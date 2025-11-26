@@ -1,0 +1,540 @@
+<div class="chargers-container">
+  <div class="page-header">
+    <h2>إدارة الشواحن</h2>
+    <p class="page-description">عرض وإدارة جميع شواحن المنصة</p>
+  </div>
+
+  <!-- Compact Filters Section -->
+  <div class="filters-section voltyks-card">
+    <div class="filters-wrapper">
+      <!-- Search Box -->
+      <div class="filter-item search-filter">
+        <div class="search-box">
+          <span class="material-icons search-icon">search</span>
+          <input
+            type="text"
+            class="voltyks-input"
+            placeholder="البحث عن شاحن (المعرف، البروتوكول، العنوان)..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange($event)"
+          />
+        </div>
+      </div>
+
+      <!-- User Filter -->
+      <div class="filter-item user-filter">
+        <div class="custom-dropdown" [class.open]="isFilterDropdownOpen" (document:click)="onDocumentClick($event)">
+          <div class="dropdown-selected" (click)="toggleFilterDropdown()">
+            @if (selectedUser) {
+              <div class="selected-user-info">
+                <span class="material-icons user-icon">account_circle</span>
+                <span class="user-name">{{ selectedUser.fullName }}</span>
+                <button type="button" class="clear-btn" (click)="clearUserFilter(); $event.stopPropagation()">
+                  <span class="material-icons">close</span>
+                </button>
+              </div>
+            } @else {
+              <span class="material-icons filter-icon">person</span>
+              <span class="placeholder">جميع المستخدمين</span>
+              <span class="material-icons dropdown-arrow">arrow_drop_down</span>
+            }
+          </div>
+
+          @if (isFilterDropdownOpen) {
+            <div class="dropdown-menu">
+              <div class="dropdown-search">
+                <span class="material-icons search-icon">search</span>
+                <input
+                  type="text"
+                  class="search-input"
+                  [(ngModel)]="filterSearchQuery"
+                  (keyup)="filterUsersInFilterDropdown()"
+                  placeholder="ابحث عن مستخدم..."
+                  (click)="$event.stopPropagation()"
+                />
+              </div>
+
+              <div class="dropdown-list">
+                @if (filteredUsers.length > 0) {
+                  @for (user of filteredUsers; track user.id) {
+                    <div
+                      class="dropdown-item"
+                      [class.selected]="selectedUser?.id === user.id"
+                      (click)="selectUserForFilter(user)"
+                    >
+                      <span class="material-icons user-icon">account_circle</span>
+                      <div class="user-info">
+                        <span class="user-name">{{ user.fullName }}</span>
+                        <span class="user-email">{{ user.email }}</span>
+                      </div>
+                      @if (selectedUser?.id === user.id) {
+                        <span class="material-icons check-icon">check_circle</span>
+                      }
+                    </div>
+                  }
+                } @else {
+                  <div class="no-results">
+                    <span class="material-icons">search_off</span>
+                    <p>لا توجد نتائج</p>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chargers Table -->
+  <div class="voltyks-card">
+    <div class="table-header">
+      <h3>قائمة الشواحن</h3>
+      <div class="header-actions">
+        <span class="total-count">إجمالي: {{ totalItems }}</span>
+        <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
+          <span class="material-icons">add</span>
+          إضافة شاحن
+        </button>
+      </div>
+    </div>
+
+    @if (paginatedChargers.length > 0) {
+      <div class="table-wrapper">
+        <table class="voltyks-table">
+          <thead>
+            <tr>
+              <th>المستخدم</th>
+              <th>الهاتف</th>
+              <th>البروتوكول</th>
+              <th>السعة</th>
+              <th>السعر</th>
+              <th>المنطقة</th>
+              <th>الشارع</th>
+              <th>الأدابتر</th>
+              <th>التقييم</th>
+              <th>تاريخ الإضافة</th>
+              <th>الحالة</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (charger of paginatedChargers; track charger.id) {
+              <tr>
+                <td>{{ charger.userName }}</td>
+                <td>
+                  @if (charger.userPhone) {
+                    <a href="tel:{{ charger.userPhone }}" class="phone-link">{{ charger.userPhone }}</a>
+                  } @else {
+                    -
+                  }
+                </td>
+                <td>{{ getProtocolName(charger.protocolId) }}</td>
+                <td>{{ getCapacityKw(charger.capacityId) }}</td>
+                <td>{{ getPriceValue(charger.priceOptionId) }}</td>
+                <td>{{ charger.area }}</td>
+                <td>{{ charger.street }}</td>
+                <td>
+                  <span class="adaptor-badge" [ngClass]="charger.adaptor ? 'available' : 'unavailable'">
+                    {{ charger.adaptor ? 'متوفر' : 'غير متوفر' }}
+                  </span>
+                </td>
+                <td>
+                  <div class="rating-display">
+                    <span class="stars">★</span>
+                    <span class="rating-value">{{ charger.averageRating | number:'1.1-1' }}</span>
+                    <span class="rating-count">({{ charger.ratingCount || 0 }})</span>
+                  </div>
+                </td>
+                <td>{{ formatDate(charger.dateAdded) }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(charger)">
+                    {{ getStatusText(charger) }}
+                  </span>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button
+                      class="voltyks-btn btn-icon btn-edit"
+                      (click)="openEditDialog(charger)"
+                      title="تعديل"
+                    >
+                      <span class="material-icons">edit</span>
+                    </button>
+                    <button
+                      class="voltyks-btn btn-icon"
+                      [ngClass]="charger.isActive ? 'btn-warning' : 'btn-success'"
+                      (click)="toggleStatus(charger)"
+                      [title]="charger.isActive ? 'إيقاف' : 'تفعيل'"
+                    >
+                      <span class="material-icons">{{ charger.isActive ? 'toggle_on' : 'toggle_off' }}</span>
+                    </button>
+                    <button
+                      class="voltyks-btn btn-icon btn-danger"
+                      (click)="openDeleteConfirm(charger)"
+                      title="حذف"
+                    >
+                      <span class="material-icons">delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <app-pagination
+        [totalItems]="totalItems"
+        [pageSize]="pageSize"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      ></app-pagination>
+    } @else {
+      <div class="empty-state">
+        <span class="material-icons empty-icon">ev_station</span>
+        <p>لا يوجد شواحن</p>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Create Charger Modal -->
+@if (showCreateDialog) {
+  <div class="modal-overlay" (click)="closeCreateDialog()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>إضافة شاحن جديد</h3>
+        <button class="close-btn" (click)="closeCreateDialog()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="charger-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>البروتوكول <span class="required">*</span></label>
+              <select
+                class="voltyks-input"
+                [(ngModel)]="createDto.protocolId"
+                name="protocolId"
+              >
+                <option [value]="0">اختر البروتوكول</option>
+                @for (protocol of protocols; track protocol.id) {
+                  <option [value]="protocol.id">{{ protocol.name }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label>السعة <span class="required">*</span></label>
+              <select
+                class="voltyks-input"
+                [(ngModel)]="createDto.capacityId"
+                name="capacityId"
+              >
+                <option [value]="0">اختر السعة</option>
+                @for (capacity of capacities; track capacity.id) {
+                  <option [value]="capacity.id">{{ capacity.kw }} kW</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>خيار السعر <span class="required">*</span></label>
+              <select
+                class="voltyks-input"
+                [(ngModel)]="createDto.priceOptionId"
+                name="priceOptionId"
+              >
+                <option [value]="0">اختر السعر</option>
+                @for (price of priceOptions; track price.id) {
+                  <option [value]="price.id">{{ price.value }} ر.س</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label>رقم المبنى <span class="required">*</span></label>
+              <input
+                type="text"
+                class="voltyks-input"
+                [(ngModel)]="createDto.buildingNumber"
+                name="buildingNumber"
+                placeholder="مثال: 123"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>المنطقة <span class="required">*</span></label>
+              <input
+                type="text"
+                class="voltyks-input"
+                [(ngModel)]="createDto.area"
+                name="area"
+                placeholder="مثال: الرياض"
+              />
+            </div>
+            <div class="form-group">
+              <label>الشارع <span class="required">*</span></label>
+              <input
+                type="text"
+                class="voltyks-input"
+                [(ngModel)]="createDto.street"
+                name="street"
+                placeholder="مثال: شارع الملك فهد"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>خط العرض</label>
+              <input
+                type="number"
+                class="voltyks-input"
+                [(ngModel)]="createDto.latitude"
+                name="latitude"
+                step="0.000001"
+                placeholder="مثال: 30.0444"
+              />
+            </div>
+            <div class="form-group">
+              <label>خط الطول</label>
+              <input
+                type="number"
+                class="voltyks-input"
+                [(ngModel)]="createDto.longitude"
+                name="longitude"
+                step="0.000001"
+                placeholder="مثال: 31.2357"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>المستخدم المالك <span class="required">*</span></label>
+            <div class="custom-dropdown" [class.open]="isCreateUserDropdownOpen">
+              <div class="dropdown-selected" (click)="toggleCreateUserDropdown()">
+                @if (createDto.userId) {
+                  <div class="selected-user-info">
+                    <span class="material-icons user-icon">account_circle</span>
+                    <span class="user-name">{{ getUserName(createDto.userId) }}</span>
+                  </div>
+                } @else {
+                  <span class="placeholder">اختر المستخدم</span>
+                  <span class="material-icons dropdown-arrow">arrow_drop_down</span>
+                }
+              </div>
+
+              @if (isCreateUserDropdownOpen) {
+                <div class="dropdown-menu">
+                  <div class="dropdown-search">
+                    <span class="material-icons search-icon">search</span>
+                    <input
+                      type="text"
+                      class="search-input"
+                      [(ngModel)]="createUserSearchQuery"
+                      (keyup)="filterUsersInCreateDropdown()"
+                      placeholder="ابحث عن مستخدم..."
+                      name="userSearch"
+                      (click)="$event.stopPropagation()"
+                    />
+                  </div>
+
+                  <div class="dropdown-list">
+                    @if (filteredUsers.length > 0) {
+                      @for (user of filteredUsers; track user.id) {
+                        <div
+                          class="dropdown-item"
+                          [class.selected]="createDto.userId === user.id"
+                          (click)="selectUserForCreate(user)"
+                        >
+                          <span class="material-icons user-icon">account_circle</span>
+                          <div class="user-info">
+                            <span class="user-name">{{ user.fullName }}</span>
+                            <span class="user-email">{{ user.email }}</span>
+                          </div>
+                          @if (createDto.userId === user.id) {
+                            <span class="material-icons check-icon">check_circle</span>
+                          }
+                        </div>
+                      }
+                    } @else {
+                      <div class="no-results">
+                        <span class="material-icons">search_off</span>
+                        <p>لا توجد نتائج</p>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">
+          إلغاء
+        </button>
+        <button class="voltyks-btn btn-primary" (click)="createCharger()">
+          <span class="material-icons">save</span>
+          حفظ
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Edit Charger Modal -->
+@if (showEditDialog && currentCharger) {
+  <div class="modal-overlay" (click)="closeEditDialog()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>تعديل الشاحن</h3>
+        <button class="close-btn" (click)="closeEditDialog()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="charger-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>البروتوكول</label>
+              <select
+                class="voltyks-input"
+                [(ngModel)]="updateDto.protocolId"
+                name="protocolId"
+              >
+                <option [value]="0">اختر البروتوكول</option>
+                @for (protocol of protocols; track protocol.id) {
+                  <option [value]="protocol.id">{{ protocol.name }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label>السعة</label>
+              <select
+                class="voltyks-input"
+                [(ngModel)]="updateDto.capacityId"
+                name="capacityId"
+              >
+                <option [value]="0">اختر السعة</option>
+                @for (capacity of capacities; track capacity.id) {
+                  <option [value]="capacity.id">{{ capacity.kw }} kW</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>خيار السعر</label>
+              <select
+                class="voltyks-input"
+                [(ngModel)]="updateDto.priceOptionId"
+                name="priceOptionId"
+              >
+                <option [value]="0">اختر السعر</option>
+                @for (price of priceOptions; track price.id) {
+                  <option [value]="price.id">{{ price.value }} ر.س</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label>رقم المبنى</label>
+              <input
+                type="text"
+                class="voltyks-input"
+                [(ngModel)]="updateDto.buildingNumber"
+                name="buildingNumber"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>المنطقة</label>
+              <input
+                type="text"
+                class="voltyks-input"
+                [(ngModel)]="updateDto.area"
+                name="area"
+              />
+            </div>
+            <div class="form-group">
+              <label>الشارع</label>
+              <input
+                type="text"
+                class="voltyks-input"
+                [(ngModel)]="updateDto.street"
+                name="street"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>خط العرض</label>
+              <input
+                type="number"
+                class="voltyks-input"
+                [(ngModel)]="updateDto.latitude"
+                name="latitude"
+                step="0.000001"
+              />
+            </div>
+            <div class="form-group">
+              <label>خط الطول</label>
+              <input
+                type="number"
+                class="voltyks-input"
+                [(ngModel)]="updateDto.longitude"
+                name="longitude"
+                step="0.000001"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input
+                type="checkbox"
+                [(ngModel)]="updateDto.isActive"
+                name="isActive"
+              />
+              <span>الشاحن نشط</span>
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">
+          إلغاء
+        </button>
+        <button class="voltyks-btn btn-primary" (click)="updateCharger()">
+          <span class="material-icons">save</span>
+          حفظ التغييرات
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Delete Confirmation Dialog -->
+<app-confirm-dialog
+  [isOpen]="showDeleteConfirm"
+  title="تأكيد حذف الشاحن"
+  [message]="'هل أنت متأكد من حذف هذا الشاحن؟ لا يمكن التراجع عن هذا الإجراء.'"
+  type="danger"
+  (confirm)="confirmDelete()"
+  (cancel)="closeDeleteConfirm()"
+></app-confirm-dialog>
+
+@if (isLoading) {
+  <app-loading-overlay></app-loading-overlay>
+}

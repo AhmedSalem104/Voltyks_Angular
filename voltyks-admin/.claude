@@ -1,0 +1,809 @@
+# Voltyks Admin Panel - Project Documentation
+
+## Project Overview
+Voltyks Admin Panel is a modern, RTL-enabled admin dashboard for managing the Voltyks EV charging platform.
+
+### Tech Stack
+- **Framework**: Angular 17+ (Standalone Components)
+- **Language**: TypeScript
+- **Styling**: SCSS with component-level styles
+- **UI/UX**: Dark/Light Mode Toggle, RTL Support, Cairo Font
+- **UI Components**: Angular Material (Datepicker, Form Fields, Input)
+- **Icons**: Material Icons
+- **Localization**: Custom Date Adapters, Arabic (ar-EG)
+- **Authentication**: Cookie-based JWT
+- **API Communication**: HttpClient with RxJS Observables
+- **State Management**: Services with BehaviorSubject for Theme & Sidebar
+
+### Angular Material Modules Used
+- **MatDatepickerModule** - Date selection with Arabic localization
+- **MatInputModule** - Enhanced form inputs
+- **MatFormFieldModule** - Form field wrapper with labels
+- **MatNativeDateModule** - Native date adapter (extended for Arabic)
+- **DateAdapter** - Custom Arabic date adapter
+- **MAT_DATE_LOCALE** - Locale configuration
+
+---
+
+## Architecture
+
+### Project Structure
+```
+voltyks-admin/
+├── src/app/
+│   ├── core/
+│   │   ├── guards/          # Route guards (auth.guard.ts)
+│   │   ├── interceptors/    # HTTP interceptors (auth.interceptor.ts)
+│   │   ├── models/          # TypeScript interfaces & DTOs
+│   │   └── services/
+│   │       ├── auth/        # Authentication service
+│   │       ├── admin/       # Admin API services
+│   │       ├── theme.service.ts      # Dark/Light mode toggle
+│   │       └── sidebar.service.ts    # Sidebar state management
+│   ├── features/            # Feature modules (lazy loaded)
+│   │   ├── dashboard/
+│   │   ├── users/
+│   │   │   ├── users-list/
+│   │   │   └── user-details/
+│   │   ├── fees/
+│   │   ├── terms/
+│   │   ├── protocol/
+│   │   ├── reports/
+│   │   ├── brands-models/
+│   │   └── about/
+│   ├── layout/              # Layout components
+│   │   ├── header/          # Top navigation bar (responsive)
+│   │   ├── sidebar/         # Side navigation (hover & mobile)
+│   │   └── main-layout/     # Main container
+│   └── shared/              # Shared components
+│       └── components/
+│           ├── pagination/
+│           ├── loading-overlay/
+│           ├── confirm-dialog/
+│           └── toaster/
+```
+
+---
+
+## New Services (Recently Added)
+
+### SidebarService
+**File**: `src/app/core/services/sidebar.service.ts`
+**Purpose**: Manages sidebar open/close state across components
+
+**Methods**:
+- `toggle()` - Toggle sidebar state
+- `open()` - Open sidebar
+- `close()` - Close sidebar
+- `isOpen$` - Observable for state changes
+- `isOpen` - Current state getter
+
+**Usage**:
+```typescript
+constructor(private sidebarService: SidebarService) {}
+
+toggleMenu() {
+  this.sidebarService.toggle();
+}
+```
+
+### ThemeService
+**File**: `src/app/core/services/theme.service.ts`
+**Purpose**: Manages dark/light theme switching
+
+**Methods**:
+- `toggleTheme()` - Switch between themes
+- `setTheme(theme: 'dark' | 'light')` - Set specific theme
+- `theme$` - Observable for theme changes
+- `currentTheme` - Current theme getter
+
+**Usage**:
+```typescript
+constructor(private themeService: ThemeService) {}
+
+ngOnInit() {
+  this.themeService.theme$.subscribe(theme => {
+    this.currentTheme = theme;
+  });
+}
+```
+
+---
+
+## Layout System (Updated)
+
+### Sidebar Component
+**File**: `src/app/layout/sidebar/sidebar.component.ts`
+
+**Features**:
+- ✅ Hover-based expansion (70px → 260px on desktop)
+- ✅ Mobile slide-in menu with backdrop overlay
+- ✅ Smooth animations with cubic-bezier timing
+- ✅ Logo with glow animation
+- ✅ Active route highlighting
+- ✅ Footer with version number
+
+**Behavior**:
+- **Desktop**: Collapses to 70px, expands on hover to 260px
+- **Mobile (≤768px)**: Hidden by default, slides in from right
+- **Integration**: Connected to SidebarService
+
+**Navigation Items**:
+1. لوحة التحكم (Dashboard) - /dashboard
+2. المستخدمون (Users) - /users
+3. الرسوم (Fees) - /fees
+4. الشروط والأحكام (Terms) - /terms
+5. البروتوكول (Protocol) - /protocol
+6. العلامات والموديلات (Brands & Models) - /brands-models
+7. التقارير (Reports) - /reports
+8. عن Voltyks (About) - /about
+
+### Header Component
+**File**: `src/app/layout/header/header.component.ts`
+
+**Features**:
+- ✅ Menu toggle button (mobile only)
+- ✅ Page title display
+- ✅ Theme toggle button with rotation animation
+- ✅ Notification button with pulse badge
+- ✅ User profile dropdown
+- ✅ Fully responsive design
+
+**Elements**:
+1. **Left Section**:
+   - Menu toggle (mobile only)
+   - Page title with gradient
+
+2. **Right Section**:
+   - Theme toggle (hidden on small mobile)
+   - Notification bell with badge
+   - User profile with dropdown
+
+3. **User Dropdown**:
+   - Gradient header with user info
+   - Profile link
+   - Settings link
+   - Logout button (red hover)
+
+**Responsive Behavior**:
+- **Desktop**: Full layout with all elements
+- **Tablet (≤1024px)**: Slightly compact
+- **Mobile (≤768px)**:
+  - Header fixed to top
+  - Menu button visible
+  - User info hidden (avatar only)
+  - Dropdown positioned from right
+- **Small Mobile (≤480px)**:
+  - Theme toggle hidden
+  - Ultra-compact layout
+  - Dropdown takes full width
+
+### Main Layout
+**File**: `src/app/layout/main-layout/main-layout.component.ts`
+
+**Structure**:
+- Sidebar (fixed right)
+- Content area with header and router-outlet
+- Toaster notifications
+
+**Responsive Layout**:
+- **Desktop**: `margin-right: 70px` for collapsed sidebar
+- **Mobile**: `margin-right: 0`, `padding-top: 60px` for fixed header
+- **Small Mobile**: `padding-top: 56px`
+
+---
+
+## API Integration Status
+
+### All Endpoints (16 Total) - 100% Integrated ✅
+
+#### Users Management (6 endpoints)
+- ✅ GET /api/admin/users (search)
+- ✅ GET /api/admin/users/{id}
+- ✅ POST /api/admin/users/{id}/ban-toggle
+- ✅ GET /api/admin/users/{id}/wallet
+- ✅ GET /api/admin/users/{id}/vehicles
+- ✅ GET /api/admin/users/{id}/reports
+
+#### Fees Management (3 endpoints)
+- ✅ GET /api/admin/fees
+- ✅ PUT /api/admin/fees
+- ✅ POST /api/admin/fees/transfer
+
+#### Brands & Models (2 endpoints)
+- ✅ GET /api/admin/brands
+- ✅ GET /api/admin/brands/models (brandId query)
+
+#### Reports (2 endpoints)
+- ✅ GET /api/admin/reports (filters: userId, startDate, endDate, isResolved)
+- ⚠️ GET /api/admin/reports/{id} - Service exists, page needed
+
+#### Terms & Protocol (3 endpoints)
+- ✅ GET /api/admin/terms (lang parameter)
+- ✅ PUT /api/admin/terms
+- ✅ GET /api/admin/protocol
+
+---
+
+## Design System
+
+### Color Palette (Dark Theme)
+- **Primary Green**: #00C853
+- **Light Green**: #B5FFD6, #00E676
+- **Dark Background**: #1E1E1E
+- **Card Background**: #2A2A2A
+- **Border Color**: #333
+- **Text Primary**: #FFFFFF
+- **Text Secondary**: #B0B0B0
+- **Error Red**: #F44336, #EF5350
+- **Warning Orange**: #FFA726
+
+### Typography
+- **Font Family**: Cairo (Arabic optimized)
+- **Headers**: 22-32px - 700 weight
+- **Subheaders**: 17-20px - 600 weight
+- **Body Text**: 13-16px - 400-500 weight
+
+### Animations
+
+#### Sidebar & Header Animations
+```scss
+// Dropdown slide
+@keyframes dropdownSlide {
+  from { opacity: 0; transform: translateY(-12px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+// Notification pulse
+@keyframes notificationPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+// Ripple effect
+@keyframes ripple {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+// Glow effect
+@keyframes glow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.2); }
+}
+```
+
+#### Page Animations
+```scss
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes tableRowFadeIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+```
+
+### Component Classes
+```scss
+// Buttons
+.voltyks-btn
+.btn-primary (Green gradient)
+.btn-secondary (Gray)
+.btn-danger (Red)
+.btn-sm (Small size)
+
+// Cards
+.voltyks-card (Rounded, dark background, bordered)
+
+// Forms
+.voltyks-input
+.voltyks-select
+.voltyks-textarea
+
+// Tables
+.voltyks-table
+  - Striped rows
+  - Hover effects
+  - Responsive wrapper
+  - Staggered animations
+
+// Status Badges
+.status-badge
+.status-active
+.status-banned
+```
+
+### Responsive Breakpoints
+```scss
+@media (max-width: 1024px) and (min-width: 769px) // Tablets
+@media (max-width: 768px)  // Mobile
+@media (max-width: 480px)  // Small Mobile
+```
+
+**Key Responsive Features**:
+- Fixed header on mobile
+- Sidebar slides in from right
+- Backdrop overlay for mobile menu
+- Dropdown menus fit within screen
+- Text truncation with ellipsis
+- Touch-friendly button sizes (40-44px)
+
+---
+
+## Pages Status
+
+### Fully Implemented with Modern Design ✅
+1. **login.component** - Full authentication flow
+2. **dashboard.component** - Stats cards, charts ready
+3. **users-list.component** - Complete animations, responsive
+4. **user-details.component** - Tabs, wallet, vehicles, reports
+5. **brands-models.component** - Complete animations, responsive
+
+### Fully Implemented with Modern Design ✅
+1. **fees.component** - Complete with advanced styling and animations
+2. **terms.component** - Complete with SCSS and responsive design
+3. **dashboard.component** - Complete with caching and responsive design
+4. **reports.component** - Complete with Material Datepicker, Arabic localization, and date formatting
+
+### Has Basic Implementation ⚠️
+1. **protocol.component** - Functional, needs enhanced styling
+2. **about.component** - Created, needs content
+
+### Missing Page 🔴
+1. **report-details.component** - Not created yet
+
+---
+
+## Pending Tasks
+
+### High Priority
+- [ ] Create report-details.component
+- [ ] Add route for /reports/:id
+- [ ] Add "View Details" button in reports table
+- [ ] Convert components to external SCSS files
+
+### Medium Priority
+- [ ] Add animations to all pages
+- [ ] Consistent button styles across all pages
+- [ ] Consistent table styles across all pages
+- [ ] Loading states verification
+- [ ] Error states verification
+
+### Low Priority
+- [ ] Add data export features (CSV, Excel)
+- [ ] Add advanced filtering and sorting
+- [ ] Add bulk operations for users
+- [ ] Add admin activity logs
+
+---
+
+## Configuration Files
+
+### proxy.conf.json
+```json
+{
+  "/api": {
+    "target": "http://localhost:3000",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
+```
+
+### angular.json (Key Settings)
+- Port: 4202
+- RTL: true
+- Cairo font loaded in index.html
+- Material Icons enabled
+- Assets: public/ and src/assets/
+
+---
+
+## Development Commands
+
+### Start Development Server
+```bash
+cd voltyks-admin
+ng serve --port 4202
+```
+
+### Build for Production
+```bash
+ng build --configuration production
+```
+
+### Run Tests
+```bash
+ng test
+```
+
+---
+
+## Authentication Flow
+
+1. User enters credentials in login page
+2. POST to /api/admin/auth/login
+3. Server sets HTTP-only cookie with JWT
+4. AuthInterceptor adds cookie to all subsequent requests
+5. AuthGuard protects admin routes
+6. Logout clears cookie via /api/admin/auth/logout
+
+---
+
+## Material Datepicker with Arabic Localization
+
+### Custom Arabic Date Adapter
+**File**: `reports.component.ts` (lines 15-37)
+
+```typescript
+class ArabicDateAdapter extends NativeDateAdapter {
+  override getFirstDayOfWeek(): number {
+    return 6; // Saturday
+  }
+
+  override getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[] {
+    if (style === 'narrow') {
+      return ['ح', 'ن', 'ث', 'ر', 'خ', 'ج', 'س'];
+    }
+    return ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  }
+
+  override getMonthNames(style: 'long' | 'short' | 'narrow'): string[] {
+    return [
+      'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+      'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+    ];
+  }
+}
+```
+
+### Provider Configuration
+```typescript
+@Component({
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'ar-EG' },
+    { provide: DateAdapter, useClass: ArabicDateAdapter }
+  ]
+})
+```
+
+### HTML Template Usage
+```html
+<mat-form-field class="voltyks-datepicker" appearance="outline">
+  <mat-label>من تاريخ</mat-label>
+  <input
+    matInput
+    [matDatepicker]="startPicker"
+    [(ngModel)]="startDateObj"
+    placeholder="اختر تاريخ البداية"
+  />
+  <mat-datepicker-toggle matIconSuffix [for]="startPicker">
+  </mat-datepicker-toggle>
+  <mat-datepicker #startPicker></mat-datepicker>
+</mat-form-field>
+```
+
+### Date Formatting Functions
+
+**Short Format** (for tables):
+```typescript
+formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('ar-EG', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+```
+
+**Long Format** (for tooltips):
+```typescript
+formatDateLong(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('ar-EG', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+```
+
+**Relative Time** (human-readable):
+```typescript
+getRelativeTime(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMinutes = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMinutes < 1) return 'الآن';
+  if (diffMinutes < 60) return `منذ ${diffMinutes} دقيقة`;
+  if (diffHours < 24) return `منذ ${diffHours} ساعة`;
+  if (diffDays === 1) return 'أمس';
+  if (diffDays < 7) return `منذ ${diffDays} أيام`;
+  // ... more conditions
+}
+```
+
+### Enhanced Datepicker Button Styling
+```scss
+.mat-datepicker-toggle {
+  .mat-mdc-icon-button {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, rgba(0, 200, 83, 0.15), rgba(0, 200, 83, 0.08)) !important;
+    border: 1.5px solid rgba(0, 200, 83, 0.3) !important;
+
+    // Calendar icon using CSS
+    &::before {
+      content: '\e935' !important; // Material Icons calendar
+      font-family: 'Material Icons' !important;
+      font-size: 20px !important;
+      color: #00C853 !important;
+    }
+
+    &:hover {
+      transform: scale(1.1) rotate(5deg) !important;
+      box-shadow: 0 4px 16px rgba(0, 200, 83, 0.4) !important;
+    }
+  }
+}
+```
+
+---
+
+## Best Practices
+
+### Component Development
+- Use standalone components
+- Implement OnInit for data loading
+- Use RxJS observables for async operations
+- Handle errors with ToasterService
+- Show loading states with LoadingOverlayComponent
+- Subscribe to services in ngOnInit
+- Unsubscribe in ngOnDestroy (if needed)
+
+### Styling
+- Component-level SCSS files (not inline for complex pages)
+- Use design system classes
+- Add animations for better UX
+- Ensure RTL compatibility
+- Test responsive design on all breakpoints
+- Use CSS variables for theming
+- Use cubic-bezier for smooth animations
+
+### API Integration
+- All API calls through services
+- Use typed DTOs from models
+- Handle success and error responses
+- Show user feedback (toasters)
+- Add confirmation dialogs for destructive actions
+- Use loading overlays during API calls
+
+---
+
+## Responsive Design Guidelines
+
+### Mobile-First Approach
+1. **Header**:
+   - Fixed position on mobile
+   - Menu button visible
+   - User info hidden, avatar only
+   - Dropdowns fit within screen
+
+2. **Sidebar**:
+   - Hidden by default on mobile
+   - Slides in from right
+   - Backdrop overlay
+   - Touch-friendly targets
+
+3. **Content**:
+   - Padding-top for fixed header
+   - Horizontal scroll prevention
+   - Text truncation for long content
+   - Responsive tables
+
+4. **Forms**:
+   - Full-width inputs on mobile
+   - Larger touch targets
+   - Proper spacing
+
+5. **Tables**:
+   - Horizontal scroll wrapper
+   - Compact on mobile
+   - Essential columns only
+
+---
+
+## Known Issues & Solutions
+
+### Issue: CORS Error
+**Solution**: Use proxy.conf.json with target pointing to backend
+
+### Issue: Cookie not sent with requests
+**Solution**: Use `withCredentials: true` in HttpClient
+
+### Issue: RTL layout issues
+**Solution**: Use `dir="rtl"` in index.html and test all components
+
+### Issue: Dropdown out of screen on mobile
+**Solution**: Position from right with proper max-width calculation
+
+### Issue: Text overflow in dropdown
+**Solution**: Use `text-overflow: ellipsis` with `white-space: nowrap`
+
+---
+
+## Recent Updates
+
+### Session 2025-11-24: Reports Component Enhancement ✅
+
+#### Material Datepicker Integration
+1. **Arabic Localization**:
+   - Custom Arabic Date Adapter (ArabicDateAdapter)
+   - Arabic month names and day names
+   - First day of week set to Saturday
+   - MAT_DATE_LOCALE set to 'ar-EG'
+
+2. **Enhanced Date Formatting**:
+   - `formatDate()` - Short format for table display
+   - `formatDateLong()` - Full format with weekday for tooltips
+   - `getRelativeTime()` - Relative time display (منذ X دقيقة/ساعة/يوم)
+   - Dual display in table: main date + relative time
+
+3. **Improved Date Inputs**:
+   - Gradient background with depth effects
+   - Larger height (58px) for better visibility
+   - Enhanced borders (2px) with green color (#00C853)
+   - Prominent labels (Bold, uppercase, white color)
+   - Text shadow for clarity
+   - Input font size increased to 16px with bold weight
+   - Hover and focus effects with glow
+
+4. **Beautiful Datepicker Button**:
+   - Circular design (36px)
+   - Gradient background with green theme
+   - Border and shadow effects
+   - Calendar icon using CSS ::before
+   - Smooth animations (scale + rotate on hover)
+   - Touch target overlay completely hidden
+   - Responsive sizing for mobile devices
+
+5. **Responsive Design**:
+   - Desktop: 58px height, 16px font
+   - Tablet (1024px): 56px height, 15px font
+   - Mobile (768px): 54px height, 15px font
+   - All sizes maintain clarity and readability
+
+#### Component Files Updated
+- **reports.component.ts** (lines 15-269):
+  - Added ArabicDateAdapter class
+  - Added formatDate(), formatDateLong(), getRelativeTime() methods
+  - Configured Arabic locale providers
+
+- **reports.component.html**:
+  - Material Datepicker integration
+  - Enhanced date cell in table with dual display
+  - Removed icon text from toggle buttons
+
+- **reports.component.scss** (135.08 kB):
+  - Enhanced input field styling (~150 lines)
+  - Datepicker button styling with CSS ::before
+  - Calendar popup styling
+  - Responsive breakpoints for all screen sizes
+
+### Session 2025-11-18: Layout System Redesign ✅
+1. **Sidebar**:
+   - Removed toggle button
+   - Implemented hover-based expansion
+   - Mobile slide-in with backdrop
+   - Created SidebarService for state management
+   - Logo with glow animation
+   - Smooth transitions
+
+2. **Header**:
+   - Complete responsive redesign
+   - Menu toggle button (connects to sidebar)
+   - Theme toggle with rotation animation
+   - User dropdown with gradient header
+   - Fixed positioning on mobile
+   - Dropdown fits within screen
+
+3. **Main Layout**:
+   - Proper spacing for fixed header
+   - Responsive content area
+   - Overflow handling
+
+4. **Services**:
+   - Created SidebarService
+   - ThemeService integration in header
+
+### Responsive Improvements ✅
+- Mobile menu functionality
+- Fixed header positioning
+- Dropdown menu positioning
+- Text truncation in all components
+- Touch-friendly button sizes
+- Safe padding on all screen sizes
+
+---
+
+## Future Enhancements
+
+1. Add real-time notifications (WebSocket)
+2. Add data export features (CSV, Excel)
+3. Add advanced filtering and sorting
+4. Add bulk operations for users
+5. Add analytics dashboard with charts
+6. Add admin activity logs
+7. Add role-based access control (if multiple admin types)
+8. Add light theme support (currently dark only)
+
+---
+
+## Contact & Support
+
+Project: Voltyks Admin Panel
+Version: 1.2.0
+Last Updated: 2025-11-24
+
+---
+
+**Current Status**:
+- ✅ All API endpoints integrated (16/16)
+- ✅ Layout system fully responsive
+- ✅ Sidebar & Header redesigned
+- ✅ Theme switching implemented
+- ✅ Mobile-friendly navigation
+- ✅ Authentication fully working
+- ✅ Core functionality complete
+- ✅ Dashboard component enhanced with caching
+- ✅ Reports component with Material Datepicker and Arabic support
+- ✅ Fees component with modern design
+- ✅ Terms component with enhanced styling
+- ⚠️ Design system needs completion on 2 pages (Protocol, About)
+- ⚠️ One missing page (report-details)
+
+**Next Steps**:
+1. Create report-details component
+2. Enhance Protocol component styling
+3. Complete About page content
+4. Test on real mobile devices
+5. Add data export features
+6. Add remaining features from backlog
+
+**Latest Achievements (2025-11-24)**:
+- ✅ Material Datepicker with full Arabic localization
+- ✅ Enhanced date formatting (short, long, relative)
+- ✅ Beautiful circular datepicker button with animations
+- ✅ Improved date input fields with gradient backgrounds
+- ✅ Responsive design for all screen sizes
+- ✅ Dual date display in tables (absolute + relative)

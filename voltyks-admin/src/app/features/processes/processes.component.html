@@ -1,0 +1,461 @@
+<div class="processes-container" [class.panel-open]="showSidePanel">
+  <div class="page-header">
+    <h2>إدارة عمليات الشحن</h2>
+    <p class="page-description">عرض ومتابعة جميع عمليات الشحن في المنصة</p>
+  </div>
+
+  <!-- Compact Filters Section -->
+  <div class="filters-section voltyks-card">
+    <div class="filters-wrapper">
+      <!-- Search Box -->
+      <div class="filter-item search-filter">
+        <div class="search-box">
+          <span class="material-icons search-icon">search</span>
+          <input
+            type="text"
+            class="voltyks-input"
+            placeholder="البحث (رقم العملية، اسم المالك، رقم اللوحة...)"
+            [(ngModel)]="filters.search"
+            (ngModelChange)="onSearchChange($event)"
+          />
+        </div>
+      </div>
+
+      <!-- Date Range -->
+      <div class="filter-item date-filter-group">
+        <div class="date-field">
+          <label>من</label>
+          <div class="date-input-wrapper">
+            <span class="material-icons date-icon">calendar_today</span>
+            <input
+              type="date"
+              [(ngModel)]="filters.startDate"
+              (ngModelChange)="onDateChange()"
+              [max]="filters.endDate || today"
+            />
+          </div>
+        </div>
+        <span class="date-separator">-</span>
+        <div class="date-field">
+          <label>إلى</label>
+          <div class="date-input-wrapper">
+            <span class="material-icons date-icon">calendar_today</span>
+            <input
+              type="date"
+              [(ngModel)]="filters.endDate"
+              (ngModelChange)="onDateChange()"
+              [min]="filters.startDate"
+              [max]="today"
+            />
+          </div>
+        </div>
+        @if (filters.startDate || filters.endDate) {
+          <button class="clear-dates-btn" (click)="clearDateFilters()" title="مسح التواريخ">
+            <span class="material-icons">close</span>
+          </button>
+        }
+      </div>
+
+      <!-- Status Filter -->
+      <div class="filter-item status-filter">
+        <div class="select-wrapper">
+          <span class="material-icons select-icon">info</span>
+          <select
+            class="voltyks-input"
+            [(ngModel)]="filters.status"
+            (ngModelChange)="onStatusChange()"
+          >
+            @for (option of statusOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="filter-item filter-actions">
+        <button class="voltyks-btn btn-secondary" (click)="clearFilters()" title="إعادة تعيين">
+          <span class="material-icons">refresh</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Processes Table -->
+  <div class="voltyks-card">
+    <div class="table-header">
+      <h3>قائمة العمليات</h3>
+      <div class="header-actions">
+        <span class="total-count">إجمالي: {{ totalItems }}</span>
+      </div>
+    </div>
+
+    @if (paginatedProcesses.length > 0) {
+      <div class="table-wrapper">
+        <table class="voltyks-table">
+          <thead>
+            <tr>
+              <th>رقم العملية</th>
+              <th>تاريخ الطلب</th>
+              <th>الحالة</th>
+              <th>مالك المركبة</th>
+              <th>مالك الشاحن</th>
+              <th>السعر التقديري</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (process of paginatedProcesses; track process.id) {
+              <tr (click)="openSidePanel(process)" class="clickable-row">
+                <td class="request-id">{{ process.id }}</td>
+                <td>{{ formatDateShort(process.requestedAt) }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(process.status)">
+                    {{ getStatusText(process.status) }}
+                  </span>
+                </td>
+                <td>
+                  <div class="user-cell">
+                    <span class="user-name">{{ process.vehicleOwnerName || process.vehicleOwnerEmail || 'غير محدد' }}</span>
+                    <span class="user-phone">{{ process.vehicleOwnerPhone }}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="user-cell">
+                    <span class="user-name">{{ process.chargerOwnerName || process.chargerOwnerEmail || 'غير محدد' }}</span>
+                    <span class="user-phone">{{ process.chargerOwnerPhone }}</span>
+                  </div>
+                </td>
+                <td class="price">{{ formatCurrency(process.estimatedPrice) }}</td>
+                <td>
+                  <button
+                    class="voltyks-btn btn-icon btn-view"
+                    (click)="openSidePanel(process); $event.stopPropagation()"
+                    title="عرض التفاصيل"
+                  >
+                    <span class="material-icons">visibility</span>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <app-pagination
+        [totalItems]="totalItems"
+        [pageSize]="pageSize"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      ></app-pagination>
+    } @else {
+      <div class="empty-state">
+        <span class="material-icons empty-icon">electric_bolt</span>
+        <p>لا توجد عمليات شحن</p>
+        @if (hasActiveFilters()) {
+          <button class="voltyks-btn btn-secondary" (click)="clearFilters()">
+            مسح الفلاتر وعرض الكل
+          </button>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Side Panel Overlay -->
+@if (showSidePanel) {
+  <div class="side-panel-overlay" (click)="closeSidePanel()"></div>
+}
+
+<!-- Side Panel -->
+<div class="side-panel" [class.open]="showSidePanel">
+  @if (selectedProcess) {
+    <div class="panel-header">
+      <div class="panel-title">
+        <h3>تفاصيل العملية {{ selectedProcess.id }}</h3>
+        <span class="status-badge" [ngClass]="getStatusClass(selectedProcess.status)">
+          {{ getStatusText(selectedProcess.status) }}
+        </span>
+      </div>
+      <button class="close-btn" (click)="closeSidePanel()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <div class="panel-content">
+      <!-- Process Info Section -->
+      <div class="detail-section">
+        <div class="section-header">
+          <span class="material-icons">info</span>
+          <h4>معلومات العملية</h4>
+        </div>
+        <div class="section-content">
+          <div class="detail-row">
+            <span class="label">تاريخ الطلب</span>
+            <span class="value">{{ formatDate(selectedProcess.requestedAt) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">الحالة</span>
+            <span class="value">
+              <span class="status-badge sm" [ngClass]="getStatusClass(selectedProcess.status)">
+                {{ getStatusText(selectedProcess.status) }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Request Details Section -->
+      <div class="detail-section">
+        <div class="section-header">
+          <span class="material-icons">bolt</span>
+          <h4>تفاصيل الطلب</h4>
+        </div>
+        <div class="section-content">
+          <div class="detail-row">
+            <span class="label">الطاقة المطلوبة</span>
+            <span class="value highlight">{{ selectedProcess.kwNeeded }} kW</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">نسبة البطارية الحالية</span>
+            <span class="value">{{ selectedProcess.currentBatteryPercentage }}%</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">الكمية المشحونة</span>
+            <span class="value">{{ selectedProcess.amountCharged }} kW</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">تاريخ الإنشاء</span>
+            <span class="value">{{ formatDate(selectedProcess.dateCreated) }}</span>
+          </div>
+          @if (selectedProcess.dateCompleted) {
+            <div class="detail-row">
+              <span class="label">تاريخ الإكمال</span>
+              <span class="value">{{ formatDate(selectedProcess.dateCompleted) }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Pricing Section -->
+      <div class="detail-section pricing-section">
+        <div class="section-header">
+          <span class="material-icons">payments</span>
+          <h4>تفاصيل السعر</h4>
+        </div>
+        <div class="section-content">
+          <div class="detail-row">
+            <span class="label">المبلغ الأساسي</span>
+            <span class="value">{{ formatCurrency(selectedProcess.baseAmount) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">رسوم Voltyks</span>
+            <span class="value">{{ formatCurrency(selectedProcess.voltyksFees) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">السعر التقديري</span>
+            <span class="value">{{ formatCurrency(selectedProcess.estimatedPrice) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">المبلغ المدفوع</span>
+            <span class="value">{{ formatCurrency(selectedProcess.amountPaid) }}</span>
+          </div>
+          <div class="detail-row total">
+            <span class="label">سعر الشاحن</span>
+            <span class="value highlight">{{ formatCurrency(selectedProcess.chargerPrice) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charger Info Section -->
+      <div class="detail-section">
+        <div class="section-header">
+          <span class="material-icons">ev_station</span>
+          <h4>معلومات الشاحن</h4>
+        </div>
+        <div class="section-content">
+          <div class="detail-row">
+            <span class="label">رقم الشاحن</span>
+            <span class="value">{{ selectedProcess.chargerId }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">البروتوكول</span>
+            <span class="value">{{ selectedProcess.chargerProtocol }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">السعة</span>
+            <span class="value">{{ selectedProcess.chargerCapacityKw }} kW</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">توفر الأدابتر</span>
+            <span class="value">{{ selectedProcess.chargerHasAdaptor ? 'متوفر' : 'غير متوفر' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">حالة الشاحن</span>
+            <span class="value">{{ selectedProcess.chargerIsActive ? 'نشط' : 'غير نشط' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">التقييم</span>
+            <span class="value">{{ selectedProcess.chargerRating || 'لا يوجد' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">العنوان</span>
+            <span class="value">{{ selectedProcess.chargerArea }} - {{ selectedProcess.chargerStreet }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">رقم المبنى</span>
+            <span class="value">{{ selectedProcess.chargerBuildingNumber }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vehicle Info Section -->
+      <div class="detail-section">
+        <div class="section-header">
+          <span class="material-icons">directions_car</span>
+          <h4>معلومات المركبة</h4>
+        </div>
+        <div class="section-content">
+          <div class="detail-row">
+            <span class="label">العلامة التجارية</span>
+            <span class="value">{{ selectedProcess.vehicleBrand }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">الموديل</span>
+            <span class="value">{{ selectedProcess.vehicleModel }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">اللون</span>
+            <span class="value">{{ selectedProcess.vehicleColor }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">رقم اللوحة</span>
+            <span class="value highlight">{{ selectedProcess.vehiclePlate }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">سعة البطارية</span>
+            <span class="value">{{ selectedProcess.vehicleCapacity }} kWh</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">العنوان</span>
+            <span class="value">{{ selectedProcess.vehicleArea }} - {{ selectedProcess.vehicleStreet }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vehicle Owner Section -->
+      <div class="detail-section">
+        <div class="section-header">
+          <span class="material-icons">person</span>
+          <h4>مالك المركبة</h4>
+        </div>
+        <div class="section-content">
+          <div class="detail-row">
+            <span class="label">معرف المالك</span>
+            <span class="value">{{ selectedProcess.vehicleOwnerId || '-' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">الاسم</span>
+            <span class="value">{{ selectedProcess.vehicleOwnerName || '-' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">البريد الإلكتروني</span>
+            <span class="value">
+              <a [href]="'mailto:' + selectedProcess.vehicleOwnerEmail" class="email-link">
+                {{ selectedProcess.vehicleOwnerEmail || '-' }}
+              </a>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="label">رقم الهاتف</span>
+            <span class="value">
+              <a [href]="'tel:' + selectedProcess.vehicleOwnerPhone" class="phone-link">
+                {{ selectedProcess.vehicleOwnerPhone || '-' }}
+              </a>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="label">التقييم</span>
+            <span class="value">{{ selectedProcess.vehicleOwnerRating || 'لا يوجد' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">تقييم المستخدم</span>
+            <span class="value">{{ selectedProcess.vehicleOwnerUserRating || 'لا يوجد' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">رصيد المحفظة</span>
+            <span class="value">{{ formatCurrency(selectedProcess.vehicleOwnerWallet) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">حالة الحساب</span>
+            <span class="value">
+              <span class="status-badge sm" [ngClass]="selectedProcess.vehicleOwnerIsBanned ? 'status-rejected' : 'status-completed'">
+                {{ selectedProcess.vehicleOwnerIsBanned ? 'محظور' : 'نشط' }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charger Owner Section -->
+      <div class="detail-section">
+        <div class="section-header">
+          <span class="material-icons">business</span>
+          <h4>مالك الشاحن</h4>
+        </div>
+        <div class="section-content">
+          <div class="detail-row">
+            <span class="label">معرف المالك</span>
+            <span class="value">{{ selectedProcess.chargerOwnerId || '-' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">الاسم</span>
+            <span class="value">{{ selectedProcess.chargerOwnerName || '-' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">البريد الإلكتروني</span>
+            <span class="value">
+              <a [href]="'mailto:' + selectedProcess.chargerOwnerEmail" class="email-link">
+                {{ selectedProcess.chargerOwnerEmail || '-' }}
+              </a>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="label">رقم الهاتف</span>
+            <span class="value">
+              <a [href]="'tel:' + selectedProcess.chargerOwnerPhone" class="phone-link">
+                {{ selectedProcess.chargerOwnerPhone || '-' }}
+              </a>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="label">التقييم</span>
+            <span class="value">{{ selectedProcess.chargerOwnerRating || 'لا يوجد' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">تقييم المستخدم</span>
+            <span class="value">{{ selectedProcess.chargerOwnerUserRating || 'لا يوجد' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">رصيد المحفظة</span>
+            <span class="value">{{ formatCurrency(selectedProcess.chargerOwnerWallet) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">حالة الحساب</span>
+            <span class="value">
+              <span class="status-badge sm" [ngClass]="selectedProcess.chargerOwnerIsBanned ? 'status-rejected' : 'status-completed'">
+                {{ selectedProcess.chargerOwnerIsBanned ? 'محظور' : 'نشط' }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+@if (isLoading) {
+  <app-loading-overlay></app-loading-overlay>
+}

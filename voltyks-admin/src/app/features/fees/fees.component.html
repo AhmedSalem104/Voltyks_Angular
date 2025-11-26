@@ -1,0 +1,206 @@
+<div class="fees-container">
+  <h2>إدارة الرسوم</h2>
+  <p class="subtitle">إعدادات الرسوم وتحويل الأموال المحصلة</p>
+
+  @if (fees) {
+    <!-- Current Fees Display -->
+    <div class="voltyks-card current-fees">
+      <h3>الرسوم الحالية</h3>
+      <div class="fees-info">
+        <div class="info-item">
+          <p class="label">نسبة رسوم المنصة</p>
+          <p class="value">{{ fees.percentage }}%</p>
+        </div>
+        <div class="info-item">
+          <p class="label">الحد الأدنى للرسوم</p>
+          <p class="value">{{ fees.minimumFee }} <span style="font-size: 16px;">ج.م</span></p>
+        </div>
+        <div class="info-item">
+          <p class="label">آخر تحديث</p>
+          <p class="value" style="font-size: 16px;">{{ formatDate(fees.updatedAt) }}</p>
+        </div>
+        <div class="info-item highlight">
+          <p class="label">محدّث بواسطة</p>
+          <p class="value" style="font-size: 18px;">{{ fees.updatedBy || 'النظام' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Update Fees Form -->
+    <div class="voltyks-card">
+      <h3>تحديث إعدادات الرسوم</h3>
+      <form class="fees-form">
+        <div class="form-group">
+          <label>نسبة رسوم المنصة (%)</label>
+          <input
+            type="number"
+            class="voltyks-input"
+            [(ngModel)]="updateDto.percentage"
+            name="percentage"
+            min="0"
+            max="100"
+            step="0.1"
+            placeholder="مثال: 10"
+          />
+        </div>
+        <div class="form-group">
+          <label>الحد الأدنى للرسوم (ج.م)</label>
+          <input
+            type="number"
+            class="voltyks-input"
+            [(ngModel)]="updateDto.minimumFee"
+            name="min"
+            min="0"
+            step="0.01"
+            placeholder="مثال: 40"
+          />
+        </div>
+        <button type="button" class="voltyks-btn btn-primary" (click)="openUpdateDialog()">
+          <span class="material-icons" style="font-size: 18px; margin-left: 8px;">save</span>
+          حفظ التغييرات
+        </button>
+      </form>
+    </div>
+
+    <!-- Transfer Fees Form -->
+    <div class="voltyks-card">
+      <h3>تحويل الرسوم المحصلة</h3>
+      <form class="transfer-form">
+        <div class="form-group">
+          <label>اختر المستخدم المستلم</label>
+
+          <!-- Custom Dropdown -->
+          <div class="custom-dropdown" [class.open]="isDropdownOpen">
+            <!-- Selected User Display -->
+            <div class="dropdown-selected" (click)="toggleDropdown()">
+              @if (selectedUser) {
+                <div class="selected-user-info">
+                  <span class="material-icons user-icon">account_circle</span>
+                  <div class="user-details">
+                    <span class="user-name">{{ selectedUser.fullName }}</span>
+                    <span class="user-email">{{ selectedUser.email }}</span>
+                  </div>
+                  <button type="button" class="clear-btn" (click)="clearSelection(); $event.stopPropagation()">
+                    <span class="material-icons">close</span>
+                  </button>
+                </div>
+              } @else {
+                <span class="placeholder">اختر مستخدم من القائمة</span>
+                <span class="material-icons dropdown-arrow">arrow_drop_down</span>
+              }
+            </div>
+
+            <!-- Dropdown Menu -->
+            @if (isDropdownOpen) {
+              <div class="dropdown-menu">
+                <!-- Search Input -->
+                <div class="dropdown-search">
+                  <span class="material-icons search-icon">search</span>
+                  <input
+                    type="text"
+                    class="search-input"
+                    [(ngModel)]="searchQuery"
+                    (keyup)="filterUsers()"
+                    placeholder="ابحث بالاسم، البريد أو رقم الهاتف..."
+                    name="userSearch"
+                    (click)="$event.stopPropagation()"
+                  />
+                </div>
+
+                <!-- Users List -->
+                <div class="dropdown-list">
+                  @if (filteredUsers.length > 0) {
+                    @for (user of filteredUsers; track user.id) {
+                      <div
+                        class="dropdown-item"
+                        [class.selected]="selectedUser?.id === user.id"
+                        (click)="selectUser(user)"
+                      >
+                        <span class="material-icons user-icon">account_circle</span>
+                        <div class="user-info">
+                          <span class="user-name">{{ user.fullName }}</span>
+                          <span class="user-email">{{ user.email }}</span>
+                        </div>
+                        @if (selectedUser?.id === user.id) {
+                          <span class="material-icons check-icon">check_circle</span>
+                        }
+                      </div>
+                    }
+                  } @else {
+                    <div class="no-results">
+                      <span class="material-icons">search_off</span>
+                      <p>لا توجد نتائج</p>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="form-group">
+          <label>المبلغ المراد تحويله (ج.م)</label>
+          <input
+            type="number"
+            class="voltyks-input"
+            [(ngModel)]="transferDto.amount"
+            name="amount"
+            min="0"
+            step="0.01"
+            placeholder="مثال: 1500"
+          />
+        </div>
+        <div class="form-group">
+          <label>ملاحظات (اختياري)</label>
+          <textarea
+            class="voltyks-textarea"
+            [(ngModel)]="transferDto.notes"
+            name="notes"
+            rows="3"
+            placeholder="أضف ملاحظات إضافية..."
+          ></textarea>
+        </div>
+        <button type="button" class="voltyks-btn btn-primary" (click)="openTransferDialog()">
+          <span class="material-icons" style="font-size: 18px; margin-left: 8px;">send</span>
+          تحويل الآن
+        </button>
+      </form>
+    </div>
+  } @else if (loadError) {
+    <div class="voltyks-card">
+      <div style="text-align: center; padding: 40px;">
+        <span class="material-icons" style="font-size: 48px; color: #F44336; display: block; margin-bottom: 16px;">error_outline</span>
+        <p style="color: #F44336; margin-bottom: 16px;">فشل تحميل بيانات الرسوم</p>
+        <p style="color: #B0B0B0; margin-bottom: 24px; font-size: 14px;">تأكد من اتصال الخادم وحاول مرة أخرى</p>
+        <button class="voltyks-btn btn-primary" (click)="loadFees(); loadUsers()">
+          <span class="material-icons" style="font-size: 18px; margin-left: 8px;">refresh</span>
+          إعادة المحاولة
+        </button>
+      </div>
+    </div>
+  } @else {
+    <div class="voltyks-card">
+      <p style="text-align: center; color: #B0B0B0; padding: 40px;">جاري تحميل بيانات الرسوم...</p>
+    </div>
+  }
+</div>
+
+<app-confirm-dialog
+  [isOpen]="showUpdateDialog"
+  title="تأكيد تحديث الرسوم"
+  message="هل أنت متأكد من تحديث إعدادات الرسوم؟ سيتم تطبيق التغييرات فوراً."
+  (confirm)="confirmUpdate()"
+  (cancel)="showUpdateDialog = false"
+></app-confirm-dialog>
+
+<app-confirm-dialog
+  [isOpen]="showTransferDialog"
+  title="تأكيد تحويل الرسوم"
+  [message]="'هل أنت متأكد من تحويل ' + transferDto.amount + ' ج.م إلى المستخدم؟'"
+  type="danger"
+  (confirm)="confirmTransfer()"
+  (cancel)="showTransferDialog = false"
+></app-confirm-dialog>
+
+@if (isLoading) {
+  <app-loading-overlay></app-loading-overlay>
+}

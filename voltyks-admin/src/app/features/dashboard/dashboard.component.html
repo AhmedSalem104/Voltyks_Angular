@@ -1,0 +1,183 @@
+<div class="dashboard">
+  <!-- Hero Section with Logo & Typing -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <span class="material-icons">bolt</span>
+        </div>
+        <h1 class="logo-text">Voltyks</h1>
+      </div>
+      <div class="typing-container">
+        <span class="typing-text">{{ currentTypingText }}</span>
+        <span class="cursor">|</span>
+      </div>
+    </div>
+    <div class="hero-greeting">
+      <span class="greeting-label">{{ greeting }}</span>
+      <span class="greeting-name">{{ currentUser?.firstName || 'المشرف' }}</span>
+      <span class="date-text">{{ today | date:'EEEE، d MMMM yyyy':'':'ar-EG' }}</span>
+    </div>
+  </section>
+
+  @if (isLoading) {
+    <div class="loading-skeleton">
+      <div class="skeleton-grid">
+        @for (item of [1,2,3,4,5,6]; track item) {
+          <div class="skeleton-card"></div>
+        }
+      </div>
+    </div>
+  } @else {
+    <!-- Stats & Charts Section -->
+    <section class="main-section">
+      <div class="main-grid">
+        <!-- Overview Chart -->
+        <div class="chart-card overview-chart">
+          <h3>نظرة عامة</h3>
+          <div class="chart-container">
+            <canvas baseChart
+              [data]="overviewChartData"
+              [options]="overviewChartOptions"
+              type="doughnut">
+            </canvas>
+            <div class="chart-center">
+              <span class="total-value">{{ stats.totalUsers + stats.totalChargers + stats.totalVehicles }}</span>
+              <span class="total-label">إجمالي</span>
+            </div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <span class="legend-color users"></span>
+              <span class="legend-label">مستخدمين</span>
+              <span class="legend-value">{{ stats.totalUsers }}</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color chargers"></span>
+              <span class="legend-label">شواحن</span>
+              <span class="legend-value">{{ stats.totalChargers }}</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color vehicles"></span>
+              <span class="legend-label">مركبات</span>
+              <span class="legend-value">{{ stats.totalVehicles }}</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color reports"></span>
+              <span class="legend-label">بلاغات</span>
+              <span class="legend-value">{{ stats.totalReports }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reports Chart -->
+        <div class="chart-card reports-chart">
+          <h3>حالة البلاغات</h3>
+          <div class="bar-chart-container">
+            <canvas baseChart
+              [data]="reportsChartData"
+              [options]="reportsChartOptions"
+              type="bar">
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Stats Chips -->
+        <div class="stats-chips">
+          <a routerLink="/users" class="stat-chip">
+            <span class="material-icons">group</span>
+            <div class="chip-data">
+              <span class="chip-value">{{ stats.totalUsers }}</span>
+              <span class="chip-label">مستخدم</span>
+            </div>
+            @if (stats.activeUsers > 0) {
+              <span class="chip-badge active">{{ stats.activeUsers }}</span>
+            }
+          </a>
+
+          <a routerLink="/chargers" class="stat-chip">
+            <span class="material-icons">ev_station</span>
+            <div class="chip-data">
+              <span class="chip-value">{{ stats.totalChargers }}</span>
+              <span class="chip-label">شاحن</span>
+            </div>
+          </a>
+
+          <a routerLink="/vehicles" class="stat-chip">
+            <span class="material-icons">electric_car</span>
+            <div class="chip-data">
+              <span class="chip-value">{{ stats.totalVehicles }}</span>
+              <span class="chip-label">مركبة</span>
+            </div>
+          </a>
+
+          <a routerLink="/reports" class="stat-chip">
+            <span class="material-icons">flag</span>
+            <div class="chip-data">
+              <span class="chip-value">{{ stats.totalReports }}</span>
+              <span class="chip-label">بلاغ</span>
+            </div>
+            @if (stats.pendingReports > 0) {
+              <span class="chip-badge pending">{{ stats.pendingReports }}</span>
+            }
+          </a>
+
+          <a routerLink="/brands-models" class="stat-chip">
+            <span class="material-icons">business</span>
+            <div class="chip-data">
+              <span class="chip-value">{{ stats.totalBrands }}</span>
+              <span class="chip-label">علامة</span>
+            </div>
+          </a>
+
+          <a routerLink="/fees" class="stat-chip">
+            <span class="material-icons">percent</span>
+            <div class="chip-data">
+              <span class="chip-value">{{ stats.currentFees }}%</span>
+              <span class="chip-label">رسوم</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+      <h3>الوصول السريع</h3>
+      <div class="actions-grid">
+        <a routerLink="/users" class="action-item">
+          <span class="material-icons">people</span>
+          <span>المستخدمين</span>
+        </a>
+        <a routerLink="/chargers" class="action-item">
+          <span class="material-icons">ev_station</span>
+          <span>الشواحن</span>
+        </a>
+        <a routerLink="/vehicles" class="action-item">
+          <span class="material-icons">electric_car</span>
+          <span>المركبات</span>
+        </a>
+        <a routerLink="/brands-models" class="action-item">
+          <span class="material-icons">category</span>
+          <span>العلامات</span>
+        </a>
+        <a routerLink="/reports" class="action-item">
+          <span class="material-icons">flag</span>
+          <span>البلاغات</span>
+        </a>
+        <a routerLink="/fees" class="action-item">
+          <span class="material-icons">payments</span>
+          <span>الرسوم</span>
+        </a>
+        <a routerLink="/terms" class="action-item">
+          <span class="material-icons">article</span>
+          <span>الشروط</span>
+        </a>
+        <a routerLink="/protocol" class="action-item">
+          <span class="material-icons">settings</span>
+          <span>البروتوكول</span>
+        </a>
+      </div>
+    </section>
+  }
+</div>

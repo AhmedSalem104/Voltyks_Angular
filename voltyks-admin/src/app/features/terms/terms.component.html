@@ -1,0 +1,142 @@
+<div class="terms-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h2>الشروط والأحكام</h2>
+      <p class="subtitle">عرض وتعديل الشروط والأحكام بطريقة منسقة واحترافية</p>
+    </div>
+
+    <div class="header-actions">
+      <div class="lang-toggle">
+        <button
+          class="toggle-btn"
+          [class.active]="selectedLang === 'ar'"
+          (click)="toggleLanguage()"
+          [title]="'التبديل إلى ' + otherLanguageLabel"
+          [disabled]="isEditMode"
+        >
+          <span class="lang-label current">{{ languageLabel }}</span>
+          <span class="toggle-icon material-icons">swap_horiz</span>
+          <span class="lang-label other">{{ otherLanguageLabel }}</span>
+        </button>
+      </div>
+
+      <button
+        class="voltyks-btn"
+        [class.btn-primary]="!isEditMode"
+        [class.btn-secondary]="isEditMode"
+        (click)="toggleEditMode()"
+        *ngIf="terms"
+      >
+        <span class="material-icons">{{ isEditMode ? 'close' : 'edit' }}</span>
+        {{ isEditMode ? 'إلغاء التعديل' : 'تعديل' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="voltyks-card terms-card" *ngIf="terms">
+    <!-- Terms Info Header -->
+    <div class="terms-info-header">
+      <div class="info-item">
+        <span class="material-icons">numbers</span>
+        <div class="info-content">
+          <span class="info-label">الإصدار</span>
+          <span class="info-value">{{ terms.version }}</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <span class="material-icons">calendar_today</span>
+        <div class="info-content">
+          <span class="info-label">تاريخ النشر</span>
+          <span class="info-value">{{ formatDate(terms.publishedAt) }}</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <span class="material-icons">language</span>
+        <div class="info-content">
+          <span class="info-label">اللغة</span>
+          <span class="info-value">{{ languageLabel }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Mode: JSON Viewer -->
+    <div class="json-viewer-section" *ngIf="!isEditMode">
+      <div class="section-header">
+        <span class="material-icons">visibility</span>
+        <h3>محتوى الشروط والأحكام (عرض)</h3>
+      </div>
+
+      <div class="json-viewer-container">
+        <ngx-json-viewer
+          [json]="jsonData"
+          [expanded]="true"
+        ></ngx-json-viewer>
+      </div>
+    </div>
+
+    <!-- Edit Mode: JSON Editor -->
+    <div class="json-editor-section" *ngIf="isEditMode">
+      <div class="section-header">
+        <span class="material-icons">edit_note</span>
+        <h3>تعديل محتوى الشروط والأحكام (JSON)</h3>
+      </div>
+
+      <div class="editor-toolbar">
+        <button class="toolbar-btn" (click)="formatJson()" title="تنسيق JSON تلقائياً">
+          <span class="material-icons">auto_fix_high</span>
+          تنسيق تلقائي
+        </button>
+        <button class="toolbar-btn" (click)="validateJson()" title="التحقق من صحة JSON">
+          <span class="material-icons">check_circle</span>
+          التحقق من الصحة
+        </button>
+        <div class="validation-status">
+          <span class="status-indicator" [class.valid]="isJsonValid" [class.invalid]="!isJsonValid">
+            <span class="material-icons">{{ isJsonValid ? 'check_circle' : 'error' }}</span>
+            {{ isJsonValid ? 'JSON صالح' : 'JSON غير صالح' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="json-editor-container">
+        <textarea
+          class="json-editor"
+          [(ngModel)]="editedContent"
+          (input)="validateJson()"
+          placeholder="أدخل محتوى JSON هنا..."
+          [class.invalid]="!isJsonValid"
+        ></textarea>
+        <div class="error-message" *ngIf="!isJsonValid && jsonError">
+          <span class="material-icons">error_outline</span>
+          {{ jsonError }}
+        </div>
+      </div>
+
+      <div class="editor-actions">
+        <button class="voltyks-btn btn-primary" (click)="saveTerms()" [disabled]="!isJsonValid">
+          <span class="material-icons">save</span>
+          حفظ التعديلات
+        </button>
+        <button class="voltyks-btn btn-secondary" (click)="toggleEditMode()">
+          <span class="material-icons">close</span>
+          إلغاء
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="voltyks-card empty-state" *ngIf="!terms && !isLoading">
+    <span class="material-icons">description</span>
+    <p>لا توجد شروط وأحكام متاحة حالياً</p>
+    <button class="voltyks-btn btn-secondary" (click)="loadTerms()">
+      <span class="material-icons">refresh</span>
+      إعادة المحاولة
+    </button>
+  </div>
+
+  <!-- Loading Overlay -->
+  <app-loading-overlay *ngIf="isLoading"></app-loading-overlay>
+</div>

@@ -1,0 +1,558 @@
+<div class="vehicles-container">
+  <div class="page-header">
+    <h2>إدارة المركبات</h2>
+    <p class="page-description">عرض وإدارة جميع مركبات المنصة</p>
+  </div>
+
+  <!-- Search Section -->
+  <div class="search-section voltyks-card">
+    <div class="search-filter-wrapper">
+      <!-- Search Box -->
+      <div class="search-box">
+        <span class="material-icons search-icon">search</span>
+        <input
+          type="text"
+          class="voltyks-input"
+          placeholder="البحث عن مركبة (اللوحة، اللون، السنة)..."
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="filters-section voltyks-card">
+    <h3 style="margin-bottom: 16px;">تصفية المركبات</h3>
+    <div class="filters-wrapper">
+      <!-- User Filter -->
+      <div class="filter-box">
+        <div class="custom-dropdown" [class.open]="isUserFilterDropdownOpen">
+          <div class="dropdown-selected" (click)="toggleUserDropdown(true)">
+            @if (selectedUser) {
+              <div class="selected-user-info">
+                <span class="material-icons user-icon">account_circle</span>
+                <span class="user-name">{{ selectedUser.fullName }}</span>
+                <button type="button" class="clear-btn" (click)="clearUserFilter(); $event.stopPropagation()">
+                  <span class="material-icons">close</span>
+                </button>
+              </div>
+            } @else {
+              <span class="placeholder">تصفية حسب المستخدم</span>
+              <span class="material-icons dropdown-arrow">person</span>
+            }
+          </div>
+
+          @if (isUserFilterDropdownOpen) {
+            <div class="dropdown-menu">
+              <div class="dropdown-search">
+                <span class="material-icons search-icon">search</span>
+                <input
+                  type="text"
+                  class="search-input"
+                  [(ngModel)]="userSearchQuery"
+                  (keyup)="filterUsersDropdown()"
+                  placeholder="ابحث عن مستخدم..."
+                  (click)="$event.stopPropagation()"
+                />
+              </div>
+
+              <div class="dropdown-list">
+                @if (filteredUsers.length > 0) {
+                  @for (user of filteredUsers; track user.id) {
+                    <div
+                      class="dropdown-item"
+                      [class.selected]="selectedUser?.id === user.id"
+                      (click)="selectUser(user, true)"
+                    >
+                      <span class="material-icons user-icon">account_circle</span>
+                      <div class="user-info">
+                        <span class="user-name">{{ user.fullName }}</span>
+                        <span class="user-email">{{ user.email }}</span>
+                      </div>
+                      @if (selectedUser?.id === user.id) {
+                        <span class="material-icons check-icon">check_circle</span>
+                      }
+                    </div>
+                  }
+                } @else {
+                  <div class="no-results">
+                    <span class="material-icons">search_off</span>
+                    <p>لا توجد نتائج</p>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Brand Filter -->
+      <div class="filter-box">
+        <div class="custom-dropdown" [class.open]="isBrandFilterDropdownOpen">
+          <div class="dropdown-selected" (click)="toggleBrandDropdown(true)">
+            @if (selectedBrand) {
+              <div class="selected-user-info">
+                <span class="material-icons user-icon">directions_car</span>
+                <span class="user-name">{{ selectedBrand.name }}</span>
+                <button type="button" class="clear-btn" (click)="clearBrandFilter(); $event.stopPropagation()">
+                  <span class="material-icons">close</span>
+                </button>
+              </div>
+            } @else {
+              <span class="placeholder">تصفية حسب العلامة التجارية</span>
+              <span class="material-icons dropdown-arrow">directions_car</span>
+            }
+          </div>
+
+          @if (isBrandFilterDropdownOpen) {
+            <div class="dropdown-menu">
+              <div class="dropdown-search">
+                <span class="material-icons search-icon">search</span>
+                <input
+                  type="text"
+                  class="search-input"
+                  [(ngModel)]="brandSearchQuery"
+                  (keyup)="filterBrandsDropdown()"
+                  placeholder="ابحث عن علامة تجارية..."
+                  (click)="$event.stopPropagation()"
+                />
+              </div>
+
+              <div class="dropdown-list">
+                @if (filteredBrands.length > 0) {
+                  @for (brand of filteredBrands; track brand.id) {
+                    <div
+                      class="dropdown-item"
+                      [class.selected]="selectedBrand?.id === brand.id"
+                      (click)="selectBrand(brand, true)"
+                    >
+                      <span class="material-icons user-icon">directions_car</span>
+                      <span class="brand-name">{{ brand.name }}</span>
+                      @if (selectedBrand?.id === brand.id) {
+                        <span class="material-icons check-icon">check_circle</span>
+                      }
+                    </div>
+                  }
+                } @else {
+                  <div class="no-results">
+                    <span class="material-icons">search_off</span>
+                    <p>لا توجد نتائج</p>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vehicles Table -->
+  <div class="voltyks-card">
+    <div class="table-header">
+      <h3>قائمة المركبات</h3>
+      <div class="header-actions">
+        <span class="total-count">إجمالي: {{ totalItems }}</span>
+        <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
+          <span class="material-icons">add</span>
+          إضافة مركبة
+        </button>
+      </div>
+    </div>
+
+    @if (paginatedVehicles.length > 0) {
+      <div class="table-wrapper">
+        <table class="voltyks-table">
+          <thead>
+            <tr>
+              <th>المالك</th>
+              <th>البريد</th>
+              <th>الهاتف</th>
+              <th>العلامة التجارية</th>
+              <th>الموديل</th>
+              <th>سعة البطارية</th>
+              <th>السنة</th>
+              <th>اللون</th>
+              <th>رقم اللوحة</th>
+              <th>تاريخ الإضافة</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (vehicle of paginatedVehicles; track vehicle.id) {
+              <tr>
+                <td>{{ vehicle.userName || '-' }}</td>
+                <td class="email-cell">{{ vehicle.userEmail || '-' }}</td>
+                <td>
+                  @if (vehicle.userPhone) {
+                    <a href="tel:{{ vehicle.userPhone }}" class="phone-link">{{ vehicle.userPhone }}</a>
+                  } @else {
+                    -
+                  }
+                </td>
+                <td>{{ getBrandName(vehicle.brandId) }}</td>
+                <td>{{ getModelName(vehicle.modelId) }}</td>
+                <td>
+                  @if (vehicle.modelCapacity) {
+                    <span class="capacity-badge">{{ vehicle.modelCapacity }} kWh</span>
+                  } @else {
+                    -
+                  }
+                </td>
+                <td>{{ vehicle.year }}</td>
+                <td>{{ vehicle.color }}</td>
+                <td><span class="plate-badge">{{ vehicle.plate }}</span></td>
+                <td>{{ formatDate(vehicle.creationDate) }}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button
+                      class="voltyks-btn btn-icon btn-edit"
+                      (click)="openEditDialog(vehicle)"
+                      title="تعديل"
+                    >
+                      <span class="material-icons">edit</span>
+                    </button>
+                    <button
+                      class="voltyks-btn btn-icon btn-danger"
+                      (click)="openDeleteConfirm(vehicle)"
+                      title="حذف"
+                    >
+                      <span class="material-icons">delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <app-pagination
+        [totalItems]="totalItems"
+        [pageSize]="pageSize"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      ></app-pagination>
+    } @else {
+      <div class="empty-state">
+        <span class="material-icons empty-icon">directions_car</span>
+        <p>لا يوجد مركبات</p>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Create Vehicle Modal -->
+@if (showCreateDialog) {
+  <div class="modal-overlay" (click)="closeCreateDialog()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>إضافة مركبة جديدة</h3>
+        <button class="close-btn" (click)="closeCreateDialog()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="vehicle-form">
+          <!-- Brand Dropdown -->
+          <div class="form-group">
+            <label>العلامة التجارية <span class="required">*</span></label>
+            <div class="custom-dropdown" [class.open]="isBrandDropdownOpen">
+              <div class="dropdown-selected" (click)="toggleBrandDropdown(false)">
+                @if (createDto.brandId) {
+                  <div class="selected-user-info">
+                    <span class="material-icons user-icon">directions_car</span>
+                    <span class="user-name">{{ getBrandName(createDto.brandId) }}</span>
+                  </div>
+                } @else {
+                  <span class="placeholder">اختر العلامة التجارية</span>
+                  <span class="material-icons dropdown-arrow">arrow_drop_down</span>
+                }
+              </div>
+
+              @if (isBrandDropdownOpen) {
+                <div class="dropdown-menu">
+                  <div class="dropdown-search">
+                    <span class="material-icons search-icon">search</span>
+                    <input
+                      type="text"
+                      class="search-input"
+                      [(ngModel)]="brandSearchQuery"
+                      (keyup)="filterBrandsDropdown()"
+                      placeholder="ابحث عن علامة تجارية..."
+                      name="brandSearch"
+                      (click)="$event.stopPropagation()"
+                    />
+                  </div>
+
+                  <div class="dropdown-list">
+                    @if (filteredBrands.length > 0) {
+                      @for (brand of filteredBrands; track brand.id) {
+                        <div
+                          class="dropdown-item"
+                          [class.selected]="createDto.brandId === brand.id"
+                          (click)="selectBrand(brand, false)"
+                        >
+                          <span class="material-icons user-icon">directions_car</span>
+                          <span class="brand-name">{{ brand.name }}</span>
+                          @if (createDto.brandId === brand.id) {
+                            <span class="material-icons check-icon">check_circle</span>
+                          }
+                        </div>
+                      }
+                    } @else {
+                      <div class="no-results">
+                        <span class="material-icons">search_off</span>
+                        <p>لا توجد نتائج</p>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Model Dropdown -->
+          <div class="form-group">
+            <label>الموديل <span class="required">*</span></label>
+            <div class="custom-dropdown" [class.open]="isModelDropdownOpen">
+              <div class="dropdown-selected" (click)="toggleModelDropdown()">
+                @if (createDto.modelId) {
+                  <div class="selected-user-info">
+                    <span class="material-icons user-icon">settings</span>
+                    <span class="user-name">{{ getModelName(createDto.modelId) }}</span>
+                  </div>
+                } @else {
+                  <span class="placeholder">{{ createDto.brandId ? 'اختر الموديل' : 'اختر العلامة التجارية أولاً' }}</span>
+                  <span class="material-icons dropdown-arrow">arrow_drop_down</span>
+                }
+              </div>
+
+              @if (isModelDropdownOpen && createDto.brandId) {
+                <div class="dropdown-menu">
+                  <div class="dropdown-search">
+                    <span class="material-icons search-icon">search</span>
+                    <input
+                      type="text"
+                      class="search-input"
+                      [(ngModel)]="modelSearchQuery"
+                      (keyup)="filterModelsDropdown()"
+                      placeholder="ابحث عن موديل..."
+                      name="modelSearch"
+                      (click)="$event.stopPropagation()"
+                    />
+                  </div>
+
+                  <div class="dropdown-list">
+                    @if (filteredModels.length > 0) {
+                      @for (model of filteredModels; track model.id) {
+                        <div
+                          class="dropdown-item"
+                          [class.selected]="createDto.modelId === model.id"
+                          (click)="selectModel(model)"
+                        >
+                          <span class="material-icons user-icon">settings</span>
+                          <span class="brand-name">{{ model.name }}</span>
+                          @if (createDto.modelId === model.id) {
+                            <span class="material-icons check-icon">check_circle</span>
+                          }
+                        </div>
+                      }
+                    } @else {
+                      <div class="no-results">
+                        <span class="material-icons">search_off</span>
+                        <p>لا توجد نتائج</p>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>سنة الصنع <span class="required">*</span></label>
+              <input
+                type="number"
+                class="voltyks-input"
+                [(ngModel)]="createDto.year"
+                name="year"
+                min="1900"
+                [max]="maxYear"
+                placeholder="مثال: 2024"
+              />
+            </div>
+            <div class="form-group">
+              <label>اللون <span class="required">*</span></label>
+              <input
+                type="text"
+                class="voltyks-input"
+                [(ngModel)]="createDto.color"
+                name="color"
+                placeholder="مثال: أسود"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>رقم اللوحة <span class="required">*</span></label>
+            <input
+              type="text"
+              class="voltyks-input"
+              [(ngModel)]="createDto.plate"
+              name="plate"
+              placeholder="مثال: أ ب ج 1234"
+            />
+          </div>
+
+          <!-- User Dropdown -->
+          <div class="form-group">
+            <label>المستخدم المالك <span class="required">*</span></label>
+            <div class="custom-dropdown" [class.open]="isUserDropdownOpen">
+              <div class="dropdown-selected" (click)="toggleUserDropdown(false)">
+                @if (createDto.userId) {
+                  <div class="selected-user-info">
+                    <span class="material-icons user-icon">account_circle</span>
+                    <span class="user-name">{{ getUserName(createDto.userId) }}</span>
+                  </div>
+                } @else {
+                  <span class="placeholder">اختر المستخدم</span>
+                  <span class="material-icons dropdown-arrow">arrow_drop_down</span>
+                }
+              </div>
+
+              @if (isUserDropdownOpen) {
+                <div class="dropdown-menu">
+                  <div class="dropdown-search">
+                    <span class="material-icons search-icon">search</span>
+                    <input
+                      type="text"
+                      class="search-input"
+                      [(ngModel)]="userSearchQuery"
+                      (keyup)="filterUsersDropdown()"
+                      placeholder="ابحث عن مستخدم..."
+                      name="userSearch"
+                      (click)="$event.stopPropagation()"
+                    />
+                  </div>
+
+                  <div class="dropdown-list">
+                    @if (filteredUsers.length > 0) {
+                      @for (user of filteredUsers; track user.id) {
+                        <div
+                          class="dropdown-item"
+                          [class.selected]="createDto.userId === user.id"
+                          (click)="selectUser(user, false)"
+                        >
+                          <span class="material-icons user-icon">account_circle</span>
+                          <div class="user-info">
+                            <span class="user-name">{{ user.fullName }}</span>
+                            <span class="user-email">{{ user.email }}</span>
+                          </div>
+                          @if (createDto.userId === user.id) {
+                            <span class="material-icons check-icon">check_circle</span>
+                          }
+                        </div>
+                      }
+                    } @else {
+                      <div class="no-results">
+                        <span class="material-icons">search_off</span>
+                        <p>لا توجد نتائج</p>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">
+          إلغاء
+        </button>
+        <button class="voltyks-btn btn-primary" (click)="createVehicle()">
+          <span class="material-icons">save</span>
+          حفظ
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Edit Vehicle Modal -->
+@if (showEditDialog && currentVehicle) {
+  <div class="modal-overlay" (click)="closeEditDialog()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>تعديل المركبة</h3>
+        <button class="close-btn" (click)="closeEditDialog()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="vehicle-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>السنة</label>
+              <input
+                type="number"
+                class="voltyks-input"
+                [(ngModel)]="updateDto.year"
+                name="year"
+                min="1900"
+                [max]="maxYear"
+              />
+            </div>
+            <div class="form-group">
+              <label>اللون</label>
+              <input
+                type="text"
+                class="voltyks-input"
+                [(ngModel)]="updateDto.color"
+                name="color"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>رقم اللوحة</label>
+            <input
+              type="text"
+              class="voltyks-input"
+              [(ngModel)]="updateDto.plate"
+              name="plate"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">
+          إلغاء
+        </button>
+        <button class="voltyks-btn btn-primary" (click)="updateVehicle()">
+          <span class="material-icons">save</span>
+          حفظ التغييرات
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Delete Confirmation Dialog -->
+<app-confirm-dialog
+  [isOpen]="showDeleteConfirm"
+  title="تأكيد حذف المركبة"
+  [message]="'هل أنت متأكد من حذف المركبة رقم ' + (currentVehicle?.plate || '') + '؟ لا يمكن التراجع عن هذا الإجراء.'"
+  type="danger"
+  (confirm)="confirmDelete()"
+  (cancel)="closeDeleteConfirm()"
+></app-confirm-dialog>
+
+@if (isLoading) {
+  <app-loading-overlay></app-loading-overlay>
+}

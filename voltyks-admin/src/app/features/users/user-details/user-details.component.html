@@ -1,0 +1,241 @@
+<div class="user-details-container">
+  @if (user) {
+    <!-- Header -->
+    <div class="page-header">
+      <button class="back-btn voltyks-btn btn-secondary" (click)="goBack()">
+        <span class="material-icons">arrow_forward</span>
+        رجوع
+      </button>
+      <h2>تفاصيل المستخدم</h2>
+    </div>
+
+    <!-- User Overview Card -->
+    <div class="voltyks-card user-overview">
+      <div class="user-avatar-section">
+        <div class="user-avatar">
+          <span class="material-icons">account_circle</span>
+        </div>
+        <div class="user-basic-info">
+          <h3>{{ user.fullName }}</h3>
+          <p class="user-email">{{ user.email }}</p>
+          <span class="status-badge" [class.banned]="user.isBanned">
+            {{ user.isBanned ? 'محظور' : 'نشط' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="user-stats">
+        <div class="stat-item">
+          <span class="material-icons">phone</span>
+          <div>
+            <p class="stat-label">رقم الهاتف</p>
+            <p class="stat-value">{{ user.phoneNumber }}</p>
+          </div>
+        </div>
+        <div class="stat-item">
+          <span class="material-icons">event</span>
+          <div>
+            <p class="stat-label">تاريخ التسجيل</p>
+            <p class="stat-value">{{ formatDate(user.dateCreated) }}</p>
+          </div>
+        </div>
+        <div class="stat-item">
+          <span class="material-icons">star</span>
+          <div>
+            <p class="stat-label">التقييم</p>
+            <p class="stat-value">{{ user.rating }}/5 ({{ user.ratingCount }})</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button
+          class="voltyks-btn"
+          [class.btn-danger]="!user.isBanned"
+          [class.btn-primary]="user.isBanned"
+          (click)="openBanDialog()"
+        >
+          {{ user.isBanned ? 'إلغاء الحظر' : 'حظر المستخدم' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-container voltyks-card">
+      <div class="tabs-header">
+        <button
+          class="tab-button"
+          [class.active]="activeTab === 'overview'"
+          (click)="switchTab('overview')"
+        >
+          <span class="material-icons">info</span>
+          نظرة عامة
+        </button>
+        <button
+          class="tab-button"
+          [class.active]="activeTab === 'wallet'"
+          (click)="switchTab('wallet')"
+        >
+          <span class="material-icons">account_balance_wallet</span>
+          المحفظة
+        </button>
+        <button
+          class="tab-button"
+          [class.active]="activeTab === 'vehicles'"
+          (click)="switchTab('vehicles')"
+        >
+          <span class="material-icons">directions_car</span>
+          المركبات
+        </button>
+        <button
+          class="tab-button"
+          [class.active]="activeTab === 'reports'"
+          (click)="switchTab('reports')"
+        >
+          <span class="material-icons">report</span>
+          التقارير
+        </button>
+      </div>
+
+      <div class="tabs-content">
+        <!-- Overview Tab -->
+        @if (activeTab === 'overview') {
+          <div class="tab-pane">
+            <h4>معلومات إضافية</h4>
+            <div class="info-grid">
+              <div class="info-item">
+                <p class="info-label">عدد الشواحن</p>
+                <p class="info-value">{{ user.totalChargers || 0 }}</p>
+              </div>
+              <div class="info-item">
+                <p class="info-label">عدد المركبات</p>
+                <p class="info-value">{{ user.totalVehicles || 0 }}</p>
+              </div>
+              <div class="info-item">
+                <p class="info-label">طلبات الشحن</p>
+                <p class="info-value">{{ user.totalChargingRequests || 0 }}</p>
+              </div>
+              <div class="info-item">
+                <p class="info-label">رصيد المحفظة</p>
+                <p class="info-value">{{ user.wallet || 0 }} ج.م</p>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Wallet Tab -->
+        @if (activeTab === 'wallet') {
+          <div class="tab-pane">
+            @if (wallet) {
+              <h4>بيانات المحفظة - {{ wallet.fullName }}</h4>
+              <div class="wallet-info">
+                <div class="wallet-balance">
+                  <p class="balance-label">الرصيد الحالي</p>
+                  <p class="balance-value">{{ wallet.walletBalance || 0 }} ج.م</p>
+                </div>
+                <p class="last-updated">آخر تحديث: {{ formatDate(wallet.lastUpdated) }}</p>
+              </div>
+            } @else {
+              <p class="loading-text">جاري التحميل...</p>
+            }
+          </div>
+        }
+
+        <!-- Vehicles Tab -->
+        @if (activeTab === 'vehicles') {
+          <div class="tab-pane">
+            <h4>مركبات المستخدم</h4>
+            @if (paginatedVehicles.length > 0) {
+              <table class="voltyks-table">
+                <thead>
+                  <tr>
+                    <th>العلامة التجارية</th>
+                    <th>الموديل</th>
+                    <th>رقم اللوحة</th>
+                    <th>اللون</th>
+                    <th>السنة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (vehicle of paginatedVehicles; track vehicle.id) {
+                    <tr>
+                      <td>{{ vehicle.brandName }}</td>
+                      <td>{{ vehicle.modelName }}</td>
+                      <td>{{ vehicle.plate }}</td>
+                      <td>{{ vehicle.color }}</td>
+                      <td>{{ vehicle.year }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+
+              <app-pagination
+                [totalItems]="vehicles.length"
+                [pageSize]="vehiclesPageSize"
+                [currentPage]="vehiclesPage"
+                (pageChange)="onVehiclesPageChange($event)"
+              ></app-pagination>
+            } @else {
+              <p class="empty-text">لا توجد مركبات</p>
+            }
+          </div>
+        }
+
+        <!-- Reports Tab -->
+        @if (activeTab === 'reports') {
+          <div class="tab-pane">
+            <h4>التقارير المتعلقة بالمستخدم</h4>
+            @if (paginatedReports.length > 0) {
+              <table class="voltyks-table">
+                <thead>
+                  <tr>
+                    <th>محتوى البلاغ</th>
+                    <th>التاريخ</th>
+                    <th>الحالة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (report of paginatedReports; track report.id) {
+                    <tr>
+                      <td>{{ report.reportContent }}</td>
+                      <td>{{ formatDate(report.reportDate) }}</td>
+                      <td>
+                        <span class="status-badge" [class.resolved]="report.isResolved">
+                          {{ report.isResolved ? 'تم الحل' : 'معلق' }}
+                        </span>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+
+              <app-pagination
+                [totalItems]="reports.length"
+                [pageSize]="reportsPageSize"
+                [currentPage]="reportsPage"
+                (pageChange)="onReportsPageChange($event)"
+              ></app-pagination>
+            } @else {
+              <p class="empty-text">لا توجد تقارير</p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Ban/Unban Confirmation Dialog -->
+<app-confirm-dialog
+  [isOpen]="showBanDialog"
+  [title]="user?.isBanned ? 'إلغاء حظر المستخدم' : 'حظر المستخدم'"
+  [message]="user?.isBanned ? 'هل أنت متأكد من إلغاء حظر هذا المستخدم؟' : 'هل أنت متأكد من حظر هذا المستخدم؟'"
+  [confirmText]="user?.isBanned ? 'إلغاء الحظر' : 'حظر'"
+  [type]="user?.isBanned ? 'primary' : 'danger'"
+  (confirm)="confirmBanToggle()"
+  (cancel)="showBanDialog = false"
+></app-confirm-dialog>
+
+@if (isLoading) {
+  <app-loading-overlay></app-loading-overlay>
+}

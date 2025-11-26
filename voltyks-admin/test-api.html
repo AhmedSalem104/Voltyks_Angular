@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار API - Voltyks</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #00C853;
+        }
+        .test-section {
+            background: #2a2a2a;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #00C853;
+        }
+        button {
+            background: #00C853;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0.5rem;
+        }
+        button:hover {
+            background: #009E3D;
+        }
+        .result {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .success {
+            border-right: 4px solid #00C853;
+        }
+        .error {
+            border-right: 4px solid #ff4444;
+        }
+        input {
+            background: #1a1a1a;
+            border: 2px solid #00C853;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 6px;
+            width: 100%;
+            margin: 0.5rem 0;
+            font-size: 1rem;
+        }
+        label {
+            display: block;
+            margin-top: 1rem;
+            color: #00C853;
+        }
+    </style>
+</head>
+<body>
+    <h1>اختبار الاتصال بـ Voltyks API</h1>
+
+    <div class="test-section">
+        <h2>1. اختبار الاتصال الأساسي</h2>
+        <button onclick="testBasicConnection()">اختبار الاتصال</button>
+        <div id="basicResult" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. اختبار تسجيل الدخول</h2>
+        <label>البريد الإلكتروني أو رقم الهاتف:</label>
+        <input type="text" id="emailOrPhone" placeholder="أدخل البريد أو رقم الهاتف" value="admin@voltyks.com">
+
+        <label>كلمة المرور:</label>
+        <input type="password" id="password" placeholder="أدخل كلمة المرور" value="Admin@123">
+
+        <button onclick="testLogin()">اختبار تسجيل الدخول</button>
+        <div id="loginResult" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. معلومات النظام</h2>
+        <div class="result">
+الخادم: http://voltyks-app.runasp.net
+نقطة تسجيل الدخول: /api/Auth/Login
+البروتوكول: HTTP
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://voltyks-app.runasp.net';
+
+        async function testBasicConnection() {
+            const resultDiv = document.getElementById('basicResult');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.textContent = 'جاري الاتصال...';
+
+            try {
+                const response = await fetch(API_BASE, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `✅ الاتصال بالخادم ناجح!\n\nالحالة: ${response.status || 'OK'}\nالنوع: ${response.type}`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ فشل الاتصال بالخادم\n\nالخطأ: ${error.message}\n\nالتفاصيل: ${error.stack}`;
+            }
+        }
+
+        async function testLogin() {
+            const resultDiv = document.getElementById('loginResult');
+            const emailOrPhone = document.getElementById('emailOrPhone').value;
+            const password = document.getElementById('password').value;
+
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.textContent = 'جاري تسجيل الدخول...';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/Auth/Login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        emailOrPhone: emailOrPhone,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ تسجيل الدخول ناجح!\n\nالحالة: ${response.status}\nالبيانات: ${JSON.stringify(data, null, 2)}`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ فشل تسجيل الدخول\n\nالحالة: ${response.status}\nالرسالة: ${data.message || 'خطأ غير معروف'}\nالبيانات: ${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ خطأ في الاتصال\n\nالخطأ: ${error.message}\n\nتفاصيل:\n- تأكد من أن الخادم يعمل\n- تحقق من إعدادات CORS\n- تحقق من اتصال الإنترنت\n\nStack: ${error.stack}`;
+            }
+        }
+
+        // Auto test on load
+        window.onload = () => {
+            console.log('Testing API connection...');
+            testBasicConnection();
+        };
+    </script>
+</body>
+</html>

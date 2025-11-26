@@ -1,0 +1,150 @@
+<div class="reports-container">
+  <div class="page-header">
+    <h2>إدارة التقارير</h2>
+    <p class="page-description">عرض وإدارة جميع التقارير المقدمة</p>
+  </div>
+
+  <!-- Compact Filters Section -->
+  <div class="filters-section voltyks-card">
+    <div class="filters-wrapper">
+      <!-- Search Box -->
+      <div class="filter-item search-filter">
+        <div class="search-box">
+          <span class="material-icons search-icon">search</span>
+          <input
+            type="text"
+            class="voltyks-input"
+            placeholder="البحث (اسم المستخدم، محتوى البلاغ...)"
+            [(ngModel)]="filters.search"
+            (ngModelChange)="onSearchChange($event)"
+          />
+        </div>
+      </div>
+
+      <!-- Start Date -->
+      <div class="filter-item date-filter">
+        <div class="date-input-wrapper">
+          <span class="material-icons date-icon">calendar_today</span>
+          <input
+            type="date"
+            class="voltyks-input"
+            [(ngModel)]="filters.startDate"
+            (ngModelChange)="onDateChange()"
+            [max]="filters.endDate || today"
+            title="من تاريخ"
+          />
+        </div>
+      </div>
+
+      <!-- End Date -->
+      <div class="filter-item date-filter">
+        <div class="date-input-wrapper">
+          <span class="material-icons date-icon">calendar_today</span>
+          <input
+            type="date"
+            class="voltyks-input"
+            [(ngModel)]="filters.endDate"
+            (ngModelChange)="onDateChange()"
+            [min]="filters.startDate"
+            [max]="today"
+            title="إلى تاريخ"
+          />
+        </div>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="filter-item status-filter">
+        <div class="select-wrapper">
+          <span class="material-icons select-icon">info</span>
+          <select
+            class="voltyks-input"
+            [(ngModel)]="filters.status"
+            (ngModelChange)="onStatusChange()"
+          >
+            @for (option of statusOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="filter-item filter-actions">
+        <button class="voltyks-btn btn-secondary" (click)="clearFilters()" title="إعادة تعيين">
+          <span class="material-icons">refresh</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reports Table -->
+  <div class="voltyks-card">
+    <div class="table-header">
+      <h3>قائمة التقارير</h3>
+      <div class="header-actions">
+        <span class="total-count">إجمالي: {{ totalReports }}</span>
+      </div>
+    </div>
+
+    @if (paginatedReports.length > 0) {
+      <div class="table-wrapper">
+        <table class="voltyks-table">
+          <thead>
+            <tr>
+              <th>المستخدم</th>
+              <th>محتوى البلاغ</th>
+              <th>التاريخ</th>
+              <th>الحالة</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (report of paginatedReports; track report.id) {
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <span class="material-icons">account_circle</span>
+                    {{ report.userFullName }}
+                  </div>
+                </td>
+                <td class="content-cell">{{ report.reportContent }}</td>
+                <td>
+                  <div class="date-cell" [title]="formatDateLong(report.reportDate)">
+                    <span class="date-main">{{ formatDate(report.reportDate) }}</span>
+                    <span class="date-relative">{{ getRelativeTime(report.reportDate) }}</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="status-badge" [class.resolved]="report.isResolved">
+                    <span class="material-icons">{{ report.isResolved ? 'check_circle' : 'schedule' }}</span>
+                    {{ report.isResolved ? 'تم الحل' : 'معلق' }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <app-pagination
+        [totalItems]="totalReports"
+        [pageSize]="pageSize"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)"
+      ></app-pagination>
+    } @else {
+      <div class="empty-state">
+        <span class="material-icons empty-icon">report_off</span>
+        <p>لا توجد تقارير</p>
+        @if (hasActiveFilters()) {
+          <button class="voltyks-btn btn-secondary" (click)="clearFilters()">
+            مسح الفلاتر وعرض الكل
+          </button>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+@if (isLoading) {
+  <app-loading-overlay></app-loading-overlay>
+}

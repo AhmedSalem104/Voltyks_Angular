@@ -1,0 +1,276 @@
+<div class="models-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h2>إدارة الموديلات</h2>
+      <p class="page-description">عرض وإدارة موديلات السيارات الكهربائية</p>
+    </div>
+    <button class="voltyks-btn btn-secondary back-btn" (click)="goToBrands()">
+      <span class="material-icons">arrow_forward</span>
+      العلامات التجارية
+    </button>
+  </div>
+
+  <!-- Compact Filters Section -->
+  <div class="filters-section voltyks-card">
+    <div class="filters-wrapper">
+      <!-- Search Box -->
+      <div class="filter-item search-filter">
+        <div class="search-box">
+          <span class="material-icons search-icon">search</span>
+          <input
+            type="text"
+            class="voltyks-input"
+            placeholder="البحث عن موديل..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange($event)"
+          />
+        </div>
+      </div>
+
+      <!-- Brand Filter -->
+      <div class="filter-item brand-filter">
+        <div class="select-wrapper">
+          <span class="material-icons select-icon">directions_car</span>
+          <select
+            class="voltyks-input"
+            [ngModel]="selectedBrandFilter"
+            (ngModelChange)="onBrandFilterChange($event)"
+          >
+            <option [ngValue]="null">جميع العلامات التجارية</option>
+            @for (brand of brands; track brand.id) {
+              <option [ngValue]="brand.id">{{ brand.name }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- Clear Filter Button -->
+      @if (selectedBrandFilter) {
+        <div class="filter-item filter-actions">
+          <button class="voltyks-btn btn-secondary" (click)="clearBrandFilter()" title="مسح الفلتر">
+            <span class="material-icons">refresh</span>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Models Table -->
+  <div class="voltyks-card">
+    <div class="table-header">
+      <h3>قائمة الموديلات</h3>
+      <div class="header-actions">
+        <span class="total-count">إجمالي: {{ totalItems }}</span>
+        <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
+          <span class="material-icons">add</span>
+          إضافة موديل
+        </button>
+      </div>
+    </div>
+
+    @if (paginatedModels.length > 0) {
+      <div class="table-wrapper">
+        <table class="voltyks-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>اسم الموديل</th>
+              <th>العلامة التجارية</th>
+              <th>سعة البطارية (kWh)</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (model of paginatedModels; track model.id; let i = $index) {
+              <tr>
+                <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                <td class="model-name">{{ model.name }}</td>
+                <td>
+                  <span class="brand-badge">{{ model.brandName }}</span>
+                </td>
+                <td>
+                  <span class="capacity-badge">{{ model.capacity }} kWh</span>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button
+                      class="voltyks-btn btn-icon btn-edit"
+                      (click)="openEditDialog(model)"
+                      title="تعديل"
+                    >
+                      <span class="material-icons">edit</span>
+                    </button>
+                    <button
+                      class="voltyks-btn btn-icon btn-danger"
+                      (click)="openDeleteConfirm(model)"
+                      title="حذف"
+                    >
+                      <span class="material-icons">delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <app-pagination
+        [totalItems]="totalItems"
+        [pageSize]="pageSize"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      ></app-pagination>
+    } @else {
+      <div class="empty-state">
+        <span class="material-icons empty-icon">directions_car</span>
+        <p>لا توجد موديلات</p>
+        @if (selectedBrandFilter) {
+          <button class="voltyks-btn btn-secondary" (click)="clearBrandFilter()">
+            عرض جميع الموديلات
+          </button>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Create Model Modal -->
+@if (showCreateDialog) {
+  <div class="modal-overlay" (click)="closeCreateDialog()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>إضافة موديل جديد</h3>
+        <button class="close-btn" (click)="closeCreateDialog()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="model-form">
+          <div class="form-group">
+            <label>اسم الموديل <span class="required">*</span></label>
+            <input
+              type="text"
+              class="voltyks-input"
+              [(ngModel)]="createDto.name"
+              name="name"
+              placeholder="مثال: Model 3, iX3, EQS..."
+            />
+          </div>
+
+          <div class="form-group">
+            <label>العلامة التجارية <span class="required">*</span></label>
+            <select
+              class="voltyks-input"
+              [(ngModel)]="createDto.brandId"
+              name="brandId"
+            >
+              <option [value]="0">اختر العلامة التجارية</option>
+              @for (brand of brands; track brand.id) {
+                <option [value]="brand.id">{{ brand.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>سعة البطارية (kWh) <span class="required">*</span></label>
+            <input
+              type="number"
+              class="voltyks-input"
+              [(ngModel)]="createDto.capacity"
+              name="capacity"
+              placeholder="مثال: 75"
+              min="1"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">
+          إلغاء
+        </button>
+        <button class="voltyks-btn btn-primary" (click)="createModel()">
+          <span class="material-icons">save</span>
+          حفظ
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Edit Model Modal -->
+@if (showEditDialog && currentModel) {
+  <div class="modal-overlay" (click)="closeEditDialog()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>تعديل الموديل</h3>
+        <button class="close-btn" (click)="closeEditDialog()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="model-form">
+          <div class="form-group">
+            <label>اسم الموديل <span class="required">*</span></label>
+            <input
+              type="text"
+              class="voltyks-input"
+              [(ngModel)]="updateDto.name"
+              name="name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>العلامة التجارية <span class="required">*</span></label>
+            <select
+              class="voltyks-input"
+              [(ngModel)]="updateDto.brandId"
+              name="brandId"
+            >
+              <option [value]="0">اختر العلامة التجارية</option>
+              @for (brand of brands; track brand.id) {
+                <option [value]="brand.id">{{ brand.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>سعة البطارية (kWh) <span class="required">*</span></label>
+            <input
+              type="number"
+              class="voltyks-input"
+              [(ngModel)]="updateDto.capacity"
+              name="capacity"
+              min="1"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">
+          إلغاء
+        </button>
+        <button class="voltyks-btn btn-primary" (click)="updateModel()">
+          <span class="material-icons">save</span>
+          حفظ التغييرات
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Delete Confirmation Dialog -->
+<app-confirm-dialog
+  [isOpen]="showDeleteConfirm"
+  title="تأكيد حذف الموديل"
+  [message]="'هل أنت متأكد من حذف الموديل \'' + (currentModel?.name || '') + '\'؟ لا يمكن التراجع عن هذا الإجراء.'"
+  type="danger"
+  (confirm)="confirmDelete()"
+  (cancel)="closeDeleteConfirm()"
+></app-confirm-dialog>
+
+@if (isLoading) {
+  <app-loading-overlay></app-loading-overlay>
+}

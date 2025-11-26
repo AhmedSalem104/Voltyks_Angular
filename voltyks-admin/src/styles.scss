@@ -1,0 +1,595 @@
+/* ========================================
+   Voltyks Admin Panel - Global Styles
+   ======================================== */
+
+@use '@angular/material' as mat;
+
+/* ========================================
+   0. CSS Variables for Theme Support
+   ======================================== */
+:root {
+  /* Dark Theme (Default) */
+  --bg-primary: #121212;
+  --bg-secondary: #1E1E1E;
+  --bg-elevated: #2A2A2A;
+  --bg-hover: rgba(0, 200, 83, 0.1);
+  --border-color: #333333;
+  --text-primary: #FFFFFF;
+  --text-secondary: #B0B0B0;
+  --text-disabled: #666666;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.4);
+
+  /* Additional Dark Theme Colors */
+  --card-bg: #1E1E1E;
+  --table-bg: #1E1E1E;
+  --table-header-bg: #2A2A2A;
+  --input-bg: #2A2A2A;
+}
+
+/* Light Theme */
+[data-theme='light'] {
+  --bg-primary: #F5F5F5;
+  --bg-secondary: #FFFFFF;
+  --bg-elevated: #FFFFFF;
+  --bg-hover: rgba(0, 200, 83, 0.08);
+  --border-color: #E0E0E0;
+  --text-primary: #1A1A1A;
+  --text-secondary: #616161;
+  --text-disabled: #9E9E9E;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.2);
+
+  /* Additional Light Theme Colors */
+  --card-bg: #FFFFFF;
+  --table-bg: #FFFFFF;
+  --table-header-bg: #F5F5F5;
+  --input-bg: #FFFFFF;
+}
+
+/* ========================================
+   1. Variables - Voltyks Color System
+   ======================================== */
+$voltyks-primary-green: #00C853;
+$voltyks-darker-green: #009E3D;
+$voltyks-light-mint: #B5FFD6;
+$voltyks-success: #00C853;
+$voltyks-warning: #FFA726;
+$voltyks-error: #EF5350;
+$voltyks-info: #42A5F5;
+
+/* Dark Theme Colors */
+$voltyks-dark-bg: #121212;
+$voltyks-dark-surface: #1E1E1E;
+$voltyks-dark-surface-elevated: #2A2A2A;
+$voltyks-dark-border: #333333;
+$voltyks-dark-text-primary: #FFFFFF;
+$voltyks-dark-text-secondary: #B0B0B0;
+$voltyks-dark-text-disabled: #666666;
+
+/* Spacing */
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+/* Border Radius */
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+
+/* Shadows */
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+$shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.4);
+
+/* ========================================
+   2. Angular Material Theme Configuration
+   ======================================== */
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$green-palette,
+      tertiary: mat.$cyan-palette,
+      theme-type: dark,
+    ),
+    typography: Cairo,
+    density: 0,
+  ));
+}
+
+/* ========================================
+   3. Global Styles
+   ======================================== */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  direction: rtl;
+}
+
+body {
+  font-family: 'Cairo', sans-serif;
+  font-size: 16px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  margin: 0;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ========================================
+   4. Typography
+   ======================================== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cairo', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1 { font-size: 36px; font-weight: 700; }
+h2 { font-size: 32px; font-weight: 600; }
+h3 { font-size: 28px; font-weight: 600; }
+h4 { font-size: 24px; font-weight: 500; }
+h5 { font-size: 20px; font-weight: 500; }
+h6 { font-size: 18px; font-weight: 500; }
+
+p {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ========================================
+   5. Utility Classes
+   ======================================== */
+
+/* Spacing */
+.mt-xs { margin-top: $spacing-xs; }
+.mt-sm { margin-top: $spacing-sm; }
+.mt-md { margin-top: $spacing-md; }
+.mt-lg { margin-top: $spacing-lg; }
+.mt-xl { margin-top: $spacing-xl; }
+
+.mb-xs { margin-bottom: $spacing-xs; }
+.mb-sm { margin-bottom: $spacing-sm; }
+.mb-md { margin-bottom: $spacing-md; }
+.mb-lg { margin-bottom: $spacing-lg; }
+.mb-xl { margin-bottom: $spacing-xl; }
+
+.p-xs { padding: $spacing-xs; }
+.p-sm { padding: $spacing-sm; }
+.p-md { padding: $spacing-md; }
+.p-lg { padding: $spacing-lg; }
+.p-xl { padding: $spacing-xl; }
+
+/* Text Colors */
+.text-primary { color: $voltyks-primary-green; }
+.text-secondary { color: var(--text-secondary); }
+.text-success { color: $voltyks-success; }
+.text-warning { color: $voltyks-warning; }
+.text-error { color: $voltyks-error; }
+
+/* ========================================
+   6. Card Component Styles
+   ======================================== */
+.voltyks-card {
+  background-color: var(--card-bg);
+  border-radius: $border-radius-md;
+  padding: $spacing-lg;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+/* ========================================
+   7. Button Styles
+   ======================================== */
+.voltyks-btn {
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-sm;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+
+  &.btn-primary {
+    background-color: $voltyks-primary-green;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: $voltyks-darker-green;
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &.btn-secondary {
+    background-color: transparent;
+    color: $voltyks-primary-green;
+    border: 1px solid $voltyks-primary-green;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(0, 200, 83, 0.1);
+    }
+  }
+
+  &.btn-danger {
+    background-color: $voltyks-error;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: darken($voltyks-error, 10%);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* ========================================
+   8. Form Input Styles
+   ======================================== */
+.voltyks-input,
+.voltyks-select,
+.voltyks-textarea {
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: $border-radius-sm;
+  padding: $spacing-sm $spacing-md;
+  font-family: 'Cairo', sans-serif;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: $voltyks-primary-green;
+  }
+
+  &::placeholder {
+    color: var(--text-disabled);
+  }
+}
+
+.voltyks-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* ========================================
+   9. Table Styles
+   ======================================== */
+.voltyks-table {
+  width: 100%;
+  background-color: var(--table-bg);
+  border-radius: $border-radius-md;
+  overflow: hidden;
+  border-collapse: collapse;
+
+  thead {
+    background-color: var(--table-header-bg);
+
+    th {
+      padding: $spacing-md;
+      text-align: right;
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: var(--bg-hover);
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      td {
+        padding: $spacing-md;
+        text-align: right;
+        font-size: 15px;
+        color: var(--text-secondary);
+      }
+    }
+  }
+}
+
+/* ========================================
+   10. Scrollbar Styles
+   ======================================== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $voltyks-dark-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $voltyks-dark-border;
+  border-radius: 4px;
+
+  &:hover {
+    background: lighten($voltyks-dark-border, 10%);
+  }
+}
+
+/* ========================================
+   11. Loading & Overlay Styles
+   ======================================== */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* ========================================
+   12. Responsive Utilities
+   ======================================== */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* ========================================
+   13. Date Input Filter Styles
+   ======================================== */
+.date-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .date-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    label {
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .date-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .date-icon {
+        position: absolute;
+        right: 10px;
+        color: $voltyks-primary-green;
+        font-size: 18px;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      input[type="date"] {
+        background-color: var(--input-bg);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        border-radius: $border-radius-sm;
+        padding: 8px 38px 8px 12px;
+        font-family: 'Cairo', sans-serif;
+        font-size: 13px;
+        min-height: 36px;
+        min-width: 140px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+
+        &:hover {
+          border-color: $voltyks-primary-green;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: $voltyks-primary-green;
+          box-shadow: 0 0 0 2px rgba(0, 200, 83, 0.2);
+        }
+
+        // Style the calendar picker
+        &::-webkit-calendar-picker-indicator {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          cursor: pointer;
+        }
+
+        // Remove default appearance
+        &::-webkit-inner-spin-button,
+        &::-webkit-clear-button {
+          display: none;
+        }
+
+        // Placeholder style when empty
+        &:not(:valid)::-webkit-datetime-edit {
+          color: var(--text-disabled);
+        }
+
+        &::-webkit-datetime-edit-fields-wrapper {
+          padding: 0;
+        }
+
+        &::-webkit-datetime-edit-text {
+          color: var(--text-secondary);
+          padding: 0 2px;
+        }
+
+        &::-webkit-datetime-edit-day-field,
+        &::-webkit-datetime-edit-month-field,
+        &::-webkit-datetime-edit-year-field {
+          color: var(--text-primary);
+        }
+      }
+    }
+  }
+
+  .date-separator {
+    color: var(--text-secondary);
+    font-size: 14px;
+    padding: 0 4px;
+  }
+
+  .clear-dates-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: $border-radius-sm;
+    padding: 6px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    min-height: 36px;
+
+    .material-icons {
+      font-size: 16px;
+    }
+
+    &:hover {
+      background: rgba(244, 67, 54, 0.1);
+      border-color: $voltyks-error;
+      color: $voltyks-error;
+    }
+  }
+}
+
+// Compact version for smaller filter sections
+.date-filter-compact {
+  .date-field {
+    label {
+      font-size: 12px;
+    }
+
+    .date-input-wrapper input[type="date"] {
+      padding: 6px 34px 6px 10px;
+      font-size: 12px;
+      min-height: 32px;
+      min-width: 120px;
+    }
+  }
+}
+
+// Date range display badge
+.date-range-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(0, 200, 83, 0.15);
+  color: $voltyks-primary-green;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid rgba(0, 200, 83, 0.3);
+
+  .material-icons {
+    font-size: 16px;
+  }
+
+  .remove-filter {
+    background: transparent;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    margin-right: -4px;
+
+    .material-icons {
+      font-size: 14px;
+      color: $voltyks-primary-green;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+
+      .material-icons {
+        color: white;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .date-filter-group {
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .date-field {
+      flex: 1;
+      min-width: 130px;
+
+      label {
+        display: none;
+      }
+
+      .date-input-wrapper input[type="date"] {
+        width: 100%;
+        min-width: unset;
+      }
+    }
+
+    .date-separator {
+      display: none;
+    }
+
+    .clear-dates-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

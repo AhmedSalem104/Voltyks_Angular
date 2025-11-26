@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "http://voltyks-app.runasp.net",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

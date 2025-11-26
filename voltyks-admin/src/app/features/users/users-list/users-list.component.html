@@ -1,0 +1,91 @@
+<div class="users-list-container">
+  <div class="page-header">
+    <h2>إدارة المستخدمين</h2>
+    <p class="page-description">عرض وإدارة جميع مستخدمي النظام</p>
+  </div>
+
+  <!-- Compact Filters Section -->
+  <div class="filters-section voltyks-card">
+    <div class="filters-wrapper">
+      <!-- Search Box -->
+      <div class="filter-item search-filter">
+        <div class="search-box">
+          <span class="material-icons search-icon">search</span>
+          <input
+            type="text"
+            class="voltyks-input"
+            placeholder="البحث عن مستخدم (الاسم، البريد، رقم الهاتف)..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange($event)"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="voltyks-card">
+    <div class="table-header">
+      <h3>قائمة المستخدمين</h3>
+      <span class="total-count">إجمالي: {{ totalItems }}</span>
+    </div>
+
+    @if (paginatedUsers.length > 0) {
+      <div class="table-wrapper">
+        <table class="voltyks-table">
+          <thead>
+            <tr>
+              <th>الاسم الكامل</th>
+              <th>البريد الإلكتروني</th>
+              <th>رقم الهاتف</th>
+              <th>تاريخ التسجيل</th>
+              <th>الحالة</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of paginatedUsers; track user.id) {
+              <tr>
+                <td>{{ user.fullName }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.phoneNumber }}</td>
+                <td>{{ formatDate(user.dateCreated) }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(user)">
+                    {{ getStatusText(user) }}
+                  </span>
+                </td>
+                <td>
+                  <a
+                    [routerLink]="['/users', user.id]"
+                    class="voltyks-btn btn-primary btn-sm"
+                  >
+                    عرض التفاصيل
+                  </a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <app-pagination
+        [totalItems]="totalItems"
+        [pageSize]="pageSize"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      ></app-pagination>
+    } @else {
+      <div class="empty-state">
+        <span class="material-icons empty-icon">people_outline</span>
+        <p>لا يوجد مستخدمون</p>
+      </div>
+    }
+  </div>
+</div>
+
+@if (isLoading) {
+  <app-loading-overlay></app-loading-overlay>
+}
