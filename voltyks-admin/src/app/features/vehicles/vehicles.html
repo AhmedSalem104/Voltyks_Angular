@@ -4,42 +4,38 @@
     <p class="page-description">عرض وإدارة جميع مركبات المنصة</p>
   </div>
 
-  <!-- Search Section -->
-  <div class="search-section voltyks-card">
-    <div class="search-filter-wrapper">
-      <!-- Search Box -->
-      <div class="search-box">
-        <span class="material-icons search-icon">search</span>
-        <input
-          type="text"
-          class="voltyks-input"
-          placeholder="البحث عن مركبة (اللوحة، اللون، السنة)..."
-          [(ngModel)]="searchTerm"
-          (ngModelChange)="onSearchChange($event)"
-        />
-      </div>
-    </div>
-  </div>
-
-  <!-- Filter Section -->
+  <!-- Compact Filters Section -->
   <div class="filters-section voltyks-card">
-    <h3 style="margin-bottom: 16px;">تصفية المركبات</h3>
     <div class="filters-wrapper">
+      <!-- Search Box -->
+      <div class="filter-item search-filter">
+        <div class="search-box">
+          <span class="material-icons search-icon">search</span>
+          <input
+            type="text"
+            class="voltyks-input"
+            placeholder="البحث (اللوحة، اللون، السنة...)"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange($event)"
+          />
+        </div>
+      </div>
+
       <!-- User Filter -->
-      <div class="filter-box">
-        <div class="custom-dropdown" [class.open]="isUserFilterDropdownOpen">
+      <div class="filter-item user-filter">
+        <div class="custom-dropdown compact" [class.open]="isUserFilterDropdownOpen">
           <div class="dropdown-selected" (click)="toggleUserDropdown(true)">
             @if (selectedUser) {
-              <div class="selected-user-info">
-                <span class="material-icons user-icon">account_circle</span>
-                <span class="user-name">{{ selectedUser.fullName }}</span>
+              <div class="selected-info">
+                <span class="material-icons">person</span>
+                <span class="selected-name">{{ selectedUser.fullName }}</span>
                 <button type="button" class="clear-btn" (click)="clearUserFilter(); $event.stopPropagation()">
                   <span class="material-icons">close</span>
                 </button>
               </div>
             } @else {
-              <span class="placeholder">تصفية حسب المستخدم</span>
-              <span class="material-icons dropdown-arrow">person</span>
+              <span class="material-icons select-icon">person</span>
+              <span class="placeholder">المستخدم</span>
             }
           </div>
 
@@ -56,7 +52,6 @@
                   (click)="$event.stopPropagation()"
                 />
               </div>
-
               <div class="dropdown-list">
                 @if (filteredUsers.length > 0) {
                   @for (user of filteredUsers; track user.id) {
@@ -88,20 +83,20 @@
       </div>
 
       <!-- Brand Filter -->
-      <div class="filter-box">
-        <div class="custom-dropdown" [class.open]="isBrandFilterDropdownOpen">
+      <div class="filter-item brand-filter">
+        <div class="custom-dropdown compact" [class.open]="isBrandFilterDropdownOpen">
           <div class="dropdown-selected" (click)="toggleBrandDropdown(true)">
             @if (selectedBrand) {
-              <div class="selected-user-info">
-                <span class="material-icons user-icon">directions_car</span>
-                <span class="user-name">{{ selectedBrand.name }}</span>
+              <div class="selected-info">
+                <span class="material-icons">directions_car</span>
+                <span class="selected-name">{{ selectedBrand.name }}</span>
                 <button type="button" class="clear-btn" (click)="clearBrandFilter(); $event.stopPropagation()">
                   <span class="material-icons">close</span>
                 </button>
               </div>
             } @else {
-              <span class="placeholder">تصفية حسب العلامة التجارية</span>
-              <span class="material-icons dropdown-arrow">directions_car</span>
+              <span class="material-icons select-icon">directions_car</span>
+              <span class="placeholder">الماركة</span>
             }
           </div>
 
@@ -118,7 +113,6 @@
                   (click)="$event.stopPropagation()"
                 />
               </div>
-
               <div class="dropdown-list">
                 @if (filteredBrands.length > 0) {
                   @for (brand of filteredBrands; track brand.id) {
@@ -144,6 +138,64 @@
             </div>
           }
         </div>
+      </div>
+
+      <!-- Model Filter -->
+      <div class="filter-item model-filter">
+        <div class="select-wrapper">
+          <span class="material-icons select-icon">settings</span>
+          <select
+            class="voltyks-input"
+            [(ngModel)]="filterModel"
+            (ngModelChange)="onFilterModelChange()"
+          >
+            <option value="">الموديل</option>
+            @for (model of filterModelsList; track model) {
+              <option [value]="model">{{ model }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- Year Filter -->
+      <div class="filter-item year-filter">
+        <div class="select-wrapper">
+          <span class="material-icons select-icon">event</span>
+          <select
+            class="voltyks-input"
+            [(ngModel)]="filterYear"
+            (ngModelChange)="applyLocalFilters()"
+          >
+            <option value="">السنة</option>
+            @for (year of filterYearsList; track year) {
+              <option [value]="year">{{ year }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- Color Filter -->
+      <div class="filter-item color-filter">
+        <div class="select-wrapper">
+          <span class="material-icons select-icon">palette</span>
+          <select
+            class="voltyks-input"
+            [(ngModel)]="filterColor"
+            (ngModelChange)="applyLocalFilters()"
+          >
+            <option value="">اللون</option>
+            @for (color of filterColorsList; track color) {
+              <option [value]="color">{{ color }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="filter-item filter-actions">
+        <button class="voltyks-btn btn-secondary" (click)="clearAllFilters()" title="إعادة تعيين">
+          <span class="material-icons">refresh</span>
+        </button>
       </div>
     </div>
   </div>

@@ -46,6 +46,14 @@ export class VehiclesComponent implements OnInit {
   searchTerm: string = '';
   private searchSubject = new Subject<string>();
 
+  // New filters
+  filterModel: string = '';
+  filterYear: string = '';
+  filterColor: string = '';
+  filterModelsList: string[] = [];
+  filterYearsList: number[] = [];
+  filterColorsList: string[] = [];
+
   isLoading: boolean = false;
 
   // Modals
@@ -117,10 +125,8 @@ export class VehiclesComponent implements OnInit {
       next: (response) => {
         if (response.status && response.data) {
           this.vehicles = response.data;
-          this.filteredVehicles = [...this.vehicles];
-          this.totalItems = this.filteredVehicles.length;
-          this.currentPage = 1;
-          this.updatePaginatedVehicles();
+          this.extractFilterOptions();
+          this.applyLocalFilters();
         }
         this.isLoading = false;
       },
@@ -129,6 +135,82 @@ export class VehiclesComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  private extractFilterOptions(): void {
+    // Extract unique models
+    const modelNames = this.vehicles
+      .map(v => this.getModelName(v.modelId))
+      .filter(name => name && name !== '-');
+    this.filterModelsList = [...new Set(modelNames)].sort();
+
+    // Extract unique years
+    const years = this.vehicles
+      .map(v => v.year)
+      .filter(year => year);
+    this.filterYearsList = [...new Set(years)].sort((a, b) => b - a);
+
+    // Extract unique colors
+    const colors = this.vehicles
+      .map(v => v.color)
+      .filter(color => color);
+    this.filterColorsList = [...new Set(colors)].sort();
+  }
+
+  applyLocalFilters(): void {
+    let result = [...this.vehicles];
+
+    // Filter by search term
+    if (this.searchTerm?.trim()) {
+      const term = this.searchTerm.toLowerCase();
+      result = result.filter(vehicle =>
+        vehicle.plate?.toLowerCase().includes(term) ||
+        vehicle.color?.toLowerCase().includes(term) ||
+        vehicle.year?.toString().includes(term)
+      );
+    }
+
+    // Filter by model
+    if (this.filterModel) {
+      result = result.filter(vehicle =>
+        this.getModelName(vehicle.modelId) === this.filterModel
+      );
+    }
+
+    // Filter by year
+    if (this.filterYear) {
+      result = result.filter(vehicle =>
+        vehicle.year?.toString() === this.filterYear
+      );
+    }
+
+    // Filter by color
+    if (this.filterColor) {
+      result = result.filter(vehicle =>
+        vehicle.color === this.filterColor
+      );
+    }
+
+    this.filteredVehicles = result;
+    this.totalItems = this.filteredVehicles.length;
+    this.currentPage = 1;
+    this.updatePaginatedVehicles();
+  }
+
+  onFilterModelChange(): void {
+    this.applyLocalFilters();
+  }
+
+  clearAllFilters(): void {
+    this.searchTerm = '';
+    this.filterModel = '';
+    this.filterYear = '';
+    this.filterColor = '';
+    this.selectedUser = null;
+    this.userFilterId = '';
+    this.selectedBrand = null;
+    this.brandFilterId = '';
+    this.loadVehicles();
   }
 
   loadUsers(): void {
@@ -179,20 +261,8 @@ export class VehiclesComponent implements OnInit {
   }
 
   private performSearch(searchTerm: string): void {
-    if (!searchTerm.trim()) {
-      this.filteredVehicles = [...this.vehicles];
-    } else {
-      const term = searchTerm.toLowerCase();
-      this.filteredVehicles = this.vehicles.filter(vehicle =>
-        vehicle.plate?.toLowerCase().includes(term) ||
-        vehicle.color?.toLowerCase().includes(term) ||
-        vehicle.year?.toString().includes(term)
-      );
-    }
-
-    this.totalItems = this.filteredVehicles.length;
-    this.currentPage = 1;
-    this.updatePaginatedVehicles();
+    this.searchTerm = searchTerm;
+    this.applyLocalFilters();
   }
 
   filterByUser(userId: string): void {
