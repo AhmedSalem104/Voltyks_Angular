@@ -67,6 +67,7 @@ export interface AdminProcessDto {
   chargerBuildingNumber: string;
   chargerLatitude: number;
   chargerLongitude: number;
+  
 }
 
 // Filter params for client-side filtering
