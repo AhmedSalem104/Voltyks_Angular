@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/*.js",
+      "src": "api/proxy.js",
       "use": "@vercel/node"
     },
     {
-      "src": "voltyks-admin/package.json",
+      "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist/voltyks-admin/browser"
+        "distDir": "voltyks-admin/dist/voltyks-admin/browser"
       }
     }
   ],
@@ -23,7 +23,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/voltyks-admin/$1"
+      "dest": "/index.html"
     }
   ]
 }
