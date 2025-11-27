@@ -37,7 +37,8 @@
       "WebFetch(domain:vercel.com)",
       "WebFetch(domain:voltyks-app.runasp.net)",
       "Bash(curl:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(timeout:*)"
     ],
     "deny": [],
     "ask": []
