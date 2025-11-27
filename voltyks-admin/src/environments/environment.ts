@@ -1,8 +1,8 @@
 // Development Environment Configuration
 export const environment = {
   production: false,
-  // API Base URL - Using CORS proxy to bypass Mixed Content restriction
-  apiBaseUrl: 'https://corsproxy.io/?http://voltyks-app.runasp.net',
+  // API Base URL - Direct backend for development (use Angular proxy)
+  apiBaseUrl: 'http://voltyks-app.runasp.net',
   apiEndpoints: {
     admin: {
       users: '/api/admin/users',

@@ -1,11 +1,15 @@
 // Vercel Serverless Function - API Proxy
-// This proxies all /api/* requests to the backend
+// Route: /api/proxy?path=/api/Auth/Login
 
 const BACKEND_URL = 'http://voltyks-app.runasp.net';
 
 module.exports = async (req, res) => {
-  // Get the path from the URL
-  const apiPath = req.url; // e.g., /api/Auth/Login
+  // Get the API path from query parameter
+  const apiPath = req.query.path || req.url.replace('/api/proxy', '');
+
+  if (!apiPath) {
+    return res.status(400).json({ error: 'Missing path parameter' });
+  }
 
   const targetUrl = `${BACKEND_URL}${apiPath}`;
 
@@ -40,7 +44,7 @@ module.exports = async (req, res) => {
 
     // Add body for non-GET requests
     if (req.method !== 'GET' && req.method !== 'HEAD' && req.body) {
-      fetchOptions.body = JSON.stringify(req.body);
+      fetchOptions.body = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
     }
 
     // Make the request to the backend
