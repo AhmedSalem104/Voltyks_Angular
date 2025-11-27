@@ -1,31 +1,24 @@
-// Vercel Edge Function - API Proxy
+// Vercel Serverless Function - API Proxy
 // This proxies all /api/* requests to the backend
-
-export const config = {
-  runtime: 'edge',
-};
 
 const BACKEND_URL = 'http://voltyks-app.runasp.net';
 
-export default async function handler(request) {
-  const url = new URL(request.url);
-  // Get the path after /api/
-  const apiPath = url.pathname; // e.g., /api/Auth/Login
+module.exports = async (req, res) => {
+  // Get the path from the URL
+  const apiPath = req.url; // e.g., /api/Auth/Login
 
   const targetUrl = `${BACKEND_URL}${apiPath}`;
 
-  console.log(`Proxying ${request.method} request to: ${targetUrl}`);
+  console.log(`Proxying ${req.method} request to: ${targetUrl}`);
+
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   // Handle preflight requests
-  if (request.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
-    });
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
 
   try {
@@ -35,27 +28,19 @@ export default async function handler(request) {
     };
 
     // Forward Authorization header if present
-    const authHeader = request.headers.get('Authorization');
-    if (authHeader) {
-      headers['Authorization'] = authHeader;
+    if (req.headers.authorization) {
+      headers['Authorization'] = req.headers.authorization;
     }
 
     // Build fetch options
     const fetchOptions = {
-      method: request.method,
+      method: req.method,
       headers,
     };
 
     // Add body for non-GET requests
-    if (request.method !== 'GET' && request.method !== 'HEAD') {
-      try {
-        const body = await request.text();
-        if (body) {
-          fetchOptions.body = body;
-        }
-      } catch (e) {
-        // No body
-      }
+    if (req.method !== 'GET' && req.method !== 'HEAD' && req.body) {
+      fetchOptions.body = JSON.stringify(req.body);
     }
 
     // Make the request to the backend
@@ -64,37 +49,21 @@ export default async function handler(request) {
     // Get response data
     const data = await response.text();
 
-    // Build response headers
-    const responseHeaders = {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    };
-
     // Set content type from response
     const contentType = response.headers.get('content-type');
     if (contentType) {
-      responseHeaders['Content-Type'] = contentType;
+      res.setHeader('Content-Type', contentType);
     }
 
     // Return the response
-    return new Response(data, {
-      status: response.status,
-      headers: responseHeaders,
-    });
+    res.status(response.status).send(data);
 
   } catch (error) {
     console.error('Proxy error:', error);
-    return new Response(JSON.stringify({
+    res.status(500).json({
       error: 'Proxy error',
       message: error.message,
       targetUrl
-    }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
     });
   }
-}
+};

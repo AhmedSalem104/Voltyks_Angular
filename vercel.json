@@ -1,15 +1,26 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "voltyks-admin/dist/voltyks-admin/browser",
-  "installCommand": "npm run vercel-install",
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/api/:path*",
-      "destination": "/api/:path*"
+      "src": "voltyks-admin/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/voltyks-admin/browser"
+      }
     },
     {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "src": "api/[...path].js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/[...path].js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/voltyks-admin/$1"
     }
   ]
 }
