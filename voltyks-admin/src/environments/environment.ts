@@ -1,10 +1,8 @@
 // Development Environment Configuration
 export const environment = {
   production: false,
-  // استخدام proxy أثناء التطوير لحل مشكلة CORS
-  backendUrl: '',
-  corsProxy: '',
-  apiBaseUrl: '',
+  // API Base URL - Direct backend server
+  apiBaseUrl: 'http://voltyks-app.runasp.net',
   apiEndpoints: {
     admin: {
       users: '/api/admin/users',

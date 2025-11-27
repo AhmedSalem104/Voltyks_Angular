@@ -23,13 +23,11 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<UserLoginResultDto | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
+  // Base URL for API calls - directly from environment
+  private readonly apiBaseUrl = environment.apiBaseUrl;
+
   private getApiUrl(path: string): string {
-    // In production, use CORS proxy for HTTP backend
-    if (environment.production && environment.corsProxy && environment.backendUrl) {
-      return `${environment.corsProxy}${encodeURIComponent(environment.backendUrl + path)}`;
-    }
-    // In development, use direct URL
-    return `${environment.apiBaseUrl}${path}`;
+    return `${this.apiBaseUrl}${path}`;
   }
 
   constructor(
