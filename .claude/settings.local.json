@@ -39,7 +39,8 @@
       "Bash(curl:*)",
       "Bash(npm run build:*)",
       "Bash(timeout:*)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:github.com)"
     ],
     "deny": [],
     "ask": []

@@ -20,9 +20,17 @@ import {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly baseUrl = `${environment.apiBaseUrl}/api/Auth`;
   private currentUserSubject = new BehaviorSubject<UserLoginResultDto | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
+
+  private getApiUrl(path: string): string {
+    // In production, use CORS proxy for HTTP backend
+    if (environment.production && environment.corsProxy && environment.backendUrl) {
+      return `${environment.corsProxy}${encodeURIComponent(environment.backendUrl + path)}`;
+    }
+    // In development, use direct URL
+    return `${environment.apiBaseUrl}${path}`;
+  }
 
   constructor(
     private http: HttpClient,
@@ -47,9 +55,9 @@ export class AuthService {
    * POST /api/Auth/Login
    */
   login(dto: LoginDTO): Observable<ApiResponse<UserLoginResultDto>> {
-    return this.http.post<ApiResponse<UserLoginResultDto>>(`${this.baseUrl}/Login`, dto, {
-      withCredentials: true // Enable sending/receiving cookies
-    }).pipe(
+    const url = this.getApiUrl('/api/Auth/Login');
+    console.log('Login URL:', url);
+    return this.http.post<ApiResponse<UserLoginResultDto>>(url, dto).pipe(
       tap(response => {
         console.log('AuthService - Login response:', response);
 
@@ -87,7 +95,7 @@ export class AuthService {
    * POST /api/Auth/register
    */
   register(dto: RegisterDTO): Observable<ApiResponse<UserRegisterationResultDto>> {
-    return this.http.post<ApiResponse<UserRegisterationResultDto>>(`${this.baseUrl}/register`, dto);
+    return this.http.post<ApiResponse<UserRegisterationResultDto>>(this.getApiUrl('/api/Auth/register'), dto);
   }
 
   /**
@@ -95,7 +103,7 @@ export class AuthService {
    * POST /api/Auth/RefreshToken
    */
   refreshToken(dto: RefreshTokenDto): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.baseUrl}/RefreshToken`, dto).pipe(
+    return this.http.post<ApiResponse<any>>(this.getApiUrl('/api/Auth/RefreshToken'), dto).pipe(
       tap(response => {
         if (response.status && response.data?.accessToken) {
           this.setToken(response.data.accessToken);
@@ -110,7 +118,7 @@ export class AuthService {
    */
   logout(): Observable<ApiResponse<any>> {
     const token = this.getToken();
-    return this.http.post<ApiResponse<any>>(`${this.baseUrl}/Logout`, { token }).pipe(
+    return this.http.post<ApiResponse<any>>(this.getApiUrl('/api/Auth/Logout'), { token }).pipe(
       tap(() => {
         this.clearAuth();
       })
@@ -122,7 +130,7 @@ export class AuthService {
    * POST /api/Auth/forget-password
    */
   forgetPassword(dto: ForgetPasswordDto): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.baseUrl}/forget-password`, dto);
+    return this.http.post<ApiResponse<any>>(this.getApiUrl('/api/Auth/forget-password'), dto);
   }
 
   /**
@@ -130,7 +138,7 @@ export class AuthService {
    * POST /api/Auth/verify-forget-password-otp
    */
   verifyForgetPasswordOtp(dto: VerifyForgetPasswordOtpDto): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.baseUrl}/verify-forget-password-otp`, dto);
+    return this.http.post<ApiResponse<any>>(this.getApiUrl('/api/Auth/verify-forget-password-otp'), dto);
   }
 
   /**
@@ -138,7 +146,7 @@ export class AuthService {
    * POST /api/Auth/reset-password
    */
   resetPassword(dto: ResetPasswordDto): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.baseUrl}/reset-password`, dto);
+    return this.http.post<ApiResponse<any>>(this.getApiUrl('/api/Auth/reset-password'), dto);
   }
 
   /**
@@ -146,7 +154,7 @@ export class AuthService {
    * GET /api/Auth/GetProfileDetails
    */
   getProfileDetails(): Observable<ApiResponse<UserDetailsDto>> {
-    return this.http.get<ApiResponse<UserDetailsDto>>(`${this.baseUrl}/GetProfileDetails`);
+    return this.http.get<ApiResponse<UserDetailsDto>>(this.getApiUrl('/api/Auth/GetProfileDetails'));
   }
 
   /**

@@ -2,6 +2,8 @@
 export const environment = {
   production: false,
   // استخدام proxy أثناء التطوير لحل مشكلة CORS
+  backendUrl: '',
+  corsProxy: '',
   apiBaseUrl: '',
   apiEndpoints: {
     admin: {
