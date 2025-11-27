@@ -1,0 +1,9 @@
+{
+  "name": "voltyks-angular",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install": "cd voltyks-admin && npm install",
+    "build": "cd voltyks-admin && npm run build"
+  }
+}
