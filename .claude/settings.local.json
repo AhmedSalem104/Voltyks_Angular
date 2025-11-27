@@ -40,7 +40,8 @@
       "Bash(npm run build:*)",
       "Bash(timeout:*)",
       "WebSearch",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(npm run build:github:*)"
     ],
     "deny": [],
     "ask": []
