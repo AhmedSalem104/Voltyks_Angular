@@ -1,66 +1,79 @@
-export const config = {
-  runtime: 'edge',
+const http = require('http');
+
+const BACKEND_HOST = 'voltyks-app.runasp.net';
+
+module.exports = async (req, res) => {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  // Handle preflight OPTIONS request
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
+  // Get the API path from the URL
+  const apiPath = req.url || '/api';
+
+  console.log('Proxying request:', req.method, apiPath);
+
+  return new Promise((resolve) => {
+    const options = {
+      hostname: BACKEND_HOST,
+      port: 80,
+      path: apiPath,
+      method: req.method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    };
+
+    // Copy authorization header if present
+    if (req.headers.authorization) {
+      options.headers['Authorization'] = req.headers.authorization;
+    }
+
+    const proxyReq = http.request(options, (proxyRes) => {
+      let data = '';
+
+      proxyRes.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      proxyRes.on('end', () => {
+        console.log('Backend response:', proxyRes.statusCode);
+
+        res.status(proxyRes.statusCode);
+
+        if (proxyRes.headers['content-type']) {
+          res.setHeader('Content-Type', proxyRes.headers['content-type']);
+        }
+
+        res.send(data);
+        resolve();
+      });
+    });
+
+    proxyReq.on('error', (error) => {
+      console.error('Proxy error:', error);
+      res.status(500).json({
+        status: false,
+        message: 'Proxy connection error',
+        error: error.message
+      });
+      resolve();
+    });
+
+    // Forward request body
+    if (req.body && ['POST', 'PUT', 'PATCH'].includes(req.method)) {
+      const bodyData = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+      proxyReq.write(bodyData);
+    }
+
+    proxyReq.end();
+  });
 };
-
-export default async function handler(request) {
-  const url = new URL(request.url);
-  const path = url.pathname;
-
-  // Build the backend URL
-  const backendUrl = `http://voltyks-app.runasp.net${path}${url.search}`;
-
-  // Handle CORS preflight
-  if (request.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
-        'Access-Control-Max-Age': '86400',
-      },
-    });
-  }
-
-  try {
-    // Forward the request to backend
-    const backendResponse = await fetch(backendUrl, {
-      method: request.method,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        ...(request.headers.get('Authorization') && {
-          'Authorization': request.headers.get('Authorization')
-        })
-      },
-      body: request.method !== 'GET' && request.method !== 'HEAD'
-        ? await request.text()
-        : undefined,
-    });
-
-    // Get the response body
-    const responseBody = await backendResponse.text();
-
-    // Return response with CORS headers
-    return new Response(responseBody, {
-      status: backendResponse.status,
-      headers: {
-        'Content-Type': backendResponse.headers.get('Content-Type') || 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
-      },
-    });
-  } catch (error) {
-    return new Response(JSON.stringify({
-      status: false,
-      message: 'Proxy error: ' + error.message,
-    }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    });
-  }
-}
