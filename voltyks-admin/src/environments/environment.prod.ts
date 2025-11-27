@@ -1,7 +1,7 @@
 // Production Environment Configuration
 export const environment = {
   production: true,
-  apiBaseUrl: '',
+  apiBaseUrl: 'http://voltyks-app.runasp.net',
   apiEndpoints: {
     admin: {
       users: '/api/admin/users',
