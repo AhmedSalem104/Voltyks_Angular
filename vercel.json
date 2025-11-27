@@ -1,7 +1,7 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "voltyks-admin/dist/voltyks-admin/browser",
-  "installCommand": "npm run install",
+  "installCommand": "npm run vercel-install",
   "rewrites": [
     {
       "source": "/(.*)",
