@@ -33,7 +33,11 @@
       "Bash(cat:*)",
       "Bash(git ls-tree:*)",
       "Bash(git commit:*)",
-      "Bash(del:*)"
+      "Bash(del:*)",
+      "WebFetch(domain:vercel.com)",
+      "WebFetch(domain:voltyks-app.runasp.net)",
+      "Bash(curl:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []
