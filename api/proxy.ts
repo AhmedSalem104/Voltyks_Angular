@@ -1,8 +1,9 @@
-const http = require('http');
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import http from 'http';
 
 const BACKEND_HOST = 'voltyks-app.runasp.net';
 
-module.exports = async (req, res) => {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
@@ -16,18 +17,15 @@ module.exports = async (req, res) => {
   }
 
   // Get the API path from query parameter
-  const apiPath = '/api/' + (req.query.path || '');
+  const pathParam = req.query.path;
+  const apiPath = '/api/' + (Array.isArray(pathParam) ? pathParam.join('/') : pathParam || '');
 
-  console.log('Proxying request to:', apiPath);
-  console.log('Method:', req.method);
-  console.log('Body:', req.body);
-
-  return new Promise((resolve) => {
-    const options = {
+  return new Promise<void>((resolve) => {
+    const options: http.RequestOptions = {
       hostname: BACKEND_HOST,
       port: 80,
       path: apiPath,
-      method: req.method,
+      method: req.method || 'GET',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -36,7 +34,7 @@ module.exports = async (req, res) => {
 
     // Copy authorization header if present
     if (req.headers.authorization) {
-      options.headers['Authorization'] = req.headers.authorization;
+      options.headers = { ...options.headers, 'Authorization': req.headers.authorization };
     }
 
     const proxyReq = http.request(options, (proxyRes) => {
@@ -47,25 +45,18 @@ module.exports = async (req, res) => {
       });
 
       proxyRes.on('end', () => {
-        console.log('Backend response status:', proxyRes.statusCode);
-        console.log('Backend response:', data);
+        res.status(proxyRes.statusCode || 500);
 
-        // Set response status
-        res.status(proxyRes.statusCode);
-
-        // Copy content-type header
         if (proxyRes.headers['content-type']) {
           res.setHeader('Content-Type', proxyRes.headers['content-type']);
         }
 
-        // Send response
         res.send(data);
         resolve();
       });
     });
 
     proxyReq.on('error', (error) => {
-      console.error('Proxy error:', error);
       res.status(500).json({
         status: false,
         message: 'Proxy connection error',
@@ -75,12 +66,11 @@ module.exports = async (req, res) => {
     });
 
     // Forward request body for POST/PUT/PATCH
-    if (req.body && ['POST', 'PUT', 'PATCH'].includes(req.method)) {
+    if (req.body && ['POST', 'PUT', 'PATCH'].includes(req.method || '')) {
       const bodyData = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
-      proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
       proxyReq.write(bodyData);
     }
 
     proxyReq.end();
   });
-};
+}

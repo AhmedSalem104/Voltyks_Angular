@@ -2,18 +2,13 @@
   "buildCommand": "npm run build",
   "outputDirectory": "voltyks-admin/dist/voltyks-admin/browser",
   "installCommand": "npm run vercel-install",
-  "functions": {
-    "api/**/*.js": {
-      "maxDuration": 30
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "/api/proxy?path=$1"
     },
     {
-      "source": "/((?!api/).*)",
+      "source": "/((?!api).*)",
       "destination": "/index.html"
     }
   ],
