@@ -38,7 +38,8 @@
       "WebFetch(domain:voltyks-app.runasp.net)",
       "Bash(curl:*)",
       "Bash(npm run build:*)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

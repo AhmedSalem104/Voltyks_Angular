@@ -5,10 +5,10 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "http://voltyks-app.runasp.net/api/:path*"
+      "destination": "/api/proxy"
     },
     {
-      "source": "/:path*",
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ],
