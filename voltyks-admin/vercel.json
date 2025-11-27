@@ -1,7 +1,7 @@
 {
-  "buildCommand": "npm run build --prefix voltyks-admin",
-  "installCommand": "npm install --prefix voltyks-admin",
-  "outputDirectory": "voltyks-admin/dist/voltyks-admin/browser",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/voltyks-admin/browser",
+  "installCommand": "npm install",
   "rewrites": [
     {
       "source": "/(.*)",

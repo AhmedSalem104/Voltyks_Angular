@@ -29,7 +29,11 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: Voltyks Admin Panel\n\nFeatures:\n- Dashboard with statistics and charts\n- Users management\n- Chargers management\n- Vehicles management\n- Processes/Transactions management with detailed side panel\n- Reports management\n- Brands and Models management\n- Fees management\n- Terms management\n- Protocol management\n- Authentication (Login/Forgot Password)\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git push:*)",
       "Bash(timeout 20 echo:*)",
-      "Bash(echo.)"
+      "Bash(echo.)",
+      "Bash(cat:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git commit:*)",
+      "Bash(del:*)"
     ],
     "deny": [],
     "ask": []
