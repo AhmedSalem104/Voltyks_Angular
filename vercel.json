@@ -4,11 +4,7 @@
   "installCommand": "npm run vercel-install",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/proxy?path=$1"
-    },
-    {
-      "source": "/((?!api).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
