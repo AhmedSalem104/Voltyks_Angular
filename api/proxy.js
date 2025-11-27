@@ -15,8 +15,12 @@ module.exports = async (req, res) => {
     return;
   }
 
-  // Get the API path from the URL
-  const apiPath = req.url;
+  // Get the API path from query parameter
+  const apiPath = '/api/' + (req.query.path || '');
+
+  console.log('Proxying request to:', apiPath);
+  console.log('Method:', req.method);
+  console.log('Body:', req.body);
 
   return new Promise((resolve) => {
     const options = {
@@ -43,7 +47,10 @@ module.exports = async (req, res) => {
       });
 
       proxyRes.on('end', () => {
-        // Set response status and headers
+        console.log('Backend response status:', proxyRes.statusCode);
+        console.log('Backend response:', data);
+
+        // Set response status
         res.status(proxyRes.statusCode);
 
         // Copy content-type header
