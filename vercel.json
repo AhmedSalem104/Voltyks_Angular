@@ -1,29 +1,15 @@
 {
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/proxy.js",
-      "use": "@vercel/node"
+      "source": "/api/:path*",
+      "destination": "https://corsproxy.io/?http://voltyks-app.runasp.net/api/:path*"
     },
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "voltyks-admin/dist/voltyks-admin/browser"
-      }
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/proxy.js"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
+  "buildCommand": "npm run build",
+  "outputDirectory": "voltyks-admin/dist/voltyks-admin/browser",
+  "installCommand": "npm run vercel-install"
 }
