@@ -1,8 +1,8 @@
 // Development Environment Configuration
 export const environment = {
   production: false,
-  // API Base URL - Direct backend for development (use Angular proxy)
-  apiBaseUrl: 'http://voltyks-app.runasp.net',
+  // API Base URL - Empty to use Angular proxy (proxy.conf.json)
+  apiBaseUrl: '',
   apiEndpoints: {
     admin: {
       users: '/api/admin/users',
