@@ -1,11 +1,11 @@
 // Production Environment Configuration
 export const environment = {
   production: true,
-  // Backend URL (used by Vercel serverless proxy)
+  // Backend URL
   backendUrl: 'http://voltyks-app.runasp.net',
-  // No CORS proxy needed - using Vercel serverless function
-  corsProxy: '',
-  // API base URL - empty to use same origin (Vercel proxy)
+  // CORS proxy - using corsproxy.io which works from browser
+  corsProxy: 'https://corsproxy.io/?',
+  // API base URL - empty, handled by getApiUrl in services
   apiBaseUrl: '',
   apiEndpoints: {
     admin: {
