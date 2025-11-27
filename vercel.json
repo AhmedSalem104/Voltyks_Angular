@@ -1,7 +1,7 @@
 {
-  "buildCommand": "cd voltyks-admin && npm install && ng build --configuration production",
+  "installCommand": "cd voltyks-admin && npm install",
+  "buildCommand": "cd voltyks-admin && npm run build",
   "outputDirectory": "voltyks-admin/dist/voltyks-admin/browser",
-  "framework": "angular",
   "rewrites": [
     {
       "source": "/(.*)",
