@@ -67,8 +67,8 @@ export class LoginComponent implements OnInit {
     this.errorMessage = '';
 
     const loginDto: LoginDTO = {
-      emailOrPhone: this.loginForm.value.emailOrPhone.trim(),
-      password: this.loginForm.value.password
+      EmailOrPhone: this.loginForm.value.emailOrPhone.trim(),
+      Password: this.loginForm.value.password
     };
 
     this.authService.login(loginDto).subscribe({

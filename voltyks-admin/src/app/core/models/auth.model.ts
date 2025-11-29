@@ -1,8 +1,8 @@
 // Auth Related DTOs
 
 export interface LoginDTO {
-  emailOrPhone: string;
-  password: string;
+  EmailOrPhone: string;
+  Password: string;
 }
 
 export interface UserLoginResultDto {
