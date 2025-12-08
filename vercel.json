@@ -1,8 +1,14 @@
 {
-  "buildCommand": "cd voltyks-admin && npm install && npm run build",
+  "buildCommand": "cd voltyks-admin && npm install && npm run build && mkdir -p dist/voltyks-admin/browser/api && cp ../api/proxy.js dist/voltyks-admin/browser/api/",
   "outputDirectory": "voltyks-admin/dist/voltyks-admin/browser",
   "framework": null,
+  "functions": {
+    "api/proxy.js": {
+      "runtime": "nodejs20.x"
+    }
+  },
   "rewrites": [
-    { "source": "/api/proxy/:path*", "destination": "/api/proxy" }
+    { "source": "/api/proxy/:path*", "destination": "/api/proxy" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
