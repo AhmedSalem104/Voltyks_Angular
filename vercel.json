@@ -1,21 +1,12 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "cd voltyks-admin && npm run build",
   "outputDirectory": "voltyks-admin/dist/voltyks-admin/browser",
-  "installCommand": "npm run vercel-install",
+  "installCommand": "cd voltyks-admin && npm install",
+  "framework": null,
   "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
-      ]
     }
   ]
 }
