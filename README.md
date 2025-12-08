@@ -1,291 +1,346 @@
 <div align="center">
 
-# ⚡ Voltyks Admin Panel
+<!-- Animated Header -->
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:00d4ff,100:0099ff&height=200&section=header&text=⚡%20Voltyks%20Admin&fontSize=50&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=EV%20Charging%20Platform%20Management%20Dashboard&descSize=18&descAlignY=55"/>
 
-<img src="https://img.shields.io/badge/Angular-20-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular 20"/>
-<img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"/>
-<img src="https://img.shields.io/badge/RxJS-7.8-B7178C?style=for-the-badge&logo=reactivex&logoColor=white" alt="RxJS"/>
-<img src="https://img.shields.io/badge/Chart.js-4.5-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white" alt="Chart.js"/>
+<!-- Animated Typing -->
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&pause=1000&color=00D4FF&center=true&vCenter=true&random=false&width=600&lines=Modern+Admin+Dashboard;Built+with+Angular+20;Real-time+Analytics;Multi-language+Support+(AR%2FEN);Dark+Theme+%26+RTL+Ready" alt="Typing SVG" /></a>
 
 <br/><br/>
 
-**Modern Admin Dashboard for EV Charging Platform Management**
+<!-- Tech Stack Badges -->
+<p>
+  <img src="https://img.shields.io/badge/Angular-20-DD0031?style=for-the-badge&logo=angular&logoColor=white&labelColor=1a1a2e" alt="Angular"/>
+  <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white&labelColor=1a1a2e" alt="TypeScript"/>
+  <img src="https://img.shields.io/badge/RxJS-7.8-B7178C?style=for-the-badge&logo=reactivex&logoColor=white&labelColor=1a1a2e" alt="RxJS"/>
+  <img src="https://img.shields.io/badge/SCSS-CC6699?style=for-the-badge&logo=sass&logoColor=white&labelColor=1a1a2e" alt="SCSS"/>
+</p>
 
-[Features](#-features) • [Quick Start](#-quick-start) • [Architecture](#-architecture) • [API](#-api-integration) • [Screenshots](#-screenshots)
+<!-- Status Badges -->
+<p>
+  <img src="https://img.shields.io/github/last-commit/AhmedSalem104/Voltyks_Angular?style=flat-square&color=00d4ff&labelColor=1a1a2e" alt="Last Commit"/>
+  <img src="https://img.shields.io/github/commit-activity/m/AhmedSalem104/Voltyks_Angular?style=flat-square&color=00d4ff&labelColor=1a1a2e" alt="Commits"/>
+  <img src="https://img.shields.io/badge/PRs-Welcome-00d4ff?style=flat-square&labelColor=1a1a2e" alt="PRs Welcome"/>
+  <img src="https://img.shields.io/badge/License-Proprietary-red?style=flat-square&labelColor=1a1a2e" alt="License"/>
+</p>
+
+<!-- Live Demo Button -->
+<p>
+  <a href="https://voltyks-angular.vercel.app">
+    <img src="https://img.shields.io/badge/🚀_Live_Demo-Visit_Now-00d4ff?style=for-the-badge&labelColor=1a1a2e" alt="Live Demo"/>
+  </a>
+</p>
 
 ---
 
+<!-- Navigation -->
+<p>
+  <a href="#-overview">Overview</a> •
+  <a href="#-features">Features</a> •
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-architecture">Architecture</a> •
+  <a href="#-tech-stack">Tech Stack</a> •
+  <a href="#-screenshots">Screenshots</a>
+</p>
+
 </div>
 
-## 📋 Overview
+<br/>
 
-Voltyks Admin Panel is a comprehensive management dashboard for the Voltyks EV charging platform. Built with **Angular 20** using standalone components and the latest control flow syntax (`@if`, `@for`, `@switch`), it provides a powerful interface for managing users, chargers, vehicles, transactions, and more.
+<!-- Overview Section -->
+## <img src="https://media.giphy.com/media/iY8CRBdQXODJSCERIr/giphy.gif" width="30"/> Overview
 
-## ✨ Features
+<img align="right" width="300" src="https://raw.githubusercontent.com/gist/patevs/b007a0e98fb216438d4cbf559fac4166/raw/88f20c9d749d756be63f22b09f3c4ac570bc5101/programming.gif" alt="Coding"/>
+
+**Voltyks Admin Panel** is a cutting-edge management dashboard designed for the Voltyks EV charging platform.
+
+Built with the latest **Angular 20** featuring:
+- ✨ Standalone Components
+- 🔄 New Control Flow (`@if`, `@for`, `@switch`)
+- ⚡ Signal-based Reactivity
+- 🎯 Lazy Loading Optimization
+
+The dashboard provides comprehensive tools for managing users, chargers, vehicles, transactions, and platform content with a beautiful RTL-ready Arabic interface.
+
+<br clear="right"/>
+
+---
+
+<!-- Features Section -->
+## <img src="https://media2.giphy.com/media/QssGEmpkyEOhBCb7e1/giphy.gif?cid=ecf05e47a0n3gi1bfqntqmob8g9aid1oyj2wr3ds3mg700bl&rid=giphy.gif" width="30"/> Features
 
 <table>
 <tr>
-<td width="50%">
+<td width="50%" valign="top">
 
-### 📊 Dashboard & Analytics
-- Real-time statistics overview
-- Interactive charts with Chart.js
-- Quick access to all modules
-- Activity monitoring
+### 📊 Analytics Dashboard
+```diff
++ Real-time statistics
++ Interactive Chart.js graphs
++ Quick navigation cards
++ Activity monitoring
+```
 
 ### 👥 User Management
-- Complete user CRUD operations
-- User details with wallet info
-- Chargers & vehicles per user
-- Account status management
+```diff
++ Complete CRUD operations
++ Wallet & balance tracking
++ Chargers per user view
++ Account status control
+```
 
 ### 🔌 Charger Management
-- Charger registration & tracking
-- Location-based management
-- Availability status
-- Usage statistics
+```diff
++ Registration & tracking
++ Location management
++ Availability status
++ Usage analytics
+```
 
 </td>
-<td width="50%">
+<td width="50%" valign="top">
 
 ### 🚗 Vehicle Management
-- Vehicle registration
-- Brand & model association
-- User vehicle assignments
-- Fleet overview
+```diff
++ Vehicle registration
++ Brand/Model linking
++ User assignments
++ Fleet overview
+```
 
-### 💳 Transaction Management
-- Process/transaction tracking
-- Detailed transaction view
-- Status management
-- Financial reporting
+### 💳 Transactions
+```diff
++ Process tracking
++ Detailed view panel
++ Status management
++ Financial reports
+```
 
 ### 📝 Content Management
-- Terms & Conditions (JSON Editor)
-- Protocol management
-- Multi-language support (AR/EN)
-- Dynamic content updates
+```diff
++ Terms & Conditions (JSON)
++ Protocol editor
++ Multi-language (AR/EN)
++ Dynamic updates
+```
 
 </td>
 </tr>
 </table>
 
-### Additional Modules
-
-| Module | Description |
-|--------|-------------|
-| 🏷️ **Brands & Models** | Manage EV brands and their models |
-| 💰 **Fees Management** | Configure platform fees and pricing |
-| 📊 **Reports** | Generate and export reports |
-| 📢 **Complaints** | Handle user complaints with categories |
-| ℹ️ **About** | Platform information management |
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- **Node.js** 18.x or higher
-- **npm** 9.x or higher
-- **Angular CLI** 20.x
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/your-org/voltyks-angular.git
-
-# Navigate to admin panel
-cd voltyks-angular/voltyks-admin
-
-# Install dependencies
-npm install
-
-# Start development server
-npm start
-```
-
-### Available Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm start` | Start dev server at `http://localhost:4200` |
-| `npm run build` | Production build |
-| `npm run build:github` | Build for GitHub Pages deployment |
-| `npm run watch` | Build with watch mode |
-| `npm test` | Run unit tests |
-
-## 🏗️ Architecture
-
-```
-voltyks-admin/
-├── src/
-│   ├── app/
-│   │   ├── core/                    # Core functionality
-│   │   │   ├── guards/              # Route guards (Auth)
-│   │   │   ├── interceptors/        # HTTP interceptors
-│   │   │   ├── models/              # TypeScript interfaces/DTOs
-│   │   │   └── services/            # API services
-│   │   │       └── admin/           # Admin-specific services
-│   │   │
-│   │   ├── features/                # Feature modules
-│   │   │   ├── auth/                # Login & Forgot Password
-│   │   │   ├── dashboard/           # Main dashboard
-│   │   │   ├── users/               # User management
-│   │   │   ├── chargers/            # Charger management
-│   │   │   ├── vehicles/            # Vehicle management
-│   │   │   ├── processes/           # Transactions
-│   │   │   ├── brands/              # Brand management
-│   │   │   ├── models/              # Model management
-│   │   │   ├── fees/                # Fee configuration
-│   │   │   ├── terms/               # Terms & Conditions
-│   │   │   ├── protocol/            # Protocol management
-│   │   │   ├── reports/             # Reporting
-│   │   │   ├── complaints/          # Complaint categories
-│   │   │   ├── complaints-list/     # All complaints
-│   │   │   └── about/               # About page
-│   │   │
-│   │   ├── layout/                  # Layout components
-│   │   │   ├── sidebar/             # Navigation sidebar
-│   │   │   └── main-layout/         # Main app layout
-│   │   │
-│   │   └── shared/                  # Shared components
-│   │       └── components/
-│   │           ├── pagination/      # Reusable pagination
-│   │           ├── loading-overlay/ # Loading indicator
-│   │           └── toaster/         # Toast notifications
-│   │
-│   ├── environments/                # Environment configs
-│   └── styles.scss                  # Global styles
-│
-├── proxy.conf.json                  # API proxy configuration
-└── angular.json                     # Angular workspace config
-```
-
-## 🔌 API Integration
-
-### Configuration
-
-The app uses Angular's proxy for API requests during development:
-
-```json
-// proxy.conf.json
-{
-  "/api": {
-    "target": "http://voltyks-app.runasp.net",
-    "secure": false,
-    "changeOrigin": true,
-    "logLevel": "debug"
-  }
-}
-```
-
-### API Endpoints Structure
-
-```
-/api/admin/
-├── users              # User management
-├── chargers           # Charger management
-├── vehicles           # Vehicle management
-├── brands             # Brand management
-├── fees               # Fee configuration
-├── terms              # Terms & Conditions
-├── protocol           # Protocol content
-├── reports            # Reports generation
-├── process            # Transaction management
-├── complaints         # Complaints handling
-└── complaint-categories # Complaint types
-
-/api/auth/
-├── login              # Authentication
-├── forgot-password    # Password recovery
-└── general-complaints # User complaints
-```
-
-## 🎨 UI/UX Features
-
-- 🌐 **RTL Support** - Full Arabic language support with right-to-left layout
-- 🌙 **Dark Theme** - Modern dark color scheme optimized for long sessions
-- 📱 **Responsive Design** - Seamless experience across all devices
-- 🎯 **Material Icons** - Google Material Design icon system
-- ✨ **Smooth Animations** - CSS transitions and Angular animations
-- 🔔 **Toast Notifications** - Real-time user feedback system
-- ⏳ **Loading States** - Skeleton loaders and overlay indicators
-
-## 🔐 Authentication
-
-- JWT-based authentication
-- Token stored in localStorage
-- Auto-redirect on session expiry
-- Protected routes with AuthGuard
-
-## 📦 Key Dependencies
-
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `@angular/core` | ^20.3.0 | Core framework |
-| `@angular/material` | ^20.2.13 | UI components |
-| `@angular/cdk` | ^20.2.13 | Component Dev Kit |
-| `chart.js` | ^4.5.1 | Charts & graphs |
-| `ng2-charts` | ^8.0.0 | Angular Chart.js wrapper |
-| `ngx-json-viewer` | ^3.2.1 | JSON visualization |
-| `rxjs` | ~7.8.0 | Reactive extensions |
-
-## 🌐 Browser Support
-
-| <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/chrome/chrome_48x48.png" alt="Chrome" width="24"/> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/firefox/firefox_48x48.png" alt="Firefox" width="24"/> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/safari/safari_48x48.png" alt="Safari" width="24"/> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/edge/edge_48x48.png" alt="Edge" width="24"/> |
-|:---:|:---:|:---:|:---:|
-| Latest ✅ | Latest ✅ | Latest ✅ | Latest ✅ |
-
-## 🛠️ Development
-
-### Code Style
-
-This project uses **Prettier** for code formatting:
-
-```json
-{
-  "printWidth": 100,
-  "singleQuote": true
-}
-```
-
-### Building for Production
-
-```bash
-# Standard production build
-npm run build
-
-# GitHub Pages deployment
-npm run build:github
-```
-
-### Environment Configuration
-
-```typescript
-// src/environments/environment.ts
-export const environment = {
-  production: false,
-  apiBaseUrl: '',
-  apiEndpoints: {
-    admin: { /* ... */ },
-    auth: { /* ... */ }
-  }
-};
-```
-
-## 📄 License
-
-This project is proprietary software. All rights reserved.
-
----
+### 🎯 Additional Modules
 
 <div align="center">
 
-**Built with ❤️ by the Voltyks Team**
+| <img src="https://img.icons8.com/fluency/48/price-tag.png" width="20"/> Brands | <img src="https://img.icons8.com/fluency/48/money-bag.png" width="20"/> Fees | <img src="https://img.icons8.com/fluency/48/graph-report.png" width="20"/> Reports | <img src="https://img.icons8.com/fluency/48/complaint.png" width="20"/> Complaints |
+|:---:|:---:|:---:|:---:|
+| Brand & Model Management | Platform Fee Configuration | Generate & Export Reports | User Complaints System |
 
-<br/>
+</div>
 
-<img src="https://img.shields.io/badge/Made%20with-Angular-DD0031?style=flat-square&logo=angular" alt="Made with Angular"/>
-<img src="https://img.shields.io/badge/Powered%20by-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="Powered by TypeScript"/>
+---
+
+<!-- Quick Start Section -->
+## <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30"/> Quick Start
+
+### Prerequisites
+
+<table>
+<tr>
+<td>
+
+```
+📦 Node.js    18.x+
+📦 npm        9.x+
+📦 Angular    20.x
+```
+
+</td>
+<td>
+
+```bash
+# Verify installations
+node --version
+npm --version
+ng version
+```
+
+</td>
+</tr>
+</table>
+
+### ⚡ Installation
+
+```bash
+# 1️⃣ Clone the repository
+git clone https://github.com/AhmedSalem104/Voltyks_Angular.git
+
+# 2️⃣ Navigate to project
+cd Voltyks_Angular/voltyks-admin
+
+# 3️⃣ Install dependencies
+npm install
+
+# 4️⃣ Start development server
+npm start
+
+# 🎉 Open http://localhost:4200
+```
+
+### 📜 Available Scripts
+
+| Command | Description |
+|:--------|:------------|
+| `npm start` | 🚀 Start dev server at `localhost:4200` |
+| `npm run build` | 📦 Production build |
+| `npm run build:github` | 🌐 Build for GitHub Pages |
+| `npm test` | 🧪 Run unit tests |
+
+---
+
+<!-- Architecture Section -->
+## <img src="https://media.giphy.com/media/QTfX9Ejfra3ZmNxh6B/giphy.gif" width="30"/> Architecture
+
+```
+📁 voltyks-admin/
+├── 📂 src/
+│   ├── 📂 app/
+│   │   ├── 🔷 core/                    # Core functionality
+│   │   │   ├── 🛡️ guards/              # Route guards
+│   │   │   ├── 🔄 interceptors/        # HTTP interceptors
+│   │   │   ├── 📋 models/              # TypeScript DTOs
+│   │   │   └── ⚙️ services/            # API services
+│   │   │
+│   │   ├── 🎨 features/                # Feature modules
+│   │   │   ├── 🔐 auth/                # Authentication
+│   │   │   ├── 📊 dashboard/           # Main dashboard
+│   │   │   ├── 👥 users/               # User management
+│   │   │   ├── 🔌 chargers/            # Chargers
+│   │   │   ├── 🚗 vehicles/            # Vehicles
+│   │   │   ├── 💳 processes/           # Transactions
+│   │   │   ├── 🏷️ brands/              # Brands
+│   │   │   ├── 🚙 models/              # Models
+│   │   │   ├── 💰 fees/                # Fees
+│   │   │   ├── 📄 terms/               # Terms
+│   │   │   ├── 📋 protocol/            # Protocol
+│   │   │   ├── 📈 reports/             # Reports
+│   │   │   └── 📢 complaints/          # Complaints
+│   │   │
+│   │   ├── 🖼️ layout/                  # Layout components
+│   │   └── 🔧 shared/                  # Shared components
+│   │
+│   └── 🌍 environments/                # Config files
+│
+└── ⚙️ angular.json                     # Angular config
+```
+
+---
+
+<!-- Tech Stack Section -->
+## <img src="https://media.giphy.com/media/j2pOGeGYKe2xCCKwfi/giphy.gif" width="30"/> Tech Stack
+
+<div align="center">
+
+### Frontend Framework
+<p>
+  <img src="https://skillicons.dev/icons?i=angular,typescript,scss,rxjs" alt="Frontend"/>
+</p>
+
+### Tools & Libraries
+<p>
+  <img src="https://skillicons.dev/icons?i=nodejs,npm,git,github,vscode" alt="Tools"/>
+</p>
+
+</div>
+
+### 📦 Core Dependencies
+
+| Package | Version | Description |
+|:--------|:-------:|:------------|
+| <img src="https://angular.io/assets/images/logos/angular/angular.svg" width="16"/> `@angular/core` | `^20.3.0` | Core Framework |
+| <img src="https://material.angular.io/assets/img/angular-material-logo.svg" width="16"/> `@angular/material` | `^20.2.13` | UI Components |
+| <img src="https://www.chartjs.org/img/chartjs-logo.svg" width="16"/> `chart.js` | `^4.5.1` | Charts & Graphs |
+| <img src="https://rxjs.dev/assets/images/logos/Rx_Logo_S.png" width="16"/> `rxjs` | `~7.8.0` | Reactive Extensions |
+
+---
+
+<!-- UI/UX Section -->
+## 🎨 UI/UX Features
+
+<div align="center">
+
+| Feature | Description |
+|:-------:|:------------|
+| 🌐 **RTL Support** | Full Arabic language with right-to-left layout |
+| 🌙 **Dark Theme** | Modern dark color scheme |
+| 📱 **Responsive** | Works on all screen sizes |
+| ✨ **Animations** | Smooth CSS & Angular animations |
+| 🔔 **Toasts** | Real-time notifications |
+| ⏳ **Loading** | Skeleton loaders & overlays |
+
+</div>
+
+---
+
+<!-- Browser Support -->
+## 🌐 Browser Support
+
+<div align="center">
+
+| <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/chrome/chrome_48x48.png" width="32"/> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/firefox/firefox_48x48.png" width="32"/> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/safari/safari_48x48.png" width="32"/> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/main/src/edge/edge_48x48.png" width="32"/> |
+|:---:|:---:|:---:|:---:|
+| Chrome | Firefox | Safari | Edge |
+| ✅ Latest | ✅ Latest | ✅ Latest | ✅ Latest |
+
+</div>
+
+---
+
+<!-- API Section -->
+## 🔌 API Integration
+
+<details>
+<summary><b>📡 Click to expand API Endpoints</b></summary>
+
+```
+🔹 /api/admin/
+├── 👥 users                  # User management
+├── 🔌 chargers               # Charger operations
+├── 🚗 vehicles               # Vehicle management
+├── 🏷️ brands                 # Brand management
+├── 💰 fees                   # Fee configuration
+├── 📄 terms                  # Terms & Conditions
+├── 📋 protocol               # Protocol content
+├── 📊 reports                # Report generation
+├── 💳 process                # Transactions
+├── 📢 complaints             # Complaints
+└── 📁 complaint-categories   # Complaint types
+
+🔹 /api/auth/
+├── 🔐 login                  # Authentication
+├── 🔑 forgot-password        # Password recovery
+└── 📝 general-complaints     # User complaints
+```
+
+</details>
+
+---
+
+<!-- Footer -->
+<div align="center">
+
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:00d4ff,100:0099ff&height=120&section=footer"/>
+
+### 💙 Made with passion by the Voltyks Team
+
+<p>
+  <img src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular"/>
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"/>
+  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel"/>
+</p>
+
+<img src="https://komarev.com/ghpvc/?username=voltyks-angular&color=00d4ff&style=flat-square&label=Profile+Views" alt="Profile Views"/>
+
+**⭐ Star this repo if you find it helpful!**
 
 </div>
