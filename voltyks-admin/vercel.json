@@ -2,6 +2,12 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist/voltyks-admin/browser",
   "framework": null,
+  "functions": {
+    "api/proxy.js": {
+      "memory": 1024,
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
     { "source": "/api/proxy/:path*", "destination": "/api/proxy" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
