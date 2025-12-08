@@ -1,8 +1,8 @@
 // Production Environment Configuration
 export const environment = {
   production: true,
-  // API Base URL - Use Vercel serverless proxy to bypass CORS
-  apiBaseUrl: '/api/proxy',
+  // API Base URL - Direct connection to Azure backend
+  apiBaseUrl: 'https://voltyks-dqh6fzgwdndrdng7.canadacentral-01.azurewebsites.net',
   apiEndpoints: {
     admin: {
       users: '/api/admin/users',
