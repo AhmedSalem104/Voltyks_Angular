@@ -1,7 +1,7 @@
 // Vercel Serverless Function - API Proxy
 // Route: /api/proxy?path=/api/Auth/Login
 
-const BACKEND_URL = 'http://voltyks-app.runasp.net';
+const BACKEND_URL = 'https://voltyks-dqh6fzgwdndrdng7.canadacentral-01.azurewebsites.net';
 
 module.exports = async (req, res) => {
   // Get the API path from query parameter

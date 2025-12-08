@@ -3,9 +3,19 @@
   "outputDirectory": "voltyks-admin/dist/voltyks-admin/browser",
   "installCommand": "cd voltyks-admin && npm install",
   "framework": null,
+  "functions": {
+    "api/proxy.js": {
+      "memory": 1024,
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/proxy/:path*",
+      "destination": "/api/proxy?path=/:path*"
+    },
+    {
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ]
