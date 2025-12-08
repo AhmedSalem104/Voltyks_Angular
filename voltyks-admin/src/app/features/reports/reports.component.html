@@ -95,15 +95,31 @@
               <th>محتوى البلاغ</th>
               <th>التاريخ</th>
               <th>الحالة</th>
+              <th>الإجراءات</th>
             </tr>
           </thead>
           <tbody>
             @for (report of paginatedReports; track report.id) {
-              <tr>
+              <tr class="clickable-row" (click)="openSidePanel(report)">
                 <td>
-                  <div class="user-cell">
-                    <span class="material-icons">account_circle</span>
-                    {{ report.userFullName }}
+                  <div class="user-cell" [title]="'معرف المستخدم: ' + report.userId">
+                    <div class="user-avatar">
+                      <span class="material-icons">account_circle</span>
+                    </div>
+                    <div class="user-info">
+                      <span class="user-name">{{ report.userFullName }}</span>
+                      <span class="user-contact">
+                        @if (report.userEmail) {
+                          <span class="material-icons contact-icon">email</span>
+                          {{ report.userEmail }}
+                        } @else if (report.userPhone) {
+                          <span class="material-icons contact-icon">phone</span>
+                          {{ report.userPhone }}
+                        } @else {
+                          <span class="loading-contact">جاري التحميل...</span>
+                        }
+                      </span>
+                    </div>
                   </div>
                 </td>
                 <td class="content-cell">{{ report.reportContent }}</td>
@@ -114,10 +130,36 @@
                   </div>
                 </td>
                 <td>
-                  <span class="status-badge" [class.resolved]="report.isResolved">
-                    <span class="material-icons">{{ report.isResolved ? 'check_circle' : 'schedule' }}</span>
-                    {{ report.isResolved ? 'تم الحل' : 'معلق' }}
-                  </span>
+                  <div class="status-cell">
+                    <button
+                      class="status-toggle-btn"
+                      [class.resolved]="report.isResolved"
+                      [class.pending]="!report.isResolved"
+                      [class.updating]="isReportUpdating(report.id)"
+                      [disabled]="isReportUpdating(report.id)"
+                      (click)="toggleReportStatus(report, $event)"
+                      [title]="report.isResolved ? 'اضغط لإرجاع إلى معلق' : 'اضغط لتحديد كمحلول'"
+                    >
+                      @if (isReportUpdating(report.id)) {
+                        <span class="material-icons spinning">sync</span>
+                        <span class="status-text">جاري التحديث</span>
+                      } @else {
+                        <span class="material-icons">{{ report.isResolved ? 'check_circle' : 'schedule' }}</span>
+                        <span class="status-text">{{ report.isResolved ? 'تم الحل' : 'معلق' }}</span>
+                      }
+                    </button>
+                  </div>
+                </td>
+                <td>
+                  <div class="actions-cell">
+                    <button
+                      class="voltyks-btn btn-icon"
+                      (click)="openSidePanel(report); $event.stopPropagation()"
+                      title="عرض التفاصيل"
+                    >
+                      <span class="material-icons">visibility</span>
+                    </button>
+                  </div>
                 </td>
               </tr>
             }
@@ -144,6 +186,364 @@
     }
   </div>
 </div>
+
+<!-- Side Panel -->
+@if (showSidePanel && selectedReport) {
+  <div class="side-panel-overlay" (click)="closeSidePanel()"></div>
+  <div class="side-panel">
+    <div class="side-panel-header">
+      <h3>تفاصيل البلاغ #{{ selectedReport.id }}</h3>
+      <button class="close-btn" (click)="closeSidePanel()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <div class="side-panel-content">
+      <!-- Report Info Section -->
+      <div class="detail-section">
+        <div class="section-header">
+          <span class="material-icons">report</span>
+          <h4>معلومات البلاغ</h4>
+        </div>
+        <div class="section-content">
+          <div class="detail-row">
+            <span class="detail-label">محتوى البلاغ</span>
+            <span class="detail-value report-content">{{ selectedReport.reportContent }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">تاريخ البلاغ</span>
+            <span class="detail-value">{{ formatDateLong(selectedReport.reportDate) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">الحالة</span>
+            <div class="status-action">
+              <span class="status-badge" [class.resolved]="selectedReport.isResolved">
+                <span class="material-icons">{{ selectedReport.isResolved ? 'check_circle' : 'schedule' }}</span>
+                {{ selectedReport.isResolved ? 'تم الحل' : 'معلق' }}
+              </span>
+              <button
+                class="voltyks-btn btn-sm"
+                [class.btn-success]="!selectedReport.isResolved"
+                [class.btn-warning]="selectedReport.isResolved"
+                (click)="toggleReportStatus(selectedReport)"
+                [disabled]="isUpdatingStatus"
+              >
+                @if (isUpdatingStatus) {
+                  <span class="material-icons spinning">sync</span>
+                } @else {
+                  <span class="material-icons">{{ selectedReport.isResolved ? 'undo' : 'check' }}</span>
+                }
+                {{ selectedReport.isResolved ? 'إرجاع للمعلق' : 'تحديد كمحلول' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Info Section -->
+      <div class="detail-section">
+        <div class="section-header">
+          <span class="material-icons">person</span>
+          <h4>بيانات صاحب البلاغ</h4>
+        </div>
+        <div class="section-content">
+          <div class="detail-row">
+            <span class="detail-label">الاسم</span>
+            <span class="detail-value">{{ selectedReport.userFullName }}</span>
+          </div>
+          @if (isLoadingReportDetails) {
+            <div class="detail-row">
+              <span class="detail-label">البريد الإلكتروني</span>
+              <span class="detail-value loading-text">جاري التحميل...</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">رقم الهاتف</span>
+              <span class="detail-value loading-text">جاري التحميل...</span>
+            </div>
+          } @else if (selectedReportDetails) {
+            <div class="detail-row">
+              <span class="detail-label">البريد الإلكتروني</span>
+              <a class="detail-value link" [href]="'mailto:' + selectedReportDetails.userEmail">
+                {{ selectedReportDetails.userEmail || '-' }}
+              </a>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">رقم الهاتف</span>
+              <a class="detail-value link" [href]="'tel:' + selectedReportDetails.userPhone">
+                {{ selectedReportDetails.userPhone || '-' }}
+              </a>
+            </div>
+          }
+          <div class="detail-row">
+            <span class="detail-label">معرف المستخدم</span>
+            <span class="detail-value">{{ selectedReport.userId }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Process Details -->
+      @if (isLoadingProcess) {
+        <div class="loading-section">
+          <span class="material-icons spinning">sync</span>
+          <p>جاري تحميل بيانات العملية...</p>
+        </div>
+      } @else if (selectedProcess) {
+        <!-- Process Info Section -->
+        <div class="detail-section">
+          <div class="section-header">
+            <span class="material-icons">electric_bolt</span>
+            <h4>معلومات العملية</h4>
+          </div>
+          <div class="section-content">
+            <div class="detail-row">
+              <span class="detail-label">رقم العملية</span>
+              <span class="detail-value">#{{ selectedProcess.id }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">تاريخ الطلب</span>
+              <span class="detail-value">{{ formatDateLong(selectedProcess.requestedAt) }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">الحالة</span>
+              <span class="status-badge process-status" [ngClass]="getStatusClass(selectedProcess.status)">
+                {{ getStatusText(selectedProcess.status) }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Request Details Section -->
+        <div class="detail-section">
+          <div class="section-header">
+            <span class="material-icons">info</span>
+            <h4>تفاصيل الطلب</h4>
+          </div>
+          <div class="section-content">
+            <div class="detail-row">
+              <span class="detail-label">الطاقة المطلوبة</span>
+              <span class="detail-value">{{ selectedProcess.kwNeeded }} kW</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">نسبة البطارية الحالية</span>
+              <span class="detail-value">{{ selectedProcess.currentBatteryPercentage }}%</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">الكمية المشحونة</span>
+              <span class="detail-value">{{ selectedProcess.amountCharged }} kW</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">تاريخ الإنشاء</span>
+              <span class="detail-value">{{ formatDateLong(selectedProcess.dateCreated) }}</span>
+            </div>
+            @if (selectedProcess.dateCompleted) {
+              <div class="detail-row">
+                <span class="detail-label">تاريخ الإكمال</span>
+                <span class="detail-value">{{ formatDateLong(selectedProcess.dateCompleted) }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Pricing Section -->
+        <div class="detail-section">
+          <div class="section-header">
+            <span class="material-icons">payments</span>
+            <h4>الأسعار</h4>
+          </div>
+          <div class="section-content">
+            <div class="detail-row">
+              <span class="detail-label">المبلغ الأساسي</span>
+              <span class="detail-value">{{ selectedProcess.baseAmount }} ج.م</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">رسوم Voltyks</span>
+              <span class="detail-value">{{ selectedProcess.voltyksFees }} ج.م</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">السعر التقديري</span>
+              <span class="detail-value">{{ selectedProcess.estimatedPrice }} ج.م</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">المبلغ المدفوع</span>
+              <span class="detail-value highlight">{{ selectedProcess.amountPaid }} ج.م</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">سعر الشاحن</span>
+              <span class="detail-value">{{ selectedProcess.chargerPrice }} ج.م/kW</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charger Info Section -->
+        <div class="detail-section">
+          <div class="section-header">
+            <span class="material-icons">ev_station</span>
+            <h4>معلومات الشاحن</h4>
+          </div>
+          <div class="section-content">
+            <div class="detail-row">
+              <span class="detail-label">رقم الشاحن</span>
+              <span class="detail-value">#{{ selectedProcess.chargerId }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">البروتوكول</span>
+              <span class="detail-value">{{ selectedProcess.chargerProtocol }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">السعة</span>
+              <span class="detail-value">{{ selectedProcess.chargerCapacityKw }} kW</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">توفر الأدابتر</span>
+              <span class="detail-value">{{ selectedProcess.chargerHasAdaptor ? 'نعم' : 'لا' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">حالة الشاحن</span>
+              <span class="detail-value" [class.active]="selectedProcess.chargerIsActive" [class.inactive]="!selectedProcess.chargerIsActive">
+                {{ selectedProcess.chargerIsActive ? 'نشط' : 'غير نشط' }}
+              </span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">التقييم</span>
+              <span class="detail-value">{{ selectedProcess.chargerRating || '-' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">المنطقة</span>
+              <span class="detail-value">{{ selectedProcess.chargerArea }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">الشارع</span>
+              <span class="detail-value">{{ selectedProcess.chargerStreet }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">رقم المبنى</span>
+              <span class="detail-value">{{ selectedProcess.chargerBuildingNumber }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vehicle Info Section -->
+        <div class="detail-section">
+          <div class="section-header">
+            <span class="material-icons">directions_car</span>
+            <h4>معلومات المركبة</h4>
+          </div>
+          <div class="section-content">
+            <div class="detail-row">
+              <span class="detail-label">العلامة التجارية</span>
+              <span class="detail-value">{{ selectedProcess.vehicleBrand }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">الموديل</span>
+              <span class="detail-value">{{ selectedProcess.vehicleModel }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">اللون</span>
+              <span class="detail-value">{{ selectedProcess.vehicleColor }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">رقم اللوحة</span>
+              <span class="detail-value">{{ selectedProcess.vehiclePlate }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">سعة البطارية</span>
+              <span class="detail-value">{{ selectedProcess.vehicleCapacity }} kW</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">سنة الصنع</span>
+              <span class="detail-value">{{ selectedProcess.vehicleYear }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vehicle Owner Section -->
+        <div class="detail-section">
+          <div class="section-header">
+            <span class="material-icons">person</span>
+            <h4>مالك المركبة</h4>
+          </div>
+          <div class="section-content">
+            <div class="detail-row">
+              <span class="detail-label">الاسم</span>
+              <span class="detail-value">{{ selectedProcess.vehicleOwnerName }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">البريد الإلكتروني</span>
+              <a class="detail-value link" [href]="'mailto:' + selectedProcess.vehicleOwnerEmail">
+                {{ selectedProcess.vehicleOwnerEmail }}
+              </a>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">رقم الهاتف</span>
+              <a class="detail-value link" [href]="'tel:' + selectedProcess.vehicleOwnerPhone">
+                {{ selectedProcess.vehicleOwnerPhone }}
+              </a>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">التقييم</span>
+              <span class="detail-value">{{ selectedProcess.vehicleOwnerRating || '-' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">رصيد المحفظة</span>
+              <span class="detail-value">{{ selectedProcess.vehicleOwnerWallet }} ج.م</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">حالة الحساب</span>
+              <span class="detail-value" [class.banned]="selectedProcess.vehicleOwnerIsBanned" [class.active]="!selectedProcess.vehicleOwnerIsBanned">
+                {{ selectedProcess.vehicleOwnerIsBanned ? 'محظور' : 'نشط' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charger Owner Section -->
+        <div class="detail-section">
+          <div class="section-header">
+            <span class="material-icons">engineering</span>
+            <h4>مالك الشاحن</h4>
+          </div>
+          <div class="section-content">
+            <div class="detail-row">
+              <span class="detail-label">الاسم</span>
+              <span class="detail-value">{{ selectedProcess.chargerOwnerName }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">البريد الإلكتروني</span>
+              <a class="detail-value link" [href]="'mailto:' + selectedProcess.chargerOwnerEmail">
+                {{ selectedProcess.chargerOwnerEmail }}
+              </a>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">رقم الهاتف</span>
+              <a class="detail-value link" [href]="'tel:' + selectedProcess.chargerOwnerPhone">
+                {{ selectedProcess.chargerOwnerPhone }}
+              </a>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">التقييم</span>
+              <span class="detail-value">{{ selectedProcess.chargerOwnerRating || '-' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">رصيد المحفظة</span>
+              <span class="detail-value">{{ selectedProcess.chargerOwnerWallet }} ج.م</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">حالة الحساب</span>
+              <span class="detail-value" [class.banned]="selectedProcess.chargerOwnerIsBanned" [class.active]="!selectedProcess.chargerOwnerIsBanned">
+                {{ selectedProcess.chargerOwnerIsBanned ? 'محظور' : 'نشط' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <div class="no-process">
+          <span class="material-icons">info</span>
+          <p>لا توجد بيانات عملية مرتبطة بهذا البلاغ</p>
+        </div>
+      }
+    </div>
+  </div>
+}
 
 @if (isLoading) {
   <app-loading-overlay></app-loading-overlay>

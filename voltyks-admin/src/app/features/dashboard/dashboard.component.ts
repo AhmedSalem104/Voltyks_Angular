@@ -9,6 +9,9 @@ import { AdminReportsService } from '../../core/services/admin/admin-reports.ser
 import { AdminBrandsService } from '../../core/services/admin/admin-brands.service';
 import { AdminChargersService } from '../../core/services/admin/admin-chargers.service';
 import { AdminVehiclesService } from '../../core/services/admin/admin-vehicles.service';
+import { AdminComplaintsService } from '../../core/services/admin/admin-complaints.service';
+import { AdminComplaintCategoriesService } from '../../core/services/admin/admin-complaint-categories.service';
+import { AdminProcessesService } from '../../core/services/admin/admin-processes.service';
 import { AuthService } from '../../core/services/auth.service';
 import { forkJoin } from 'rxjs';
 
@@ -27,6 +30,12 @@ interface DashboardStats {
   totalModels: number;
   currentFees: number;
   averageRating: number;
+  // New stats
+  totalComplaints: number;
+  pendingComplaints: number;
+  resolvedComplaints: number;
+  totalComplaintCategories: number;
+  totalProcesses: number;
 }
 
 interface RecentReport {
@@ -57,7 +66,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     totalBrands: 0,
     totalModels: 0,
     currentFees: 0,
-    averageRating: 0
+    averageRating: 0,
+    totalComplaints: 0,
+    pendingComplaints: 0,
+    resolvedComplaints: 0,
+    totalComplaintCategories: 0,
+    totalProcesses: 0
   };
 
   recentReports: RecentReport[] = [];
@@ -148,6 +162,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     private brandsService: AdminBrandsService,
     private chargersService: AdminChargersService,
     private vehiclesService: AdminVehiclesService,
+    private complaintsService: AdminComplaintsService,
+    private complaintCategoriesService: AdminComplaintCategoriesService,
+    private processesService: AdminProcessesService,
     private authService: AuthService
   ) {}
 
@@ -210,7 +227,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       brands: this.brandsService.getBrands(),
       models: this.brandsService.getModels(),
       chargers: this.chargersService.getChargers(),
-      vehicles: this.vehiclesService.getVehicles()
+      vehicles: this.vehiclesService.getVehicles(),
+      complaints: this.complaintsService.getComplaints({ includeResolved: true }),
+      complaintCategories: this.complaintCategoriesService.getCategories({ includeDeleted: false }),
+      processes: this.processesService.getProcesses()
     }).subscribe({
       next: (results) => {
         if (results.users.status && results.users.data) {
@@ -260,6 +280,24 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
         if (results.vehicles.status && results.vehicles.data) {
           this.stats.totalVehicles = results.vehicles.data.length;
+        }
+
+        // Complaints stats
+        if (results.complaints.status && results.complaints.data) {
+          const complaints = results.complaints.data;
+          this.stats.totalComplaints = complaints.length;
+          this.stats.pendingComplaints = complaints.filter(c => !c.isResolved).length;
+          this.stats.resolvedComplaints = complaints.filter(c => c.isResolved).length;
+        }
+
+        // Complaint categories stats
+        if (results.complaintCategories.status && results.complaintCategories.data) {
+          this.stats.totalComplaintCategories = results.complaintCategories.data.length;
+        }
+
+        // Processes stats
+        if (results.processes.status && results.processes.data) {
+          this.stats.totalProcesses = results.processes.data.length;
         }
 
         this.updateCharts();

@@ -181,10 +181,10 @@ export class TermsComponent implements OnInit {
     }
 
     // Update the terms content
-    // Convert content to JSON string for backend
+    // Send content as object (not string) to backend
     const updatedTerms: UpdateTermsDto = {
       lang: this.selectedLang,
-      content: JSON.stringify(parsedContent)
+      content: parsedContent
     };
 
     console.log('=== Sending update request ===');

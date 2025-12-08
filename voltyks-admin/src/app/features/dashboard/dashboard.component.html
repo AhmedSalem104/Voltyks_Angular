@@ -122,7 +122,7 @@
             }
           </a>
 
-          <a routerLink="/brands-models" class="stat-chip">
+          <a routerLink="/brands" class="stat-chip">
             <span class="material-icons">business</span>
             <div class="chip-data">
               <span class="chip-value">{{ stats.totalBrands }}</span>
@@ -137,6 +137,33 @@
               <span class="chip-label">رسوم</span>
             </div>
           </a>
+
+          <a routerLink="/processes" class="stat-chip">
+            <span class="material-icons">electric_bolt</span>
+            <div class="chip-data">
+              <span class="chip-value">{{ stats.totalProcesses }}</span>
+              <span class="chip-label">عملية شحن</span>
+            </div>
+          </a>
+
+          <a routerLink="/complaints" class="stat-chip">
+            <span class="material-icons">feedback</span>
+            <div class="chip-data">
+              <span class="chip-value">{{ stats.totalComplaints }}</span>
+              <span class="chip-label">شكوى</span>
+            </div>
+            @if (stats.pendingComplaints > 0) {
+              <span class="chip-badge pending">{{ stats.pendingComplaints }}</span>
+            }
+          </a>
+
+          <a routerLink="/complaint-categories" class="stat-chip">
+            <span class="material-icons">category</span>
+            <div class="chip-data">
+              <span class="chip-value">{{ stats.totalComplaintCategories }}</span>
+              <span class="chip-label">نوع شكوى</span>
+            </div>
+          </a>
         </div>
       </div>
     </section>
@@ -149,6 +176,10 @@
           <span class="material-icons">people</span>
           <span>المستخدمين</span>
         </a>
+        <a routerLink="/processes" class="action-item">
+          <span class="material-icons">electric_bolt</span>
+          <span>عمليات الشحن</span>
+        </a>
         <a routerLink="/chargers" class="action-item">
           <span class="material-icons">ev_station</span>
           <span>الشواحن</span>
@@ -157,13 +188,21 @@
           <span class="material-icons">electric_car</span>
           <span>المركبات</span>
         </a>
-        <a routerLink="/brands-models" class="action-item">
+        <a routerLink="/brands" class="action-item">
           <span class="material-icons">category</span>
           <span>العلامات</span>
         </a>
         <a routerLink="/reports" class="action-item">
           <span class="material-icons">flag</span>
           <span>البلاغات</span>
+        </a>
+        <a routerLink="/complaints" class="action-item">
+          <span class="material-icons">feedback</span>
+          <span>الشكاوى</span>
+        </a>
+        <a routerLink="/complaint-categories" class="action-item">
+          <span class="material-icons">category</span>
+          <span>أنواع الشكاوى</span>
         </a>
         <a routerLink="/fees" class="action-item">
           <span class="material-icons">payments</span>
@@ -174,7 +213,7 @@
           <span>الشروط</span>
         </a>
         <a routerLink="/protocol" class="action-item">
-          <span class="material-icons">settings</span>
+          <span class="material-icons">policy</span>
           <span>البروتوكول</span>
         </a>
       </div>

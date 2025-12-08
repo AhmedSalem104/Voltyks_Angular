@@ -9,5 +9,5 @@ export interface AdminTermsDto {
 
 export interface UpdateTermsDto {
   lang: string;
-  content: string;
+  content: any;  // Can be object or string - backend expects JSON object
 }

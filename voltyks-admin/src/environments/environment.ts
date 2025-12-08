@@ -13,7 +13,12 @@ export const environment = {
       reports: '/api/admin/reports',
       chargers: '/api/admin/chargers',
       vehicles: '/api/admin/vehicles',
-      processes: '/api/admin/process'
+      processes: '/api/admin/process',
+      complaintCategories: '/api/admin/complaint-categories',
+      complaints: '/api/admin/complaints'
+    },
+    auth: {
+      generalComplaints: '/api/auth/general-complaints'
     }
   }
 };

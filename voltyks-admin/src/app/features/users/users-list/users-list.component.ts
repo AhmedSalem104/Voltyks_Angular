@@ -84,20 +84,8 @@ export class UsersListComponent implements OnInit {
   }
 
   private performSearch(searchTerm: string): void {
-    if (!searchTerm.trim()) {
-      this.filteredUsers = [...this.users];
-    } else {
-      const term = searchTerm.toLowerCase();
-      this.filteredUsers = this.users.filter(user =>
-        user.fullName?.toLowerCase().includes(term) ||
-        user.email?.toLowerCase().includes(term) ||
-        user.phoneNumber?.includes(term)
-      );
-    }
-
-    this.totalItems = this.filteredUsers.length;
-    this.currentPage = 1;
-    this.updatePaginatedUsers();
+    // Call API with search parameter
+    this.loadUsers(searchTerm.trim() || undefined);
   }
 
   onPageChange(page: number): void {

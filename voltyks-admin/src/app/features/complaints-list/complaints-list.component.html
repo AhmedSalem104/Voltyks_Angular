@@ -1,0 +1,275 @@
+<div class="complaints-list-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h2>الشكاوى</h2>
+      <p class="page-description">عرض وإدارة جميع الشكاوى المقدمة من المستخدمين</p>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card pending">
+      <div class="stat-icon">
+        <span class="material-icons">hourglass_empty</span>
+      </div>
+      <div class="stat-content">
+        <span class="stat-value">{{ totalPending }}</span>
+        <span class="stat-label">غير محلولة</span>
+      </div>
+    </div>
+    <div class="stat-card resolved">
+      <div class="stat-icon">
+        <span class="material-icons">check_circle</span>
+      </div>
+      <div class="stat-content">
+        <span class="stat-value">{{ totalResolved }}</span>
+        <span class="stat-label">محلولة</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section voltyks-card">
+    <div class="filters-wrapper">
+      <!-- Search Box -->
+      <div class="filter-item search-filter">
+        <div class="search-box">
+          <span class="material-icons search-icon">search</span>
+          <input
+            type="text"
+            class="voltyks-input"
+            placeholder="البحث في الشكاوى..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()"
+          />
+        </div>
+      </div>
+
+      <!-- Category Filter -->
+      <div class="filter-item select-filter">
+        <select
+          class="voltyks-input"
+          [(ngModel)]="selectedCategoryId"
+          (ngModelChange)="onCategoryChange()"
+        >
+          <option [ngValue]="null">جميع الأنواع</option>
+          @for (category of categories; track category.id) {
+            <option [ngValue]="category.id">{{ category.name }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Show Resolved Toggle -->
+      <div class="filter-item toggle-filter">
+        <label class="toggle-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="showResolved"
+            (ngModelChange)="onShowResolvedChange()"
+          />
+          <span class="toggle-switch"></span>
+          <span class="toggle-text">عرض المحلولة</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complaints Table -->
+  <div class="voltyks-card">
+    <div class="table-header">
+      <h3>قائمة الشكاوى</h3>
+      <div class="header-actions">
+        <span class="total-count">إجمالي: {{ totalComplaints }}</span>
+      </div>
+    </div>
+
+    @if (paginatedComplaints.length > 0) {
+      <div class="table-wrapper">
+        <table class="voltyks-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>النوع</th>
+              <th>المحتوى</th>
+              <th>المستخدم</th>
+              <th>الحالة</th>
+              <th>التاريخ</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (complaint of paginatedComplaints; track complaint.id; let i = $index) {
+              <tr [class.resolved-row]="complaint.isResolved">
+                <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                <td>
+                  <div class="category-badge">
+                    <span class="material-icons">category</span>
+                    {{ complaint.categoryName }}
+                  </div>
+                </td>
+                <td class="content-cell">
+                  <span [title]="complaint.content">
+                    {{ truncateContent(complaint.content, 80) }}
+                  </span>
+                </td>
+                <td>
+                  <div class="user-info">
+                    <span class="user-name">{{ complaint.userName || '-' }}</span>
+                    @if (complaint.userEmail) {
+                      <span class="user-contact">{{ complaint.userEmail }}</span>
+                    }
+                    @if (complaint.userPhone) {
+                      <span class="user-contact">{{ complaint.userPhone }}</span>
+                    }
+                  </div>
+                </td>
+                <td>
+                  <button
+                    class="status-toggle-btn"
+                    [class.resolved]="complaint.isResolved"
+                    [class.pending]="!complaint.isResolved"
+                    [disabled]="updatingComplaintId === complaint.id"
+                    (click)="toggleStatus(complaint)"
+                  >
+                    @if (updatingComplaintId === complaint.id) {
+                      <span class="material-icons spinning">sync</span>
+                    } @else {
+                      <span class="material-icons">{{ complaint.isResolved ? 'check_circle' : 'hourglass_empty' }}</span>
+                    }
+                    {{ complaint.isResolved ? 'محلولة' : 'غير محلولة' }}
+                  </button>
+                </td>
+                <td>
+                  <div class="date-cell" [title]="formatDateLong(complaint.createdAt)">
+                    {{ formatDate(complaint.createdAt) }}
+                  </div>
+                </td>
+                <td>
+                  <div class="actions-cell">
+                    <button
+                      class="action-btn view"
+                      (click)="openDetailsModal(complaint)"
+                      title="عرض التفاصيل"
+                    >
+                      <span class="material-icons">visibility</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <app-pagination
+        [totalItems]="totalComplaints"
+        [pageSize]="pageSize"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)"
+      ></app-pagination>
+    } @else {
+      <div class="empty-state">
+        <span class="material-icons empty-icon">inbox</span>
+        <p>لا توجد شكاوى</p>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Details Modal -->
+@if (showDetailsModal && selectedComplaint) {
+  <div class="modal-overlay" (click)="closeDetailsModal()"></div>
+  <div class="modal details-modal">
+    <div class="modal-header">
+      <h3>
+        <span class="material-icons">info</span>
+        تفاصيل الشكوى
+      </h3>
+      <button class="close-btn" (click)="closeDetailsModal()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-section">
+        <div class="detail-row">
+          <span class="detail-label">
+            <span class="material-icons">category</span>
+            نوع الشكوى
+          </span>
+          <span class="detail-value">{{ selectedComplaint.categoryName }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">
+            <span class="material-icons">schedule</span>
+            الحالة
+          </span>
+          <span class="status-badge" [class.resolved]="selectedComplaint.isResolved" [class.pending]="!selectedComplaint.isResolved">
+            <span class="material-icons">{{ selectedComplaint.isResolved ? 'check_circle' : 'hourglass_empty' }}</span>
+            {{ selectedComplaint.isResolved ? 'محلولة' : 'غير محلولة' }}
+          </span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">
+            <span class="material-icons">calendar_today</span>
+            تاريخ الإنشاء
+          </span>
+          <span class="detail-value">{{ formatDateLong(selectedComplaint.createdAt) }}</span>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h4>معلومات المستخدم</h4>
+        <div class="detail-row">
+          <span class="detail-label">
+            <span class="material-icons">person</span>
+            الاسم
+          </span>
+          <span class="detail-value">{{ selectedComplaint.userName || '-' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">
+            <span class="material-icons">email</span>
+            البريد الإلكتروني
+          </span>
+          <span class="detail-value">{{ selectedComplaint.userEmail || '-' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">
+            <span class="material-icons">phone</span>
+            رقم الهاتف
+          </span>
+          <span class="detail-value">{{ selectedComplaint.userPhone || '-' }}</span>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h4>محتوى الشكوى</h4>
+        <div class="complaint-content-box">
+          {{ selectedComplaint.content }}
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="voltyks-btn btn-secondary" (click)="closeDetailsModal()">إغلاق</button>
+      <button
+        class="voltyks-btn"
+        [class.btn-primary]="!selectedComplaint.isResolved"
+        [class.btn-secondary]="selectedComplaint.isResolved"
+        [disabled]="updatingComplaintId === selectedComplaint.id"
+        (click)="toggleStatus(selectedComplaint)"
+      >
+        @if (updatingComplaintId === selectedComplaint.id) {
+          <span class="material-icons spinning">sync</span>
+        } @else {
+          <span class="material-icons">{{ selectedComplaint.isResolved ? 'undo' : 'check_circle' }}</span>
+        }
+        {{ selectedComplaint.isResolved ? 'إلغاء الحل' : 'تحديد كمحلولة' }}
+      </button>
+    </div>
+  </div>
+}
+
+
+@if (isLoading) {
+  <app-loading-overlay></app-loading-overlay>
+}

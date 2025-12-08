@@ -1,12 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
 import { AdminReportsService } from '../../core/services/admin/admin-reports.service';
-import { AdminReportDto, ReportFilterParams } from '../../core/models';
+import { AdminProcessesService } from '../../core/services/admin/admin-processes.service';
+import { AdminReportDto, AdminReportDetailsDto, ReportFilterParams, AdminProcessDto } from '../../core/models';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+
+// Extended report type with user details for table display
+interface ReportWithUserDetails extends AdminReportDto {
+  userEmail?: string;
+  userPhone?: string;
+}
 
 // Status options for reports
 const REPORT_STATUS_OPTIONS = [
@@ -29,9 +36,12 @@ const REPORT_STATUS_OPTIONS = [
 })
 export class ReportsComponent implements OnInit {
   // Reports data
-  reports: AdminReportDto[] = [];
-  filteredReports: AdminReportDto[] = [];
-  paginatedReports: AdminReportDto[] = [];
+  reports: ReportWithUserDetails[] = [];
+  filteredReports: ReportWithUserDetails[] = [];
+  paginatedReports: ReportWithUserDetails[] = [];
+
+  // Track updating status for each report
+  updatingReportIds: Set<number> = new Set();
 
   // Status options
   statusOptions = REPORT_STATUS_OPTIONS;
@@ -58,8 +68,18 @@ export class ReportsComponent implements OnInit {
   // Today's date for max date validation
   today: string = new Date().toISOString().split('T')[0];
 
+  // Side Panel
+  showSidePanel = false;
+  selectedReport: AdminReportDto | null = null;
+  selectedReportDetails: AdminReportDetailsDto | null = null;
+  selectedProcess: AdminProcessDto | null = null;
+  isLoadingProcess = false;
+  isLoadingReportDetails = false;
+  isUpdatingStatus = false;
+
   constructor(
     private reportsService: AdminReportsService,
+    private processesService: AdminProcessesService,
     private toaster: ToasterService
   ) {}
 
@@ -90,12 +110,39 @@ export class ReportsComponent implements OnInit {
         if (res.status && res.data) {
           this.reports = res.data;
           this.applyFilters();
+          // Load user details for all reports
+          this.loadUserDetailsForReports();
         }
         this.isLoading = false;
       },
       error: (err) => {
         this.toaster.error(err.message || 'فشل تحميل التقارير');
         this.isLoading = false;
+      }
+    });
+  }
+
+  private loadUserDetailsForReports(): void {
+    // Fetch details for each report to get email/phone
+    const detailRequests = this.reports.map(report =>
+      this.reportsService.getReportById(report.id)
+    );
+
+    if (detailRequests.length === 0) return;
+
+    forkJoin(detailRequests).subscribe({
+      next: (responses) => {
+        responses.forEach((response, index) => {
+          if (response.status && response.data) {
+            this.reports[index].userEmail = response.data.userEmail;
+            this.reports[index].userPhone = response.data.userPhone;
+          }
+        });
+        // Update paginated reports to reflect changes
+        this.updatePaginatedReports();
+      },
+      error: () => {
+        // Silently fail - user details are optional
       }
     });
   }
@@ -213,5 +260,137 @@ export class ReportsComponent implements OnInit {
 
   hasActiveFilters(): boolean {
     return !!(this.filters.search || this.filters.status || this.filters.startDate || this.filters.endDate);
+  }
+
+  // Side Panel Methods
+  openSidePanel(report: AdminReportDto): void {
+    this.selectedReport = report;
+    this.selectedReportDetails = null;
+    this.selectedProcess = null;
+    this.showSidePanel = true;
+    document.body.style.overflow = 'hidden';
+
+    // Load report details (with user email & phone)
+    this.loadReportDetails(report.id);
+
+    // Load process details
+    if (report.processId) {
+      this.loadProcessDetails(report.processId);
+    }
+  }
+
+  closeSidePanel(): void {
+    this.showSidePanel = false;
+    this.selectedReport = null;
+    this.selectedReportDetails = null;
+    this.selectedProcess = null;
+    document.body.style.overflow = '';
+  }
+
+  private loadReportDetails(reportId: number): void {
+    this.isLoadingReportDetails = true;
+    this.reportsService.getReportById(reportId).subscribe({
+      next: (response) => {
+        if (response.status && response.data) {
+          this.selectedReportDetails = response.data;
+        }
+        this.isLoadingReportDetails = false;
+      },
+      error: (err) => {
+        this.isLoadingReportDetails = false;
+      }
+    });
+  }
+
+  private loadProcessDetails(processId: number): void {
+    this.isLoadingProcess = true;
+    // Use getProcesses and filter by processId since there's no single process endpoint
+    this.processesService.getProcesses().subscribe({
+      next: (response) => {
+        if (response.status && response.data) {
+          const process = response.data.find(p => p.id === processId);
+          if (process) {
+            this.selectedProcess = process;
+          } else {
+            this.toaster.error('لم يتم العثور على بيانات العملية');
+          }
+        }
+        this.isLoadingProcess = false;
+      },
+      error: (err) => {
+        this.toaster.error('فشل تحميل بيانات العملية');
+        this.isLoadingProcess = false;
+      }
+    });
+  }
+
+  toggleReportStatus(report: ReportWithUserDetails, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+
+    // Check if already updating this report
+    if (this.updatingReportIds.has(report.id)) {
+      return;
+    }
+
+    this.updatingReportIds.add(report.id);
+    this.isUpdatingStatus = true;
+    const newStatus = !report.isResolved;
+
+    this.reportsService.updateReportStatus(report.id, newStatus).subscribe({
+      next: (response) => {
+        if (response.status) {
+          report.isResolved = newStatus;
+          // Update in original reports array
+          const originalReport = this.reports.find(r => r.id === report.id);
+          if (originalReport) {
+            originalReport.isResolved = newStatus;
+          }
+          if (this.selectedReport?.id === report.id) {
+            this.selectedReport.isResolved = newStatus;
+          }
+          this.toaster.success(newStatus ? 'تم تحديث الحالة إلى: تم الحل' : 'تم تحديث الحالة إلى: معلق');
+        } else {
+          this.toaster.error(response.message || 'فشل تحديث الحالة');
+        }
+        this.updatingReportIds.delete(report.id);
+        this.isUpdatingStatus = false;
+      },
+      error: (err) => {
+        this.toaster.error('فشل تحديث حالة البلاغ');
+        this.updatingReportIds.delete(report.id);
+        this.isUpdatingStatus = false;
+      }
+    });
+  }
+
+  isReportUpdating(reportId: number): boolean {
+    return this.updatingReportIds.has(reportId);
+  }
+
+  // Process Status Methods
+  getStatusClass(status: string): string {
+    const statusClasses: { [key: string]: string } = {
+      'Pending': 'status-pending',
+      'Accepted': 'status-accepted',
+      'InProgress': 'status-in-progress',
+      'Completed': 'status-completed',
+      'Aborted': 'status-aborted',
+      'Rejected': 'status-rejected'
+    };
+    return statusClasses[status] || 'status-pending';
+  }
+
+  getStatusText(status: string): string {
+    const statusTexts: { [key: string]: string } = {
+      'Pending': 'قيد الانتظار',
+      'Accepted': 'مقبول',
+      'InProgress': 'جاري التنفيذ',
+      'Completed': 'مكتمل',
+      'Aborted': 'ملغي',
+      'Rejected': 'مرفوض'
+    };
+    return statusTexts[status] || status;
   }
 }

@@ -20,4 +20,12 @@ export class AdminProcessesService {
   getProcesses(): Observable<ApiResponse<AdminProcessDto[]>> {
     return this.http.get<ApiResponse<AdminProcessDto[]>>(this.baseUrl);
   }
+
+  /**
+   * Get process by ID
+   * GET /api/admin/process/{id}
+   */
+  getProcessById(id: number): Observable<ApiResponse<AdminProcessDto>> {
+    return this.http.get<ApiResponse<AdminProcessDto>>(`${this.baseUrl}/${id}`);
+  }
 }

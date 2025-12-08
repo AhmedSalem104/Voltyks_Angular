@@ -65,6 +65,8 @@ export class SidebarComponent implements OnInit {
     { label: 'الشروط والأحكام', icon: 'description', route: '/terms' },
     { label: 'البروتوكول', icon: 'policy', route: '/protocol' },
     { label: 'التقارير', icon: 'report', route: '/reports' },
+    { label: 'الشكاوى', icon: 'feedback', route: '/complaints' },
+    { label: 'أنواع الشكاوى', icon: 'category', route: '/complaint-categories' },
     { label: 'عن Voltyks', icon: 'info', route: '/about' }
   ];
 

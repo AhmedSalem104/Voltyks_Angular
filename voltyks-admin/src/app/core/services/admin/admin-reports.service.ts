@@ -50,4 +50,15 @@ export class AdminReportsService {
   getReportById(id: number): Observable<ApiResponse<AdminReportDetailsDto>> {
     return this.http.get<ApiResponse<AdminReportDetailsDto>>(`${this.baseUrl}/${id}`);
   }
+
+  /**
+   * Update report status
+   * PATCH /api/admin/reports/{id}/status?isResolved=true/false
+   */
+  updateReportStatus(id: number, isResolved: boolean): Observable<ApiResponse<any>> {
+    return this.http.patch<ApiResponse<any>>(
+      `${this.baseUrl}/${id}/status?isResolved=${isResolved}`,
+      null
+    );
+  }
 }
