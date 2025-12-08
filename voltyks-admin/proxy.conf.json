@@ -1,7 +1,7 @@
 {
   "/api": {
-    "target": "http://voltyks-app.runasp.net",
-    "secure": false,
+    "target": "https://voltyks-dqh6fzgwdndrdng7.canadacentral-01.azurewebsites.net",
+    "secure": true,
     "changeOrigin": true,
     "logLevel": "debug"
   }

@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "http://voltyks-app.runasp.net/api/:path*"
+      "destination": "https://voltyks-dqh6fzgwdndrdng7.canadacentral-01.azurewebsites.net/api/:path*"
     },
     {
       "source": "/(.*)",
