@@ -12,6 +12,7 @@ export interface UserLoginResultDto {
   phoneNumber: string;
   city: string;
   token: string;
+  role?: string;
 }
 
 export interface RegisterDTO {

@@ -89,7 +89,17 @@ export class LoginComponent implements OnInit {
                          (response.data && response.data.token);
 
         if (isSuccess) {
-          console.log('✅ Login successful! Navigating to dashboard...');
+          console.log('✅ Login successful!');
+
+          // Check if user is Admin
+          if (!this.authService.isAdmin()) {
+            console.log('❌ Access denied - User is not Admin');
+            this.authService.clearAuth();
+            this.errorMessage = 'عذراً، لوحة التحكم متاحة للمسؤولين فقط';
+            return;
+          }
+
+          console.log('✅ Admin verified! Navigating to dashboard...');
 
           // Wait a bit for cookies to be set, then navigate
           setTimeout(() => {

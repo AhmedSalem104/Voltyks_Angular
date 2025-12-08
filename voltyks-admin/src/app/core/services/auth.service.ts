@@ -65,6 +65,11 @@ export class AuthService {
                          (response.data && response.data.token);
 
         if (isSuccess && response.data) {
+          // Extract role from JWT token
+          const role = this.extractRoleFromToken(response.data.token);
+          response.data.role = role;
+          console.log('User role:', role);
+
           // Save token in localStorage if provided
           if (response.data.token) {
             this.setToken(response.data.token);
@@ -86,6 +91,28 @@ export class AuthService {
         }
       })
     );
+  }
+
+  /**
+   * Extract role from JWT token
+   */
+  private extractRoleFromToken(token: string): string | undefined {
+    try {
+      const payload = token.split('.')[1];
+      const decoded = JSON.parse(atob(payload));
+      return decoded.role;
+    } catch (error) {
+      console.error('Error extracting role from token:', error);
+      return undefined;
+    }
+  }
+
+  /**
+   * Check if current user is Admin
+   */
+  isAdmin(): boolean {
+    const user = this.currentUserSubject.value;
+    return user?.role === 'Admin';
   }
 
   /**
