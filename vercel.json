@@ -1,14 +1,26 @@
 {
-  "buildCommand": "cd voltyks-admin && npm install && npm run build && mkdir -p dist/voltyks-admin/browser/api && cp ../api/proxy.js dist/voltyks-admin/browser/api/",
-  "outputDirectory": "voltyks-admin/dist/voltyks-admin/browser",
-  "framework": null,
-  "functions": {
-    "api/proxy.js": {
-      "runtime": "nodejs20.x"
+  "version": 2,
+  "builds": [
+    {
+      "src": "voltyks-admin/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/voltyks-admin/browser"
+      }
+    },
+    {
+      "src": "api/*.js",
+      "use": "@vercel/node"
     }
-  },
-  "rewrites": [
-    { "source": "/api/proxy/:path*", "destination": "/api/proxy" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ],
+  "routes": [
+    {
+      "src": "/api/proxy(.*)",
+      "dest": "/api/proxy.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/voltyks-admin/$1"
+    }
   ]
 }
