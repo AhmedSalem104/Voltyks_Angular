@@ -161,55 +161,49 @@ export class PrintService {
           }
           .header {
             background: linear-gradient(135deg, #00C853 0%, #009E3D 100%);
-            padding: 30px 40px;
+            padding: 25px 40px;
             display: flex;
-            flex-direction: row-reverse;
             justify-content: space-between;
             align-items: center;
             border-radius: 0;
-            min-height: 100px;
+            min-height: 90px;
           }
           .header-right {
             text-align: right;
-            flex: 1;
-            padding-left: 30px;
+            order: 2;
           }
           .header-right h1 {
             color: #ffffff;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-            unicode-bidi: bidi-override;
-            direction: rtl;
+            margin-bottom: 6px;
           }
           .header-right .subtitle {
             color: rgba(255,255,255,0.9);
-            font-size: 14px;
-            margin-bottom: 6px;
+            font-size: 13px;
+            margin-bottom: 4px;
           }
           .header-right .date {
             color: rgba(255,255,255,0.8);
-            font-size: 13px;
-            margin-top: 6px;
+            font-size: 12px;
+            margin-top: 4px;
           }
           .header-left {
             display: flex;
-            flex-direction: row-reverse;
             align-items: center;
-            gap: 16px;
-            flex-shrink: 0;
+            gap: 12px;
+            order: 1;
           }
           .logo {
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            height: 55px;
             background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
           }
           .logo img {
             width: 100%;
@@ -217,9 +211,8 @@ export class PrintService {
           }
           .brand-name {
             color: #ffffff;
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
-            letter-spacing: 1px;
           }
           .page-number {
             color: rgba(255,255,255,0.9);
@@ -449,48 +442,42 @@ export class PrintService {
             }
             .header {
               background: linear-gradient(135deg, #00C853 0%, #009E3D 100%);
-              padding: 30px 40px;
+              padding: 25px 40px;
               display: flex;
-              flex-direction: row-reverse;
               justify-content: space-between;
               align-items: center;
-              min-height: 100px;
+              min-height: 90px;
             }
             .header-right {
               text-align: right;
-              flex: 1;
-              padding-left: 30px;
+              order: 2;
             }
             .header-right h1 {
               color: #ffffff;
-              font-size: 30px;
+              font-size: 28px;
               font-weight: 700;
-              margin-bottom: 8px;
-              letter-spacing: 0.5px;
-              unicode-bidi: bidi-override;
-              direction: rtl;
+              margin-bottom: 6px;
             }
             .header-right .subtitle {
               color: rgba(255,255,255,0.9);
-              font-size: 14px;
+              font-size: 13px;
             }
             .header-left {
               display: flex;
-              flex-direction: row-reverse;
               align-items: center;
-              gap: 16px;
-              flex-shrink: 0;
+              gap: 12px;
+              order: 1;
             }
             .logo {
-              width: 60px;
-              height: 60px;
+              width: 55px;
+              height: 55px;
               background: white;
               border-radius: 50%;
               display: flex;
               align-items: center;
               justify-content: center;
-              padding: 10px;
-              box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+              padding: 8px;
+              box-shadow: 0 3px 10px rgba(0,0,0,0.15);
             }
             .logo img {
               width: 100%;
@@ -498,9 +485,8 @@ export class PrintService {
             }
             .brand-name {
               color: #ffffff;
-              font-size: 32px;
+              font-size: 28px;
               font-weight: 700;
-              letter-spacing: 1px;
             }
             .content {
               padding: 35px 40px;
