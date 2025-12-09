@@ -80,6 +80,10 @@
       <h3>قائمة الشكاوى</h3>
       <div class="header-actions">
         <span class="total-count">إجمالي: {{ totalComplaints }}</span>
+        <button class="voltyks-btn btn-outline btn-sm print-btn" (click)="printToPdf()" [disabled]="filteredComplaints.length === 0">
+          <span class="material-icons">print</span>
+          طباعة PDF
+        </button>
       </div>
     </div>
 

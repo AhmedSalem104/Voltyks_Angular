@@ -135,6 +135,12 @@
       font-weight: 600;
     }
 
+    .table-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
     .total-count {
       color: #00C853;
       font-size: 14px;

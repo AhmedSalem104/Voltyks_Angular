@@ -29,6 +29,10 @@
       <h3>قائمة العلامات التجارية</h3>
       <div class="header-actions">
         <span class="total-count">إجمالي: {{ totalItems }}</span>
+        <button class="voltyks-btn btn-outline btn-sm print-btn" (click)="printToPdf()" [disabled]="filteredBrands.length === 0">
+          <span class="material-icons">print</span>
+          طباعة PDF
+        </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
           <span class="material-icons">add</span>
           إضافة علامة تجارية

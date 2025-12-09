@@ -83,6 +83,10 @@
       <h3>قائمة التقارير</h3>
       <div class="header-actions">
         <span class="total-count">إجمالي: {{ totalReports }}</span>
+        <button class="voltyks-btn btn-outline btn-sm print-btn" (click)="printToPdf()" [disabled]="filteredReports.length === 0">
+          <span class="material-icons">print</span>
+          طباعة PDF
+        </button>
       </div>
     </div>
 

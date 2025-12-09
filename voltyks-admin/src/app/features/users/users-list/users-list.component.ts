@@ -8,6 +8,7 @@ import { AdminUserDto } from '../../../core/models';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { ToasterService } from '../../../shared/components/toaster/toaster.service';
+import { PrintService } from '../../../core/services/print.service';
 
 @Component({
   selector: 'app-users-list',
@@ -39,7 +40,8 @@ export class UsersListComponent implements OnInit {
 
   constructor(
     private usersService: AdminUsersService,
-    private toaster: ToasterService
+    private toaster: ToasterService,
+    private printService: PrintService
   ) {}
 
   ngOnInit(): void {
@@ -120,6 +122,28 @@ export class UsersListComponent implements OnInit {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
+    });
+  }
+
+  printToPdf(): void {
+    this.printService.printTableToPdf({
+      title: 'تقرير المستخدمين',
+      filename: 'users_report',
+      orientation: 'landscape',
+      columns: [
+        { header: '#', field: 'index' },
+        { header: 'الاسم الكامل', field: 'fullName' },
+        { header: 'البريد الإلكتروني', field: 'email' },
+        { header: 'رقم الهاتف', field: 'phoneNumber' },
+        { header: 'تاريخ التسجيل', field: 'dateCreatedFormatted' },
+        { header: 'الحالة', field: 'statusText' }
+      ],
+      data: this.filteredUsers.map((user, index) => ({
+        ...user,
+        index: index + 1,
+        dateCreatedFormatted: this.formatDate(user.dateCreated),
+        statusText: user.isBanned ? 'محظور' : 'نشط'
+      }))
     });
   }
 }

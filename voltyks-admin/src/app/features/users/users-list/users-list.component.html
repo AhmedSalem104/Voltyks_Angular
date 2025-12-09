@@ -24,10 +24,16 @@
   </div>
 
   <!-- Users Table -->
-  <div class="voltyks-card">
+  <div class="voltyks-card" id="users-table-container">
     <div class="table-header">
       <h3>قائمة المستخدمين</h3>
-      <span class="total-count">إجمالي: {{ totalItems }}</span>
+      <div class="table-header-actions">
+        <span class="total-count">إجمالي: {{ totalItems }}</span>
+        <button class="voltyks-btn btn-outline btn-sm print-btn" (click)="printToPdf()" [disabled]="filteredUsers.length === 0">
+          <span class="material-icons">print</span>
+          طباعة PDF
+        </button>
+      </div>
     </div>
 
     @if (paginatedUsers.length > 0) {

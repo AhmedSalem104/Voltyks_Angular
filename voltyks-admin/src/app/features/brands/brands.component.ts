@@ -9,6 +9,7 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { PrintService } from '../../core/services/print.service';
 
 @Component({
   selector: 'app-brands',
@@ -61,7 +62,8 @@ export class BrandsComponent implements OnInit {
   constructor(
     private brandsService: AdminBrandsService,
     private toaster: ToasterService,
-    private router: Router
+    private router: Router,
+    private printService: PrintService
   ) {}
 
   ngOnInit(): void {
@@ -255,5 +257,22 @@ export class BrandsComponent implements OnInit {
     this.createDto = {
       name: ''
     };
+  }
+
+  printToPdf(): void {
+    this.printService.printTableToPdf({
+      title: 'تقرير العلامات التجارية',
+      filename: 'brands_report',
+      orientation: 'landscape',
+      columns: [
+        { header: '#', field: 'index' },
+        { header: 'اسم العلامة', field: 'name' },
+        { header: 'عدد الموديلات', field: 'modelsCount' }
+      ],
+      data: this.filteredBrands.map((brand, index) => ({
+        ...brand,
+        index: index + 1
+      }))
+    });
   }
 }

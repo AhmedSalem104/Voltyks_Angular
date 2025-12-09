@@ -12,6 +12,7 @@ import {
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { PrintService } from '../../core/services/print.service';
 
 @Component({
   selector: 'app-complaints',
@@ -72,7 +73,8 @@ export class ComplaintsComponent implements OnInit {
   constructor(
     private categoriesService: AdminComplaintCategoriesService,
     private complaintsService: AdminComplaintsService,
-    private toaster: ToasterService
+    private toaster: ToasterService,
+    private printService: PrintService
   ) {}
 
   ngOnInit(): void {
@@ -326,5 +328,28 @@ export class ComplaintsComponent implements OnInit {
 
   getActiveCategories(): AdminComplaintCategoryDto[] {
     return this.categories.filter(c => !c.isDeleted);
+  }
+
+  printToPdf(): void {
+    this.printService.printTableToPdf({
+      title: 'تقرير أنواع الشكاوى',
+      filename: 'complaint_categories_report',
+      orientation: 'landscape',
+      columns: [
+        { header: '#', field: 'index' },
+        { header: 'اسم النوع', field: 'name' },
+        { header: 'الوصف', field: 'descriptionShort' },
+        { header: 'عدد الشكاوى', field: 'complaintsCount' },
+        { header: 'الحالة', field: 'statusText' },
+        { header: 'تاريخ الإنشاء', field: 'createdAtFormatted' }
+      ],
+      data: this.filteredCategories.map((category, index) => ({
+        ...category,
+        index: index + 1,
+        descriptionShort: category.description?.substring(0, 30) + (category.description && category.description.length > 30 ? '...' : ''),
+        statusText: category.isDeleted ? 'محذوف' : 'نشط',
+        createdAtFormatted: this.formatDate(category.createdAt)
+      }))
+    });
   }
 }

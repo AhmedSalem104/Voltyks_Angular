@@ -9,6 +9,7 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { PrintService } from '../../core/services/print.service';
 
 @Component({
   selector: 'app-models',
@@ -70,7 +71,8 @@ export class ModelsComponent implements OnInit {
     private brandsService: AdminBrandsService,
     private toaster: ToasterService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private printService: PrintService
   ) {}
 
   ngOnInit(): void {
@@ -349,5 +351,23 @@ export class ModelsComponent implements OnInit {
   getSelectedBrandName(): string {
     if (!this.selectedBrandFilter) return '';
     return this.brands.find(b => b.id === this.selectedBrandFilter)?.name || '';
+  }
+
+  printToPdf(): void {
+    this.printService.printTableToPdf({
+      title: 'تقرير الموديلات',
+      filename: 'models_report',
+      orientation: 'landscape',
+      columns: [
+        { header: '#', field: 'index' },
+        { header: 'اسم الموديل', field: 'name' },
+        { header: 'العلامة التجارية', field: 'brandName' },
+        { header: 'سعة البطارية (kWh)', field: 'capacity' }
+      ],
+      data: this.filteredModels.map((model, index) => ({
+        ...model,
+        index: index + 1
+      }))
+    });
   }
 }

@@ -9,6 +9,7 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { PrintService } from '../../core/services/print.service';
 
 @Component({
   selector: 'app-chargers',
@@ -83,7 +84,8 @@ export class ChargersComponent implements OnInit {
   constructor(
     private chargersService: AdminChargersService,
     private usersService: AdminUsersService,
-    private toaster: ToasterService
+    private toaster: ToasterService,
+    private printService: PrintService
   ) {}
 
   ngOnInit(): void {
@@ -506,5 +508,26 @@ export class ChargersComponent implements OnInit {
     if (!dropdown && this.isFilterDropdownOpen) {
       this.isFilterDropdownOpen = false;
     }
+  }
+
+  printToPdf(): void {
+    this.printService.printTableToPdf({
+      title: 'تقرير الشواحن',
+      filename: 'chargers_report',
+      orientation: 'landscape',
+      columns: [
+        { header: '#', field: 'index' },
+        { header: 'المستخدم', field: 'userName' },
+        { header: 'البروتوكول', field: 'protocolName' },
+        { header: 'المنطقة', field: 'area' },
+        { header: 'الشارع', field: 'street' },
+        { header: 'الحالة', field: 'statusText' }
+      ],
+      data: this.filteredChargers.map((charger, index) => ({
+        ...charger,
+        index: index + 1,
+        statusText: charger.isActive ? 'نشط' : 'متوقف'
+      }))
+    });
   }
 }

@@ -8,6 +8,7 @@ import { AdminComplaintDto, AdminComplaintCategoryDto, AdminUserDto, CreateGener
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { PrintService } from '../../core/services/print.service';
 
 @Component({
   selector: 'app-complaints-list',
@@ -66,7 +67,8 @@ export class ComplaintsListComponent implements OnInit {
     private complaintsService: AdminComplaintsService,
     private categoriesService: AdminComplaintCategoriesService,
     private usersService: AdminUsersService,
-    private toaster: ToasterService
+    private toaster: ToasterService,
+    private printService: PrintService
   ) {}
 
   ngOnInit(): void {
@@ -305,5 +307,30 @@ export class ComplaintsListComponent implements OnInit {
   truncateContent(content: string, maxLength: number = 100): string {
     if (!content) return '-';
     return content.length > maxLength ? content.substring(0, maxLength) + '...' : content;
+  }
+
+  printToPdf(): void {
+    this.printService.printTableToPdf({
+      title: 'تقرير الشكاوى',
+      filename: 'complaints_report',
+      orientation: 'landscape',
+      columns: [
+        { header: '#', field: 'index' },
+        { header: 'رقم الشكوى', field: 'id' },
+        { header: 'اسم المستخدم', field: 'userName' },
+        { header: 'البريد الإلكتروني', field: 'userEmail' },
+        { header: 'نوع الشكوى', field: 'categoryName' },
+        { header: 'المحتوى', field: 'contentShort' },
+        { header: 'الحالة', field: 'statusText' },
+        { header: 'التاريخ', field: 'createdAtFormatted' }
+      ],
+      data: this.filteredComplaints.map((complaint, index) => ({
+        ...complaint,
+        index: index + 1,
+        contentShort: complaint.content?.substring(0, 50) + (complaint.content?.length > 50 ? '...' : ''),
+        statusText: complaint.isResolved ? 'تم الحل' : 'معلقة',
+        createdAtFormatted: this.formatDate(complaint.createdAt)
+      }))
+    });
   }
 }

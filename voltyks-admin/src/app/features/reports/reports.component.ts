@@ -8,6 +8,7 @@ import { AdminReportDto, AdminReportDetailsDto, ReportFilterParams, AdminProcess
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { PrintService } from '../../core/services/print.service';
 
 // Extended report type with user details for table display
 interface ReportWithUserDetails extends AdminReportDto {
@@ -80,7 +81,8 @@ export class ReportsComponent implements OnInit {
   constructor(
     private reportsService: AdminReportsService,
     private processesService: AdminProcessesService,
-    private toaster: ToasterService
+    private toaster: ToasterService,
+    private printService: PrintService
   ) {}
 
   ngOnInit(): void {
@@ -392,5 +394,30 @@ export class ReportsComponent implements OnInit {
       'Rejected': 'مرفوض'
     };
     return statusTexts[status] || status;
+  }
+
+  printToPdf(): void {
+    this.printService.printTableToPdf({
+      title: 'تقرير البلاغات',
+      filename: 'reports_report',
+      orientation: 'landscape',
+      columns: [
+        { header: '#', field: 'index' },
+        { header: 'رقم البلاغ', field: 'id' },
+        { header: 'اسم المستخدم', field: 'userFullName' },
+        { header: 'البريد الإلكتروني', field: 'userEmail' },
+        { header: 'رقم الهاتف', field: 'userPhone' },
+        { header: 'محتوى البلاغ', field: 'reportContentShort' },
+        { header: 'الحالة', field: 'statusText' },
+        { header: 'التاريخ', field: 'reportDateFormatted' }
+      ],
+      data: this.filteredReports.map((report, index) => ({
+        ...report,
+        index: index + 1,
+        reportContentShort: report.reportContent?.substring(0, 50) + (report.reportContent?.length > 50 ? '...' : ''),
+        statusText: report.isResolved ? 'تم الحل' : 'معلق',
+        reportDateFormatted: this.formatDate(report.reportDate)
+      }))
+    });
   }
 }

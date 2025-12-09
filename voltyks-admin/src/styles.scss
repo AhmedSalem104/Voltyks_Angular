@@ -233,6 +233,31 @@ p {
     }
   }
 
+  &.btn-outline {
+    background-color: transparent;
+    color: $voltyks-primary-green;
+    border: 1px solid $voltyks-primary-green;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(0, 200, 83, 0.1);
+    }
+  }
+
+  &.btn-sm {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  &.print-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    .material-icons {
+      font-size: 18px;
+    }
+  }
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;

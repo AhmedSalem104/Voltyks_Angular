@@ -7,6 +7,7 @@ import { AdminProcessDto, ProcessFilterParams, PROCESS_STATUS_OPTIONS } from '..
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { PrintService } from '../../core/services/print.service';
 
 @Component({
   selector: 'app-processes',
@@ -57,7 +58,8 @@ export class ProcessesComponent implements OnInit {
 
   constructor(
     private processesService: AdminProcessesService,
-    private toaster: ToasterService
+    private toaster: ToasterService,
+    private printService: PrintService
   ) {}
 
   ngOnInit(): void {
@@ -270,5 +272,29 @@ export class ProcessesComponent implements OnInit {
 
   hasActiveFilters(): boolean {
     return !!(this.filters.search || this.filters.status || this.filters.startDate || this.filters.endDate);
+  }
+
+  printToPdf(): void {
+    this.printService.printTableToPdf({
+      title: 'تقرير عمليات الشحن',
+      filename: 'processes_report',
+      orientation: 'landscape',
+      columns: [
+        { header: '#', field: 'index' },
+        { header: 'رقم العملية', field: 'id' },
+        { header: 'صاحب المركبة', field: 'vehicleOwnerName' },
+        { header: 'رقم اللوحة', field: 'vehiclePlate' },
+        { header: 'نوع المركبة', field: 'vehicleBrand' },
+        { header: 'صاحب الشاحن', field: 'chargerOwnerName' },
+        { header: 'الحالة', field: 'statusText' },
+        { header: 'تاريخ الطلب', field: 'requestedAtFormatted' }
+      ],
+      data: this.filteredProcesses.map((process, index) => ({
+        ...process,
+        index: index + 1,
+        statusText: this.getStatusText(process.status),
+        requestedAtFormatted: this.formatDateShort(process.requestedAt)
+      }))
+    });
   }
 }
