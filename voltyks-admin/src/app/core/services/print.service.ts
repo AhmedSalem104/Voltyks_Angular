@@ -160,27 +160,32 @@ export class PrintService {
             background: linear-gradient(135deg, #00C853 0%, #009E3D 100%);
             padding: 20px 25px;
             display: flex;
+            flex-direction: row-reverse;
             justify-content: space-between;
             align-items: center;
             border-radius: 0;
           }
-          .header-left h1 {
+          .header-right {
+            text-align: right;
+          }
+          .header-right h1 {
             color: #ffffff;
             font-size: 22px;
             font-weight: 700;
             margin-bottom: 4px;
           }
-          .header-left .subtitle {
+          .header-right .subtitle {
             color: rgba(255,255,255,0.85);
             font-size: 12px;
           }
-          .header-left .date {
+          .header-right .date {
             color: rgba(255,255,255,0.75);
             font-size: 11px;
             margin-top: 4px;
           }
-          .header-right {
+          .header-left {
             display: flex;
+            flex-direction: row-reverse;
             align-items: center;
             gap: 12px;
           }
@@ -207,7 +212,7 @@ export class PrintService {
             color: rgba(255,255,255,0.9);
             font-size: 13px;
             margin-top: 8px;
-            text-align: left;
+            text-align: right;
           }
           .table-container {
             padding: 20px 25px;
@@ -278,19 +283,19 @@ export class PrintService {
       <body>
         <div class="page">
           <div class="header">
-            <div class="header-left">
+            <div class="header-right">
               <h1>${title}</h1>
               <div class="subtitle">${subtitle}</div>
               ${showDate ? `<div class="date">${dateStr}</div>` : ''}
             </div>
-            <div class="header-right">
-              <div class="brand-name">Voltyks</div>
+            <div class="header-left">
               <div class="logo">
                 <img src="${VOLTYKS_LOGO}" alt="Voltyks Logo">
               </div>
+              <div class="brand-name">Voltyks</div>
             </div>
           </div>
-          <div class="page-number" style="text-align: left; padding: 8px 25px; background: #f0f0f0; color: #555; font-size: 12px;">
+          <div class="page-number" style="text-align: right; padding: 8px 25px; background: #f0f0f0; color: #555; font-size: 12px;">
             صفحة ${currentPage} من ${totalPages}
           </div>
           <div class="table-container">
@@ -320,10 +325,10 @@ export class PrintService {
             </table>
           </div>
           <div class="footer">
-            <div class="footer-left">
+            <div class="footer-right">
               <span>إجمالي السجلات:</span> ${totalRecords}
             </div>
-            <div class="footer-right">
+            <div class="footer-left">
               Voltyks Admin Dashboard © ${new Date().getFullYear()}
             </div>
           </div>
@@ -411,21 +416,26 @@ export class PrintService {
               background: linear-gradient(135deg, #00C853 0%, #009E3D 100%);
               padding: 25px 30px;
               display: flex;
+              flex-direction: row-reverse;
               justify-content: space-between;
               align-items: center;
             }
-            .header-left h1 {
+            .header-right {
+              text-align: right;
+            }
+            .header-right h1 {
               color: #ffffff;
               font-size: 26px;
               font-weight: 700;
               margin-bottom: 5px;
             }
-            .header-left .subtitle {
+            .header-right .subtitle {
               color: rgba(255,255,255,0.85);
               font-size: 13px;
             }
-            .header-right {
+            .header-left {
               display: flex;
+              flex-direction: row-reverse;
               align-items: center;
               gap: 12px;
             }
@@ -474,15 +484,15 @@ export class PrintService {
         <body>
           <div class="page">
             <div class="header">
-              <div class="header-left">
+              <div class="header-right">
                 <h1>${title}</h1>
                 <div class="subtitle">${subtitle}</div>
               </div>
-              <div class="header-right">
-                <div class="brand-name">Voltyks</div>
+              <div class="header-left">
                 <div class="logo">
                   <img src="${VOLTYKS_LOGO}" alt="Voltyks Logo">
                 </div>
+                <div class="brand-name">Voltyks</div>
               </div>
             </div>
             <div class="content">
