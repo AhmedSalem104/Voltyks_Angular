@@ -206,9 +206,9 @@
       <h3>قائمة المركبات</h3>
       <div class="header-actions">
         <span class="total-count">إجمالي: {{ totalItems }}</span>
-        <button class="voltyks-btn btn-outline btn-sm print-btn" (click)="printToPdf()" [disabled]="filteredVehicles.length === 0">
+        <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredVehicles.length === 0">
           <span class="material-icons">print</span>
-          طباعة PDF
+          <span>طباعة PDF</span>
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
           <span class="material-icons">add</span>

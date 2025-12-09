@@ -11,9 +11,9 @@ import { PrintService } from '../../core/services/print.service';
       <div class="hero-section voltyks-card">
         <div class="hero-header">
           <h1>Voltyks</h1>
-          <button class="voltyks-btn btn-outline btn-sm print-btn hero-print-btn" (click)="printToPdf()">
+          <button class="voltyks-btn print-btn hero-print-btn" (click)="printToPdf()">
             <span class="material-icons">print</span>
-            طباعة PDF
+            <span>طباعة PDF</span>
           </button>
         </div>
         <p class="tagline">حرية التنقل. شفافية الأسعار. قوة الاختيار.</p>
@@ -127,12 +127,28 @@ import { PrintService } from '../../core/services/print.service';
           align-items: center;
           gap: 24px;
           margin-bottom: 16px;
+          flex-wrap: wrap;
 
           .hero-print-btn {
-            background: rgba(255,255,255,0.2);
-            border-color: white;
-            color: white;
-            &:hover { background: rgba(255,255,255,0.3); }
+            background: rgba(255,255,255,0.15) !important;
+            border-color: rgba(255,255,255,0.6) !important;
+            color: white !important;
+            backdrop-filter: blur(10px);
+
+            &:hover:not(:disabled) {
+              background: rgba(255,255,255,0.25) !important;
+              border-color: white !important;
+              box-shadow: 0 4px 15px rgba(255,255,255,0.3) !important;
+            }
+          }
+
+          @media (max-width: 768px) {
+            gap: 16px;
+          }
+
+          @media (max-width: 480px) {
+            flex-direction: column;
+            gap: 12px;
           }
         }
 
