@@ -158,46 +158,53 @@ export class PrintService {
           }
           .header {
             background: linear-gradient(135deg, #00C853 0%, #009E3D 100%);
-            padding: 20px 25px;
+            padding: 30px 40px;
             display: flex;
             flex-direction: row-reverse;
             justify-content: space-between;
             align-items: center;
             border-radius: 0;
+            min-height: 100px;
           }
           .header-right {
             text-align: right;
+            flex: 1;
+            padding-left: 30px;
           }
           .header-right h1 {
             color: #ffffff;
-            font-size: 22px;
+            font-size: 28px;
             font-weight: 700;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
           }
           .header-right .subtitle {
-            color: rgba(255,255,255,0.85);
-            font-size: 12px;
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+            margin-bottom: 6px;
           }
           .header-right .date {
-            color: rgba(255,255,255,0.75);
-            font-size: 11px;
-            margin-top: 4px;
+            color: rgba(255,255,255,0.8);
+            font-size: 13px;
+            margin-top: 6px;
           }
           .header-left {
             display: flex;
             flex-direction: row-reverse;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
+            flex-shrink: 0;
           }
           .logo {
-            width: 45px;
-            height: 45px;
+            width: 60px;
+            height: 60px;
             background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
           }
           .logo img {
             width: 100%;
@@ -205,8 +212,9 @@ export class PrintService {
           }
           .brand-name {
             color: #ffffff;
-            font-size: 24px;
+            font-size: 32px;
             font-weight: 700;
+            letter-spacing: 1px;
           }
           .page-number {
             color: rgba(255,255,255,0.9);
@@ -414,40 +422,46 @@ export class PrintService {
             }
             .header {
               background: linear-gradient(135deg, #00C853 0%, #009E3D 100%);
-              padding: 25px 30px;
+              padding: 30px 40px;
               display: flex;
               flex-direction: row-reverse;
               justify-content: space-between;
               align-items: center;
+              min-height: 100px;
             }
             .header-right {
               text-align: right;
+              flex: 1;
+              padding-left: 30px;
             }
             .header-right h1 {
               color: #ffffff;
-              font-size: 26px;
+              font-size: 30px;
               font-weight: 700;
-              margin-bottom: 5px;
+              margin-bottom: 8px;
+              letter-spacing: 0.5px;
             }
             .header-right .subtitle {
-              color: rgba(255,255,255,0.85);
-              font-size: 13px;
+              color: rgba(255,255,255,0.9);
+              font-size: 14px;
             }
             .header-left {
               display: flex;
               flex-direction: row-reverse;
               align-items: center;
-              gap: 12px;
+              gap: 16px;
+              flex-shrink: 0;
             }
             .logo {
-              width: 50px;
-              height: 50px;
+              width: 60px;
+              height: 60px;
               background: white;
               border-radius: 50%;
               display: flex;
               align-items: center;
               justify-content: center;
-              padding: 8px;
+              padding: 10px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             }
             .logo img {
               width: 100%;
@@ -455,8 +469,9 @@ export class PrintService {
             }
             .brand-name {
               color: #ffffff;
-              font-size: 28px;
+              font-size: 32px;
               font-weight: 700;
+              letter-spacing: 1px;
             }
             .content {
               padding: 35px 40px;
