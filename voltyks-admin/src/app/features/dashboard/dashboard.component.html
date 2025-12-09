@@ -33,54 +33,68 @@
     <section class="main-section">
       <div class="main-grid">
         <!-- Overview Chart -->
-        <div class="chart-card overview-chart">
-          <h3>نظرة عامة</h3>
-          <div class="chart-container">
-            <canvas baseChart
-              [data]="overviewChartData"
-              [options]="overviewChartOptions"
-              type="doughnut">
-            </canvas>
-            <div class="chart-center">
-              <span class="total-value">{{ stats.totalUsers + stats.totalChargers + stats.totalVehicles }}</span>
-              <span class="total-label">إجمالي</span>
+        @defer (on viewport) {
+          <div class="chart-card overview-chart">
+            <h3>نظرة عامة</h3>
+            <div class="chart-container">
+              <canvas baseChart
+                [data]="overviewChartData"
+                [options]="overviewChartOptions"
+                type="doughnut">
+              </canvas>
+              <div class="chart-center">
+                <span class="total-value">{{ stats.totalUsers + stats.totalChargers + stats.totalVehicles }}</span>
+                <span class="total-label">إجمالي</span>
+              </div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item">
+                <span class="legend-color users"></span>
+                <span class="legend-label">مستخدمين</span>
+                <span class="legend-value">{{ stats.totalUsers }}</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color chargers"></span>
+                <span class="legend-label">شواحن</span>
+                <span class="legend-value">{{ stats.totalChargers }}</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color vehicles"></span>
+                <span class="legend-label">مركبات</span>
+                <span class="legend-value">{{ stats.totalVehicles }}</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color reports"></span>
+                <span class="legend-label">بلاغات</span>
+                <span class="legend-value">{{ stats.totalReports }}</span>
+              </div>
             </div>
           </div>
-          <div class="chart-legend">
-            <div class="legend-item">
-              <span class="legend-color users"></span>
-              <span class="legend-label">مستخدمين</span>
-              <span class="legend-value">{{ stats.totalUsers }}</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color chargers"></span>
-              <span class="legend-label">شواحن</span>
-              <span class="legend-value">{{ stats.totalChargers }}</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color vehicles"></span>
-              <span class="legend-label">مركبات</span>
-              <span class="legend-value">{{ stats.totalVehicles }}</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color reports"></span>
-              <span class="legend-label">بلاغات</span>
-              <span class="legend-value">{{ stats.totalReports }}</span>
-            </div>
+        } @placeholder {
+          <div class="chart-card overview-chart skeleton-chart">
+            <h3>نظرة عامة</h3>
+            <div class="chart-placeholder"></div>
           </div>
-        </div>
+        }
 
         <!-- Reports Chart -->
-        <div class="chart-card reports-chart">
-          <h3>حالة البلاغات</h3>
-          <div class="bar-chart-container">
-            <canvas baseChart
-              [data]="reportsChartData"
-              [options]="reportsChartOptions"
-              type="bar">
-            </canvas>
+        @defer (on viewport) {
+          <div class="chart-card reports-chart">
+            <h3>حالة البلاغات</h3>
+            <div class="bar-chart-container">
+              <canvas baseChart
+                [data]="reportsChartData"
+                [options]="reportsChartOptions"
+                type="bar">
+              </canvas>
+            </div>
           </div>
-        </div>
+        } @placeholder {
+          <div class="chart-card reports-chart skeleton-chart">
+            <h3>حالة البلاغات</h3>
+            <div class="chart-placeholder"></div>
+          </div>
+        }
 
         <!-- Stats Chips -->
         <div class="stats-chips">

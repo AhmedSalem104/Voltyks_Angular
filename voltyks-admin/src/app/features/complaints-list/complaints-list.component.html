@@ -181,96 +181,98 @@
 </div>
 
 <!-- Details Modal -->
-@if (showDetailsModal && selectedComplaint) {
-  <div class="modal-overlay" (click)="closeDetailsModal()"></div>
-  <div class="modal details-modal">
-    <div class="modal-header">
-      <h3>
-        <span class="material-icons">info</span>
-        تفاصيل الشكوى
-      </h3>
-      <button class="close-btn" (click)="closeDetailsModal()">
-        <span class="material-icons">close</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="detail-section">
-        <div class="detail-row">
-          <span class="detail-label">
-            <span class="material-icons">category</span>
-            نوع الشكوى
-          </span>
-          <span class="detail-value">{{ selectedComplaint.categoryName }}</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">
-            <span class="material-icons">schedule</span>
-            الحالة
-          </span>
-          <span class="status-badge" [class.resolved]="selectedComplaint.isResolved" [class.pending]="!selectedComplaint.isResolved">
-            <span class="material-icons">{{ selectedComplaint.isResolved ? 'check_circle' : 'hourglass_empty' }}</span>
-            {{ selectedComplaint.isResolved ? 'محلولة' : 'غير محلولة' }}
-          </span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">
-            <span class="material-icons">calendar_today</span>
-            تاريخ الإنشاء
-          </span>
-          <span class="detail-value">{{ formatDateLong(selectedComplaint.createdAt) }}</span>
-        </div>
+@defer (when showDetailsModal) {
+  @if (showDetailsModal && selectedComplaint) {
+    <div class="modal-overlay" (click)="closeDetailsModal()"></div>
+    <div class="modal details-modal">
+      <div class="modal-header">
+        <h3>
+          <span class="material-icons">info</span>
+          تفاصيل الشكوى
+        </h3>
+        <button class="close-btn" (click)="closeDetailsModal()">
+          <span class="material-icons">close</span>
+        </button>
       </div>
+      <div class="modal-body">
+        <div class="detail-section">
+          <div class="detail-row">
+            <span class="detail-label">
+              <span class="material-icons">category</span>
+              نوع الشكوى
+            </span>
+            <span class="detail-value">{{ selectedComplaint.categoryName }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">
+              <span class="material-icons">schedule</span>
+              الحالة
+            </span>
+            <span class="status-badge" [class.resolved]="selectedComplaint.isResolved" [class.pending]="!selectedComplaint.isResolved">
+              <span class="material-icons">{{ selectedComplaint.isResolved ? 'check_circle' : 'hourglass_empty' }}</span>
+              {{ selectedComplaint.isResolved ? 'محلولة' : 'غير محلولة' }}
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">
+              <span class="material-icons">calendar_today</span>
+              تاريخ الإنشاء
+            </span>
+            <span class="detail-value">{{ formatDateLong(selectedComplaint.createdAt) }}</span>
+          </div>
+        </div>
 
-      <div class="detail-section">
-        <h4>معلومات المستخدم</h4>
-        <div class="detail-row">
-          <span class="detail-label">
-            <span class="material-icons">person</span>
-            الاسم
-          </span>
-          <span class="detail-value">{{ selectedComplaint.userName || '-' }}</span>
+        <div class="detail-section">
+          <h4>معلومات المستخدم</h4>
+          <div class="detail-row">
+            <span class="detail-label">
+              <span class="material-icons">person</span>
+              الاسم
+            </span>
+            <span class="detail-value">{{ selectedComplaint.userName || '-' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">
+              <span class="material-icons">email</span>
+              البريد الإلكتروني
+            </span>
+            <span class="detail-value">{{ selectedComplaint.userEmail || '-' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">
+              <span class="material-icons">phone</span>
+              رقم الهاتف
+            </span>
+            <span class="detail-value">{{ selectedComplaint.userPhone || '-' }}</span>
+          </div>
         </div>
-        <div class="detail-row">
-          <span class="detail-label">
-            <span class="material-icons">email</span>
-            البريد الإلكتروني
-          </span>
-          <span class="detail-value">{{ selectedComplaint.userEmail || '-' }}</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">
-            <span class="material-icons">phone</span>
-            رقم الهاتف
-          </span>
-          <span class="detail-value">{{ selectedComplaint.userPhone || '-' }}</span>
-        </div>
-      </div>
 
-      <div class="detail-section">
-        <h4>محتوى الشكوى</h4>
-        <div class="complaint-content-box">
-          {{ selectedComplaint.content }}
+        <div class="detail-section">
+          <h4>محتوى الشكوى</h4>
+          <div class="complaint-content-box">
+            {{ selectedComplaint.content }}
+          </div>
         </div>
       </div>
+      <div class="modal-footer">
+        <button class="voltyks-btn btn-secondary" (click)="closeDetailsModal()">إغلاق</button>
+        <button
+          class="voltyks-btn"
+          [class.btn-primary]="!selectedComplaint.isResolved"
+          [class.btn-secondary]="selectedComplaint.isResolved"
+          [disabled]="updatingComplaintId === selectedComplaint.id"
+          (click)="toggleStatus(selectedComplaint)"
+        >
+          @if (updatingComplaintId === selectedComplaint.id) {
+            <span class="material-icons spinning">sync</span>
+          } @else {
+            <span class="material-icons">{{ selectedComplaint.isResolved ? 'undo' : 'check_circle' }}</span>
+          }
+          {{ selectedComplaint.isResolved ? 'إلغاء الحل' : 'تحديد كمحلولة' }}
+        </button>
+      </div>
     </div>
-    <div class="modal-footer">
-      <button class="voltyks-btn btn-secondary" (click)="closeDetailsModal()">إغلاق</button>
-      <button
-        class="voltyks-btn"
-        [class.btn-primary]="!selectedComplaint.isResolved"
-        [class.btn-secondary]="selectedComplaint.isResolved"
-        [disabled]="updatingComplaintId === selectedComplaint.id"
-        (click)="toggleStatus(selectedComplaint)"
-      >
-        @if (updatingComplaintId === selectedComplaint.id) {
-          <span class="material-icons spinning">sync</span>
-        } @else {
-          <span class="material-icons">{{ selectedComplaint.isResolved ? 'undo' : 'check_circle' }}</span>
-        }
-        {{ selectedComplaint.isResolved ? 'إلغاء الحل' : 'تحديد كمحلولة' }}
-      </button>
-    </div>
-  </div>
+  }
 }
 
 

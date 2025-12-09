@@ -192,9 +192,10 @@
 </div>
 
 <!-- Side Panel -->
-@if (showSidePanel && selectedReport) {
-  <div class="side-panel-overlay" (click)="closeSidePanel()"></div>
-  <div class="side-panel">
+@defer (when showSidePanel) {
+  @if (showSidePanel && selectedReport) {
+    <div class="side-panel-overlay" (click)="closeSidePanel()"></div>
+    <div class="side-panel">
     <div class="side-panel-header">
       <h3>تفاصيل البلاغ #{{ selectedReport.id }}</h3>
       <button class="close-btn" (click)="closeSidePanel()">
@@ -546,7 +547,8 @@
         </div>
       }
     </div>
-  </div>
+    </div>
+  }
 }
 
 @if (isLoading) {

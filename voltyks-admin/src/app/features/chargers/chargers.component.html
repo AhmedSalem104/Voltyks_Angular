@@ -206,15 +206,16 @@
 </div>
 
 <!-- Create Charger Modal -->
-@if (showCreateDialog) {
-  <div class="modal-overlay" (click)="closeCreateDialog()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3>إضافة شاحن جديد</h3>
-        <button class="close-btn" (click)="closeCreateDialog()">
-          <span class="material-icons">close</span>
-        </button>
-      </div>
+@defer (when showCreateDialog) {
+  @if (showCreateDialog) {
+    <div class="modal-overlay" (click)="closeCreateDialog()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>إضافة شاحن جديد</h3>
+          <button class="close-btn" (click)="closeCreateDialog()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
       <div class="modal-body">
         <form class="charger-form">
           <div class="form-row">
@@ -392,10 +393,12 @@
       </div>
     </div>
   </div>
+  }
 }
 
 <!-- Edit Charger Modal -->
-@if (showEditDialog && currentCharger) {
+@defer (when showEditDialog) {
+  @if (showEditDialog && currentCharger) {
   <div class="modal-overlay" (click)="closeEditDialog()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
@@ -527,6 +530,7 @@
       </div>
     </div>
   </div>
+  }
 }
 
 <!-- Delete Confirmation Dialog -->
