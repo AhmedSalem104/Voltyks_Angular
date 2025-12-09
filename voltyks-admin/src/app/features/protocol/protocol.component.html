@@ -6,6 +6,10 @@
     </div>
 
     <div class="protocol-toggle">
+      <button class="voltyks-btn btn-outline btn-sm print-btn" (click)="printToPdf()" style="margin-left: 12px;">
+        <span class="material-icons">print</span>
+        طباعة PDF
+      </button>
       <button
         class="toggle-btn"
         [class.chinese]="selectedType === 'chinese'"

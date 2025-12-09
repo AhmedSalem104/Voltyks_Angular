@@ -6,6 +6,7 @@ import { AdminTermsService } from '../../core/services/admin/admin-terms.service
 import { AdminTermsDto, UpdateTermsDto } from '../../core/models';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { PrintService } from '../../core/services/print.service';
 
 @Component({
   selector: 'app-terms',
@@ -28,7 +29,8 @@ export class TermsComponent implements OnInit {
 
   constructor(
     private termsService: AdminTermsService,
-    private toaster: ToasterService
+    private toaster: ToasterService,
+    private printService: PrintService
   ) {}
 
   ngOnInit(): void {
@@ -225,5 +227,44 @@ export class TermsComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  printToPdf(): void {
+    if (!this.jsonData) return;
+    const content = this.formatJsonForPrint(this.jsonData);
+    this.printService.printContentToPdf(content, {
+      title: `الشروط والأحكام - ${this.languageLabel}`,
+      filename: `terms_${this.selectedLang}`,
+      orientation: 'portrait'
+    });
+  }
+
+  private formatJsonForPrint(obj: any, indent: number = 0): string {
+    let result = '';
+    const padding = '&nbsp;'.repeat(indent * 4);
+
+    if (typeof obj === 'object' && obj !== null) {
+      if (Array.isArray(obj)) {
+        obj.forEach((item, index) => {
+          result += `${padding}<div style="margin-bottom: 8px;">${index + 1}. ${this.formatJsonForPrint(item, indent + 1)}</div>`;
+        });
+      } else {
+        for (const key in obj) {
+          if (obj.hasOwnProperty(key)) {
+            const value = obj[key];
+            if (typeof value === 'object' && value !== null) {
+              result += `${padding}<div style="margin-bottom: 12px; color: #02e600; font-weight: 600;">${key}:</div>`;
+              result += this.formatJsonForPrint(value, indent + 1);
+            } else {
+              result += `${padding}<div style="margin-bottom: 8px;"><span style="color: #02e600;">${key}:</span> ${value}</div>`;
+            }
+          }
+        }
+      }
+    } else {
+      result = String(obj);
+    }
+
+    return result;
   }
 }

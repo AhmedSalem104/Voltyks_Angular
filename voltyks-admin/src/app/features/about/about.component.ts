@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PrintService } from '../../core/services/print.service';
 
 @Component({
   selector: 'app-about',
@@ -8,7 +9,13 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="about-container">
       <div class="hero-section voltyks-card">
-        <h1>Voltyks</h1>
+        <div class="hero-header">
+          <h1>Voltyks</h1>
+          <button class="voltyks-btn btn-outline btn-sm print-btn hero-print-btn" (click)="printToPdf()">
+            <span class="material-icons">print</span>
+            طباعة PDF
+          </button>
+        </div>
         <p class="tagline">حرية التنقل. شفافية الأسعار. قوة الاختيار.</p>
       </div>
 
@@ -114,11 +121,26 @@ import { CommonModule } from '@angular/common';
         background: linear-gradient(135deg, #00C853 0%, #009E3D 100%);
         margin-bottom: 32px;
 
+        .hero-header {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 24px;
+          margin-bottom: 16px;
+
+          .hero-print-btn {
+            background: rgba(255,255,255,0.2);
+            border-color: white;
+            color: white;
+            &:hover { background: rgba(255,255,255,0.3); }
+          }
+        }
+
         h1 {
           font-size: 56px;
           font-weight: 700;
           color: white;
-          margin-bottom: 16px;
+          margin-bottom: 0;
         }
 
         .tagline {
@@ -211,4 +233,52 @@ import { CommonModule } from '@angular/common';
     }
   `]
 })
-export class AboutComponent {}
+export class AboutComponent {
+  constructor(private printService: PrintService) {}
+
+  printToPdf(): void {
+    const content = `
+      <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-size: 48px; color: #02e600; margin-bottom: 16px;">Voltyks</h1>
+        <p style="font-size: 20px; color: #888;">حرية التنقل. شفافية الأسعار. قوة الاختيار.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+        <div style="background: #252540; padding: 24px; border-radius: 12px; text-align: center;">
+          <div style="font-size: 24px; color: #02e600; margin-bottom: 12px;">⚡</div>
+          <h3 style="color: #fff; margin-bottom: 12px;">رؤيتنا</h3>
+          <p style="color: #888; font-size: 14px; line-height: 1.6;">نتحدى الأنظمة القديمة ونمنح السائقين والركاب القوة للاختيار</p>
+        </div>
+
+        <div style="background: #252540; padding: 24px; border-radius: 12px; text-align: center;">
+          <div style="font-size: 24px; color: #02e600; margin-bottom: 12px;">👥</div>
+          <h3 style="color: #fff; margin-bottom: 12px;">المجتمع</h3>
+          <p style="color: #888; font-size: 14px; line-height: 1.6;">نربط السائقين والركاب مباشرة بأسعار عادلة وشفافة</p>
+        </div>
+
+        <div style="background: #252540; padding: 24px; border-radius: 12px; text-align: center;">
+          <div style="font-size: 24px; color: #02e600; margin-bottom: 12px;">✓</div>
+          <h3 style="color: #fff; margin-bottom: 12px;">الشفافية</h3>
+          <p style="color: #888; font-size: 14px; line-height: 1.6;">كل معاملة شفافة، لا رسوم مخفية أو أسعار متلاعب بها</p>
+        </div>
+
+        <div style="background: #252540; padding: 24px; border-radius: 12px; text-align: center;">
+          <div style="font-size: 24px; color: #02e600; margin-bottom: 12px;">🔒</div>
+          <h3 style="color: #fff; margin-bottom: 12px;">الأمان</h3>
+          <p style="color: #888; font-size: 14px; line-height: 1.6;">حسابات موثقة وتقييمات وأنظمة دفع آمنة</p>
+        </div>
+      </div>
+
+      <div style="background: #252540; padding: 30px; border-radius: 12px; text-align: center;">
+        <h2 style="color: #02e600; margin-bottom: 16px;">مهمتنا</h2>
+        <p style="color: #e0e0e0; line-height: 1.8;">إنشاء نظام نقل مستدام وعادل وشفاف حيث يكسب السائقون ما يستحقونه ويدفع الركاب أسعاراً عادلة</p>
+      </div>
+    `;
+
+    this.printService.printContentToPdf(content, {
+      title: 'عن Voltyks',
+      filename: 'about_voltyks',
+      orientation: 'portrait'
+    });
+  }
+}

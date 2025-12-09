@@ -10,6 +10,7 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { PrintService } from '../../core/services/print.service';
 
 @Component({
   selector: 'app-vehicles',
@@ -99,7 +100,8 @@ export class VehiclesComponent implements OnInit {
     private vehiclesService: AdminVehiclesService,
     private usersService: AdminUsersService,
     private brandsService: AdminBrandsService,
-    private toaster: ToasterService
+    private toaster: ToasterService,
+    private printService: PrintService
   ) {}
 
   ngOnInit(): void {
@@ -583,6 +585,31 @@ export class VehiclesComponent implements OnInit {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
+    });
+  }
+
+  printToPdf(): void {
+    this.printService.printTableToPdf({
+      title: 'تقرير المركبات',
+      filename: 'vehicles_report',
+      orientation: 'landscape',
+      columns: [
+        { header: 'المالك', field: 'userName' },
+        { header: 'البريد', field: 'userEmail' },
+        { header: 'الهاتف', field: 'userPhone' },
+        { header: 'العلامة التجارية', field: 'brandName' },
+        { header: 'الموديل', field: 'modelName' },
+        { header: 'السعة', field: 'capacityText' },
+        { header: 'السنة', field: 'year' },
+        { header: 'اللون', field: 'color' },
+        { header: 'اللوحة', field: 'plate' }
+      ],
+      data: this.filteredVehicles.map(vehicle => ({
+        ...vehicle,
+        brandName: this.getBrandName(vehicle.brandId),
+        modelName: this.getModelName(vehicle.modelId),
+        capacityText: vehicle.modelCapacity ? `${vehicle.modelCapacity} kWh` : '-'
+      }))
     });
   }
 }

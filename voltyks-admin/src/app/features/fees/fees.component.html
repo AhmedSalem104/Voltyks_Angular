@@ -1,6 +1,14 @@
 <div class="fees-container">
-  <h2>إدارة الرسوم</h2>
-  <p class="subtitle">إعدادات الرسوم وتحويل الأموال المحصلة</p>
+  <div class="page-header-row">
+    <div>
+      <h2>إدارة الرسوم</h2>
+      <p class="subtitle">إعدادات الرسوم وتحويل الأموال المحصلة</p>
+    </div>
+    <button class="voltyks-btn btn-outline btn-sm print-btn" (click)="printToPdf()" *ngIf="fees">
+      <span class="material-icons">print</span>
+      طباعة PDF
+    </button>
+  </div>
 
   @if (fees) {
     <!-- Current Fees Display -->

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PrintService } from '../../core/services/print.service';
 
 @Component({
   selector: 'app-protocol',
@@ -11,7 +12,7 @@ import { CommonModule } from '@angular/common';
 export class ProtocolComponent implements OnInit {
   selectedType: 'chinese' | 'european' = 'chinese';
 
-  constructor() {}
+  constructor(private printService: PrintService) {}
 
   ngOnInit(): void {
     // Component initialized with hardcoded protocol content
@@ -165,5 +166,14 @@ CCS2 يُعتبر المعيار المستقبلي في أوروبا والعد
 
   get protocolTypeIcon(): string {
     return this.selectedType === 'chinese' ? '🇨🇳' : '🇪🇺';
+  }
+
+  printToPdf(): void {
+    const content = this.detailedContent.replace(/\n/g, '<br>');
+    this.printService.printContentToPdf(content, {
+      title: this.protocolTypeLabel,
+      filename: this.selectedType === 'chinese' ? 'chinese_protocol' : 'european_protocol',
+      orientation: 'portrait'
+    });
   }
 }

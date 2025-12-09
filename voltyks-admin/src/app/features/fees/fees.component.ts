@@ -7,6 +7,7 @@ import { AdminFeesDto, UpdateFeesDto, TransferFeesRequestDto, AdminUserDto } fro
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { PrintService } from '../../core/services/print.service';
 
 @Component({
   selector: 'app-fees',
@@ -37,7 +38,8 @@ export class FeesComponent implements OnInit {
   constructor(
     private feesService: AdminFeesService,
     private usersService: AdminUsersService,
-    private toaster: ToasterService
+    private toaster: ToasterService,
+    private printService: PrintService
   ) {}
 
   ngOnInit(): void {
@@ -205,6 +207,44 @@ export class FeesComponent implements OnInit {
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
+    });
+  }
+
+  printToPdf(): void {
+    if (!this.fees) return;
+
+    const content = `
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="color: #02e600; margin-bottom: 20px;">إعدادات الرسوم الحالية</h2>
+      </div>
+
+      <div style="display: grid; gap: 20px;">
+        <div style="background: #252540; padding: 20px; border-radius: 12px; border-right: 4px solid #02e600;">
+          <div style="color: #888; font-size: 14px; margin-bottom: 8px;">نسبة رسوم المنصة</div>
+          <div style="color: #02e600; font-size: 32px; font-weight: 700;">${this.fees.percentage}%</div>
+        </div>
+
+        <div style="background: #252540; padding: 20px; border-radius: 12px; border-right: 4px solid #02e600;">
+          <div style="color: #888; font-size: 14px; margin-bottom: 8px;">الحد الأدنى للرسوم</div>
+          <div style="color: #02e600; font-size: 32px; font-weight: 700;">${this.fees.minimumFee} ج.م</div>
+        </div>
+
+        <div style="background: #252540; padding: 20px; border-radius: 12px; border-right: 4px solid #02e600;">
+          <div style="color: #888; font-size: 14px; margin-bottom: 8px;">آخر تحديث</div>
+          <div style="color: #e0e0e0; font-size: 18px;">${this.formatDate(this.fees.updatedAt)}</div>
+        </div>
+
+        <div style="background: #252540; padding: 20px; border-radius: 12px; border-right: 4px solid #02e600;">
+          <div style="color: #888; font-size: 14px; margin-bottom: 8px;">محدّث بواسطة</div>
+          <div style="color: #e0e0e0; font-size: 18px;">${this.fees.updatedBy || 'النظام'}</div>
+        </div>
+      </div>
+    `;
+
+    this.printService.printContentToPdf(content, {
+      title: 'تقرير الرسوم',
+      filename: 'fees_report',
+      orientation: 'portrait'
     });
   }
 }

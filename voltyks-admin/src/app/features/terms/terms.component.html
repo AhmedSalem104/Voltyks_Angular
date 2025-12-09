@@ -20,6 +20,11 @@
         </button>
       </div>
 
+      <button class="voltyks-btn btn-outline btn-sm print-btn" (click)="printToPdf()" *ngIf="terms && !isEditMode">
+        <span class="material-icons">print</span>
+        طباعة PDF
+      </button>
+
       <button
         class="voltyks-btn"
         [class.btn-primary]="!isEditMode"

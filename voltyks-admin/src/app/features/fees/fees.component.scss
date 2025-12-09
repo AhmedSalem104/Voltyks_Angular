@@ -43,6 +43,15 @@
 .fees-container {
   animation: fadeIn 0.3s ease-out;
 
+  .page-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
   h2 {
     color: white;
     font-size: 32px;
@@ -57,7 +66,7 @@
   .subtitle {
     color: #B0B0B0;
     font-size: 16px;
-    margin-bottom: 32px;
+    margin-bottom: 0;
   }
 
   .current-fees {
