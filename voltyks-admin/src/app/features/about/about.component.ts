@@ -254,40 +254,91 @@ export class AboutComponent {
 
   printToPdf(): void {
     const content = `
-      <div style="text-align: center; margin-bottom: 40px;">
-        <h1 style="font-size: 48px; color: #02e600; margin-bottom: 16px;">Voltyks</h1>
-        <p style="font-size: 20px; color: #888;">حرية التنقل. شفافية الأسعار. قوة الاختيار.</p>
+      <!-- Hero Section -->
+      <div style="text-align: center; margin-bottom: 40px; padding: 30px; background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%); border-radius: 16px; border: 2px solid #00C853;">
+        <h1 style="font-size: 42px; color: #00C853; margin-bottom: 12px; font-weight: 700;">Voltyks</h1>
+        <p style="font-size: 18px; color: #555; font-weight: 500;">حرية التنقل. شفافية الأسعار. قوة الاختيار.</p>
       </div>
 
+      <!-- Vision & Mission Grid -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
-        <div style="background: #252540; padding: 24px; border-radius: 12px; text-align: center;">
-          <div style="font-size: 24px; color: #02e600; margin-bottom: 12px;">⚡</div>
-          <h3 style="color: #fff; margin-bottom: 12px;">رؤيتنا</h3>
-          <p style="color: #888; font-size: 14px; line-height: 1.6;">نتحدى الأنظمة القديمة ونمنح السائقين والركاب القوة للاختيار</p>
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-right: 4px solid #00C853;">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+            <span style="font-size: 28px;">⚡</span>
+            <h3 style="color: #333; margin: 0; font-size: 18px;">رؤيتنا</h3>
+          </div>
+          <p style="color: #555; font-size: 14px; line-height: 1.8; margin: 0;">
+            At its core, Voltyks stands for freedom, transparency, and empowerment.
+            We challenge outdated systems and give both drivers and riders the power to choose—
+            a true peer-to-peer marketplace where no one gets exploited.
+          </p>
         </div>
 
-        <div style="background: #252540; padding: 24px; border-radius: 12px; text-align: center;">
-          <div style="font-size: 24px; color: #02e600; margin-bottom: 12px;">👥</div>
-          <h3 style="color: #fff; margin-bottom: 12px;">المجتمع</h3>
-          <p style="color: #888; font-size: 14px; line-height: 1.6;">نربط السائقين والركاب مباشرة بأسعار عادلة وشفافة</p>
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-right: 4px solid #00C853;">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+            <span style="font-size: 28px;">👥</span>
+            <h3 style="color: #333; margin: 0; font-size: 18px;">مجتمعنا</h3>
+          </div>
+          <p style="color: #555; font-size: 14px; line-height: 1.8; margin: 0;">
+            We connect drivers and riders directly with fair, transparent pricing.
+            No middlemen taking excessive cuts. No hidden algorithms manipulating prices.
+            Just people helping people get where they need to go.
+          </p>
         </div>
 
-        <div style="background: #252540; padding: 24px; border-radius: 12px; text-align: center;">
-          <div style="font-size: 24px; color: #02e600; margin-bottom: 12px;">✓</div>
-          <h3 style="color: #fff; margin-bottom: 12px;">الشفافية</h3>
-          <p style="color: #888; font-size: 14px; line-height: 1.6;">كل معاملة شفافة، لا رسوم مخفية أو أسعار متلاعب بها</p>
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-right: 4px solid #00C853;">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+            <span style="font-size: 28px;">✓</span>
+            <h3 style="color: #333; margin: 0; font-size: 18px;">الشفافية</h3>
+          </div>
+          <p style="color: #555; font-size: 14px; line-height: 1.8; margin: 0;">
+            Every transaction is transparent. No hidden fees or manipulated prices.
+            Both drivers and riders see exactly what they're paying and earning.
+            Trust built on openness.
+          </p>
         </div>
 
-        <div style="background: #252540; padding: 24px; border-radius: 12px; text-align: center;">
-          <div style="font-size: 24px; color: #02e600; margin-bottom: 12px;">🔒</div>
-          <h3 style="color: #fff; margin-bottom: 12px;">الأمان</h3>
-          <p style="color: #888; font-size: 14px; line-height: 1.6;">حسابات موثقة وتقييمات وأنظمة دفع آمنة</p>
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-right: 4px solid #00C853;">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+            <span style="font-size: 28px;">🔒</span>
+            <h3 style="color: #333; margin: 0; font-size: 18px;">الأمان</h3>
+          </div>
+          <p style="color: #555; font-size: 14px; line-height: 1.8; margin: 0;">
+            Verified accounts, ratings, and secure payment systems ensure safety for everyone.
+            We prioritize the security of our community above all else.
+          </p>
         </div>
       </div>
 
-      <div style="background: #252540; padding: 30px; border-radius: 12px; text-align: center;">
-        <h2 style="color: #02e600; margin-bottom: 16px;">مهمتنا</h2>
-        <p style="color: #e0e0e0; line-height: 1.8;">إنشاء نظام نقل مستدام وعادل وشفاف حيث يكسب السائقون ما يستحقونه ويدفع الركاب أسعاراً عادلة</p>
+      <!-- Mission Statement -->
+      <div style="background: linear-gradient(135deg, #00C853 0%, #009E3D 100%); padding: 35px; border-radius: 16px; text-align: center; margin-bottom: 30px;">
+        <h2 style="color: #fff; margin-bottom: 16px; font-size: 22px;">مهمتنا</h2>
+        <p style="color: rgba(255,255,255,0.95); line-height: 2; font-size: 15px; max-width: 700px; margin: 0 auto;">
+          إنشاء نظام نقل مستدام وعادل وشفاف حيث يكسب السائقون ما يستحقونه ويدفع الركاب أسعاراً عادلة.
+          نحن نؤمن بأن التكنولوجيا يجب أن تمكّن الناس، لا أن تستغلهم.
+        </p>
+      </div>
+
+      <!-- Contact Info -->
+      <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; text-align: center;">
+        <h3 style="color: #333; margin-bottom: 20px; font-size: 18px;">تواصل معنا</h3>
+        <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+          <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 8px;">📧</div>
+            <div style="color: #00C853; font-weight: 600;">البريد الإلكتروني</div>
+            <div style="color: #555; font-size: 13px;">support@voltyks.com</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 8px;">🌐</div>
+            <div style="color: #00C853; font-weight: 600;">الموقع</div>
+            <div style="color: #555; font-size: 13px;">www.voltyks.com</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 8px;">📱</div>
+            <div style="color: #00C853; font-weight: 600;">التطبيق</div>
+            <div style="color: #555; font-size: 13px;">متاح على iOS & Android</div>
+          </div>
+        </div>
       </div>
     `;
 
