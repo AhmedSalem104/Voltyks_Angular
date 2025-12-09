@@ -10,10 +10,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getToken(); // Get token from localStorage or cookies
 
-  // Clone the request and add withCredentials to enable cookies
-  let modifiedReq = req.clone({
-    withCredentials: true // Always send/receive cookies with requests
-  });
+  // Clone the request (withCredentials disabled for CORS with wildcard origin)
+  let modifiedReq = req.clone();
 
   // If token exists, also add it to Authorization header (for APIs that use Bearer token)
   if (token) {
