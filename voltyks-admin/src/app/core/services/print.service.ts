@@ -92,12 +92,14 @@ export class PrintService {
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
         pdf.addImage(
-          canvas.toDataURL('image/png'),
-          'PNG',
+          canvas.toDataURL('image/jpeg', 0.92),
+          'JPEG',
           margin,
           margin,
           imgWidth,
-          Math.min(imgHeight, pageHeight - (margin * 2))
+          Math.min(imgHeight, pageHeight - (margin * 2)),
+          undefined,
+          'FAST'
         );
       }
 
@@ -365,7 +367,7 @@ export class PrintService {
     await new Promise(resolve => setTimeout(resolve, 500));
 
     const canvas = await html2canvas(container, {
-      scale: 2,
+      scale: 1.5,
       useCORS: true,
       logging: false,
       backgroundColor: '#ffffff',
@@ -565,7 +567,7 @@ export class PrintService {
 
     if (imgHeight <= availableHeight) {
       // Single page
-      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', margin, margin, imgWidth, imgHeight);
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', margin, margin, imgWidth, imgHeight, undefined, 'FAST');
     } else {
       // Multiple pages
       let remainingHeight = imgHeight;
@@ -589,7 +591,7 @@ export class PrintService {
           ctx.fillStyle = '#ffffff';
           ctx.fillRect(0, 0, croppedCanvas.width, croppedCanvas.height);
           ctx.drawImage(canvas, 0, sourceY, canvas.width, sourceHeight, 0, 0, canvas.width, sourceHeight);
-          pdf.addImage(croppedCanvas.toDataURL('image/png'), 'PNG', margin, margin, imgWidth, heightToDraw);
+          pdf.addImage(croppedCanvas.toDataURL('image/jpeg', 0.92), 'JPEG', margin, margin, imgWidth, heightToDraw, undefined, 'FAST');
         }
 
         remainingHeight -= heightToDraw;
