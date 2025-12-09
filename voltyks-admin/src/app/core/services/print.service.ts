@@ -20,20 +20,13 @@ const VOLTYKS_LOGO = `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0i
   providedIn: 'root'
 })
 export class PrintService {
-  // PDF dimensions
-  private readonly PAGE_WIDTH_LANDSCAPE = 297;
-  private readonly PAGE_WIDTH_PORTRAIT = 210;
-  private readonly PAGE_HEIGHT_LANDSCAPE = 210;
-  private readonly PAGE_HEIGHT_PORTRAIT = 297;
-  private readonly MARGIN = 15;
-  private readonly HEADER_HEIGHT = 35;
-  private readonly FOOTER_HEIGHT = 15;
-  private readonly ROW_HEIGHT = 10;
+  private readonly ROWS_PER_PAGE = 15;
 
   constructor() {}
 
   /**
-   * Professional Table PDF with repeating headers on each page
+   * Professional Table PDF with Arabic support using html2canvas
+   * Creates separate pages with repeating headers
    */
   async printTableToPdf(options: PrintOptions): Promise<void> {
     const {
@@ -60,80 +53,52 @@ export class PrintService {
         format: 'a4'
       });
 
-      const pageWidth = orientation === 'landscape' ? this.PAGE_WIDTH_LANDSCAPE : this.PAGE_WIDTH_PORTRAIT;
-      const pageHeight = orientation === 'landscape' ? this.PAGE_HEIGHT_LANDSCAPE : this.PAGE_HEIGHT_PORTRAIT;
-      const contentWidth = pageWidth - (this.MARGIN * 2);
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 10;
 
-      // Calculate column widths
-      const colWidth = contentWidth / columns.length;
-
-      // Calculate rows per page (accounting for header and footer)
-      const tableHeaderHeight = 12;
-      const availableHeight = pageHeight - this.MARGIN - this.HEADER_HEIGHT - tableHeaderHeight - this.FOOTER_HEIGHT - this.MARGIN;
-      const rowsPerPage = Math.floor(availableHeight / this.ROW_HEIGHT);
-
-      let currentPage = 1;
-      const totalPages = Math.ceil(data.length / rowsPerPage);
+      // Split data into pages
+      const totalPages = Math.ceil(data.length / this.ROWS_PER_PAGE);
 
       for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
         if (pageIndex > 0) {
           pdf.addPage();
-          currentPage++;
         }
 
-        // Draw page header
-        this.drawPageHeader(pdf, title, subtitle, showDate, pageWidth, currentPage, totalPages);
+        // Get data for this page
+        const startRow = pageIndex * this.ROWS_PER_PAGE;
+        const endRow = Math.min(startRow + this.ROWS_PER_PAGE, data.length);
+        const pageData = data.slice(startRow, endRow);
 
-        // Draw table header
-        let yPos = this.MARGIN + this.HEADER_HEIGHT + 5;
-        this.drawTableHeader(pdf, columns, colWidth, yPos);
-        yPos += tableHeaderHeight;
+        // Create HTML for this page
+        const pageHtml = this.createTablePageHtml(
+          title,
+          subtitle,
+          showDate,
+          columns,
+          pageData,
+          startRow,
+          pageIndex + 1,
+          totalPages,
+          data.length,
+          orientation
+        );
 
-        // Draw table rows for this page
-        const startRow = pageIndex * rowsPerPage;
-        const endRow = Math.min(startRow + rowsPerPage, data.length);
+        // Render to canvas
+        const canvas = await this.renderHtmlToCanvas(pageHtml, orientation);
 
-        for (let i = startRow; i < endRow; i++) {
-          const row = data[i];
-          const isEven = (i - startRow) % 2 === 0;
+        // Add to PDF
+        const imgWidth = pageWidth - (margin * 2);
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-          // Row background
-          pdf.setFillColor(isEven ? 250 : 245, isEven ? 250 : 245, isEven ? 250 : 245);
-          pdf.rect(this.MARGIN, yPos, contentWidth, this.ROW_HEIGHT, 'F');
-
-          // Row data
-          pdf.setFontSize(9);
-          pdf.setTextColor(50, 50, 50);
-
-          columns.forEach((col, colIndex) => {
-            let value = this.getNestedValue(row, col.field);
-            if (value === null || value === undefined) value = '-';
-            else if (typeof value === 'boolean') value = value ? 'نعم' : 'لا';
-            value = String(value);
-
-            // Truncate long text
-            if (value.length > 25) {
-              value = value.substring(0, 22) + '...';
-            }
-
-            const xPos = this.MARGIN + (colIndex * colWidth) + (colWidth / 2);
-            pdf.text(value, xPos, yPos + 6.5, { align: 'center' });
-          });
-
-          // Row border
-          pdf.setDrawColor(230, 230, 230);
-          pdf.line(this.MARGIN, yPos + this.ROW_HEIGHT, this.MARGIN + contentWidth, yPos + this.ROW_HEIGHT);
-
-          yPos += this.ROW_HEIGHT;
-        }
-
-        // Draw table border
-        pdf.setDrawColor(0, 200, 83);
-        pdf.setLineWidth(0.5);
-        pdf.rect(this.MARGIN, this.MARGIN + this.HEADER_HEIGHT + 5, contentWidth, yPos - (this.MARGIN + this.HEADER_HEIGHT + 5));
-
-        // Draw page footer
-        this.drawPageFooter(pdf, pageWidth, pageHeight, data.length);
+        pdf.addImage(
+          canvas.toDataURL('image/png'),
+          'PNG',
+          margin,
+          margin,
+          imgWidth,
+          Math.min(imgHeight, pageHeight - (margin * 2))
+        );
       }
 
       pdf.save(`${filename}_${this.getDateString()}.pdf`);
@@ -144,6 +109,258 @@ export class PrintService {
     } finally {
       this.hideLoading(loadingEl);
     }
+  }
+
+  /**
+   * Create HTML for a single table page
+   */
+  private createTablePageHtml(
+    title: string,
+    subtitle: string,
+    showDate: boolean,
+    columns: any[],
+    pageData: any[],
+    startIndex: number,
+    currentPage: number,
+    totalPages: number,
+    totalRecords: number,
+    orientation: string
+  ): string {
+    const dateStr = showDate ? new Date().toLocaleDateString('ar-EG', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }) : '';
+
+    return `
+      <!DOCTYPE html>
+      <html dir="rtl" lang="ar">
+      <head>
+        <meta charset="UTF-8">
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+        <style>
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+          }
+          body {
+            background: #ffffff;
+            direction: rtl;
+          }
+          .page {
+            width: ${orientation === 'landscape' ? '1120px' : '794px'};
+            padding: 0;
+            background: #ffffff;
+          }
+          .header {
+            background: linear-gradient(135deg, #00C853 0%, #009E3D 100%);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0;
+          }
+          .header-left h1 {
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+          }
+          .header-left .subtitle {
+            color: rgba(255,255,255,0.85);
+            font-size: 12px;
+          }
+          .header-left .date {
+            color: rgba(255,255,255,0.75);
+            font-size: 11px;
+            margin-top: 4px;
+          }
+          .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+          .logo {
+            width: 45px;
+            height: 45px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+          }
+          .logo img {
+            width: 100%;
+            height: 100%;
+          }
+          .brand-name {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 700;
+          }
+          .page-number {
+            color: rgba(255,255,255,0.9);
+            font-size: 13px;
+            margin-top: 8px;
+            text-align: left;
+          }
+          .table-container {
+            padding: 20px 25px;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 2px solid #00C853;
+            border-radius: 8px;
+            overflow: hidden;
+          }
+          thead tr {
+            background: linear-gradient(135deg, #00C853 0%, #00a844 100%);
+          }
+          th {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 14px 10px;
+            text-align: center;
+            border-left: 1px solid rgba(255,255,255,0.2);
+          }
+          th:last-child {
+            border-left: none;
+          }
+          tbody tr:nth-child(odd) {
+            background: #ffffff;
+          }
+          tbody tr:nth-child(even) {
+            background: #f8f9fa;
+          }
+          td {
+            color: #333333;
+            font-size: 12px;
+            padding: 12px 10px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+            border-left: 1px solid #e9ecef;
+          }
+          td:last-child {
+            border-left: none;
+          }
+          tbody tr:last-child td {
+            border-bottom: none;
+          }
+          .footer {
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #00C853;
+            background: #f8f9fa;
+          }
+          .footer-left {
+            color: #555;
+            font-size: 11px;
+          }
+          .footer-left span {
+            color: #00C853;
+            font-weight: 600;
+          }
+          .footer-right {
+            color: #777;
+            font-size: 11px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="page">
+          <div class="header">
+            <div class="header-left">
+              <h1>${title}</h1>
+              <div class="subtitle">${subtitle}</div>
+              ${showDate ? `<div class="date">${dateStr}</div>` : ''}
+            </div>
+            <div class="header-right">
+              <div class="brand-name">Voltyks</div>
+              <div class="logo">
+                <img src="${VOLTYKS_LOGO}" alt="Voltyks Logo">
+              </div>
+            </div>
+          </div>
+          <div class="page-number" style="text-align: left; padding: 8px 25px; background: #f0f0f0; color: #555; font-size: 12px;">
+            صفحة ${currentPage} من ${totalPages}
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  ${columns.map(col => `<th>${col.header}</th>`).join('')}
+                </tr>
+              </thead>
+              <tbody>
+                ${pageData.map((row, index) => `
+                  <tr>
+                    ${columns.map(col => {
+                      let value = this.getNestedValue(row, col.field);
+                      if (col.field === 'index') {
+                        value = startIndex + index + 1;
+                      } else if (value === null || value === undefined) {
+                        value = '-';
+                      } else if (typeof value === 'boolean') {
+                        value = value ? 'نعم' : 'لا';
+                      }
+                      return `<td>${value}</td>`;
+                    }).join('')}
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+          <div class="footer">
+            <div class="footer-left">
+              <span>إجمالي السجلات:</span> ${totalRecords}
+            </div>
+            <div class="footer-right">
+              Voltyks Admin Dashboard © ${new Date().getFullYear()}
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  /**
+   * Render HTML string to canvas
+   */
+  private async renderHtmlToCanvas(html: string, orientation: string): Promise<HTMLCanvasElement> {
+    const container = document.createElement('div');
+    container.style.cssText = `
+      position: fixed;
+      left: -9999px;
+      top: 0;
+      width: ${orientation === 'landscape' ? '1120px' : '794px'};
+      background: #ffffff;
+    `;
+    container.innerHTML = html;
+    document.body.appendChild(container);
+
+    // Wait for fonts to load
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    const canvas = await html2canvas(container, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#ffffff',
+      allowTaint: true
+    });
+
+    document.body.removeChild(container);
+    return canvas;
   }
 
   /**
@@ -160,93 +377,131 @@ export class PrintService {
     const loadingEl = this.showLoading();
 
     try {
-      // Create temporary container with white background
-      const container = document.createElement('div');
-      container.id = 'print-content-container';
-      container.style.cssText = `
-        position: fixed;
-        left: -9999px;
-        top: 0;
-        width: ${orientation === 'landscape' ? '1050px' : '750px'};
-        background: #ffffff;
-        font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
-        direction: rtl;
-        padding: 0;
-      `;
-
-      container.innerHTML = `
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
-          #print-content-container * {
-            font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
-            box-sizing: border-box;
-          }
-        </style>
-
-        <!-- Header -->
-        <div style="
-          background: linear-gradient(135deg, #00C853 0%, #009E3D 100%);
-          padding: 25px 30px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        ">
-          <div>
-            <div style="font-size: 26px; font-weight: 700; color: #ffffff;">${title}</div>
-            <div style="font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 5px;">${subtitle}</div>
-          </div>
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <img src="${VOLTYKS_LOGO}" width="45" height="45" style="border-radius: 50%; background: white; padding: 2px;" />
-            <div style="font-size: 28px; font-weight: 700; color: #ffffff;">Voltyks</div>
-          </div>
-        </div>
-
-        <!-- Content -->
-        <div style="
-          padding: 35px 40px;
-          background: #ffffff;
-          color: #333333;
-          font-size: 14px;
-          line-height: 2;
-          min-height: 400px;
-        ">
-          ${content}
-        </div>
-
-        <!-- Footer -->
-        <div style="
-          padding: 20px 30px;
-          background: #f8f9fa;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          color: #666;
-          font-size: 11px;
-          border-top: 2px solid #00C853;
-        ">
-          <div>
-            <span style="color: #00C853; font-weight: 600;">تاريخ الطباعة:</span>
-            ${new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span>Voltyks Admin Dashboard</span>
-            <span style="color: #00C853;">©</span>
-            <span>${new Date().getFullYear()}</span>
-          </div>
-        </div>
-      `;
-
-      document.body.appendChild(container);
-      await new Promise(resolve => setTimeout(resolve, 600));
-
-      const canvas = await html2canvas(container, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff'
+      const dateStr = new Date().toLocaleDateString('ar-EG', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
       });
 
-      document.body.removeChild(container);
+      // Create HTML page
+      const html = `
+        <!DOCTYPE html>
+        <html dir="rtl" lang="ar">
+        <head>
+          <meta charset="UTF-8">
+          <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+          <style>
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+              font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+            }
+            body {
+              background: #ffffff;
+              direction: rtl;
+            }
+            .page {
+              width: ${orientation === 'landscape' ? '1050px' : '750px'};
+              background: #ffffff;
+            }
+            .header {
+              background: linear-gradient(135deg, #00C853 0%, #009E3D 100%);
+              padding: 25px 30px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            }
+            .header-left h1 {
+              color: #ffffff;
+              font-size: 26px;
+              font-weight: 700;
+              margin-bottom: 5px;
+            }
+            .header-left .subtitle {
+              color: rgba(255,255,255,0.85);
+              font-size: 13px;
+            }
+            .header-right {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            }
+            .logo {
+              width: 50px;
+              height: 50px;
+              background: white;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 8px;
+            }
+            .logo img {
+              width: 100%;
+              height: 100%;
+            }
+            .brand-name {
+              color: #ffffff;
+              font-size: 28px;
+              font-weight: 700;
+            }
+            .content {
+              padding: 35px 40px;
+              background: #ffffff;
+              color: #333333;
+              font-size: 14px;
+              line-height: 2;
+            }
+            .footer {
+              padding: 20px 30px;
+              background: #f8f9fa;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              color: #666;
+              font-size: 11px;
+              border-top: 2px solid #00C853;
+            }
+            .footer .date-label {
+              color: #00C853;
+              font-weight: 600;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="page">
+            <div class="header">
+              <div class="header-left">
+                <h1>${title}</h1>
+                <div class="subtitle">${subtitle}</div>
+              </div>
+              <div class="header-right">
+                <div class="brand-name">Voltyks</div>
+                <div class="logo">
+                  <img src="${VOLTYKS_LOGO}" alt="Voltyks Logo">
+                </div>
+              </div>
+            </div>
+            <div class="content">
+              ${content}
+            </div>
+            <div class="footer">
+              <div>
+                <span class="date-label">تاريخ الطباعة:</span> ${dateStr}
+              </div>
+              <div>
+                Voltyks Admin Dashboard © ${new Date().getFullYear()}
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      const canvas = await this.renderHtmlToCanvas(html, orientation);
 
       const pdf = new jsPDF({ orientation, unit: 'mm', format: 'a4' });
       const pageWidth = pdf.internal.pageSize.getWidth();
@@ -270,108 +525,6 @@ export class PrintService {
   }
 
   /**
-   * Draw page header with logo
-   */
-  private drawPageHeader(
-    pdf: jsPDF,
-    title: string,
-    subtitle: string,
-    showDate: boolean,
-    pageWidth: number,
-    currentPage: number,
-    totalPages: number
-  ): void {
-    // Header background
-    pdf.setFillColor(0, 200, 83);
-    pdf.rect(this.MARGIN, this.MARGIN, pageWidth - (this.MARGIN * 2), this.HEADER_HEIGHT, 'F');
-
-    // Logo circle
-    pdf.setFillColor(255, 255, 255);
-    pdf.circle(pageWidth - this.MARGIN - 18, this.MARGIN + 17.5, 12, 'F');
-
-    // Bolt icon (simplified)
-    pdf.setFillColor(0, 200, 83);
-    pdf.triangle(
-      pageWidth - this.MARGIN - 22, this.MARGIN + 12,
-      pageWidth - this.MARGIN - 18, this.MARGIN + 20,
-      pageWidth - this.MARGIN - 14, this.MARGIN + 12
-    );
-    pdf.triangle(
-      pageWidth - this.MARGIN - 22, this.MARGIN + 23,
-      pageWidth - this.MARGIN - 18, this.MARGIN + 15,
-      pageWidth - this.MARGIN - 14, this.MARGIN + 23
-    );
-
-    // Title
-    pdf.setFontSize(16);
-    pdf.setTextColor(255, 255, 255);
-    pdf.text(title, this.MARGIN + 8, this.MARGIN + 15);
-
-    // Subtitle
-    pdf.setFontSize(9);
-    pdf.setTextColor(255, 255, 255);
-    pdf.text(subtitle, this.MARGIN + 8, this.MARGIN + 23);
-
-    // Date
-    if (showDate) {
-      pdf.setFontSize(8);
-      const dateStr = new Date().toLocaleDateString('ar-EG', {
-        year: 'numeric', month: 'short', day: 'numeric'
-      });
-      pdf.text(dateStr, this.MARGIN + 8, this.MARGIN + 30);
-    }
-
-    // Page number
-    pdf.setFontSize(9);
-    pdf.text(`${currentPage} / ${totalPages}`, pageWidth - this.MARGIN - 40, this.MARGIN + 30);
-
-    // Voltyks text
-    pdf.setFontSize(14);
-    pdf.setTextColor(255, 255, 255);
-    pdf.text('Voltyks', pageWidth - this.MARGIN - 35, this.MARGIN + 18);
-  }
-
-  /**
-   * Draw table header row
-   */
-  private drawTableHeader(pdf: jsPDF, columns: any[], colWidth: number, yPos: number): void {
-    const contentWidth = colWidth * columns.length;
-
-    // Header background
-    pdf.setFillColor(0, 200, 83);
-    pdf.rect(this.MARGIN, yPos, contentWidth, 12, 'F');
-
-    // Header text
-    pdf.setFontSize(10);
-    pdf.setTextColor(255, 255, 255);
-
-    columns.forEach((col, index) => {
-      const xPos = this.MARGIN + (index * colWidth) + (colWidth / 2);
-      pdf.text(col.header, xPos, yPos + 8, { align: 'center' });
-    });
-  }
-
-  /**
-   * Draw page footer
-   */
-  private drawPageFooter(pdf: jsPDF, pageWidth: number, pageHeight: number, totalRecords: number): void {
-    const yPos = pageHeight - this.MARGIN - 5;
-
-    // Footer line
-    pdf.setDrawColor(0, 200, 83);
-    pdf.setLineWidth(0.5);
-    pdf.line(this.MARGIN, yPos - 5, pageWidth - this.MARGIN, yPos - 5);
-
-    // Total records
-    pdf.setFontSize(8);
-    pdf.setTextColor(100, 100, 100);
-    pdf.text(`إجمالي السجلات: ${totalRecords}`, this.MARGIN + 5, yPos);
-
-    // Copyright
-    pdf.text(`Voltyks Admin Dashboard © ${new Date().getFullYear()}`, pageWidth - this.MARGIN - 5, yPos, { align: 'right' });
-  }
-
-  /**
    * Add image to PDF with smart pagination
    */
   private async addImageWithPagination(
@@ -386,9 +539,8 @@ export class PrintService {
     const availableHeight = pageHeight - (margin * 2);
 
     if (imgHeight <= availableHeight) {
-      // Single page - center vertically
-      const yPos = margin;
-      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', margin, yPos, imgWidth, imgHeight);
+      // Single page
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', margin, margin, imgWidth, imgHeight);
     } else {
       // Multiple pages
       let remainingHeight = imgHeight;
