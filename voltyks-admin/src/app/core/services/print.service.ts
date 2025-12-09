@@ -141,17 +141,18 @@ export class PrintService {
       <html dir="rtl" lang="ar">
       <head>
         <meta charset="UTF-8">
-        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
         <style>
+          @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
           * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif !important;
           }
           body {
             background: #ffffff;
             direction: rtl;
+            text-align: right;
           }
           .page {
             width: ${orientation === 'landscape' ? '1120px' : '794px'};
@@ -179,6 +180,8 @@ export class PrintService {
             font-weight: 700;
             margin-bottom: 8px;
             letter-spacing: 0.5px;
+            unicode-bidi: bidi-override;
+            direction: rtl;
           }
           .header-right .subtitle {
             color: rgba(255,255,255,0.9);
@@ -363,8 +366,8 @@ export class PrintService {
     container.innerHTML = html;
     document.body.appendChild(container);
 
-    // Wait for fonts to load
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Wait for fonts to load properly
+    await this.waitForFonts();
 
     const canvas = await html2canvas(container, {
       scale: 1.5,
@@ -376,6 +379,27 @@ export class PrintService {
 
     document.body.removeChild(container);
     return canvas;
+  }
+
+  /**
+   * Wait for fonts to be ready
+   */
+  private async waitForFonts(): Promise<void> {
+    // Load Cairo font explicitly
+    try {
+      await document.fonts.load('700 28px Cairo');
+      await document.fonts.load('600 14px Cairo');
+      await document.fonts.load('400 12px Cairo');
+    } catch (e) {
+      console.log('Font loading via API not supported');
+    }
+
+    // Check if document.fonts API is available
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+    // Additional wait for rendering
+    await new Promise(resolve => setTimeout(resolve, 800));
   }
 
   /**
@@ -406,17 +430,18 @@ export class PrintService {
         <html dir="rtl" lang="ar">
         <head>
           <meta charset="UTF-8">
-          <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
           <style>
+            @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
             * {
               margin: 0;
               padding: 0;
               box-sizing: border-box;
-              font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+              font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif !important;
             }
             body {
               background: #ffffff;
               direction: rtl;
+              text-align: right;
             }
             .page {
               width: ${orientation === 'landscape' ? '1050px' : '750px'};
@@ -442,6 +467,8 @@ export class PrintService {
               font-weight: 700;
               margin-bottom: 8px;
               letter-spacing: 0.5px;
+              unicode-bidi: bidi-override;
+              direction: rtl;
             }
             .header-right .subtitle {
               color: rgba(255,255,255,0.9);
