@@ -282,6 +282,76 @@ npm start
 
 ---
 
+<!-- Screenshots Section -->
+## 📸 Screenshots
+
+<details>
+<summary><b>🖼️ Click to view all screenshots</b></summary>
+
+### 🔐 Authentication
+| Login Page |
+|:---:|
+| ![Login](voltyks-admin/screenshots/1.png) |
+
+### 📊 Dashboard
+| Main Dashboard |
+|:---:|
+| ![Dashboard](voltyks-admin/screenshots/2.png) |
+
+### 👥 User Management
+| Users List |
+|:---:|
+| ![Users](voltyks-admin/screenshots/3.png) |
+
+### ⚡ Charging Operations
+| Processes |
+|:---:|
+| ![Processes](voltyks-admin/screenshots/4.png) |
+
+### 🔌 Chargers & Vehicles
+| Chargers | Vehicles |
+|:---:|:---:|
+| ![Chargers](voltyks-admin/screenshots/5.png) | ![Vehicles](voltyks-admin/screenshots/6.png) |
+
+### 🏷️ Brands & Models
+| Brands | Models |
+|:---:|:---:|
+| ![Brands](voltyks-admin/screenshots/7.png) | ![Models](voltyks-admin/screenshots/8.png) |
+
+### 💰 Fees Management
+| Fees Configuration |
+|:---:|
+| ![Fees](voltyks-admin/screenshots/9.png) |
+
+### 📋 Terms & Conditions
+| Terms View | Terms Edit (JSON) |
+|:---:|:---:|
+| ![Terms](voltyks-admin/screenshots/10.png) | ![Terms Edit](voltyks-admin/screenshots/11.png) |
+
+### 🔧 Protocols
+| EU Protocol | CN Protocol |
+|:---:|:---:|
+| ![EU Protocol](voltyks-admin/screenshots/12.png) | ![CN Protocol](voltyks-admin/screenshots/13.png) |
+
+### 📈 Reports
+| Reports Management |
+|:---:|
+| ![Reports](voltyks-admin/screenshots/14.png) |
+
+### 📢 Complaints
+| Complaints List | Complaint Categories |
+|:---:|:---:|
+| ![Complaints](voltyks-admin/screenshots/15.png) | ![Categories](voltyks-admin/screenshots/16.png) |
+
+### ℹ️ About Page
+| About Voltyks |
+|:---:|
+| ![About](voltyks-admin/screenshots/17.png) |
+
+</details>
+
+---
+
 <!-- Browser Support -->
 ## 🌐 Browser Support
 
