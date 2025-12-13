@@ -235,6 +235,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 24px;
+            margin-bottom: 32px;
 
             .balance-card {
               background-color: #2A2A2A;
@@ -344,6 +345,45 @@
                     }
                   }
                 }
+              }
+            }
+          }
+
+          .transactions-section {
+            h4 {
+              color: white;
+              font-size: 20px;
+              font-weight: 600;
+              margin-bottom: 20px;
+            }
+
+            .transactions-table {
+              .transaction-type {
+                display: inline-block;
+                padding: 4px 12px;
+                border-radius: 12px;
+                font-size: 12px;
+                font-weight: 500;
+
+                &.add {
+                  background-color: rgba(0, 200, 83, 0.2);
+                  color: #00C853;
+                }
+
+                &.deduct {
+                  background-color: rgba(239, 83, 80, 0.2);
+                  color: #EF5350;
+                }
+              }
+
+              .amount-add {
+                color: #00C853;
+                font-weight: 600;
+              }
+
+              .amount-deduct {
+                color: #EF5350;
+                font-weight: 600;
               }
             }
           }

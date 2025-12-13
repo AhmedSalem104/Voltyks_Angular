@@ -9,7 +9,8 @@ import {
   AdminWalletDto,
   AdminUserVehicleDto,
   AdminUserReportDto,
-  AddBalanceRequestDto
+  AddBalanceRequestDto,
+  WalletTransactionDto
 } from '../../../core/models';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -59,6 +60,12 @@ export class UserDetailsComponent implements OnInit {
   reportsPageSize: number = 5;
   paginatedReports: AdminUserReportDto[] = [];
 
+  // Wallet Transactions
+  walletTransactions: WalletTransactionDto[] = [];
+  paginatedTransactions: WalletTransactionDto[] = [];
+  transactionsPage: number = 1;
+  transactionsPageSize: number = 10;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -103,6 +110,9 @@ export class UserDetailsComponent implements OnInit {
         break;
       case 'reports':
         if (this.reports.length === 0) this.loadReports();
+        break;
+      case 'manageBalance':
+        if (this.walletTransactions.length === 0) this.loadWalletTransactions();
         break;
     }
   }
@@ -195,6 +205,36 @@ export class UserDetailsComponent implements OnInit {
     this.paginatedReports = this.reports.slice(start, end);
   }
 
+  // Wallet Transactions Methods
+  loadWalletTransactions(): void {
+    this.isLoading = true;
+
+    this.feesService.getWalletTransactions(this.userId).subscribe({
+      next: (response) => {
+        if (response.status && response.data) {
+          this.walletTransactions = response.data;
+          this.updatePaginatedTransactions();
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.toaster.error(error.message || 'فشل تحميل سجل المعاملات');
+        this.isLoading = false;
+      }
+    });
+  }
+
+  updatePaginatedTransactions(): void {
+    const start = (this.transactionsPage - 1) * this.transactionsPageSize;
+    const end = start + this.transactionsPageSize;
+    this.paginatedTransactions = this.walletTransactions.slice(start, end);
+  }
+
+  onTransactionsPageChange(page: number): void {
+    this.transactionsPage = page;
+    this.updatePaginatedTransactions();
+  }
+
   onVehiclesPageChange(page: number): void {
     this.vehiclesPage = page;
     this.updatePaginatedVehicles();
@@ -245,8 +285,9 @@ export class UserDetailsComponent implements OnInit {
         if (response.status) {
           this.toaster.success('تم إضافة الرصيد بنجاح');
           this.resetAddBalanceForm();
-          // Reload wallet and user data
+          // Reload wallet, user data, and transactions
           this.loadUserDetails();
+          this.loadWalletTransactions();
           if (this.wallet) {
             this.loadWallet();
           }
@@ -290,8 +331,9 @@ export class UserDetailsComponent implements OnInit {
         if (response.status) {
           this.toaster.success('تم خصم الرصيد بنجاح');
           this.resetDeductBalanceForm();
-          // Reload wallet and user data
+          // Reload wallet, user data, and transactions
           this.loadUserDetails();
+          this.loadWalletTransactions();
           if (this.wallet) {
             this.loadWallet();
           }

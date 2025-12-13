@@ -18,3 +18,16 @@ export interface TransferFeesRequestDto {
   amount: number;
   notes: string | null;
 }
+
+export interface WalletTransactionDto {
+  id: number;
+  userId: string;
+  userName: string;
+  amount: number;
+  transactionType: 'Add' | 'Deduct';
+  notes: string | null;
+  previousBalance: number;
+  newBalance: number;
+  createdByAdminId: string;
+  createdAt: string;
+}

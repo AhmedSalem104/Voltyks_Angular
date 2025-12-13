@@ -6,7 +6,8 @@ import {
   ApiResponse,
   AdminFeesDto,
   UpdateFeesDto,
-  TransferFeesRequestDto
+  TransferFeesRequestDto,
+  WalletTransactionDto
 } from '../../models';
 
 @Injectable({
@@ -39,5 +40,13 @@ export class AdminFeesService {
    */
   transferFees(dto: TransferFeesRequestDto): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(`${this.baseUrl}/transfer`, dto);
+  }
+
+  /**
+   * Get wallet transactions for a user
+   * GET /api/admin/fees/wallet-transactions/{userId}
+   */
+  getWalletTransactions(userId: string): Observable<ApiResponse<WalletTransactionDto[]>> {
+    return this.http.get<ApiResponse<WalletTransactionDto[]>>(`${this.baseUrl}/wallet-transactions/${userId}`);
   }
 }

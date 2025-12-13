@@ -306,6 +306,52 @@
                 </div>
               </div>
             </div>
+
+            <!-- Wallet Transactions History -->
+            <div class="transactions-section">
+              <h4>سجل المعاملات</h4>
+              @if (paginatedTransactions.length > 0) {
+                <table class="voltyks-table transactions-table">
+                  <thead>
+                    <tr>
+                      <th>التاريخ</th>
+                      <th>النوع</th>
+                      <th>المبلغ</th>
+                      <th>الرصيد السابق</th>
+                      <th>الرصيد الجديد</th>
+                      <th>الملاحظات</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (transaction of paginatedTransactions; track transaction.id) {
+                      <tr>
+                        <td>{{ formatDate(transaction.createdAt) }}</td>
+                        <td>
+                          <span class="transaction-type" [class.add]="transaction.transactionType === 'Add'" [class.deduct]="transaction.transactionType === 'Deduct'">
+                            {{ transaction.transactionType === 'Add' ? 'إضافة' : 'خصم' }}
+                          </span>
+                        </td>
+                        <td [class.amount-add]="transaction.transactionType === 'Add'" [class.amount-deduct]="transaction.transactionType === 'Deduct'">
+                          {{ transaction.transactionType === 'Add' ? '+' : '' }}{{ transaction.amount }} ج.م
+                        </td>
+                        <td>{{ transaction.previousBalance }} ج.م</td>
+                        <td>{{ transaction.newBalance }} ج.م</td>
+                        <td>{{ transaction.notes || '-' }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+
+                <app-pagination
+                  [totalItems]="walletTransactions.length"
+                  [pageSize]="transactionsPageSize"
+                  [currentPage]="transactionsPage"
+                  (pageChange)="onTransactionsPageChange($event)"
+                ></app-pagination>
+              } @else {
+                <p class="empty-text">لا توجد معاملات</p>
+              }
+            </div>
           </div>
         }
       </div>
