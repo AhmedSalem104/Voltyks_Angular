@@ -261,7 +261,9 @@ export class UserDetailsComponent implements OnInit {
 
   // Add Balance Methods
   openAddBalanceDialog(): void {
-    if (this.addBalanceDto.amount <= 0) {
+    alert('openAddBalanceDialog called, amount: ' + this.addBalanceDto.amount);
+
+    if (!this.addBalanceDto.amount || this.addBalanceDto.amount <= 0) {
       this.toaster.error('يرجى إدخال مبلغ صحيح أكبر من صفر');
       return;
     }
@@ -273,15 +275,20 @@ export class UserDetailsComponent implements OnInit {
   }
 
   confirmAddBalance(): void {
+    alert('confirmAddBalance called');
     this.isLoading = true;
     this.showAddBalanceDialog = false;
 
-    this.feesService.transferFees({
+    const requestData = {
       recipientUserId: this.userId,
       amount: this.addBalanceDto.amount,
       notes: this.addBalanceDto.notes
-    }).subscribe({
+    };
+    alert('Sending request: ' + JSON.stringify(requestData));
+
+    this.feesService.transferFees(requestData).subscribe({
       next: (response) => {
+        alert('Response received: ' + JSON.stringify(response));
         if (response.status) {
           this.toaster.success('تم إضافة الرصيد بنجاح');
           this.resetAddBalanceForm();
@@ -291,10 +298,13 @@ export class UserDetailsComponent implements OnInit {
           if (this.wallet) {
             this.loadWallet();
           }
+        } else {
+          this.toaster.error('فشل إضافة الرصيد');
         }
         this.isLoading = false;
       },
       error: (error) => {
+        alert('Error: ' + JSON.stringify(error));
         this.toaster.error(error.message || 'فشل إضافة الرصيد');
         this.isLoading = false;
       }
