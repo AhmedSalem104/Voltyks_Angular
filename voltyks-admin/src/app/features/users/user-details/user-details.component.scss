@@ -229,63 +229,121 @@
           }
         }
 
-        // Add Balance Section
-        &.add-balance-section {
-          .add-balance-form {
-            max-width: 500px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        // Manage Balance Section
+        &.manage-balance-section {
+          .balance-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
 
-            .form-group {
-              label {
-                display: block;
-                margin-bottom: 8px;
-                color: #fff;
-                font-weight: 500;
-                font-size: 14px;
+            .balance-card {
+              background-color: #2A2A2A;
+              border-radius: 12px;
+              overflow: hidden;
 
-                .required {
+              .card-header {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 16px 20px;
+
+                .material-icons {
+                  font-size: 28px;
+                }
+
+                h5 {
+                  margin: 0;
+                  font-size: 18px;
+                  font-weight: 600;
+                }
+
+                &.add-header {
+                  background: linear-gradient(135deg, rgba(0, 200, 83, 0.2) 0%, rgba(0, 200, 83, 0.1) 100%);
+                  color: #00C853;
+                }
+
+                &.deduct-header {
+                  background: linear-gradient(135deg, rgba(239, 83, 80, 0.2) 0%, rgba(239, 83, 80, 0.1) 100%);
                   color: #EF5350;
                 }
               }
 
-              .voltyks-input {
-                width: 100%;
-                padding: 12px 16px;
-                background-color: #2A2A2A;
-                border: 1px solid #333;
-                border-radius: 8px;
-                color: #fff;
-                font-family: 'Cairo', sans-serif;
-                font-size: 14px;
-                transition: border-color 0.3s;
+              .card-body {
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
 
-                &:focus {
-                  outline: none;
-                  border-color: #00C853;
+                .form-group {
+                  label {
+                    display: block;
+                    margin-bottom: 8px;
+                    color: #fff;
+                    font-weight: 500;
+                    font-size: 14px;
+
+                    .required {
+                      color: #EF5350;
+                    }
+                  }
+
+                  .voltyks-input {
+                    width: 100%;
+                    padding: 12px 16px;
+                    background-color: #1E1E1E;
+                    border: 1px solid #333;
+                    border-radius: 8px;
+                    color: #fff;
+                    font-family: 'Cairo', sans-serif;
+                    font-size: 14px;
+                    transition: border-color 0.3s;
+
+                    &:focus {
+                      outline: none;
+                      border-color: #00C853;
+                    }
+
+                    &::placeholder {
+                      color: #666;
+                    }
+                  }
+
+                  textarea.voltyks-input {
+                    resize: vertical;
+                    min-height: 60px;
+                  }
                 }
 
-                &::placeholder {
-                  color: #666;
+                .voltyks-btn {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 8px;
+                  padding: 12px 24px;
+                  width: 100%;
+
+                  .material-icons {
+                    font-size: 20px;
+                  }
+
+                  &.btn-success {
+                    background-color: #00C853;
+                    color: white;
+
+                    &:hover {
+                      background-color: #00A843;
+                    }
+                  }
+
+                  &.btn-danger {
+                    background-color: #EF5350;
+                    color: white;
+
+                    &:hover {
+                      background-color: #D32F2F;
+                    }
+                  }
                 }
-              }
-
-              textarea.voltyks-input {
-                resize: vertical;
-                min-height: 80px;
-              }
-            }
-
-            .voltyks-btn {
-              align-self: flex-start;
-              display: flex;
-              align-items: center;
-              gap: 8px;
-              padding: 12px 24px;
-
-              .material-icons {
-                font-size: 20px;
               }
             }
           }

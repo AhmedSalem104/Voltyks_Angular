@@ -36,7 +36,7 @@ export class UserDetailsComponent implements OnInit {
   vehicles: AdminUserVehicleDto[] = [];
   reports: AdminUserReportDto[] = [];
 
-  activeTab: 'overview' | 'wallet' | 'vehicles' | 'reports' | 'addBalance' = 'overview';
+  activeTab: 'overview' | 'wallet' | 'vehicles' | 'reports' | 'manageBalance' = 'overview';
 
   isLoading: boolean = false;
   showBanDialog: boolean = false;
@@ -44,6 +44,10 @@ export class UserDetailsComponent implements OnInit {
   // Add Balance
   addBalanceDto: AddBalanceRequestDto = { amount: 0, notes: null };
   showAddBalanceDialog: boolean = false;
+
+  // Deduct Balance
+  deductBalanceDto: AddBalanceRequestDto = { amount: 0, notes: null };
+  showDeductBalanceDialog: boolean = false;
 
   // Pagination for vehicles
   vehiclesPage: number = 1;
@@ -258,5 +262,50 @@ export class UserDetailsComponent implements OnInit {
 
   resetAddBalanceForm(): void {
     this.addBalanceDto = { amount: 0, notes: null };
+  }
+
+  // Deduct Balance Methods
+  openDeductBalanceDialog(): void {
+    if (this.deductBalanceDto.amount <= 0) {
+      this.toaster.error('يرجى إدخال مبلغ صحيح أكبر من صفر');
+      return;
+    }
+    this.showDeductBalanceDialog = true;
+  }
+
+  closeDeductBalanceDialog(): void {
+    this.showDeductBalanceDialog = false;
+  }
+
+  confirmDeductBalance(): void {
+    this.isLoading = true;
+    this.showDeductBalanceDialog = false;
+
+    this.feesService.transferFees({
+      recipientUserId: this.userId,
+      amount: -this.deductBalanceDto.amount,  // سالب للخصم
+      notes: this.deductBalanceDto.notes
+    }).subscribe({
+      next: (response) => {
+        if (response.status) {
+          this.toaster.success('تم خصم الرصيد بنجاح');
+          this.resetDeductBalanceForm();
+          // Reload wallet and user data
+          this.loadUserDetails();
+          if (this.wallet) {
+            this.loadWallet();
+          }
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.toaster.error(error.message || 'فشل خصم الرصيد');
+        this.isLoading = false;
+      }
+    });
+  }
+
+  resetDeductBalanceForm(): void {
+    this.deductBalanceDto = { amount: 0, notes: null };
   }
 }

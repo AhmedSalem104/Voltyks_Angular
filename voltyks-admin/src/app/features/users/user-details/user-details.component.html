@@ -97,11 +97,11 @@
         </button>
         <button
           class="tab-button"
-          [class.active]="activeTab === 'addBalance'"
-          (click)="switchTab('addBalance')"
+          [class.active]="activeTab === 'manageBalance'"
+          (click)="switchTab('manageBalance')"
         >
-          <span class="material-icons">add_card</span>
-          إضافة رصيد
+          <span class="material-icons">account_balance_wallet</span>
+          إدارة الرصيد
         </button>
       </div>
 
@@ -229,37 +229,82 @@
           </div>
         }
 
-        <!-- Add Balance Tab -->
-        @if (activeTab === 'addBalance') {
-          <div class="tab-pane add-balance-section">
-            <h4>إضافة رصيد للمستخدم</h4>
-            <div class="add-balance-form">
-              <div class="form-group">
-                <label>المبلغ (ج.م) <span class="required">*</span></label>
-                <input
-                  type="number"
-                  class="voltyks-input"
-                  [(ngModel)]="addBalanceDto.amount"
-                  min="0"
-                  step="0.01"
-                  placeholder="أدخل المبلغ المراد إضافته"
-                />
+        <!-- Manage Balance Tab -->
+        @if (activeTab === 'manageBalance') {
+          <div class="tab-pane manage-balance-section">
+            <h4>إدارة رصيد المستخدم</h4>
+            <div class="balance-actions-grid">
+              <!-- Add Balance Section -->
+              <div class="balance-card add-balance-card">
+                <div class="card-header add-header">
+                  <span class="material-icons">add_circle</span>
+                  <h5>إضافة رصيد</h5>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label>المبلغ (ج.م) <span class="required">*</span></label>
+                    <input
+                      type="number"
+                      class="voltyks-input"
+                      [(ngModel)]="addBalanceDto.amount"
+                      min="0"
+                      step="0.01"
+                      placeholder="أدخل المبلغ المراد إضافته"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label>ملاحظات (اختياري)</label>
+                    <textarea
+                      class="voltyks-input"
+                      [(ngModel)]="addBalanceDto.notes"
+                      rows="2"
+                      placeholder="أضف ملاحظات..."
+                    ></textarea>
+                  </div>
+
+                  <button class="voltyks-btn btn-success" (click)="openAddBalanceDialog()">
+                    <span class="material-icons">add</span>
+                    إضافة الرصيد
+                  </button>
+                </div>
               </div>
 
-              <div class="form-group">
-                <label>ملاحظات (اختياري)</label>
-                <textarea
-                  class="voltyks-input"
-                  [(ngModel)]="addBalanceDto.notes"
-                  rows="3"
-                  placeholder="أضف ملاحظات حول هذا التحويل..."
-                ></textarea>
-              </div>
+              <!-- Deduct Balance Section -->
+              <div class="balance-card deduct-balance-card">
+                <div class="card-header deduct-header">
+                  <span class="material-icons">remove_circle</span>
+                  <h5>خصم رصيد</h5>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label>المبلغ (ج.م) <span class="required">*</span></label>
+                    <input
+                      type="number"
+                      class="voltyks-input"
+                      [(ngModel)]="deductBalanceDto.amount"
+                      min="0"
+                      step="0.01"
+                      placeholder="أدخل المبلغ المراد خصمه"
+                    />
+                  </div>
 
-              <button class="voltyks-btn btn-primary" (click)="openAddBalanceDialog()">
-                <span class="material-icons">send</span>
-                إضافة الرصيد
-              </button>
+                  <div class="form-group">
+                    <label>ملاحظات (اختياري)</label>
+                    <textarea
+                      class="voltyks-input"
+                      [(ngModel)]="deductBalanceDto.notes"
+                      rows="2"
+                      placeholder="أضف ملاحظات..."
+                    ></textarea>
+                  </div>
+
+                  <button class="voltyks-btn btn-danger" (click)="openDeductBalanceDialog()">
+                    <span class="material-icons">remove</span>
+                    خصم الرصيد
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         }
@@ -288,6 +333,17 @@
   type="primary"
   (confirm)="confirmAddBalance()"
   (cancel)="closeAddBalanceDialog()"
+></app-confirm-dialog>
+
+<!-- Deduct Balance Confirmation Dialog -->
+<app-confirm-dialog
+  [isOpen]="showDeductBalanceDialog"
+  title="تأكيد خصم الرصيد"
+  [message]="'هل أنت متأكد من خصم ' + deductBalanceDto.amount + ' ج.م من رصيد المستخدم ' + user?.fullName + '؟'"
+  confirmText="خصم"
+  type="danger"
+  (confirm)="confirmDeductBalance()"
+  (cancel)="closeDeductBalanceDialog()"
 ></app-confirm-dialog>
 
 @if (isLoading) {
