@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminUsersService } from '../../../core/services/admin/admin-users.service';
+import { AdminFeesService } from '../../../core/services/admin/admin-fees.service';
 import {
   AdminUserDetailsDto,
   AdminWalletDto,
@@ -58,6 +59,7 @@ export class UserDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private usersService: AdminUsersService,
+    private feesService: AdminFeesService,
     private toaster: ToasterService
   ) {}
 
@@ -230,7 +232,11 @@ export class UserDetailsComponent implements OnInit {
     this.isLoading = true;
     this.showAddBalanceDialog = false;
 
-    this.usersService.addBalance(this.userId, this.addBalanceDto).subscribe({
+    this.feesService.transferFees({
+      recipientUserId: this.userId,
+      amount: this.addBalanceDto.amount,
+      notes: this.addBalanceDto.notes
+    }).subscribe({
       next: (response) => {
         if (response.status) {
           this.toaster.success('تم إضافة الرصيد بنجاح');
