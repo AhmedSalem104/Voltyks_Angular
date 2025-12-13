@@ -56,3 +56,8 @@ export interface AdminUserReportDto {
   reportContent: string;
   isResolved: boolean;
 }
+
+export interface AddBalanceRequestDto {
+  amount: number;
+  notes: string | null;
+}

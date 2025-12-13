@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminUsersService } from '../../../core/services/admin/admin-users.service';
 import {
   AdminUserDetailsDto,
   AdminWalletDto,
   AdminUserVehicleDto,
-  AdminUserReportDto
+  AdminUserReportDto,
+  AddBalanceRequestDto
 } from '../../../core/models';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -18,6 +20,7 @@ import { ToasterService } from '../../../shared/components/toaster/toaster.servi
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     LoadingOverlayComponent,
     ConfirmDialogComponent,
     PaginationComponent
@@ -32,10 +35,14 @@ export class UserDetailsComponent implements OnInit {
   vehicles: AdminUserVehicleDto[] = [];
   reports: AdminUserReportDto[] = [];
 
-  activeTab: 'overview' | 'wallet' | 'vehicles' | 'reports' = 'overview';
+  activeTab: 'overview' | 'wallet' | 'vehicles' | 'reports' | 'addBalance' = 'overview';
 
   isLoading: boolean = false;
   showBanDialog: boolean = false;
+
+  // Add Balance
+  addBalanceDto: AddBalanceRequestDto = { amount: 0, notes: null };
+  showAddBalanceDialog: boolean = false;
 
   // Pagination for vehicles
   vehiclesPage: number = 1;
@@ -204,5 +211,46 @@ export class UserDetailsComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/users']);
+  }
+
+  // Add Balance Methods
+  openAddBalanceDialog(): void {
+    if (this.addBalanceDto.amount <= 0) {
+      this.toaster.error('يرجى إدخال مبلغ صحيح أكبر من صفر');
+      return;
+    }
+    this.showAddBalanceDialog = true;
+  }
+
+  closeAddBalanceDialog(): void {
+    this.showAddBalanceDialog = false;
+  }
+
+  confirmAddBalance(): void {
+    this.isLoading = true;
+    this.showAddBalanceDialog = false;
+
+    this.usersService.addBalance(this.userId, this.addBalanceDto).subscribe({
+      next: (response) => {
+        if (response.status) {
+          this.toaster.success('تم إضافة الرصيد بنجاح');
+          this.resetAddBalanceForm();
+          // Reload wallet and user data
+          this.loadUserDetails();
+          if (this.wallet) {
+            this.loadWallet();
+          }
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.toaster.error(error.message || 'فشل إضافة الرصيد');
+        this.isLoading = false;
+      }
+    });
+  }
+
+  resetAddBalanceForm(): void {
+    this.addBalanceDto = { amount: 0, notes: null };
   }
 }

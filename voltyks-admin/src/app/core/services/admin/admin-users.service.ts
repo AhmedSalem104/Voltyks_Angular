@@ -8,7 +8,8 @@ import {
   AdminUserDetailsDto,
   AdminWalletDto,
   AdminUserVehicleDto,
-  AdminUserReportDto
+  AdminUserReportDto,
+  AddBalanceRequestDto
 } from '../../models';
 
 @Injectable({
@@ -69,5 +70,13 @@ export class AdminUsersService {
    */
   getUserReports(id: string): Observable<ApiResponse<AdminUserReportDto[]>> {
     return this.http.get<ApiResponse<AdminUserReportDto[]>>(`${this.baseUrl}/${id}/reports`);
+  }
+
+  /**
+   * Add balance to user wallet
+   * POST /api/admin/users/{id}/add-balance
+   */
+  addBalance(id: string, dto: AddBalanceRequestDto): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.baseUrl}/${id}/add-balance`, dto);
   }
 }
