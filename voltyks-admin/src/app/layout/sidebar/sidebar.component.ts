@@ -61,6 +61,7 @@ export class SidebarComponent implements OnInit {
     { label: 'المركبات', icon: 'directions_car_filled', route: '/vehicles' },
     { label: 'العلامات التجارية', icon: 'category', route: '/brands' },
     { label: 'الموديلات', icon: 'directions_car', route: '/models' },
+    { label: 'بروتوكولات الشحن', icon: 'electrical_services', route: '/charging-protocols' },
     { label: 'الرسوم', icon: 'payments', route: '/fees' },
     { label: 'الشروط والأحكام', icon: 'description', route: '/terms' },
     { label: 'البروتوكول', icon: 'policy', route: '/protocol' },

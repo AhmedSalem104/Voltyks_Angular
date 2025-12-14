@@ -1,0 +1,191 @@
+<div class="protocols-container">
+  <div class="page-header">
+    <h2>إدارة بروتوكولات الشحن</h2>
+    <p class="page-description">عرض وإدارة بروتوكولات الشحن المتاحة (CCS, CHAdeMO, Type 2, ...)</p>
+  </div>
+
+  <!-- Compact Filters Section -->
+  <div class="filters-section voltyks-card">
+    <div class="filters-wrapper">
+      <!-- Search Box -->
+      <div class="filter-item search-filter">
+        <div class="search-box">
+          <span class="material-icons search-icon">search</span>
+          <input
+            type="text"
+            class="voltyks-input"
+            placeholder="البحث عن بروتوكول..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange($event)"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Protocols Table -->
+  <div class="voltyks-card">
+    <div class="table-header">
+      <h3>قائمة بروتوكولات الشحن</h3>
+      <div class="header-actions">
+        <span class="total-count">إجمالي: {{ totalItems }}</span>
+        <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredProtocols.length === 0">
+          <span class="material-icons">print</span>
+          <span>طباعة PDF</span>
+        </button>
+        <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
+          <span class="material-icons">add</span>
+          إضافة بروتوكول
+        </button>
+      </div>
+    </div>
+
+    @if (paginatedProtocols.length > 0) {
+      <div class="table-wrapper">
+        <table class="voltyks-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>اسم البروتوكول</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (protocol of paginatedProtocols; track protocol.id; let i = $index) {
+              <tr>
+                <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                <td class="protocol-name">
+                  <span class="material-icons protocol-icon">electrical_services</span>
+                  {{ protocol.name }}
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button
+                      class="voltyks-btn btn-icon btn-edit"
+                      (click)="openEditDialog(protocol)"
+                      title="تعديل"
+                    >
+                      <span class="material-icons">edit</span>
+                    </button>
+                    <button
+                      class="voltyks-btn btn-icon btn-danger"
+                      (click)="openDeleteConfirm(protocol)"
+                      title="حذف"
+                    >
+                      <span class="material-icons">delete</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <app-pagination
+        [totalItems]="totalItems"
+        [pageSize]="pageSize"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      ></app-pagination>
+    } @else {
+      <div class="empty-state">
+        <span class="material-icons empty-icon">electrical_services</span>
+        <p>لا توجد بروتوكولات شحن</p>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Create Protocol Modal -->
+@defer (when showCreateDialog) {
+  @if (showCreateDialog) {
+    <div class="modal-overlay" (click)="closeCreateDialog()">
+      <div class="modal-content modal-sm" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>إضافة بروتوكول شحن جديد</h3>
+          <button class="close-btn" (click)="closeCreateDialog()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="protocol-form">
+            <div class="form-group">
+              <label>اسم البروتوكول <span class="required">*</span></label>
+              <input
+                type="text"
+                class="voltyks-input"
+                [(ngModel)]="createDto.name"
+                name="name"
+                placeholder="مثال: CCS, CHAdeMO, Type 2..."
+              />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">
+            إلغاء
+          </button>
+          <button class="voltyks-btn btn-primary" (click)="createProtocol()">
+            <span class="material-icons">save</span>
+            حفظ
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+}
+
+<!-- Edit Protocol Modal -->
+@defer (when showEditDialog) {
+  @if (showEditDialog && currentProtocol) {
+    <div class="modal-overlay" (click)="closeEditDialog()">
+      <div class="modal-content modal-sm" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>تعديل البروتوكول</h3>
+          <button class="close-btn" (click)="closeEditDialog()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="protocol-form">
+            <div class="form-group">
+              <label>اسم البروتوكول <span class="required">*</span></label>
+              <input
+                type="text"
+                class="voltyks-input"
+                [(ngModel)]="updateDto.name"
+                name="name"
+              />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">
+            إلغاء
+          </button>
+          <button class="voltyks-btn btn-primary" (click)="updateProtocol()">
+            <span class="material-icons">save</span>
+            حفظ التغييرات
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+}
+
+<!-- Delete Confirmation Dialog -->
+<app-confirm-dialog
+  [isOpen]="showDeleteConfirm"
+  title="تأكيد حذف البروتوكول"
+  [message]="'هل أنت متأكد من حذف البروتوكول \'' + (currentProtocol?.name || '') + '\'؟'"
+  type="danger"
+  (confirm)="confirmDelete()"
+  (cancel)="closeDeleteConfirm()"
+></app-confirm-dialog>
+
+@if (isLoading) {
+  <app-loading-overlay></app-loading-overlay>
+}

@@ -12,3 +12,4 @@ export * from './vehicle.model';
 export * from './lookup.model';
 export * from './process.model';
 export * from './complaint.model';
+export * from './charging-protocol.model';
