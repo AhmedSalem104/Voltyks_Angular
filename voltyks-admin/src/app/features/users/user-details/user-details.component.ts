@@ -265,6 +265,10 @@ export class UserDetailsComponent implements OnInit {
       this.toaster.error('يرجى إدخال مبلغ صحيح أكبر من صفر');
       return;
     }
+    if (!this.addBalanceDto.notes || this.addBalanceDto.notes.trim() === '') {
+      this.toaster.error('يرجى إدخال الملاحظات');
+      return;
+    }
     this.showAddBalanceDialog = true;
   }
 
@@ -309,8 +313,12 @@ export class UserDetailsComponent implements OnInit {
 
   // Deduct Balance Methods
   openDeductBalanceDialog(): void {
-    if (this.deductBalanceDto.amount <= 0) {
+    if (!this.deductBalanceDto.amount || this.deductBalanceDto.amount <= 0) {
       this.toaster.error('يرجى إدخال مبلغ صحيح أكبر من صفر');
+      return;
+    }
+    if (!this.deductBalanceDto.notes || this.deductBalanceDto.notes.trim() === '') {
+      this.toaster.error('يرجى إدخال الملاحظات');
       return;
     }
     this.showDeductBalanceDialog = true;
