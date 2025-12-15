@@ -9,3 +9,4 @@ export * from './admin-chargers.service';
 export * from './admin-vehicles.service';
 export * from './admin-processes.service';
 export * from './charging-protocol.service';
+export * from './capacity.service';

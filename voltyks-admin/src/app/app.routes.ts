@@ -83,6 +83,10 @@ export const routes: Routes = [
       {
         path: 'charging-protocols',
         loadComponent: () => import('./features/charging-protocols/charging-protocols.component').then(m => m.ChargingProtocolsComponent)
+      },
+      {
+        path: 'capacities',
+        loadComponent: () => import('./features/capacities/capacities.component').then(m => m.CapacitiesComponent)
       }
     ]
   },
