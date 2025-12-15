@@ -458,7 +458,8 @@
                 }
               }
 
-              .clear-btn {
+              .clear-btn,
+              .show-all-btn {
                 display: flex;
                 align-items: center;
                 gap: 6px;
@@ -468,6 +469,16 @@
 
                 .material-icons {
                   font-size: 16px;
+                }
+              }
+
+              .show-all-btn {
+                background: linear-gradient(135deg, rgba(0, 200, 83, 0.2) 0%, rgba(0, 200, 83, 0.3) 100%);
+                color: #00C853;
+                border: 1px solid rgba(0, 200, 83, 0.3);
+
+                &:hover {
+                  background: linear-gradient(135deg, rgba(0, 200, 83, 0.3) 0%, rgba(0, 200, 83, 0.4) 100%);
                 }
               }
             }

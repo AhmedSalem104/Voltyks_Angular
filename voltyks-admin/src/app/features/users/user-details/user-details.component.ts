@@ -68,9 +68,9 @@ export class UserDetailsComponent implements OnInit {
   transactionsPage: number = 1;
   transactionsPageSize: number = 10;
 
-  // Date filter for transactions
-  transactionDateFrom: string = '';
-  transactionDateTo: string = '';
+  // Date filter for transactions (default to today)
+  transactionDateFrom: string = new Date().toISOString().split('T')[0];
+  transactionDateTo: string = new Date().toISOString().split('T')[0];
 
   constructor(
     private route: ActivatedRoute,
@@ -220,9 +220,9 @@ export class UserDetailsComponent implements OnInit {
       next: (response) => {
         if (response.status && response.data) {
           this.walletTransactions = response.data;
-          this.filteredTransactions = [...this.walletTransactions];
           this.transactionsPage = 1;
-          this.updatePaginatedTransactions();
+          // Apply date filter (defaults to today)
+          this.filterTransactionsByDate();
         }
         this.isLoading = false;
       },
@@ -241,6 +241,12 @@ export class UserDetailsComponent implements OnInit {
 
   onTransactionsPageChange(page: number): void {
     this.transactionsPage = page;
+    this.updatePaginatedTransactions();
+  }
+
+  onTransactionsPageSizeChange(size: number): void {
+    this.transactionsPageSize = size;
+    this.transactionsPage = 1;
     this.updatePaginatedTransactions();
   }
 
@@ -272,6 +278,15 @@ export class UserDetailsComponent implements OnInit {
   }
 
   clearTransactionsFilter(): void {
+    // Reset to today's date
+    const today = new Date().toISOString().split('T')[0];
+    this.transactionDateFrom = today;
+    this.transactionDateTo = today;
+    this.transactionsPage = 1;
+    this.filterTransactionsByDate();
+  }
+
+  showAllTransactions(): void {
     this.transactionDateFrom = '';
     this.transactionDateTo = '';
     this.filteredTransactions = [...this.walletTransactions];

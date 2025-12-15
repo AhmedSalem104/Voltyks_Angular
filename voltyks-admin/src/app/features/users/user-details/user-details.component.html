@@ -342,8 +342,12 @@
                   />
                 </div>
                 <button class="voltyks-btn btn-secondary clear-btn" (click)="clearTransactionsFilter()">
-                  <span class="material-icons">clear</span>
-                  مسح الفلتر
+                  <span class="material-icons">today</span>
+                  اليوم
+                </button>
+                <button class="voltyks-btn btn-secondary show-all-btn" (click)="showAllTransactions()">
+                  <span class="material-icons">list</span>
+                  عرض الكل
                 </button>
               </div>
 
@@ -388,6 +392,7 @@
                   [pageSize]="transactionsPageSize"
                   [currentPage]="transactionsPage"
                   (pageChange)="onTransactionsPageChange($event)"
+                  (pageSizeChange)="onTransactionsPageSizeChange($event)"
                 ></app-pagination>
               } @else {
                 <div class="empty-state">
