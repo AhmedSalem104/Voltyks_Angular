@@ -2,15 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { AdminUsersService } from '../../../core/services/admin/admin-users.service';
 import { AdminFeesService } from '../../../core/services/admin/admin-fees.service';
+import { AdminChargersService } from '../../../core/services/admin/admin-chargers.service';
 import {
   AdminUserDetailsDto,
   AdminWalletDto,
   AdminUserVehicleDto,
   AdminUserReportDto,
   AddBalanceRequestDto,
-  WalletTransactionDto
+  WalletTransactionDto,
+  AdminChargerDto
 } from '../../../core/models';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -36,6 +39,7 @@ export class UserDetailsComponent implements OnInit {
   user?: AdminUserDetailsDto;
   wallet?: AdminWalletDto;
   vehicles: AdminUserVehicleDto[] = [];
+  chargers: AdminChargerDto[] = [];
   reports: AdminUserReportDto[] = [];
 
   activeTab: 'overview' | 'wallet' | 'vehicles' | 'reports' | 'manageBalance' = 'overview';
@@ -77,6 +81,7 @@ export class UserDetailsComponent implements OnInit {
     private router: Router,
     private usersService: AdminUsersService,
     private feesService: AdminFeesService,
+    private chargersService: AdminChargersService,
     private toaster: ToasterService,
     private printService: PrintService
   ) {}
@@ -89,12 +94,24 @@ export class UserDetailsComponent implements OnInit {
   loadUserDetails(): void {
     this.isLoading = true;
 
-    this.usersService.getUserById(this.userId).subscribe({
-      next: (response) => {
-        if (response.status && response.data) {
-          this.user = response.data;
-          this.toaster.success('تم تحميل بيانات المستخدم');
+    // Load user details, vehicles, and chargers in parallel
+    forkJoin({
+      user: this.usersService.getUserById(this.userId),
+      vehicles: this.usersService.getUserVehicles(this.userId),
+      chargers: this.chargersService.getChargers(this.userId)
+    }).subscribe({
+      next: (responses) => {
+        if (responses.user.status && responses.user.data) {
+          this.user = responses.user.data;
         }
+        if (responses.vehicles.status && responses.vehicles.data) {
+          this.vehicles = responses.vehicles.data;
+          this.updatePaginatedVehicles();
+        }
+        if (responses.chargers.status && responses.chargers.data) {
+          this.chargers = responses.chargers.data;
+        }
+        this.toaster.success('تم تحميل بيانات المستخدم');
         this.isLoading = false;
       },
       error: (error) => {
@@ -107,13 +124,10 @@ export class UserDetailsComponent implements OnInit {
   switchTab(tab: typeof this.activeTab): void {
     this.activeTab = tab;
 
-    // Load data for the selected tab
+    // Load data for the selected tab (vehicles and chargers are already loaded)
     switch (tab) {
       case 'wallet':
         if (!this.wallet) this.loadWallet();
-        break;
-      case 'vehicles':
-        if (this.vehicles.length === 0) this.loadVehicles();
         break;
       case 'reports':
         if (this.reports.length === 0) this.loadReports();
