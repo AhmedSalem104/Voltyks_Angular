@@ -8,7 +8,7 @@ import { ApiResponse, CapacityDto, CreateCapacityDto, UpdateCapacityDto } from '
   providedIn: 'root'
 })
 export class CapacityService {
-  private readonly baseUrl = `${environment.apiBaseUrl}/api/admin/capacities`;
+  private readonly baseUrl = `${environment.apiBaseUrl}/api/admin/capacity`;
 
   constructor(private http: HttpClient) {}
 
