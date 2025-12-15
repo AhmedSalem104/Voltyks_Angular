@@ -5,15 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { AdminUsersService } from '../../../core/services/admin/admin-users.service';
 import { AdminFeesService } from '../../../core/services/admin/admin-fees.service';
-import { AdminChargersService } from '../../../core/services/admin/admin-chargers.service';
 import {
   AdminUserDetailsDto,
   AdminWalletDto,
   AdminUserVehicleDto,
   AdminUserReportDto,
   AddBalanceRequestDto,
-  WalletTransactionDto,
-  AdminChargerDto
+  WalletTransactionDto
 } from '../../../core/models';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -39,7 +37,6 @@ export class UserDetailsComponent implements OnInit {
   user?: AdminUserDetailsDto;
   wallet?: AdminWalletDto;
   vehicles: AdminUserVehicleDto[] = [];
-  chargers: AdminChargerDto[] = [];
   reports: AdminUserReportDto[] = [];
 
   activeTab: 'overview' | 'wallet' | 'vehicles' | 'reports' | 'manageBalance' = 'overview';
@@ -81,7 +78,6 @@ export class UserDetailsComponent implements OnInit {
     private router: Router,
     private usersService: AdminUsersService,
     private feesService: AdminFeesService,
-    private chargersService: AdminChargersService,
     private toaster: ToasterService,
     private printService: PrintService
   ) {}
@@ -94,11 +90,10 @@ export class UserDetailsComponent implements OnInit {
   loadUserDetails(): void {
     this.isLoading = true;
 
-    // Load user details, vehicles, and chargers in parallel
+    // Load user details and vehicles in parallel
     forkJoin({
       user: this.usersService.getUserById(this.userId),
-      vehicles: this.usersService.getUserVehicles(this.userId),
-      chargers: this.chargersService.getChargers(this.userId)
+      vehicles: this.usersService.getUserVehicles(this.userId)
     }).subscribe({
       next: (responses) => {
         if (responses.user.status && responses.user.data) {
@@ -107,9 +102,6 @@ export class UserDetailsComponent implements OnInit {
         if (responses.vehicles.status && responses.vehicles.data) {
           this.vehicles = responses.vehicles.data;
           this.updatePaginatedVehicles();
-        }
-        if (responses.chargers.status && responses.chargers.data) {
-          this.chargers = responses.chargers.data;
         }
         this.toaster.success('تم تحميل بيانات المستخدم');
         this.isLoading = false;
