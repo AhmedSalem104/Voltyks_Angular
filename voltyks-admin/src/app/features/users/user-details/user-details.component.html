@@ -309,47 +309,91 @@
 
             <!-- Wallet Transactions History -->
             <div class="transactions-section">
-              <h4>سجل المعاملات</h4>
+              <!-- Transactions Header -->
+              <div class="transactions-header">
+                <h4>سجل المعاملات</h4>
+                <div class="transactions-actions">
+                  <span class="total-count">إجمالي: {{ filteredTransactions.length }}</span>
+                  <button class="voltyks-btn print-btn" (click)="printTransactionsToPdf()" [disabled]="filteredTransactions.length === 0">
+                    <span class="material-icons">print</span>
+                    <span>طباعة PDF</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Date Filter -->
+              <div class="date-filter">
+                <div class="filter-group">
+                  <label>من تاريخ</label>
+                  <input
+                    type="date"
+                    class="voltyks-input"
+                    [(ngModel)]="transactionDateFrom"
+                    (change)="filterTransactionsByDate()"
+                  />
+                </div>
+                <div class="filter-group">
+                  <label>إلى تاريخ</label>
+                  <input
+                    type="date"
+                    class="voltyks-input"
+                    [(ngModel)]="transactionDateTo"
+                    (change)="filterTransactionsByDate()"
+                  />
+                </div>
+                <button class="voltyks-btn btn-secondary clear-btn" (click)="clearTransactionsFilter()">
+                  <span class="material-icons">clear</span>
+                  مسح الفلتر
+                </button>
+              </div>
+
               @if (paginatedTransactions.length > 0) {
-                <table class="voltyks-table transactions-table">
-                  <thead>
-                    <tr>
-                      <th>التاريخ</th>
-                      <th>النوع</th>
-                      <th>المبلغ</th>
-                      <th>الرصيد السابق</th>
-                      <th>الرصيد الجديد</th>
-                      <th>الملاحظات</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @for (transaction of paginatedTransactions; track transaction.id) {
+                <div class="table-wrapper">
+                  <table class="voltyks-table transactions-table">
+                    <thead>
                       <tr>
-                        <td>{{ formatDate(transaction.createdAt) }}</td>
-                        <td>
-                          <span class="transaction-type" [class.add]="transaction.transactionType === 'Add'" [class.deduct]="transaction.transactionType === 'Deduct'">
-                            {{ transaction.transactionType === 'Add' ? 'إضافة' : 'خصم' }}
-                          </span>
-                        </td>
-                        <td [class.amount-add]="transaction.transactionType === 'Add'" [class.amount-deduct]="transaction.transactionType === 'Deduct'">
-                          {{ transaction.transactionType === 'Add' ? '+' : '' }}{{ transaction.amount }} ج.م
-                        </td>
-                        <td>{{ transaction.previousBalance }} ج.م</td>
-                        <td>{{ transaction.newBalance }} ج.م</td>
-                        <td>{{ transaction.notes || '-' }}</td>
+                        <th>#</th>
+                        <th>التاريخ</th>
+                        <th>النوع</th>
+                        <th>المبلغ</th>
+                        <th>الرصيد السابق</th>
+                        <th>الرصيد الجديد</th>
+                        <th>الملاحظات</th>
                       </tr>
-                    }
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      @for (transaction of paginatedTransactions; track transaction.id; let i = $index) {
+                        <tr>
+                          <td>{{ (transactionsPage - 1) * transactionsPageSize + i + 1 }}</td>
+                          <td>{{ formatDate(transaction.createdAt) }}</td>
+                          <td>
+                            <span class="transaction-type" [class.add]="transaction.transactionType === 'Add'" [class.deduct]="transaction.transactionType === 'Deduct'">
+                              {{ transaction.transactionType === 'Add' ? 'إضافة' : 'خصم' }}
+                            </span>
+                          </td>
+                          <td [class.amount-add]="transaction.transactionType === 'Add'" [class.amount-deduct]="transaction.transactionType === 'Deduct'">
+                            {{ transaction.transactionType === 'Add' ? '+' : '' }}{{ transaction.amount }} ج.م
+                          </td>
+                          <td>{{ transaction.previousBalance }} ج.م</td>
+                          <td>{{ transaction.newBalance }} ج.م</td>
+                          <td class="notes-cell">{{ transaction.notes || '-' }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
 
                 <app-pagination
-                  [totalItems]="walletTransactions.length"
+                  [totalItems]="filteredTransactions.length"
                   [pageSize]="transactionsPageSize"
                   [currentPage]="transactionsPage"
                   (pageChange)="onTransactionsPageChange($event)"
                 ></app-pagination>
               } @else {
-                <p class="empty-text">لا توجد معاملات</p>
+                <div class="empty-state">
+                  <span class="material-icons empty-icon">receipt_long</span>
+                  <p>لا توجد معاملات</p>
+                </div>
               }
             </div>
           </div>

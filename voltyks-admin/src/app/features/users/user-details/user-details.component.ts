@@ -16,6 +16,7 @@ import { LoadingOverlayComponent } from '../../../shared/components/loading-over
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { ToasterService } from '../../../shared/components/toaster/toaster.service';
+import { PrintService } from '../../../core/services/print.service';
 
 @Component({
   selector: 'app-user-details',
@@ -62,16 +63,22 @@ export class UserDetailsComponent implements OnInit {
 
   // Wallet Transactions
   walletTransactions: WalletTransactionDto[] = [];
+  filteredTransactions: WalletTransactionDto[] = [];
   paginatedTransactions: WalletTransactionDto[] = [];
   transactionsPage: number = 1;
   transactionsPageSize: number = 10;
+
+  // Date filter for transactions
+  transactionDateFrom: string = '';
+  transactionDateTo: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private usersService: AdminUsersService,
     private feesService: AdminFeesService,
-    private toaster: ToasterService
+    private toaster: ToasterService,
+    private printService: PrintService
   ) {}
 
   ngOnInit(): void {
@@ -213,6 +220,8 @@ export class UserDetailsComponent implements OnInit {
       next: (response) => {
         if (response.status && response.data) {
           this.walletTransactions = response.data;
+          this.filteredTransactions = [...this.walletTransactions];
+          this.transactionsPage = 1;
           this.updatePaginatedTransactions();
         }
         this.isLoading = false;
@@ -227,12 +236,73 @@ export class UserDetailsComponent implements OnInit {
   updatePaginatedTransactions(): void {
     const start = (this.transactionsPage - 1) * this.transactionsPageSize;
     const end = start + this.transactionsPageSize;
-    this.paginatedTransactions = this.walletTransactions.slice(start, end);
+    this.paginatedTransactions = this.filteredTransactions.slice(start, end);
   }
 
   onTransactionsPageChange(page: number): void {
     this.transactionsPage = page;
     this.updatePaginatedTransactions();
+  }
+
+  filterTransactionsByDate(): void {
+    this.filteredTransactions = this.walletTransactions.filter(transaction => {
+      const transactionDate = new Date(transaction.createdAt);
+      transactionDate.setHours(0, 0, 0, 0);
+
+      let matchesFrom = true;
+      let matchesTo = true;
+
+      if (this.transactionDateFrom) {
+        const fromDate = new Date(this.transactionDateFrom);
+        fromDate.setHours(0, 0, 0, 0);
+        matchesFrom = transactionDate >= fromDate;
+      }
+
+      if (this.transactionDateTo) {
+        const toDate = new Date(this.transactionDateTo);
+        toDate.setHours(23, 59, 59, 999);
+        matchesTo = transactionDate <= toDate;
+      }
+
+      return matchesFrom && matchesTo;
+    });
+
+    this.transactionsPage = 1;
+    this.updatePaginatedTransactions();
+  }
+
+  clearTransactionsFilter(): void {
+    this.transactionDateFrom = '';
+    this.transactionDateTo = '';
+    this.filteredTransactions = [...this.walletTransactions];
+    this.transactionsPage = 1;
+    this.updatePaginatedTransactions();
+  }
+
+  printTransactionsToPdf(): void {
+    const userName = this.user?.fullName || 'المستخدم';
+    this.printService.printTableToPdf({
+      title: `سجل معاملات - ${userName}`,
+      filename: `transactions_${this.userId}`,
+      orientation: 'landscape',
+      columns: [
+        { header: '#', field: 'index' },
+        { header: 'التاريخ', field: 'formattedDate' },
+        { header: 'النوع', field: 'typeArabic' },
+        { header: 'المبلغ', field: 'formattedAmount' },
+        { header: 'الرصيد السابق', field: 'previousBalance' },
+        { header: 'الرصيد الجديد', field: 'newBalance' },
+        { header: 'الملاحظات', field: 'notes' }
+      ],
+      data: this.filteredTransactions.map((transaction, index) => ({
+        ...transaction,
+        index: index + 1,
+        formattedDate: this.formatDate(transaction.createdAt),
+        typeArabic: transaction.transactionType === 'Add' ? 'إضافة' : 'خصم',
+        formattedAmount: `${transaction.transactionType === 'Add' ? '+' : ''}${transaction.amount} ج.م`,
+        notes: transaction.notes || '-'
+      }))
+    });
   }
 
   onVehiclesPageChange(page: number): void {
