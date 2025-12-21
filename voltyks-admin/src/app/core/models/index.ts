@@ -14,3 +14,4 @@ export * from './process.model';
 export * from './complaint.model';
 export * from './charging-protocol.model';
 export * from './capacity.model';
+export * from './notification.model';

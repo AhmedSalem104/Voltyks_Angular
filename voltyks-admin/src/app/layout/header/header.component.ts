@@ -1,14 +1,17 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { SidebarService } from '../../core/services/sidebar.service';
+import { NotificationService } from '../../core/services/notification.service';
+import { NotificationDropdownComponent } from '../../shared/components/notification-dropdown/notification-dropdown.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NotificationDropdownComponent],
   template: `
     <header class="header">
       <div class="header-left">
@@ -27,6 +30,25 @@ import { SidebarService } from '../../core/services/sidebar.service';
           <span class="user-name">{{ currentUser?.firstName || 'المسؤول' }}</span>
         </div>
 
+        <!-- Notifications -->
+        <div class="notification-wrapper">
+          <button
+            class="notification-btn"
+            (click)="toggleNotifications($event)"
+            [class.active]="showNotifications"
+            title="الإشعارات"
+          >
+            <span class="material-icons">notifications</span>
+            @if (unreadCount > 0) {
+              <span class="badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
+            }
+          </button>
+          <app-notification-dropdown
+            [isOpen]="showNotifications"
+            (closed)="showNotifications = false"
+          ></app-notification-dropdown>
+        </div>
+
         <!-- Theme Toggle -->
         <button class="theme-toggle" (click)="toggleTheme()" [title]="(currentTheme === 'dark' ? 'التبديل للوضع الفاتح' : 'التبديل للوضع الداكن')">
           <span class="material-icons">{{ currentTheme === 'dark' ? 'light_mode' : 'dark_mode' }}</span>
@@ -41,35 +63,68 @@ import { SidebarService } from '../../core/services/sidebar.service';
   `,
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private router = inject(Router);
   private themeService = inject(ThemeService);
   private sidebarService = inject(SidebarService);
+  private notificationService = inject(NotificationService);
 
   pageTitle: string = 'لوحة التحكم';
-  notificationCount: number = 5;
   currentUser: any = null;
   showDropdown: boolean = false;
   currentTheme: 'dark' | 'light' = 'dark';
+
+  // Notifications
+  showNotifications = false;
+  unreadCount = 0;
+
+  private subscriptions: Subscription[] = [];
 
   ngOnInit(): void {
     // Load current user
     this.currentUser = this.authService.currentUserValue;
 
     // Subscribe to user changes
-    this.authService.currentUser$.subscribe(user => {
-      this.currentUser = user;
-    });
+    this.subscriptions.push(
+      this.authService.currentUser$.subscribe(user => {
+        this.currentUser = user;
+      })
+    );
 
     // Subscribe to theme changes
-    this.themeService.theme$.subscribe(theme => {
-      this.currentTheme = theme;
-    });
+    this.subscriptions.push(
+      this.themeService.theme$.subscribe(theme => {
+        this.currentTheme = theme;
+      })
+    );
+
+    // Connect to notification service
+    this.notificationService.connect();
+
+    // Subscribe to unread count
+    this.subscriptions.push(
+      this.notificationService.unreadCount$.subscribe(count => {
+        this.unreadCount = count;
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup subscriptions
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+
+    // Disconnect from notification service
+    this.notificationService.disconnect();
   }
 
   toggleMenu(): void {
     this.sidebarService.toggle();
+  }
+
+  toggleNotifications(event: Event): void {
+    event.stopPropagation();
+    this.showNotifications = !this.showNotifications;
   }
 
   toggleTheme(): void {

@@ -1,0 +1,65 @@
+<div class="notification-dropdown" [class.show]="isOpen">
+  <!-- Header -->
+  <div class="dropdown-header">
+    <h3>الإشعارات</h3>
+    @if (hasUnread) {
+      <button class="mark-all-btn" (click)="markAllAsRead()">
+        تحديد الكل كمقروء
+      </button>
+    }
+  </div>
+
+  <!-- Notifications List -->
+  @if (notifications.length > 0) {
+    <div class="notification-list">
+      @for (notification of notifications; track notification.id) {
+        <div
+          class="notification-item"
+          [class.unread]="!notification.isRead"
+          (click)="onNotificationClick(notification)"
+        >
+          <div class="notification-icon" [class]="notification.type">
+            <span class="material-icons">{{ getIcon(notification.type) }}</span>
+          </div>
+
+          <div class="notification-content">
+            <span class="notification-title">{{ notification.title }}</span>
+            <span class="notification-message">{{ notification.message }}</span>
+            <span class="notification-meta">
+              <span class="notification-user">{{ notification.userName }}</span>
+              <span class="notification-time">{{ getRelativeTime(notification.timestamp) }}</span>
+            </span>
+          </div>
+
+          @if (!notification.isRead) {
+            <button
+              class="mark-read-btn"
+              (click)="markAsRead(notification, $event)"
+              title="تحديد كمقروء"
+            >
+              <span class="material-icons">done</span>
+            </button>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <!-- Empty State -->
+    <div class="empty-state">
+      <span class="material-icons">notifications_none</span>
+      <p>لا توجد إشعارات جديدة</p>
+    </div>
+  }
+
+  <!-- Footer -->
+  <div class="dropdown-footer">
+    <button class="footer-link" (click)="goToReports()">
+      <span class="material-icons">report_problem</span>
+      عرض البلاغات
+    </button>
+    <button class="footer-link" (click)="goToComplaints()">
+      <span class="material-icons">feedback</span>
+      عرض الشكاوى
+    </button>
+  </div>
+</div>
