@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
 import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
+import { ToasterService } from '../../shared/components/toaster/toaster.service';
 import {
   AppNotification,
   NotificationsResponse,
@@ -35,7 +36,8 @@ export class NotificationService implements OnDestroy {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private toasterService: ToasterService
   ) {}
 
   /**
@@ -175,6 +177,11 @@ export class NotificationService implements OnDestroy {
     if (!notification.isRead) {
       this.unreadCountSubject.next(this.unreadCountSubject.value + 1);
     }
+
+    // Show toast notification
+    const toastType = notification.type === 'report' ? 'warning' : 'info';
+    const title = notification.type === 'report' ? 'بلاغ جديد' : 'شكوى جديدة';
+    this.toasterService.show(toastType, `${title}: ${notification.userName}`, 5000);
   }
 
   /**
