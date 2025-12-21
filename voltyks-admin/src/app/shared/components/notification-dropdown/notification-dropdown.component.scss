@@ -7,8 +7,8 @@ $notification-complaint-color: #42A5F5;
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
-  width: 380px;
-  max-height: 520px;
+  width: 420px;
+  max-height: 600px;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 16px;
@@ -65,7 +65,7 @@ $notification-complaint-color: #42A5F5;
   .notification-list {
     flex: 1;
     overflow-y: auto;
-    max-height: 360px;
+    max-height: 450px;
 
     &::-webkit-scrollbar {
       width: 6px;
@@ -86,10 +86,10 @@ $notification-complaint-color: #42A5F5;
     position: relative;
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-    padding: 14px 20px;
+    gap: 14px;
+    padding: 16px 20px;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
     border-bottom: 1px solid var(--border-color);
 
     &:last-child {
@@ -105,43 +105,65 @@ $notification-complaint-color: #42A5F5;
     }
 
     &.unread {
-      background: rgba($voltyks-primary, 0.05);
+      background: linear-gradient(90deg, rgba($voltyks-primary, 0.12) 0%, rgba($voltyks-primary, 0.05) 100%);
+      border-right: 4px solid $voltyks-primary;
 
       &::before {
         content: '';
         position: absolute;
         right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 4px;
-        height: 60%;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        background: linear-gradient(90deg, transparent 0%, rgba($voltyks-primary, 0.03) 100%);
+        pointer-events: none;
+      }
+
+      &::after {
+        content: 'جديد';
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        font-size: 9px;
+        font-weight: 700;
+        color: white;
         background: $voltyks-primary;
-        border-radius: 0 2px 2px 0;
+        padding: 2px 8px;
+        border-radius: 10px;
+        text-transform: uppercase;
+      }
+
+      .notification-title {
+        color: $voltyks-primary !important;
+        font-weight: 700 !important;
       }
     }
 
     // Icon
     .notification-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
       &.report {
-        background: rgba($notification-report-color, 0.15);
+        background: linear-gradient(135deg, rgba($notification-report-color, 0.2) 0%, rgba($notification-report-color, 0.1) 100%);
         color: $notification-report-color;
+        border: 1px solid rgba($notification-report-color, 0.3);
       }
 
       &.complaint {
-        background: rgba($notification-complaint-color, 0.15);
+        background: linear-gradient(135deg, rgba($notification-complaint-color, 0.2) 0%, rgba($notification-complaint-color, 0.1) 100%);
         color: $notification-complaint-color;
+        border: 1px solid rgba($notification-complaint-color, 0.3);
       }
 
       .material-icons {
-        font-size: 22px;
+        font-size: 24px;
       }
     }
 
@@ -171,19 +193,39 @@ $notification-complaint-color: #42A5F5;
       .notification-meta {
         display: flex;
         align-items: center;
-        gap: 8px;
-        font-size: 11px;
+        gap: 10px;
+        font-size: 12px;
         color: var(--text-disabled);
+        margin-top: 4px;
 
         .notification-user {
-          color: var(--text-secondary);
-          font-weight: 500;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          color: var(--text-primary);
+          font-weight: 600;
+          font-size: 13px;
+          background: rgba($voltyks-primary, 0.1);
+          padding: 3px 10px;
+          border-radius: 12px;
+          border: 1px solid rgba($voltyks-primary, 0.2);
+
+          &::before {
+            content: 'person';
+            font-family: 'Material Icons';
+            font-size: 14px;
+            color: $voltyks-primary;
+          }
         }
 
         .notification-time {
+          color: var(--text-secondary);
+          font-size: 11px;
+
           &::before {
             content: '•';
             margin-left: 8px;
+            color: var(--text-disabled);
           }
         }
       }
@@ -310,7 +352,21 @@ $notification-complaint-color: #42A5F5;
 
 @media (max-width: 768px) {
   .notification-dropdown {
-    width: 340px;
+    width: 380px;
+
+    .notification-item {
+      padding: 14px 16px;
+
+      .notification-icon {
+        width: 44px;
+        height: 44px;
+      }
+
+      &.unread::after {
+        font-size: 8px;
+        padding: 2px 6px;
+      }
+    }
 
     .dropdown-footer {
       flex-direction: column;
