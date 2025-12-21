@@ -148,20 +148,39 @@
 
   .badge {
     position: absolute;
-    top: 6px;
-    left: 6px;
-    background: linear-gradient(135deg, #FF5252 0%, #F44336 100%);
+    top: -4px;
+    left: -4px;
+    background: linear-gradient(145deg, #FF6B6B 0%, #EE5A5A 50%, #E53935 100%);
     color: white;
-    border-radius: 12px;
-    padding: 2px 6px;
-    font-size: 10px;
+    border-radius: 50px;
+    padding: 0;
+    font-size: 11px;
     font-family: 'Cairo', sans-serif;
-    font-weight: 700;
-    min-width: 18px;
+    font-weight: 800;
+    min-width: 20px;
+    height: 20px;
+    line-height: 20px;
     text-align: center;
-    border: 2px solid var(--bg-secondary);
-    animation: notificationPulse 2s infinite;
-    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.5);
+    border: 2.5px solid var(--bg-secondary);
+    animation: badgeBounce 2s ease-in-out infinite, badgeGlow 1.5s ease-in-out infinite alternate;
+    box-shadow:
+      0 2px 8px rgba(229, 57, 53, 0.5),
+      0 4px 16px rgba(229, 57, 53, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+
+    // Shine effect
+    &::before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 4px;
+      right: 4px;
+      height: 6px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%);
+      border-radius: 50px;
+    }
   }
 
   &:hover {
@@ -274,12 +293,34 @@
   }
 }
 
-@keyframes notificationPulse {
+@keyframes badgeBounce {
   0%, 100% {
-    transform: scale(1);
+    transform: scale(1) translateY(0);
+  }
+  25% {
+    transform: scale(1.15) translateY(-2px);
   }
   50% {
-    transform: scale(1.1);
+    transform: scale(1) translateY(0);
+  }
+  75% {
+    transform: scale(1.08) translateY(-1px);
+  }
+}
+
+@keyframes badgeGlow {
+  0% {
+    box-shadow:
+      0 2px 8px rgba(229, 57, 53, 0.5),
+      0 4px 16px rgba(229, 57, 53, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  100% {
+    box-shadow:
+      0 2px 12px rgba(229, 57, 53, 0.7),
+      0 6px 24px rgba(229, 57, 53, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 0 20px rgba(229, 57, 53, 0.4);
   }
 }
 
@@ -387,11 +428,12 @@
       }
 
       .notification-btn .badge {
-        top: 4px;
-        left: 4px;
-        font-size: 9px;
-        min-width: 16px;
-        padding: 1px 4px;
+        top: -3px;
+        left: -3px;
+        font-size: 10px;
+        min-width: 18px;
+        height: 18px;
+        line-height: 18px;
       }
     }
 
@@ -458,11 +500,13 @@
       }
 
       .notification-btn .badge {
-        top: 2px;
-        left: 2px;
-        font-size: 8px;
-        min-width: 14px;
-        padding: 1px 3px;
+        top: -2px;
+        left: -2px;
+        font-size: 9px;
+        min-width: 16px;
+        height: 16px;
+        line-height: 16px;
+        border-width: 2px;
       }
     }
 
