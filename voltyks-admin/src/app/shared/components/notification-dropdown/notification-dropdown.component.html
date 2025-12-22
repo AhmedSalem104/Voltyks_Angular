@@ -1,9 +1,16 @@
 <div class="notification-dropdown" [class.show]="isOpen">
   <!-- Header -->
   <div class="dropdown-header">
-    <h3>الإشعارات</h3>
+    <div class="header-title">
+      <span class="material-icons header-icon">notifications_active</span>
+      <h3>الإشعارات</h3>
+      @if (hasUnread) {
+        <span class="unread-badge">{{ getUnreadCount() }}</span>
+      }
+    </div>
     @if (hasUnread) {
       <button class="mark-all-btn" (click)="markAllAsRead()">
+        <span class="material-icons">done_all</span>
         تحديد الكل كمقروء
       </button>
     }
@@ -25,10 +32,13 @@
           <div class="notification-content">
             <span class="notification-title">{{ notification.title }}</span>
             <span class="notification-message">{{ notification.message }}</span>
-            <span class="notification-meta">
+            <div class="notification-meta">
               <span class="notification-user">{{ notification.userName }}</span>
-              <span class="notification-time">{{ getRelativeTime(notification.timestamp) }}</span>
-            </span>
+              <span class="notification-time">
+                <span class="material-icons time-icon">schedule</span>
+                {{ getRelativeTime(notification.timestamp) }}
+              </span>
+            </div>
           </div>
 
           @if (!notification.isRead) {

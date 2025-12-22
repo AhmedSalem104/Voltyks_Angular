@@ -178,10 +178,12 @@ export class NotificationService implements OnDestroy {
       this.unreadCountSubject.next(this.unreadCountSubject.value + 1);
     }
 
-    // Show toast notification
+    // Show toast notification with more details
     const toastType = notification.type === 'report' ? 'warning' : 'info';
+    const icon = notification.type === 'report' ? '🚨' : '📢';
     const title = notification.type === 'report' ? 'بلاغ جديد' : 'شكوى جديدة';
-    this.toasterService.show(toastType, `${title}: ${notification.userName}`, 5000);
+    const message = `${icon} ${title}\n👤 ${notification.userName}`;
+    this.toasterService.show(toastType, message, 6000);
   }
 
   /**
@@ -263,23 +265,53 @@ export class NotificationService implements OnDestroy {
   }
 
   /**
-   * Get relative time string (Arabic)
+   * Get relative time string (Arabic) with proper pluralization
    */
   getRelativeTime(timestamp: string): string {
     const now = new Date();
     const date = new Date(timestamp);
     const diffMs = now.getTime() - date.getTime();
+    const diffSecs = Math.floor(diffMs / 1000);
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 1) return 'الآن';
-    if (diffMins < 60) return `منذ ${diffMins} دقيقة`;
-    if (diffHours < 24) return `منذ ${diffHours} ساعة`;
-    if (diffDays === 1) return 'أمس';
-    if (diffDays < 7) return `منذ ${diffDays} أيام`;
-    if (diffDays < 30) return `منذ ${Math.floor(diffDays / 7)} أسابيع`;
+    // Just now
+    if (diffSecs < 30) return 'الآن';
 
+    // Seconds
+    if (diffSecs < 60) return `منذ ${diffSecs} ثانية`;
+
+    // Minutes
+    if (diffMins === 1) return 'منذ دقيقة';
+    if (diffMins === 2) return 'منذ دقيقتين';
+    if (diffMins < 11) return `منذ ${diffMins} دقائق`;
+    if (diffMins < 60) return `منذ ${diffMins} دقيقة`;
+
+    // Hours
+    if (diffHours === 1) return 'منذ ساعة';
+    if (diffHours === 2) return 'منذ ساعتين';
+    if (diffHours < 11) return `منذ ${diffHours} ساعات`;
+    if (diffHours < 24) return `منذ ${diffHours} ساعة`;
+
+    // Days
+    if (diffDays === 1) return 'أمس';
+    if (diffDays === 2) return 'منذ يومين';
+    if (diffDays < 7) return `منذ ${diffDays} أيام`;
+
+    // Weeks
+    const diffWeeks = Math.floor(diffDays / 7);
+    if (diffWeeks === 1) return 'منذ أسبوع';
+    if (diffWeeks === 2) return 'منذ أسبوعين';
+    if (diffWeeks < 5) return `منذ ${diffWeeks} أسابيع`;
+
+    // Months
+    const diffMonths = Math.floor(diffDays / 30);
+    if (diffMonths === 1) return 'منذ شهر';
+    if (diffMonths === 2) return 'منذ شهرين';
+    if (diffMonths < 12) return `منذ ${diffMonths} أشهر`;
+
+    // Full date for older notifications
     return date.toLocaleDateString('ar-EG', {
       year: 'numeric',
       month: 'short',

@@ -47,6 +47,13 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Get unread notifications count
+   */
+  getUnreadCount(): number {
+    return this.notifications.filter(n => !n.isRead).length;
+  }
+
+  /**
    * Handle click on notification item
    */
   onNotificationClick(notification: AppNotification): void {

@@ -35,29 +35,76 @@ $notification-complaint-color: #42A5F5;
     align-items: center;
     padding: 16px 20px;
     border-bottom: 1px solid var(--border-color);
-    background: var(--bg-elevated);
+    background: linear-gradient(135deg, var(--bg-elevated) 0%, rgba($voltyks-primary, 0.05) 100%);
 
-    h3 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--text-primary);
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .header-icon {
+        font-size: 24px;
+        color: $voltyks-primary;
+        animation: bellRing 2s ease-in-out infinite;
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .unread-badge {
+        background: linear-gradient(135deg, $voltyks-primary 0%, darken($voltyks-primary, 10%) 100%);
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 12px;
+        min-width: 20px;
+        text-align: center;
+      }
     }
 
     .mark-all-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       background: transparent;
-      border: none;
+      border: 1px solid rgba($voltyks-primary, 0.3);
       color: $voltyks-primary;
-      font-size: 13px;
-      font-weight: 500;
+      font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
       padding: 6px 12px;
       border-radius: 8px;
       transition: all 0.2s;
 
+      .material-icons {
+        font-size: 16px;
+      }
+
       &:hover {
         background: rgba($voltyks-primary, 0.1);
+        border-color: $voltyks-primary;
+        transform: translateY(-1px);
       }
+    }
+  }
+
+  @keyframes bellRing {
+    0%, 100% {
+      transform: rotate(0);
+    }
+    10%, 30% {
+      transform: rotate(10deg);
+    }
+    20%, 40% {
+      transform: rotate(-10deg);
+    }
+    50% {
+      transform: rotate(0);
     }
   }
 
@@ -219,12 +266,17 @@ $notification-complaint-color: #42A5F5;
         }
 
         .notification-time {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
           color: var(--text-secondary);
           font-size: 11px;
+          background: var(--bg-hover);
+          padding: 3px 8px;
+          border-radius: 8px;
 
-          &::before {
-            content: '•';
-            margin-left: 8px;
+          .time-icon {
+            font-size: 12px;
             color: var(--text-disabled);
           }
         }
