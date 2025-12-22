@@ -87,6 +87,10 @@ export const routes: Routes = [
       {
         path: 'capacities',
         loadComponent: () => import('./features/capacities/capacities.component').then(m => m.CapacitiesComponent)
+      },
+      {
+        path: 'app-config',
+        loadComponent: () => import('./features/app-config/app-config.component').then(m => m.AppConfigComponent)
       }
     ]
   },

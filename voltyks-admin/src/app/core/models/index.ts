@@ -15,3 +15,4 @@ export * from './complaint.model';
 export * from './charging-protocol.model';
 export * from './capacity.model';
 export * from './notification.model';
+export * from './app-config.model';

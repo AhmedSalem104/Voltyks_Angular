@@ -69,6 +69,7 @@ export class SidebarComponent implements OnInit {
     { label: 'التقارير', icon: 'report', route: '/reports' },
     { label: 'الشكاوى', icon: 'feedback', route: '/complaints' },
     { label: 'أنواع الشكاوى', icon: 'category', route: '/complaint-categories' },
+    { label: 'إعدادات التطبيق', icon: 'phone_android', route: '/app-config' },
     { label: 'عن Voltyks', icon: 'info', route: '/about' }
   ];
 

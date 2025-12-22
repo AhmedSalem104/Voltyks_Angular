@@ -1,0 +1,97 @@
+<div class="app-config-container">
+  <div class="page-header-row">
+    <div>
+      <h2>إعدادات تطبيق الموبايل</h2>
+      <p class="subtitle">التحكم في حالة تطبيق الموبايل</p>
+    </div>
+  </div>
+
+  @if (mobileAppEnabled !== null) {
+    <div class="voltyks-card config-card">
+      <div class="card-header">
+        <div class="header-icon">
+          <span class="material-icons">phone_android</span>
+        </div>
+        <h3>حالة تطبيق الموبايل</h3>
+      </div>
+
+      <div class="status-section">
+        <div class="status-display">
+          <span class="status-label">الحالة الحالية:</span>
+          <span class="status-badge" [class]="statusClass">
+            <span class="material-icons">{{ mobileAppEnabled ? 'check_circle' : 'cancel' }}</span>
+            {{ statusText }}
+          </span>
+        </div>
+
+        <div class="toggle-section">
+          <div class="toggle-buttons">
+            <button
+              class="toggle-btn btn-activate"
+              [class.active]="mobileAppEnabled"
+              [disabled]="mobileAppEnabled"
+              (click)="openConfirmDialog(true)"
+            >
+              <span class="material-icons">power_settings_new</span>
+              <span>تفعيل التطبيق</span>
+            </button>
+
+            <button
+              class="toggle-btn btn-deactivate"
+              [class.active]="!mobileAppEnabled"
+              [disabled]="!mobileAppEnabled"
+              (click)="openConfirmDialog(false)"
+            >
+              <span class="material-icons">block</span>
+              <span>إيقاف التطبيق</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="warning-section" [class.show]="!mobileAppEnabled">
+        <span class="material-icons">warning</span>
+        <div class="warning-content">
+          <strong>تنبيه:</strong>
+          <p>تطبيق الموبايل متوقف حالياً. لن يتمكن المستخدمون من الوصول إلى التطبيق.</p>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <span class="material-icons">info</span>
+        <div class="info-content">
+          <p>عند إيقاف التطبيق، سيظهر للمستخدمين رسالة "التطبيق غير متاح حالياً" عند محاولة فتح التطبيق.</p>
+        </div>
+      </div>
+    </div>
+  } @else if (loadError) {
+    <div class="voltyks-card error-card">
+      <div class="error-content">
+        <span class="material-icons">error_outline</span>
+        <p class="error-title">فشل تحميل البيانات</p>
+        <p class="error-message">تأكد من اتصال الخادم وحاول مرة أخرى</p>
+        <button class="voltyks-btn btn-primary" (click)="loadStatus()">
+          <span class="material-icons">refresh</span>
+          إعادة المحاولة
+        </button>
+      </div>
+    </div>
+  } @else {
+    <div class="voltyks-card">
+      <p class="loading-text">جاري تحميل البيانات...</p>
+    </div>
+  }
+</div>
+
+<app-confirm-dialog
+  [isOpen]="showConfirmDialog"
+  [title]="pendingStatus ? 'تأكيد تفعيل التطبيق' : 'تأكيد إيقاف التطبيق'"
+  [message]="confirmMessage"
+  [type]="pendingStatus ? 'primary' : 'danger'"
+  (confirm)="confirmToggle()"
+  (cancel)="showConfirmDialog = false"
+></app-confirm-dialog>
+
+@if (isLoading) {
+  <app-loading-overlay></app-loading-overlay>
+}
