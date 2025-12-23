@@ -73,32 +73,29 @@ export class AdminChargersService {
     return this.http.patch<ApiResponse<void>>(`${this.baseUrl}/${id}/status`, {}, { params });
   }
 
-  // ========== Lookup Tables (Will need actual endpoints from backend) ==========
+  // ========== Lookup Tables ==========
 
   /**
-   * Get all protocols
-   * Note: Add actual endpoint when available
+   * Get all charging protocols
+   * GET /api/protocol
    */
   getProtocols(): Observable<ApiResponse<ProtocolDto[]>> {
-    // Temporary mock data - replace with actual API call
-    return this.http.get<ApiResponse<ProtocolDto[]>>(`${environment.apiBaseUrl}/api/admin/protocols`);
+    return this.http.get<ApiResponse<ProtocolDto[]>>(`${environment.apiBaseUrl}/api/protocol`);
   }
 
   /**
    * Get all capacities
-   * Note: Add actual endpoint when available
+   * GET /api/admin/capacity
    */
   getCapacities(): Observable<ApiResponse<CapacityDto[]>> {
-    // Temporary mock data - replace with actual API call
-    return this.http.get<ApiResponse<CapacityDto[]>>(`${environment.apiBaseUrl}/api/admin/capacities`);
+    return this.http.get<ApiResponse<CapacityDto[]>>(`${environment.apiBaseUrl}/api/admin/capacity`);
   }
 
   /**
    * Get all price options
-   * Note: Add actual endpoint when available
+   * TODO: Add actual endpoint when available in backend
    */
   getPriceOptions(): Observable<ApiResponse<PriceOptionDto[]>> {
-    // Temporary mock data - replace with actual API call
     return this.http.get<ApiResponse<PriceOptionDto[]>>(`${environment.apiBaseUrl}/api/admin/price-options`);
   }
 }
