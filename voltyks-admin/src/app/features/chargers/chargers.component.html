@@ -112,7 +112,7 @@
               <th>الهاتف</th>
               <th>البروتوكول</th>
               <th>السعة</th>
-              <th>السعر</th>
+              <th>السعر/ساعة</th>
               <th>المنطقة</th>
               <th>الشارع</th>
               <th>الأدابتر</th>
@@ -135,7 +135,7 @@
                 </td>
                 <td>{{ getProtocolName(charger.protocolId) }}</td>
                 <td>{{ getCapacityKw(charger.capacityId) }}</td>
-                <td>{{ getPriceValue(charger.priceOptionId) }}</td>
+                <td>{{ getPriceValue(charger.priceOptionId) }} ج.م/ساعة</td>
                 <td>{{ charger.area }}</td>
                 <td>{{ charger.street }}</td>
                 <td>
@@ -257,7 +257,7 @@
               >
                 <option [value]="0">اختر السعر</option>
                 @for (price of priceOptions; track price.id) {
-                  <option [value]="price.id">{{ price.value }} ر.س</option>
+                  <option [value]="price.id">{{ price.value }} ج.م/ساعة</option>
                 }
               </select>
             </div>
@@ -448,7 +448,7 @@
               >
                 <option [value]="0">اختر السعر</option>
                 @for (price of priceOptions; track price.id) {
-                  <option [value]="price.id">{{ price.value }} ر.س</option>
+                  <option [value]="price.id">{{ price.value }} ج.م/ساعة</option>
                 }
               </select>
             </div>

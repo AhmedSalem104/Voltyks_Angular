@@ -46,6 +46,7 @@ export interface AdminUserVehicleDto {
   creationDate: string;
   brandName: string;
   modelName: string;
+  modelCapacity: number;
   isDeleted: boolean;
 }
 
