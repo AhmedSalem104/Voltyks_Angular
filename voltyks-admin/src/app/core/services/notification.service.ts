@@ -55,10 +55,7 @@ export class NotificationService implements OnDestroy {
 
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(this.hubUrl, {
-        accessTokenFactory: () => token,
-        // Skip negotiate to avoid CORS preflight issues
-        skipNegotiation: true,
-        transport: signalR.HttpTransportType.WebSockets
+        accessTokenFactory: () => token
       })
       .withAutomaticReconnect([0, 2000, 5000, 10000, 30000])
       .configureLogging(signalR.LogLevel.None)
