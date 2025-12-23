@@ -94,9 +94,7 @@ export class ChargersComponent implements OnInit {
     this.setupSearch();
     this.loadChargers();
     this.loadUsers();
-    this.loadProtocols();
-    this.loadCapacities();
-    this.loadPriceOptions();
+    // Note: protocols, capacities, price-options are loaded on-demand when opening create/edit dialogs
   }
 
   private setupSearch(): void {
@@ -296,8 +294,22 @@ export class ChargersComponent implements OnInit {
 
   // CRUD Operations
   openCreateDialog(): void {
+    this.loadDropdownData();
     this.resetCreateForm();
     this.showCreateDialog = true;
+  }
+
+  private loadDropdownData(): void {
+    // Load data only if not already loaded
+    if (this.protocols.length === 0) {
+      this.loadProtocols();
+    }
+    if (this.capacities.length === 0) {
+      this.loadCapacities();
+    }
+    if (this.priceOptions.length === 0) {
+      this.loadPriceOptions();
+    }
   }
 
   closeCreateDialog(): void {
@@ -328,6 +340,7 @@ export class ChargersComponent implements OnInit {
   }
 
   openEditDialog(charger: AdminChargerDto): void {
+    this.loadDropdownData();
     this.currentCharger = charger;
     this.updateDto = {
       userId: charger.userId,
