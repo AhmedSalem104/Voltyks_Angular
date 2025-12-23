@@ -102,7 +102,8 @@ export class VehiclesComponent implements OnInit {
     private usersService: AdminUsersService,
     private brandsService: AdminBrandsService,
     private toaster: ToasterService,
-    private printService: PrintService
+    private printService: PrintService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -132,10 +133,12 @@ export class VehiclesComponent implements OnInit {
           this.applyLocalFilters();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحميل المركبات');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -223,8 +226,11 @@ export class VehiclesComponent implements OnInit {
           this.users = response.data;
           this.filteredUsers = response.data;
         }
+        this.cdr.markForCheck();
       },
-      error: () => {}
+      error: () => {
+        this.cdr.markForCheck();
+      }
     });
   }
 
@@ -235,8 +241,11 @@ export class VehiclesComponent implements OnInit {
           this.brands = response.data;
           this.filteredBrands = response.data;
         }
+        this.cdr.markForCheck();
       },
-      error: () => {}
+      error: () => {
+        this.cdr.markForCheck();
+      }
     });
   }
 
@@ -247,8 +256,11 @@ export class VehiclesComponent implements OnInit {
           this.models = response.data;
           this.filteredModels = response.data;
         }
+        this.cdr.markForCheck();
       },
-      error: () => {}
+      error: () => {
+        this.cdr.markForCheck();
+      }
     });
   }
 
@@ -438,10 +450,12 @@ export class VehiclesComponent implements OnInit {
           this.loadVehicles(this.userFilterId || undefined, this.brandFilterId ? this.brandFilterId.toString() : undefined);
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل إضافة المركبة');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -482,10 +496,12 @@ export class VehiclesComponent implements OnInit {
           this.loadVehicles(this.userFilterId || undefined, this.brandFilterId ? this.brandFilterId.toString() : undefined);
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحديث المركبة');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -512,10 +528,12 @@ export class VehiclesComponent implements OnInit {
           this.loadVehicles(this.userFilterId || undefined, this.brandFilterId ? this.brandFilterId.toString() : undefined);
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل حذف المركبة');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }

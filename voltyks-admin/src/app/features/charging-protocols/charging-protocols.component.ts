@@ -62,7 +62,8 @@ export class ChargingProtocolsComponent implements OnInit {
   constructor(
     private protocolService: ChargingProtocolService,
     private toaster: ToasterService,
-    private printService: PrintService
+    private printService: PrintService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -92,10 +93,12 @@ export class ChargingProtocolsComponent implements OnInit {
           this.updatePaginatedProtocols();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحميل البروتوكولات');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -162,10 +165,12 @@ export class ChargingProtocolsComponent implements OnInit {
           this.loadProtocols();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل إضافة البروتوكول');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -201,10 +206,12 @@ export class ChargingProtocolsComponent implements OnInit {
           this.loadProtocols();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحديث البروتوكول');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -231,10 +238,12 @@ export class ChargingProtocolsComponent implements OnInit {
           this.loadProtocols();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل حذف البروتوكول');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }

@@ -57,7 +57,8 @@ export class CapacitiesComponent implements OnInit {
   constructor(
     private capacityService: CapacityService,
     private toaster: ToasterService,
-    private printService: PrintService
+    private printService: PrintService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -87,10 +88,12 @@ export class CapacitiesComponent implements OnInit {
           this.updatePaginatedCapacities();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحميل سعات الشواحن');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -157,10 +160,12 @@ export class CapacitiesComponent implements OnInit {
           this.toaster.error(response.message || 'فشل إضافة السعة');
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل إضافة السعة');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -196,10 +201,12 @@ export class CapacitiesComponent implements OnInit {
           this.toaster.error(response.message || 'فشل تعديل السعة');
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تعديل السعة');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -229,10 +236,12 @@ export class CapacitiesComponent implements OnInit {
           this.toaster.error(response.message || 'فشل حذف السعة');
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل حذف السعة');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }

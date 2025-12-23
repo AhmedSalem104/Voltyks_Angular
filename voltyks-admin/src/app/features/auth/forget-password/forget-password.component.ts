@@ -19,6 +19,7 @@ export class ForgetPasswordComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private themeService = inject(ThemeService);
+  private cdr = inject(ChangeDetectorRef);
 
   forgetPasswordForm!: FormGroup;
   isLoading = false;
@@ -33,6 +34,7 @@ export class ForgetPasswordComponent implements OnInit {
     // Subscribe to theme changes
     this.themeService.theme$.subscribe(theme => {
       this.currentTheme = theme;
+      this.cdr.markForCheck();
     });
   }
 
@@ -69,10 +71,12 @@ export class ForgetPasswordComponent implements OnInit {
         } else {
           this.errorMessage = response.message || 'فشل إرسال كود التحقق';
         }
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.isLoading = false;
         this.errorMessage = error.error?.message || 'حدث خطأ أثناء معالجة الطلب';
+        this.cdr.markForCheck();
       }
     });
   }

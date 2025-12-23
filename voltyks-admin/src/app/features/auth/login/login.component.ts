@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private themeService = inject(ThemeService);
+  private cdr = inject(ChangeDetectorRef);
 
   loginForm!: FormGroup;
   isLoading = false;
@@ -39,6 +40,7 @@ export class LoginComponent implements OnInit {
     // Subscribe to theme changes
     this.themeService.theme$.subscribe(theme => {
       this.currentTheme = theme;
+      this.cdr.markForCheck();
     });
   }
 
@@ -86,6 +88,7 @@ export class LoginComponent implements OnInit {
           if (!this.authService.isAdmin()) {
             this.authService.clearAuth();
             this.errorMessage = 'عذراً، لوحة التحكم متاحة للمسؤولين فقط';
+            this.cdr.markForCheck();
             return;
           }
 
@@ -97,6 +100,7 @@ export class LoginComponent implements OnInit {
         } else {
           this.errorMessage = response.message || 'فشل تسجيل الدخول';
         }
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.isLoading = false;
@@ -113,6 +117,7 @@ export class LoginComponent implements OnInit {
         } else {
           this.errorMessage = error.error?.message || 'حدث خطأ أثناء تسجيل الدخول';
         }
+        this.cdr.markForCheck();
       }
     });
   }

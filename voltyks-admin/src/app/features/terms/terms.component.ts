@@ -31,7 +31,8 @@ export class TermsComponent implements OnInit {
   constructor(
     private termsService: AdminTermsService,
     private toaster: ToasterService,
-    private printService: PrintService
+    private printService: PrintService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -62,11 +63,13 @@ export class TermsComponent implements OnInit {
         }
 
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         const errorMessage = err?.error?.message || err?.message || 'حدث خطأ أثناء تحميل الشروط والأحكام';
         this.toaster.error(errorMessage);
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -179,11 +182,13 @@ export class TermsComponent implements OnInit {
           this.toaster.error(res.message || 'فشل حفظ التعديلات');
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         const errorMessage = err?.error?.message || err?.message || 'حدث خطأ أثناء حفظ التعديلات';
         this.toaster.error(errorMessage);
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }

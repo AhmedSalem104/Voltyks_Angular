@@ -60,7 +60,8 @@ export class ProcessesComponent implements OnInit {
   constructor(
     private processesService: AdminProcessesService,
     private toaster: ToasterService,
-    private printService: PrintService
+    private printService: PrintService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -87,10 +88,12 @@ export class ProcessesComponent implements OnInit {
           this.applyFilters();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحميل عمليات الشحن');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }

@@ -73,7 +73,8 @@ export class ModelsComponent implements OnInit {
     private toaster: ToasterService,
     private route: ActivatedRoute,
     private router: Router,
-    private printService: PrintService
+    private printService: PrintService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -104,8 +105,9 @@ export class ModelsComponent implements OnInit {
         if (response.status && response.data) {
           this.brands = response.data;
         }
+        this.cdr.markForCheck();
       },
-      error: () => {}
+      error: () => { this.cdr.markForCheck(); }
     });
   }
 
@@ -122,10 +124,12 @@ export class ModelsComponent implements OnInit {
           this.updatePaginatedModels();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحميل الموديلات');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }

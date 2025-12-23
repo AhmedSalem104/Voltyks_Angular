@@ -69,7 +69,8 @@ export class ComplaintsListComponent implements OnInit {
     private categoriesService: AdminComplaintCategoriesService,
     private usersService: AdminUsersService,
     private toaster: ToasterService,
-    private printService: PrintService
+    private printService: PrintService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -84,8 +85,11 @@ export class ComplaintsListComponent implements OnInit {
         if (response.status && response.data) {
           this.categories = response.data;
         }
+        this.cdr.markForCheck();
       },
-      error: () => {}
+      error: () => {
+        this.cdr.markForCheck();
+      }
     });
   }
 
@@ -102,10 +106,12 @@ export class ComplaintsListComponent implements OnInit {
           this.applyFilters();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error(err.message || 'فشل تحميل الشكاوى');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -189,10 +195,12 @@ export class ComplaintsListComponent implements OnInit {
           this.toaster.error(response.message || 'فشل تحديث حالة الشكوى');
         }
         this.updatingComplaintId = null;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error(err.error?.message || 'فشل تحديث حالة الشكوى');
         this.updatingComplaintId = null;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -205,8 +213,11 @@ export class ComplaintsListComponent implements OnInit {
           this.users = response.data;
           this.filteredUsers = this.users;
         }
+        this.cdr.markForCheck();
       },
-      error: () => {}
+      error: () => {
+        this.cdr.markForCheck();
+      }
     });
   }
 
@@ -269,10 +280,12 @@ export class ComplaintsListComponent implements OnInit {
           this.toaster.error(response.message || 'فشل إرسال الشكوى');
         }
         this.isSaving = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error(err.error?.message || 'فشل إرسال الشكوى');
         this.isSaving = false;
+        this.cdr.markForCheck();
       }
     });
   }

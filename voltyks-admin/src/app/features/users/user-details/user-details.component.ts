@@ -80,7 +80,8 @@ export class UserDetailsComponent implements OnInit {
     private usersService: AdminUsersService,
     private feesService: AdminFeesService,
     private toaster: ToasterService,
-    private printService: PrintService
+    private printService: PrintService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -106,10 +107,12 @@ export class UserDetailsComponent implements OnInit {
         }
         this.toaster.success('تم تحميل بيانات المستخدم');
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحميل بيانات المستخدم');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -140,10 +143,12 @@ export class UserDetailsComponent implements OnInit {
           this.wallet = response.data;
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحميل المحفظة');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -158,10 +163,12 @@ export class UserDetailsComponent implements OnInit {
           this.updatePaginatedVehicles();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحميل المركبات');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -176,10 +183,12 @@ export class UserDetailsComponent implements OnInit {
           this.updatePaginatedReports();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحميل التقارير');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -199,10 +208,12 @@ export class UserDetailsComponent implements OnInit {
           this.loadUserDetails();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشلت العملية');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -232,10 +243,12 @@ export class UserDetailsComponent implements OnInit {
           this.filterTransactionsByDate();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحميل سجل المعاملات');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -391,10 +404,12 @@ export class UserDetailsComponent implements OnInit {
           this.toaster.error(response.message || 'فشل إضافة الرصيد');
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل إضافة الرصيد');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -441,10 +456,12 @@ export class UserDetailsComponent implements OnInit {
           }
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل خصم الرصيد');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }

@@ -64,7 +64,8 @@ export class BrandsComponent implements OnInit {
     private brandsService: AdminBrandsService,
     private toaster: ToasterService,
     private router: Router,
-    private printService: PrintService
+    private printService: PrintService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -94,10 +95,12 @@ export class BrandsComponent implements OnInit {
           this.updatePaginatedBrands();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحميل العلامات التجارية');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -164,10 +167,12 @@ export class BrandsComponent implements OnInit {
           this.loadBrands();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل إضافة العلامة التجارية');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -203,10 +208,12 @@ export class BrandsComponent implements OnInit {
           this.loadBrands();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحديث العلامة التجارية');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -233,10 +240,12 @@ export class BrandsComponent implements OnInit {
           this.loadBrands();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل حذف العلامة التجارية');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
