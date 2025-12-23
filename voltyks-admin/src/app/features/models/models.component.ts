@@ -224,10 +224,12 @@ export class ModelsComponent implements OnInit {
           this.loadModels();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل إضافة الموديل');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -264,10 +266,12 @@ export class ModelsComponent implements OnInit {
           this.loadModels();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحديث الموديل');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -294,10 +298,12 @@ export class ModelsComponent implements OnInit {
           this.loadModels();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل حذف الموديل');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }

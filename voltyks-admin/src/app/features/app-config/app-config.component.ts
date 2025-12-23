@@ -43,6 +43,7 @@ export class AppConfigComponent implements OnInit {
           this.toaster.error(res.message || 'فشل تحميل حالة التطبيق');
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.loadError = true;
@@ -72,6 +73,7 @@ export class AppConfigComponent implements OnInit {
           this.toaster.error(res.message || 'فشل تحديث حالة التطبيق');
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error(err.error?.message || 'فشل تحديث حالة التطبيق');
