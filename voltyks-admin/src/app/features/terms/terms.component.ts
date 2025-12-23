@@ -40,12 +40,9 @@ export class TermsComponent implements OnInit {
 
   loadTerms(): void {
     this.isLoading = true;
-    console.log('Loading terms for language:', this.selectedLang);
 
     this.termsService.getTerms(this.selectedLang).subscribe({
       next: (res) => {
-        console.log('Terms API response:', res);
-
         if (res.status && res.data) {
           this.terms = res.data;
 
@@ -56,22 +53,17 @@ export class TermsComponent implements OnInit {
             } else {
               this.jsonData = this.terms.content;
             }
-          } catch (e) {
+          } catch {
             // If parsing fails, display as is
             this.jsonData = { content: this.terms.content };
           }
-
-          console.log('Terms loaded successfully:', this.terms);
-          console.log('Parsed JSON data:', this.jsonData);
         } else {
-          console.warn('Terms API returned no data or status is false');
           this.toaster.error('لم يتم العثور على شروط وأحكام لهذه اللغة');
         }
 
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error loading terms:', err);
         const errorMessage = err?.error?.message || err?.message || 'حدث خطأ أثناء تحميل الشروط والأحكام';
         this.toaster.error(errorMessage);
         this.isLoading = false;
@@ -143,64 +135,40 @@ export class TermsComponent implements OnInit {
   }
 
   saveTerms(): void {
-    console.log('=== saveTerms called ===');
-    console.log('Current terms:', this.terms);
-    console.log('Selected language:', this.selectedLang);
-    console.log('Edit mode:', this.isEditMode);
-    console.log('Edited content:', this.editedContent);
-
     if (!this.terms) {
-      console.error('No terms data available');
-      alert('لا توجد بيانات للحفظ');
       this.toaster.error('لا توجد بيانات للحفظ');
       return;
     }
 
     // Validate JSON before saving
     this.validateJson();
-    console.log('JSON validation result:', this.isJsonValid, this.jsonError);
 
     if (!this.isJsonValid) {
-      console.error('Invalid JSON:', this.jsonError);
-      alert(`JSON غير صالح: ${this.jsonError}`);
       this.toaster.error('يرجى تصحيح أخطاء JSON قبل الحفظ');
       return;
     }
 
     this.isLoading = true;
-    console.log('Starting save process...');
 
     // Parse the edited content
     let parsedContent: any;
     try {
       parsedContent = JSON.parse(this.editedContent);
-      console.log('Parsed content successfully:', parsedContent);
     } catch (e: any) {
-      console.error('Failed to parse JSON:', e);
-      alert(`خطأ في تنسيق JSON: ${e.message}`);
       this.toaster.error(`خطأ في تنسيق JSON: ${e.message}`);
       this.isLoading = false;
       return;
     }
 
     // Update the terms content
-    // Send content as object (not string) to backend
     const updatedTerms: UpdateTermsDto = {
       lang: this.selectedLang,
       content: parsedContent
     };
 
-    console.log('=== Sending update request ===');
-    console.log('Request data:', updatedTerms);
-    console.log('Request URL: PUT /api/admin/terms');
-
     this.termsService.updateTerms(updatedTerms).subscribe({
       next: (res) => {
-        console.log('=== Update response received ===');
-        console.log('Response:', res);
-
         if (res.status) {
-          console.log('✓ Update successful');
           this.toaster.success('تم حفظ التعديلات بنجاح');
           this.jsonData = parsedContent;
           // Reload terms to get fresh data from backend
@@ -208,22 +176,12 @@ export class TermsComponent implements OnInit {
           this.isEditMode = false;
           this.editedContent = '';
         } else {
-          console.error('✗ Update failed - status false');
-          console.error('Response message:', res.message);
-          alert(`فشل الحفظ: ${res.message || 'خطأ غير معروف'}`);
           this.toaster.error(res.message || 'فشل حفظ التعديلات');
         }
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('=== Update error ===');
-        console.error('Error object:', err);
-        console.error('Error status:', err.status);
-        console.error('Error message:', err.message);
-        console.error('Error response:', err.error);
-
         const errorMessage = err?.error?.message || err?.message || 'حدث خطأ أثناء حفظ التعديلات';
-        alert(`خطأ في الحفظ: ${errorMessage}`);
         this.toaster.error(errorMessage);
         this.isLoading = false;
       }

@@ -105,9 +105,7 @@ export class ModelsComponent implements OnInit {
           this.brands = response.data;
         }
       },
-      error: (error) => {
-        console.error('Failed to load brands:', error);
-      }
+      error: () => {}
     });
   }
 

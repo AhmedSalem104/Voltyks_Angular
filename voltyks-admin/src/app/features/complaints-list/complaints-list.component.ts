@@ -85,9 +85,7 @@ export class ComplaintsListComponent implements OnInit {
           this.categories = response.data;
         }
       },
-      error: (err) => {
-        console.error('Failed to load categories', err);
-      }
+      error: () => {}
     });
   }
 
@@ -208,9 +206,7 @@ export class ComplaintsListComponent implements OnInit {
           this.filteredUsers = this.users;
         }
       },
-      error: (err) => {
-        console.error('Failed to load users', err);
-      }
+      error: () => {}
     });
   }
 

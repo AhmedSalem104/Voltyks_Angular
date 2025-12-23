@@ -41,7 +41,6 @@ export class AuthService {
     if (token && savedUser) {
       // Both token and user data exist, restore session
       this.currentUserSubject.next(savedUser);
-      console.log('User session restored from localStorage');
     } else if (token) {
       // Token exists but no user data, try to load from API
       this.loadUserDetails();
@@ -54,11 +53,8 @@ export class AuthService {
    */
   login(dto: LoginDTO): Observable<ApiResponse<UserLoginResultDto>> {
     const url = this.getApiUrl('/api/Auth/Login');
-    console.log('Login URL:', url);
     return this.http.post<ApiResponse<UserLoginResultDto>>(url, dto).pipe(
       tap(response => {
-        console.log('AuthService - Login response:', response);
-
         // Check if login was successful
         const isSuccess = response.status === true ||
                          response.message === 'LoginSuccessful' ||
@@ -68,26 +64,15 @@ export class AuthService {
           // Extract role from JWT token
           const role = this.extractRoleFromToken(response.data.token);
           response.data.role = role;
-          console.log('User role:', role);
 
           // Save token in localStorage if provided
           if (response.data.token) {
             this.setToken(response.data.token);
-            console.log('Token saved to localStorage:', response.data.token.substring(0, 20) + '...');
           }
 
           // Save user data to memory and localStorage
           this.currentUserSubject.next(response.data);
           this.saveUser(response.data);
-          console.log('User data saved:', response.data);
-
-          // Check cookies
-          const cookieToken = this.getCookie('token') || this.getCookie('admin_token') || this.getCookie('auth_token');
-          if (cookieToken) {
-            console.log('Token found in cookies:', cookieToken.substring(0, 20) + '...');
-          }
-        } else {
-          console.log('Login failed or no data in response');
         }
       })
     );
@@ -101,8 +86,7 @@ export class AuthService {
       const payload = token.split('.')[1];
       const decoded = JSON.parse(atob(payload));
       return decoded.role;
-    } catch (error) {
-      console.error('Error extracting role from token:', error);
+    } catch {
       return undefined;
     }
   }
@@ -201,10 +185,8 @@ export class AuthService {
           this.saveUser(userData);
         }
       },
-      error: (err) => {
+      error: () => {
         // Don't clear auth on error - keep user logged in with token
-        // Only log the error for debugging
-        console.error('Failed to load user details, but keeping session:', err);
       }
     });
   }
@@ -239,8 +221,7 @@ export class AuthService {
     try {
       const userStr = localStorage.getItem('admin_user');
       return userStr ? JSON.parse(userStr) : null;
-    } catch (error) {
-      console.error('Error parsing saved user data:', error);
+    } catch {
       return null;
     }
   }

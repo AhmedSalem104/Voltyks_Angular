@@ -204,9 +204,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           this.cdr.markForCheck();
         }
       },
-      error: (error) => {
-        console.error('Failed to load app config:', error);
-      }
+      error: () => {}
     });
   }
 
@@ -371,8 +369,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.isLoading = false;
         this.cdr.markForCheck();
       },
-      error: (error) => {
-        console.error('Failed to load dashboard data:', error);
+      error: () => {
         this.isLoading = false;
         this.cdr.markForCheck();
       }

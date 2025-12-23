@@ -224,9 +224,7 @@ export class VehiclesComponent implements OnInit {
           this.filteredUsers = response.data;
         }
       },
-      error: (error) => {
-        console.error('Failed to load users:', error);
-      }
+      error: () => {}
     });
   }
 
@@ -238,9 +236,7 @@ export class VehiclesComponent implements OnInit {
           this.filteredBrands = response.data;
         }
       },
-      error: (error) => {
-        console.error('Failed to load brands:', error);
-      }
+      error: () => {}
     });
   }
 
@@ -252,9 +248,7 @@ export class VehiclesComponent implements OnInit {
           this.filteredModels = response.data;
         }
       },
-      error: (error) => {
-        console.error('Failed to load models:', error);
-      }
+      error: () => {}
     });
   }
 

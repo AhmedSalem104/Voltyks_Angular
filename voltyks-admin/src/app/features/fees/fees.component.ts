@@ -40,7 +40,8 @@ export class FeesComponent implements OnInit {
     private feesService: AdminFeesService,
     private usersService: AdminUsersService,
     private toaster: ToasterService,
-    private printService: PrintService
+    private printService: PrintService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -51,10 +52,8 @@ export class FeesComponent implements OnInit {
   loadFees(): void {
     this.isLoading = true;
     this.loadError = false;
-    console.log('🔄 Loading fees...');
     this.feesService.getFees().subscribe({
       next: (res) => {
-        console.log('✅ Fees API Response:', res);
         if (res.status && res.data) {
           this.fees = res.data;
           this.updateDto = {
@@ -62,38 +61,35 @@ export class FeesComponent implements OnInit {
             minimumFee: res.data.minimumFee
           };
         } else {
-          console.warn('⚠️ Fees API returned status false or no data:', res);
           this.loadError = true;
           this.toaster.error(res.message || 'فشل تحميل بيانات الرسوم');
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
-        console.error('❌ Failed to load fees:', err);
         this.loadError = true;
         this.toaster.error(err.error?.message || err.message || 'فشل تحميل بيانات الرسوم - تأكد من اتصال الخادم');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
 
   loadUsers(): void {
-    console.log('🔄 Loading users...');
     this.usersService.getUsers().subscribe({
       next: (res) => {
-        console.log('✅ Users API Response:', res);
         if (res.status && res.data) {
           this.users = res.data;
           this.filteredUsers = res.data;
-          console.log(`✅ Loaded ${res.data.length} users`);
         } else {
-          console.warn('⚠️ Users API returned status false or no data:', res);
           this.toaster.error('فشل تحميل قائمة المستخدمين');
         }
+        this.cdr.markForCheck();
       },
-      error: (err) => {
-        console.error('❌ Failed to load users:', err);
+      error: () => {
         this.toaster.error('فشل تحميل قائمة المستخدمين');
+        this.cdr.markForCheck();
       }
     });
   }

@@ -43,15 +43,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         }
       }
 
-      console.error('HTTP Error:', {
-        status: error.status,
-        message: errorMessage,
-        url: error.url,
-        error: error.error
-      });
-
-      // You can show a toast notification here
-      // For now, we'll just log and rethrow
       return throwError(() => ({
         status: error.status,
         message: errorMessage,

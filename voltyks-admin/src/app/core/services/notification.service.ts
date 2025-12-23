@@ -45,13 +45,11 @@ export class NotificationService implements OnDestroy {
    */
   connect(): void {
     if (this.isConnected || this.hubConnection) {
-      console.log('SignalR: Already connected or connecting');
       return;
     }
 
     const token = this.authService.getToken();
     if (!token) {
-      console.warn('SignalR: No token available, skipping connection');
       return;
     }
 
@@ -60,7 +58,7 @@ export class NotificationService implements OnDestroy {
         accessTokenFactory: () => token
       })
       .withAutomaticReconnect([0, 2000, 5000, 10000, 30000])
-      .configureLogging(signalR.LogLevel.Information)
+      .configureLogging(signalR.LogLevel.None)
       .build();
 
     // Setup event listeners
@@ -70,15 +68,13 @@ export class NotificationService implements OnDestroy {
     this.hubConnection
       .start()
       .then(() => {
-        console.log('SignalR: Connected successfully');
         this.isConnected = true;
         this.connectionStateSubject.next(true);
         // Load initial notifications after connection
         this.loadNotifications();
         this.loadUnreadCount();
       })
-      .catch(err => {
-        console.error('SignalR: Connection failed', err);
+      .catch(() => {
         this.isConnected = false;
         this.connectionStateSubject.next(false);
         // Fallback: Load notifications via REST API
@@ -87,13 +83,11 @@ export class NotificationService implements OnDestroy {
       });
 
     // Handle reconnection events
-    this.hubConnection.onreconnecting(error => {
-      console.log('SignalR: Reconnecting...', error);
+    this.hubConnection.onreconnecting(() => {
       this.connectionStateSubject.next(false);
     });
 
-    this.hubConnection.onreconnected(connectionId => {
-      console.log('SignalR: Reconnected', connectionId);
+    this.hubConnection.onreconnected(() => {
       this.isConnected = true;
       this.connectionStateSubject.next(true);
       // Refresh notifications after reconnection
@@ -101,8 +95,7 @@ export class NotificationService implements OnDestroy {
       this.loadUnreadCount();
     });
 
-    this.hubConnection.onclose(error => {
-      console.log('SignalR: Connection closed', error);
+    this.hubConnection.onclose(() => {
       this.isConnected = false;
       this.connectionStateSubject.next(false);
     });
@@ -116,7 +109,6 @@ export class NotificationService implements OnDestroy {
 
     // Listen for new reports
     this.hubConnection.on('NewReport', (notification: AppNotification) => {
-      console.log('SignalR: New Report received', notification);
       this.addNotification({
         ...notification,
         type: 'report',
@@ -126,7 +118,6 @@ export class NotificationService implements OnDestroy {
 
     // Listen for new complaints
     this.hubConnection.on('NewComplaint', (notification: AppNotification) => {
-      console.log('SignalR: New Complaint received', notification);
       this.addNotification({
         ...notification,
         type: 'complaint',
@@ -143,11 +134,10 @@ export class NotificationService implements OnDestroy {
       this.hubConnection
         .stop()
         .then(() => {
-          console.log('SignalR: Disconnected');
           this.isConnected = false;
           this.connectionStateSubject.next(false);
         })
-        .catch(err => console.error('SignalR: Disconnect error', err));
+        .catch(() => {});
 
       this.hubConnection = null;
     }
@@ -201,9 +191,7 @@ export class NotificationService implements OnDestroy {
           this.notificationsSubject.next(response.data);
         }
       },
-      error: err => {
-        console.error('Failed to load notifications', err);
-      }
+      error: () => {}
     });
   }
 
@@ -217,9 +205,7 @@ export class NotificationService implements OnDestroy {
           this.unreadCountSubject.next(response.data);
         }
       },
-      error: err => {
-        console.error('Failed to load unread count', err);
-      }
+      error: () => {}
     });
   }
 

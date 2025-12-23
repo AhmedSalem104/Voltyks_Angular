@@ -22,7 +22,8 @@ export class AppConfigComponent implements OnInit {
 
   constructor(
     private appConfigService: AppConfigService,
-    private toaster: ToasterService
+    private toaster: ToasterService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -44,10 +45,10 @@ export class AppConfigComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Failed to load app config:', err);
         this.loadError = true;
         this.toaster.error(err.error?.message || 'فشل تحميل حالة التطبيق');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -73,9 +74,9 @@ export class AppConfigComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Failed to update app config:', err);
         this.toaster.error(err.error?.message || 'فشل تحديث حالة التطبيق');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }

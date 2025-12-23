@@ -162,9 +162,7 @@ export class ChargersComponent implements OnInit {
           this.filteredUsers = response.data;
         }
       },
-      error: (error) => {
-        console.error('Failed to load users:', error);
-      }
+      error: () => {}
     });
   }
 
@@ -175,9 +173,7 @@ export class ChargersComponent implements OnInit {
           this.protocols = response.data;
         }
       },
-      error: (error) => {
-        console.error('Failed to load protocols:', error);
-      }
+      error: () => {}
     });
   }
 
@@ -188,9 +184,7 @@ export class ChargersComponent implements OnInit {
           this.capacities = response.data;
         }
       },
-      error: (error) => {
-        console.error('Failed to load capacities:', error);
-      }
+      error: () => {}
     });
   }
 
@@ -201,9 +195,7 @@ export class ChargersComponent implements OnInit {
           this.priceOptions = response.data;
         }
       },
-      error: (error) => {
-        console.error('Failed to load price options:', error);
-      }
+      error: () => {}
     });
   }
 

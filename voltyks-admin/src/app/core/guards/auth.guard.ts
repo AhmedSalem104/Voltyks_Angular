@@ -9,26 +9,15 @@ export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  console.log('=== AUTH GUARD CHECK ===');
-  console.log('Checking route:', state.url);
-  console.log('Is authenticated:', authService.isAuthenticated());
-  console.log('Is Admin:', authService.isAdmin());
-  console.log('Current user:', authService.currentUserValue);
-  console.log('Token:', authService.getToken()?.substring(0, 20) + '...');
-  console.log('======================');
-
   if (authService.isAuthenticated() && authService.isAdmin()) {
-    console.log('✅ Access granted to:', state.url);
     return true;
   }
 
   // Not authenticated or not Admin, clear auth and redirect to login
   if (authService.isAuthenticated() && !authService.isAdmin()) {
-    console.log('❌ Access denied - User is not Admin');
     authService.clearAuth();
   }
 
-  console.log('❌ Access denied, redirecting to login');
   router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
   return false;
 };

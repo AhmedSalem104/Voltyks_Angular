@@ -146,14 +146,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.showDropdown = false;
-    console.log('🔴 Logging out...');
 
     this.authService.logout().subscribe({
-      next: () => {
-        console.log('✅ Logout successful');
-      },
-      error: (error) => {
-        console.error('❌ Logout error:', error);
+      next: () => {},
+      error: () => {
         // Even if logout API fails, clear local auth
         this.authService.clearAuth();
       }

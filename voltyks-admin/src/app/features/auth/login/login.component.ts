@@ -75,54 +75,31 @@ export class LoginComponent implements OnInit {
     this.authService.login(loginDto).subscribe({
       next: (response) => {
         this.isLoading = false;
-        console.log('=== LOGIN RESPONSE ===');
-        console.log('Full response:', response);
-        console.log('Response type:', typeof response);
-        console.log('Status field:', response.status);
-        console.log('Message field:', response.message);
-        console.log('Data field:', response.data);
-        console.log('Cookies:', document.cookie);
-        console.log('===================');
 
-        // Check if response indicates success (could be response.status or just response.message)
+        // Check if response indicates success
         const isSuccess = response.status === true ||
                          response.message === 'LoginSuccessful' ||
                          (response.data && response.data.token);
 
         if (isSuccess) {
-          console.log('✅ Login successful!');
-
           // Check if user is Admin
           if (!this.authService.isAdmin()) {
-            console.log('❌ Access denied - User is not Admin');
             this.authService.clearAuth();
             this.errorMessage = 'عذراً، لوحة التحكم متاحة للمسؤولين فقط';
             return;
           }
 
-          console.log('✅ Admin verified! Navigating to dashboard...');
-
           // Wait a bit for cookies to be set, then navigate
           setTimeout(() => {
             const returnUrl = this.getReturnUrl();
-            console.log('Navigating to:', returnUrl);
-            this.router.navigate([returnUrl]).then(
-              success => console.log('Navigation success:', success),
-              error => console.error('Navigation error:', error)
-            );
+            this.router.navigate([returnUrl]);
           }, 200);
         } else {
-          console.log('❌ Login failed');
           this.errorMessage = response.message || 'فشل تسجيل الدخول';
         }
       },
       error: (error) => {
         this.isLoading = false;
-        console.error('=== LOGIN ERROR ===');
-        console.error('Full error:', error);
-        console.error('Status:', error.status);
-        console.error('Error body:', error.error);
-        console.error('===================');
 
         // Handle different error types
         if (error.status === 0) {

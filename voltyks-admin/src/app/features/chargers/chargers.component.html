@@ -146,7 +146,7 @@
                 <td>
                   <div class="rating-display">
                     <span class="stars">★</span>
-                    <span class="rating-value">{{ charger.averageRating | number:'1.1-1' }}</span>
+                    <span class="rating-value">{{ (charger.averageRating ?? 0) | number:'1.1-1' }}</span>
                     <span class="rating-count">({{ charger.ratingCount || 0 }})</span>
                   </div>
                 </td>
