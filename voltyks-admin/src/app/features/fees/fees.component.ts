@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminFeesService } from '../../core/services/admin/admin-fees.service';
@@ -17,7 +17,8 @@ import { PrintService } from '../../core/services/print.service';
   styleUrls: ['./fees.component.scss'],
   host: {
     '(document:click)': 'onDocumentClick($event)',
-  }
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FeesComponent implements OnInit {
   fees?: AdminFeesDto;

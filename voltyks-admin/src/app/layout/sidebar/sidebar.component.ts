@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SidebarService } from '../../core/services/sidebar.service';
@@ -47,10 +47,12 @@ interface NavItem {
       </div>
     </aside>
   `,
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent implements OnInit {
   private sidebarService = inject(SidebarService);
+  private cdr = inject(ChangeDetectorRef);
   isOpen = false;
 
   navItems: NavItem[] = [
@@ -77,6 +79,7 @@ export class SidebarComponent implements OnInit {
     // Subscribe to sidebar state changes
     this.sidebarService.isOpen$.subscribe(isOpen => {
       this.isOpen = isOpen;
+      this.cdr.markForCheck();
     });
   }
 

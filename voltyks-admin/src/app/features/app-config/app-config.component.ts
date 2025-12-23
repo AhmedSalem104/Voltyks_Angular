@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppConfigService } from '../../core/services/admin/app-config.service';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
@@ -10,7 +10,8 @@ import { ToasterService } from '../../shared/components/toaster/toaster.service'
   standalone: true,
   imports: [CommonModule, LoadingOverlayComponent, ConfirmDialogComponent],
   templateUrl: './app-config.component.html',
-  styleUrls: ['./app-config.component.scss']
+  styleUrls: ['./app-config.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppConfigComponent implements OnInit {
   isLoading = false;

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -61,7 +61,8 @@ import { NotificationDropdownComponent } from '../../shared/components/notificat
       </div>
     </header>
   `,
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
@@ -69,6 +70,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private themeService = inject(ThemeService);
   private sidebarService = inject(SidebarService);
   private notificationService = inject(NotificationService);
+  private cdr = inject(ChangeDetectorRef);
 
   pageTitle: string = 'لوحة التحكم';
   currentUser: any = null;
@@ -106,6 +108,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.notificationService.unreadCount$.subscribe(count => {
         this.unreadCount = count;
+        this.cdr.markForCheck();
       })
     );
   }

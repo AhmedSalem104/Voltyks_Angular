@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
@@ -21,7 +21,8 @@ import { PrintService } from '../../core/services/print.service';
     ConfirmDialogComponent
   ],
   templateUrl: './capacities.component.html',
-  styleUrls: ['./capacities.component.scss']
+  styleUrls: ['./capacities.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CapacitiesComponent implements OnInit {
   // Data

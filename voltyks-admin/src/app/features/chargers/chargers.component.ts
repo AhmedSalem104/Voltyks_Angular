@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
@@ -22,7 +22,8 @@ import { PrintService } from '../../core/services/print.service';
     ConfirmDialogComponent
   ],
   templateUrl: './chargers.component.html',
-  styleUrls: ['./chargers.component.scss']
+  styleUrls: ['./chargers.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChargersComponent implements OnInit {
   // Chargers data
@@ -85,7 +86,8 @@ export class ChargersComponent implements OnInit {
     private chargersService: AdminChargersService,
     private usersService: AdminUsersService,
     private toaster: ToasterService,
-    private printService: PrintService
+    private printService: PrintService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -108,6 +110,7 @@ export class ChargersComponent implements OnInit {
 
   loadChargers(): void {
     this.isLoading = true;
+    this.cdr.markForCheck();
 
     this.chargersService.getChargers().subscribe({
       next: (response) => {
@@ -116,10 +119,12 @@ export class ChargersComponent implements OnInit {
           this.applyFilters();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحميل الشواحن');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }

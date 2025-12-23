@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
       </div>
     </div>
   `,
-  styleUrls: ['./loading-overlay.component.scss']
+  styleUrls: ['./loading-overlay.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadingOverlayComponent {}

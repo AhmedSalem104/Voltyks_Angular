@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PrintService } from '../../core/services/print.service';
 
@@ -7,7 +7,8 @@ import { PrintService } from '../../core/services/print.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './protocol.component.html',
-  styleUrls: ['./protocol.component.scss']
+  styleUrls: ['./protocol.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProtocolComponent implements OnInit {
   selectedType: 'chinese' | 'european' = 'chinese';

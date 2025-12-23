@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,7 +22,8 @@ import { PrintService } from '../../core/services/print.service';
     ConfirmDialogComponent
   ],
   templateUrl: './brands.component.html',
-  styleUrls: ['./brands.component.scss']
+  styleUrls: ['./brands.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BrandsComponent implements OnInit {
   // Brands data

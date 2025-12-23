@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminComplaintsService } from '../../core/services/admin/admin-complaints.service';
@@ -20,7 +20,8 @@ import { PrintService } from '../../core/services/print.service';
     LoadingOverlayComponent
   ],
   templateUrl: './complaints-list.component.html',
-  styleUrls: ['./complaints-list.component.scss']
+  styleUrls: ['./complaints-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ComplaintsListComponent implements OnInit {
   // Complaints data

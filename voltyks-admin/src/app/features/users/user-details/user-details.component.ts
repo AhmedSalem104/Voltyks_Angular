@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -30,7 +30,8 @@ import { PrintService } from '../../../core/services/print.service';
     PaginationComponent
   ],
   templateUrl: './user-details.component.html',
-  styleUrls: ['./user-details.component.scss']
+  styleUrls: ['./user-details.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserDetailsComponent implements OnInit {
   userId!: string;

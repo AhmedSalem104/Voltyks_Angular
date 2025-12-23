@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar.component';
@@ -30,6 +30,7 @@ import { ToasterComponent } from '../../shared/components/toaster/toaster.compon
       <app-toaster></app-toaster>
     </div>
   `,
-  styleUrls: ['./main-layout.component.scss']
+  styleUrls: ['./main-layout.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainLayoutComponent {}

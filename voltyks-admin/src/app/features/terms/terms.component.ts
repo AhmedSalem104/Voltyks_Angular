@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
@@ -13,7 +13,8 @@ import { PrintService } from '../../core/services/print.service';
   standalone: true,
   imports: [CommonModule, FormsModule, NgxJsonViewerModule, LoadingOverlayComponent],
   templateUrl: './terms.component.html',
-  styleUrls: ['./terms.component.scss']
+  styleUrls: ['./terms.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TermsComponent implements OnInit {
   terms?: AdminTermsDto;

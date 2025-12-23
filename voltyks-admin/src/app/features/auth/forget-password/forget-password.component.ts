@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -11,7 +11,8 @@ import { ForgetPasswordDto } from '../../../core/models';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './forget-password.component.html',
-  styleUrl: './forget-password.component.scss'
+  styleUrl: './forget-password.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ForgetPasswordComponent implements OnInit {
   private fb = inject(FormBuilder);

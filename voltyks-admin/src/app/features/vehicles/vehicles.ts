@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
@@ -23,7 +23,8 @@ import { PrintService } from '../../core/services/print.service';
     ConfirmDialogComponent
   ],
   templateUrl: './vehicles.html',
-  styleUrl: './vehicles.scss'
+  styleUrl: './vehicles.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VehiclesComponent implements OnInit {
   // Vehicles data

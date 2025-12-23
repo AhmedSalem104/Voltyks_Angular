@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -21,7 +21,8 @@ import { PrintService } from '../../../core/services/print.service';
     LoadingOverlayComponent
   ],
   templateUrl: './users-list.component.html',
-  styleUrls: ['./users-list.component.scss']
+  styleUrls: ['./users-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersListComponent implements OnInit {
   users: AdminUserDto[] = [];
@@ -41,7 +42,8 @@ export class UsersListComponent implements OnInit {
   constructor(
     private usersService: AdminUsersService,
     private toaster: ToasterService,
-    private printService: PrintService
+    private printService: PrintService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -72,10 +74,12 @@ export class UsersListComponent implements OnInit {
           this.toaster.success('تم تحميل المستخدمين بنجاح');
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحميل المستخدمين');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }

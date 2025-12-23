@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
@@ -33,7 +33,8 @@ const REPORT_STATUS_OPTIONS = [
     LoadingOverlayComponent
   ],
   templateUrl: './reports.component.html',
-  styleUrls: ['./reports.component.scss']
+  styleUrls: ['./reports.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReportsComponent implements OnInit {
   // Reports data
@@ -82,7 +83,8 @@ export class ReportsComponent implements OnInit {
     private reportsService: AdminReportsService,
     private processesService: AdminProcessesService,
     private toaster: ToasterService,
-    private printService: PrintService
+    private printService: PrintService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -96,6 +98,7 @@ export class ReportsComponent implements OnInit {
       distinctUntilChanged()
     ).subscribe(() => {
       this.applyFilters();
+      this.cdr.markForCheck();
     });
   }
 
@@ -116,10 +119,12 @@ export class ReportsComponent implements OnInit {
           this.loadUserDetailsForReports();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error(err.message || 'فشل تحميل التقارير');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -142,9 +147,11 @@ export class ReportsComponent implements OnInit {
         });
         // Update paginated reports to reflect changes
         this.updatePaginatedReports();
+        this.cdr.markForCheck();
       },
       error: () => {
         // Silently fail - user details are optional
+        this.cdr.markForCheck();
       }
     });
   }
@@ -297,9 +304,11 @@ export class ReportsComponent implements OnInit {
           this.selectedReportDetails = response.data;
         }
         this.isLoadingReportDetails = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.isLoadingReportDetails = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -318,10 +327,12 @@ export class ReportsComponent implements OnInit {
           }
         }
         this.isLoadingProcess = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error('فشل تحميل بيانات العملية');
         this.isLoadingProcess = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -358,11 +369,13 @@ export class ReportsComponent implements OnInit {
         }
         this.updatingReportIds.delete(report.id);
         this.isUpdatingStatus = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error('فشل تحديث حالة البلاغ');
         this.updatingReportIds.delete(report.id);
         this.isUpdatingStatus = false;
+        this.cdr.markForCheck();
       }
     });
   }

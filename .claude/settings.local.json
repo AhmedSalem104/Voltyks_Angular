@@ -39,7 +39,9 @@
       "Bash(ls -la \"C:\\Users\\B-SMART\\Desktop\\Voltyks_Front\\Voltyks_Angular\\voltyks-admin\\src\\app\\core\\services\\admin\"\" | findstr /i \"wallet|balance \")",
       "Bash(git push)",
       "Bash(git commit -m \"$(cat <<''EOF''\nAdd capacities management page\n\n- Add CreateCapacityDto and UpdateCapacityDto models\n- Add CapacityService for API calls\n- Create capacities component with CRUD operations\n- Add route and sidebar navigation for capacities\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(find:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd mobile app config management page\n\n- Create app-config model with MobileAppConfigDto\n- Create AppConfigService for GET/PATCH API calls\n- Create AppConfigComponent with toggle functionality\n- Add route /app-config and sidebar menu item\n- Support enable/disable mobile app with confirmation dialog\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ],
     "deny": [],
     "ask": []

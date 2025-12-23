@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminComplaintCategoriesService } from '../../core/services/admin/admin-complaint-categories.service';
@@ -24,7 +24,8 @@ import { PrintService } from '../../core/services/print.service';
     LoadingOverlayComponent
   ],
   templateUrl: './complaints.component.html',
-  styleUrls: ['./complaints.component.scss']
+  styleUrls: ['./complaints.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ComplaintsComponent implements OnInit {
   // Categories data
@@ -74,7 +75,8 @@ export class ComplaintsComponent implements OnInit {
     private categoriesService: AdminComplaintCategoriesService,
     private complaintsService: AdminComplaintsService,
     private toaster: ToasterService,
-    private printService: PrintService
+    private printService: PrintService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -92,10 +94,12 @@ export class ComplaintsComponent implements OnInit {
           this.applyFilters();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error(err.message || 'فشل تحميل أنواع الشكاوى');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -186,10 +190,12 @@ export class ComplaintsComponent implements OnInit {
             this.toaster.error(response.message || 'فشل تحديث نوع الشكوى');
           }
           this.isSaving = false;
+          this.cdr.markForCheck();
         },
         error: (err) => {
           this.toaster.error(err.error?.message || 'فشل تحديث نوع الشكوى');
           this.isSaving = false;
+          this.cdr.markForCheck();
         }
       });
     } else {
@@ -203,10 +209,12 @@ export class ComplaintsComponent implements OnInit {
             this.toaster.error(response.message || 'فشل إضافة نوع الشكوى');
           }
           this.isSaving = false;
+          this.cdr.markForCheck();
         },
         error: (err) => {
           this.toaster.error(err.error?.message || 'فشل إضافة نوع الشكوى');
           this.isSaving = false;
+          this.cdr.markForCheck();
         }
       });
     }
@@ -237,10 +245,12 @@ export class ComplaintsComponent implements OnInit {
           this.toaster.error(response.message || 'فشل حذف نوع الشكوى');
         }
         this.isSaving = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error(err.error?.message || 'فشل حذف نوع الشكوى');
         this.isSaving = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -255,9 +265,11 @@ export class ComplaintsComponent implements OnInit {
         } else {
           this.toaster.error(response.message || 'فشل استعادة نوع الشكوى');
         }
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error(err.error?.message || 'فشل استعادة نوع الشكوى');
+        this.cdr.markForCheck();
       }
     });
   }
@@ -294,10 +306,12 @@ export class ComplaintsComponent implements OnInit {
           this.toaster.error(response.message || 'فشل إرسال الشكوى');
         }
         this.isSaving = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error(err.error?.message || 'فشل إرسال الشكوى');
         this.isSaving = false;
+        this.cdr.markForCheck();
       }
     });
   }

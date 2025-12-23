@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, ElementRef, HostListener, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -10,7 +10,8 @@ import { AppNotification } from '../../../core/models';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './notification-dropdown.component.html',
-  styleUrls: ['./notification-dropdown.component.scss']
+  styleUrls: ['./notification-dropdown.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationDropdownComponent implements OnInit, OnDestroy {
   @Input() isOpen = false;
@@ -24,13 +25,15 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   constructor(
     private notificationService: NotificationService,
     private router: Router,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.subscription = this.notificationService.notifications$.subscribe(
       notifications => {
         this.notifications = notifications;
+        this.cdr.markForCheck();
       }
     );
   }
@@ -59,7 +62,10 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   onNotificationClick(notification: AppNotification): void {
     // Mark as read
     if (!notification.isRead) {
-      this.notificationService.markAsRead(notification.id).subscribe();
+      this.notificationService.markAsRead(notification.id).subscribe({
+        next: () => this.cdr.markForCheck(),
+        error: () => this.cdr.markForCheck()
+      });
     }
 
     // Navigate based on type
@@ -83,7 +89,10 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   markAsRead(notification: AppNotification, event: Event): void {
     event.stopPropagation();
     if (!notification.isRead) {
-      this.notificationService.markAsRead(notification.id).subscribe();
+      this.notificationService.markAsRead(notification.id).subscribe({
+        next: () => this.cdr.markForCheck(),
+        error: () => this.cdr.markForCheck()
+      });
     }
   }
 
@@ -91,7 +100,10 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
    * Mark all notifications as read
    */
   markAllAsRead(): void {
-    this.notificationService.markAllAsRead().subscribe();
+    this.notificationService.markAllAsRead().subscribe({
+      next: () => this.cdr.markForCheck(),
+      error: () => this.cdr.markForCheck()
+    });
   }
 
   /**

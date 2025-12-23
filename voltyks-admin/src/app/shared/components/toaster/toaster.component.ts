@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { trigger, transition, style, animate } from '@angular/animations';
@@ -8,6 +8,7 @@ import { ToasterService, Toast } from './toaster.service';
   selector: 'app-toaster',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('slideIn', [
       transition(':enter', [
@@ -47,7 +48,10 @@ export class ToasterComponent implements OnInit, OnDestroy {
   private subscription?: Subscription;
   private readonly MAX_TOASTS = 3; // حد أقصى 3 إشعارات في نفس الوقت
 
-  constructor(private toasterService: ToasterService) {}
+  constructor(
+    private toasterService: ToasterService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.subscription = this.toasterService.toasts$.subscribe(toast => {
@@ -72,6 +76,7 @@ export class ToasterComponent implements OnInit, OnDestroy {
       }
 
       this.toasts.push(toast);
+      this.cdr.markForCheck();
 
       // Auto remove after duration
       if (toast.duration) {
@@ -88,5 +93,6 @@ export class ToasterComponent implements OnInit, OnDestroy {
 
   removeToast(id: string): void {
     this.toasts = this.toasts.filter(toast => toast.id !== id);
+    this.cdr.markForCheck();
   }
 }

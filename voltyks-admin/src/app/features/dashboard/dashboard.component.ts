@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { BaseChartDirective } from 'ng2-charts';
@@ -54,7 +54,8 @@ interface RecentReport {
   standalone: true,
   imports: [CommonModule, RouterModule, BaseChartDirective],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
   stats: DashboardStats = {
@@ -177,7 +178,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     private processesService: AdminProcessesService,
     private appConfigService: AppConfigService,
     private notificationService: NotificationService,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -199,6 +201,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       next: (response) => {
         if (response.status && response.data) {
           this.mobileAppEnabled = response.data.mobile_app_enabled;
+          this.cdr.markForCheck();
         }
       },
       error: (error) => {
@@ -214,6 +217,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.notificationService.notifications$.subscribe(notifications => {
       this.recentNotifications = notifications.slice(0, 5);
       this.unreadNotificationsCount = notifications.filter(n => !n.isRead).length;
+      this.cdr.markForCheck();
     });
   }
 
@@ -365,10 +369,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
         this.updateCharts();
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Failed to load dashboard data:', error);
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PrintService } from '../../core/services/print.service';
 
@@ -6,6 +6,7 @@ import { PrintService } from '../../core/services/print.service';
   selector: 'app-about',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="about-container">
       <div class="hero-section voltyks-card">
