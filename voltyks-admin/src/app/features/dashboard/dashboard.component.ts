@@ -12,8 +12,11 @@ import { AdminVehiclesService } from '../../core/services/admin/admin-vehicles.s
 import { AdminComplaintsService } from '../../core/services/admin/admin-complaints.service';
 import { AdminComplaintCategoriesService } from '../../core/services/admin/admin-complaint-categories.service';
 import { AdminProcessesService } from '../../core/services/admin/admin-processes.service';
+import { AppConfigService } from '../../core/services/admin/app-config.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { AuthService } from '../../core/services/auth.service';
 import { forkJoin } from 'rxjs';
+import { AppNotification } from '../../core/models';
 
 Chart.register(...registerables);
 
@@ -79,6 +82,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   currentUser: any = null;
   isLoading = true;
   greeting = '';
+
+  // App Config
+  mobileAppEnabled: boolean | null = null;
+
+  // Recent Notifications
+  recentNotifications: AppNotification[] = [];
+  unreadNotificationsCount = 0;
 
   // Typing Animation
   typingTexts = [
@@ -165,6 +175,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     private complaintsService: AdminComplaintsService,
     private complaintCategoriesService: AdminComplaintCategoriesService,
     private processesService: AdminProcessesService,
+    private appConfigService: AppConfigService,
+    private notificationService: NotificationService,
     private authService: AuthService
   ) {}
 
@@ -172,10 +184,61 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.currentUser = this.authService.currentUserValue;
     this.setGreeting();
     this.loadDashboardData();
+    this.loadAppConfig();
+    this.subscribeToNotifications();
     this.startTypingAnimation();
   }
 
   ngAfterViewInit(): void {}
+
+  /**
+   * Load mobile app configuration status
+   */
+  private loadAppConfig(): void {
+    this.appConfigService.getMobileAppStatus().subscribe({
+      next: (response) => {
+        if (response.status && response.data) {
+          this.mobileAppEnabled = response.data.mobile_app_enabled;
+        }
+      },
+      error: (error) => {
+        console.error('Failed to load app config:', error);
+      }
+    });
+  }
+
+  /**
+   * Subscribe to notifications stream
+   */
+  private subscribeToNotifications(): void {
+    this.notificationService.notifications$.subscribe(notifications => {
+      this.recentNotifications = notifications.slice(0, 5);
+      this.unreadNotificationsCount = notifications.filter(n => !n.isRead).length;
+    });
+  }
+
+  /**
+   * Get relative time for notifications
+   */
+  getRelativeTime(timestamp: string): string {
+    return this.notificationService.getRelativeTime(timestamp);
+  }
+
+  /**
+   * Get icon for notification type
+   */
+  getNotificationIcon(type: string): string {
+    return type === 'report' ? 'report_problem' : 'feedback';
+  }
+
+  /**
+   * Navigate to notification details
+   */
+  onNotificationClick(notification: AppNotification): void {
+    if (!notification.isRead) {
+      this.notificationService.markAsRead(notification.id).subscribe();
+    }
+  }
 
   private setGreeting(): void {
     const hour = new Date().getHours();

@@ -20,6 +20,104 @@
     </div>
   </section>
 
+  <!-- Status Cards Section -->
+  <section class="status-cards-section">
+    <!-- App Config Status Card -->
+    <div class="status-card app-status" [class.enabled]="mobileAppEnabled === true" [class.disabled]="mobileAppEnabled === false">
+      <div class="status-icon">
+        <span class="material-icons">{{ mobileAppEnabled ? 'smartphone' : 'phonelink_off' }}</span>
+      </div>
+      <div class="status-content">
+        <h4>تطبيق الجوال</h4>
+        <span class="status-text">
+          @if (mobileAppEnabled === null) {
+            جاري التحميل...
+          } @else if (mobileAppEnabled) {
+            مفعّل
+          } @else {
+            معطّل
+          }
+        </span>
+      </div>
+      <div class="status-indicator">
+        <span class="indicator-dot"></span>
+      </div>
+      <a routerLink="/app-config" class="status-link">
+        <span class="material-icons">settings</span>
+      </a>
+    </div>
+
+    <!-- Notifications Status Card -->
+    <div class="status-card notifications-status" [class.has-unread]="unreadNotificationsCount > 0">
+      <div class="status-icon">
+        <span class="material-icons">{{ unreadNotificationsCount > 0 ? 'notifications_active' : 'notifications_none' }}</span>
+      </div>
+      <div class="status-content">
+        <h4>الإشعارات</h4>
+        <span class="status-text">
+          @if (unreadNotificationsCount > 0) {
+            {{ unreadNotificationsCount }} إشعار جديد
+          } @else {
+            لا توجد إشعارات جديدة
+          }
+        </span>
+      </div>
+      @if (unreadNotificationsCount > 0) {
+        <div class="unread-badge">{{ unreadNotificationsCount }}</div>
+      }
+    </div>
+  </section>
+
+  <!-- Recent Notifications Section -->
+  @if (recentNotifications.length > 0) {
+    <section class="notifications-section">
+      <div class="section-header">
+        <h3>
+          <span class="material-icons">notifications</span>
+          آخر الإشعارات
+        </h3>
+        <a routerLink="/reports" class="view-all-link">
+          عرض الكل
+          <span class="material-icons">arrow_back</span>
+        </a>
+      </div>
+      <div class="notifications-grid">
+        @for (notification of recentNotifications; track notification.id) {
+          <div
+            class="notification-card"
+            [class.unread]="!notification.isRead"
+            [class.report]="notification.type === 'report'"
+            [class.complaint]="notification.type === 'complaint'"
+            (click)="onNotificationClick(notification)"
+          >
+            <div class="notification-icon">
+              <span class="material-icons">{{ getNotificationIcon(notification.type) }}</span>
+            </div>
+            <div class="notification-body">
+              <div class="notification-header">
+                <span class="notification-title">{{ notification.title }}</span>
+                @if (!notification.isRead) {
+                  <span class="new-badge">جديد</span>
+                }
+              </div>
+              <p class="notification-message">{{ notification.message }}</p>
+              <div class="notification-footer">
+                <span class="notification-user">
+                  <span class="material-icons">person</span>
+                  {{ notification.userName }}
+                </span>
+                <span class="notification-time">
+                  <span class="material-icons">schedule</span>
+                  {{ getRelativeTime(notification.timestamp) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
   @if (isLoading) {
     <div class="loading-skeleton">
       <div class="skeleton-grid">
@@ -229,6 +327,10 @@
         <a routerLink="/protocol" class="action-item">
           <span class="material-icons">policy</span>
           <span>البروتوكول</span>
+        </a>
+        <a routerLink="/app-config" class="action-item">
+          <span class="material-icons">smartphone</span>
+          <span>تطبيق الجوال</span>
         </a>
       </div>
     </section>

@@ -71,24 +71,52 @@ $notification-complaint-color: #42A5F5;
       display: flex;
       align-items: center;
       gap: 6px;
-      background: transparent;
+      background: linear-gradient(135deg, rgba($voltyks-primary, 0.15) 0%, rgba($voltyks-primary, 0.05) 100%);
       border: 1px solid rgba($voltyks-primary, 0.3);
       color: $voltyks-primary;
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
-      padding: 6px 12px;
-      border-radius: 8px;
-      transition: all 0.2s;
+      padding: 8px 14px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+      }
 
       .material-icons {
         font-size: 16px;
+        transition: transform 0.3s ease;
       }
 
       &:hover {
-        background: rgba($voltyks-primary, 0.1);
+        background: linear-gradient(135deg, $voltyks-primary 0%, darken($voltyks-primary, 10%) 100%);
         border-color: $voltyks-primary;
-        transform: translateY(-1px);
+        color: #000;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba($voltyks-primary, 0.4);
+
+        &::before {
+          left: 100%;
+        }
+
+        .material-icons {
+          transform: scale(1.1);
+        }
+      }
+
+      &:active {
+        transform: translateY(0);
       }
     }
   }
@@ -285,24 +313,47 @@ $notification-complaint-color: #42A5F5;
 
     // Mark as read button
     .mark-read-btn {
-      background: transparent;
-      border: none;
-      padding: 6px;
-      color: var(--text-secondary);
+      background: rgba($voltyks-primary, 0.1);
+      border: 1px solid rgba($voltyks-primary, 0.2);
+      padding: 8px;
+      color: $voltyks-primary;
       cursor: pointer;
-      border-radius: 50%;
-      transition: all 0.2s;
+      border-radius: 10px;
+      transition: all 0.3s ease;
       opacity: 0;
       flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover {
-        background: rgba($voltyks-primary, 0.1);
-        color: $voltyks-primary;
+        background: $voltyks-primary;
+        border-color: $voltyks-primary;
+        color: #000;
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba($voltyks-primary, 0.3);
       }
 
       .material-icons {
         font-size: 18px;
       }
+    }
+
+    // Always show mark-read button for unread notifications
+    &.unread .mark-read-btn {
+      opacity: 1;
+      animation: fadeInSlide 0.3s ease-out forwards;
+    }
+  }
+
+  @keyframes fadeInSlide {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
     }
   }
 
