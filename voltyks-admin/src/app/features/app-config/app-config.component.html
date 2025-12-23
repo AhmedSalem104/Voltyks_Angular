@@ -2,96 +2,214 @@
   <div class="page-header-row">
     <div>
       <h2>إعدادات تطبيق الموبايل</h2>
-      <p class="subtitle">التحكم في حالة تطبيق الموبايل</p>
+      <p class="subtitle">التحكم في حالة تطبيق الموبايل لكل منصة</p>
     </div>
   </div>
 
-  @if (mobileAppEnabled !== null) {
-    <div class="voltyks-card config-card">
-      <div class="card-header">
-        <div class="header-icon">
-          <span class="material-icons">phone_android</span>
+  @if (config !== null) {
+    <!-- Platforms Grid -->
+    <div class="platforms-grid">
+      <!-- Android Card -->
+      <div class="platform-card" [class.enabled]="formConfig.android_enabled" [class.disabled]="!formConfig.android_enabled">
+        <div class="platform-header android">
+          <div class="platform-icon">
+            <span class="material-icons">android</span>
+          </div>
+          <div class="platform-info">
+            <h3>Android</h3>
+            <span class="status-badge" [class]="getStatusClass(formConfig.android_enabled)">
+              {{ getStatusText(formConfig.android_enabled) }}
+            </span>
+          </div>
         </div>
-        <h3>حالة تطبيق الموبايل</h3>
-      </div>
 
-      <div class="status-section">
-        <div class="status-display">
-          <span class="status-label">الحالة الحالية:</span>
-          <span class="status-badge" [class]="statusClass">
-            <span class="material-icons">{{ mobileAppEnabled ? 'check_circle' : 'cancel' }}</span>
-            {{ statusText }}
-          </span>
-        </div>
+        <div class="platform-body">
+          <div class="toggle-section">
+            <div class="toggle-buttons">
+              <button
+                class="toggle-btn btn-activate"
+                [class.active]="formConfig.android_enabled"
+                [disabled]="formConfig.android_enabled"
+                (click)="togglePlatform('android')"
+              >
+                <span class="material-icons">power_settings_new</span>
+                <span>تفعيل</span>
+              </button>
 
-        <div class="toggle-section">
-          <div class="toggle-buttons">
-            <button
-              class="toggle-btn btn-activate"
-              [class.active]="mobileAppEnabled"
-              [disabled]="mobileAppEnabled"
-              (click)="openConfirmDialog(true)"
-            >
-              <span class="material-icons">power_settings_new</span>
-              <span>تفعيل التطبيق</span>
-            </button>
+              <button
+                class="toggle-btn btn-deactivate"
+                [class.active]="!formConfig.android_enabled"
+                [disabled]="!formConfig.android_enabled"
+                (click)="togglePlatform('android')"
+              >
+                <span class="material-icons">block</span>
+                <span>تعطيل</span>
+              </button>
+            </div>
+          </div>
 
-            <button
-              class="toggle-btn btn-deactivate"
-              [class.active]="!mobileAppEnabled"
-              [disabled]="!mobileAppEnabled"
-              (click)="openConfirmDialog(false)"
-            >
-              <span class="material-icons">block</span>
-              <span>إيقاف التطبيق</span>
-            </button>
+          <div class="version-section">
+            <label class="version-label">
+              <span class="material-icons">update</span>
+              الحد الأدنى للإصدار
+            </label>
+            <input
+              type="text"
+              class="version-input"
+              [class.invalid]="!isValidVersion(formConfig.android_min_version)"
+              [(ngModel)]="formConfig.android_min_version"
+              (ngModelChange)="onFormChange()"
+              placeholder="مثال: 1.0.0"
+            />
+            @if (!isValidVersion(formConfig.android_min_version)) {
+              <span class="version-error">صيغة غير صحيحة (استخدم X.Y.Z)</span>
+            }
+            <span class="version-hint">اتركه فارغاً لعدم وجود حد أدنى</span>
           </div>
         </div>
       </div>
 
-      <div class="warning-section" [class.show]="!mobileAppEnabled">
-        <span class="material-icons">warning</span>
-        <div class="warning-content">
-          <strong>تنبيه:</strong>
-          <p>تطبيق الموبايل متوقف حالياً. لن يتمكن المستخدمون من الوصول إلى التطبيق.</p>
+      <!-- iOS Card -->
+      <div class="platform-card" [class.enabled]="formConfig.ios_enabled" [class.disabled]="!formConfig.ios_enabled">
+        <div class="platform-header ios">
+          <div class="platform-icon">
+            <span class="material-icons">phone_iphone</span>
+          </div>
+          <div class="platform-info">
+            <h3>iOS</h3>
+            <span class="status-badge" [class]="getStatusClass(formConfig.ios_enabled)">
+              {{ getStatusText(formConfig.ios_enabled) }}
+            </span>
+          </div>
         </div>
-      </div>
 
-      <div class="info-section">
-        <span class="material-icons">info</span>
-        <div class="info-content">
-          <p>عند إيقاف التطبيق، سيظهر للمستخدمين رسالة "التطبيق غير متاح حالياً" عند محاولة فتح التطبيق.</p>
+        <div class="platform-body">
+          <div class="toggle-section">
+            <div class="toggle-buttons">
+              <button
+                class="toggle-btn btn-activate"
+                [class.active]="formConfig.ios_enabled"
+                [disabled]="formConfig.ios_enabled"
+                (click)="togglePlatform('ios')"
+              >
+                <span class="material-icons">power_settings_new</span>
+                <span>تفعيل</span>
+              </button>
+
+              <button
+                class="toggle-btn btn-deactivate"
+                [class.active]="!formConfig.ios_enabled"
+                [disabled]="!formConfig.ios_enabled"
+                (click)="togglePlatform('ios')"
+              >
+                <span class="material-icons">block</span>
+                <span>تعطيل</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="version-section">
+            <label class="version-label">
+              <span class="material-icons">update</span>
+              الحد الأدنى للإصدار
+            </label>
+            <input
+              type="text"
+              class="version-input"
+              [class.invalid]="!isValidVersion(formConfig.ios_min_version)"
+              [(ngModel)]="formConfig.ios_min_version"
+              (ngModelChange)="onFormChange()"
+              placeholder="مثال: 1.0.0"
+            />
+            @if (!isValidVersion(formConfig.ios_min_version)) {
+              <span class="version-error">صيغة غير صحيحة (استخدم X.Y.Z)</span>
+            }
+            <span class="version-hint">اتركه فارغاً لعدم وجود حد أدنى</span>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Warning Section -->
+    @if (!formConfig.android_enabled || !formConfig.ios_enabled) {
+      <div class="warning-card">
+        <span class="material-icons">warning</span>
+        <div class="warning-content">
+          <strong>تنبيه:</strong>
+          @if (!formConfig.android_enabled && !formConfig.ios_enabled) {
+            <p>كلا التطبيقين معطلان. لن يتمكن أي مستخدم من الوصول إلى التطبيق.</p>
+          } @else if (!formConfig.android_enabled) {
+            <p>تطبيق Android معطل. لن يتمكن مستخدمو Android من الوصول.</p>
+          } @else {
+            <p>تطبيق iOS معطل. لن يتمكن مستخدمو iOS من الوصول.</p>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Actions Section -->
+    @if (hasChanges) {
+      <div class="actions-bar">
+        <div class="changes-indicator">
+          <span class="material-icons">edit</span>
+          يوجد تغييرات غير محفوظة
+        </div>
+        <div class="action-buttons">
+          <button class="voltyks-btn btn-secondary" (click)="discardChanges()" [disabled]="isSaving">
+            <span class="material-icons">undo</span>
+            تراجع
+          </button>
+          <button class="voltyks-btn btn-primary" (click)="saveChanges()" [disabled]="isSaving">
+            @if (isSaving) {
+              <span class="material-icons spin">sync</span>
+              جاري الحفظ...
+            } @else {
+              <span class="material-icons">save</span>
+              حفظ التغييرات
+            }
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Info Section -->
+    <div class="info-card">
+      <span class="material-icons">info</span>
+      <div class="info-content">
+        <p>عند تعطيل منصة معينة، سيظهر للمستخدمين رسالة "التطبيق غير متاح حالياً" عند محاولة فتح التطبيق.</p>
+        <p>الحد الأدنى للإصدار يمنع المستخدمين الذين لديهم إصدار أقدم من الوصول ويطلب منهم التحديث.</p>
+      </div>
+    </div>
+
   } @else if (loadError) {
     <div class="voltyks-card error-card">
       <div class="error-content">
         <span class="material-icons">error_outline</span>
         <p class="error-title">فشل تحميل البيانات</p>
         <p class="error-message">تأكد من اتصال الخادم وحاول مرة أخرى</p>
-        <button class="voltyks-btn btn-primary" (click)="loadStatus()">
+        <button class="voltyks-btn btn-primary" (click)="loadConfig()">
           <span class="material-icons">refresh</span>
           إعادة المحاولة
         </button>
       </div>
     </div>
   } @else {
-    <div class="voltyks-card">
-      <p class="loading-text">جاري تحميل البيانات...</p>
+    <div class="loading-card">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">جاري تحميل الإعدادات...</p>
     </div>
   }
 </div>
 
 <app-confirm-dialog
   [isOpen]="showConfirmDialog"
-  [title]="pendingStatus ? 'تأكيد تفعيل التطبيق' : 'تأكيد إيقاف التطبيق'"
-  [message]="confirmMessage"
-  [type]="pendingStatus ? 'primary' : 'danger'"
-  (confirm)="confirmToggle()"
-  (cancel)="showConfirmDialog = false"
+  [title]="confirmDialogTitle"
+  [message]="confirmDialogMessage"
+  [type]="'primary'"
+  (confirm)="confirmAction()"
+  (cancel)="cancelAction()"
 ></app-confirm-dialog>
 
-@if (isLoading) {
+@if (isLoading || isSaving) {
   <app-loading-overlay></app-loading-overlay>
 }
