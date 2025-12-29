@@ -1,0 +1,513 @@
+// Variables
+$primary: #00C853;
+$primary-dark: #00A843;
+$warning: #FF9800;
+$danger: #ef4444;
+$info: #2196F3;
+$purple: #9C27B0;
+
+$bg-dark: #121212;
+$bg-card: #1e1e1e;
+$bg-hover: #252525;
+$border-color: rgba(255, 255, 255, 0.08);
+$text-primary: #ffffff;
+$text-secondary: rgba(255, 255, 255, 0.7);
+$text-muted: rgba(255, 255, 255, 0.4);
+
+.store-dashboard {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+// Loading State
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 16px;
+  color: $text-secondary;
+
+  .loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid $border-color;
+    border-top-color: $primary;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Header
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba($primary, 0.15) 0%, rgba($primary, 0.05) 100%);
+  border: 1px solid rgba($primary, 0.2);
+  border-radius: 20px;
+  margin-bottom: 24px;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .header-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .material-icons {
+        font-size: 30px;
+        color: #000;
+      }
+    }
+
+    .header-text {
+      h1 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 700;
+        color: $text-primary;
+      }
+
+      p {
+        margin: 4px 0 0 0;
+        font-size: 14px;
+        color: $text-secondary;
+      }
+    }
+  }
+
+  .refresh-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: rgba($primary, 0.1);
+    border: 1px solid rgba($primary, 0.3);
+    border-radius: 12px;
+    color: $primary;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      background: $primary;
+      color: #000;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .spinning {
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+// Navigation Cards
+.nav-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.nav-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    background: $primary;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  &:hover {
+    transform: translateX(-8px);
+    border-color: rgba($primary, 0.3);
+    background: $bg-hover;
+
+    &::before {
+      opacity: 1;
+    }
+
+    .card-arrow {
+      opacity: 1;
+      transform: translateX(-4px);
+    }
+  }
+
+  .card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    .material-icons {
+      font-size: 26px;
+    }
+  }
+
+  &.categories .card-icon {
+    background: linear-gradient(135deg, rgba($info, 0.2) 0%, rgba($info, 0.1) 100%);
+    color: $info;
+  }
+
+  &.products .card-icon {
+    background: linear-gradient(135deg, rgba($purple, 0.2) 0%, rgba($purple, 0.1) 100%);
+    color: $purple;
+  }
+
+  &.reservations .card-icon {
+    background: linear-gradient(135deg, rgba($primary, 0.2) 0%, rgba($primary, 0.1) 100%);
+    color: $primary;
+  }
+
+  .card-content {
+    flex: 1;
+
+    h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: $text-primary;
+    }
+
+    p {
+      margin: 4px 0 0 0;
+      font-size: 14px;
+      color: $text-secondary;
+    }
+  }
+
+  .card-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+  }
+
+  .stat-badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 8px;
+
+    &.active {
+      background: rgba($primary, 0.15);
+      color: $primary;
+    }
+
+    &.pending {
+      background: rgba($warning, 0.15);
+      color: $warning;
+    }
+
+    &.completed {
+      background: rgba($text-muted, 0.2);
+      color: $text-secondary;
+    }
+  }
+
+  .card-arrow {
+    position: absolute;
+    left: 16px;
+    color: $primary;
+    opacity: 0;
+    transition: all 0.3s;
+  }
+}
+
+// Section Title
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: $text-primary;
+
+  .material-icons {
+    font-size: 22px;
+    color: $primary;
+  }
+}
+
+// Status Section
+.status-section {
+  margin-bottom: 32px;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.status-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba($primary, 0.3);
+  }
+
+  &.has-alerts {
+    border-color: rgba($warning, 0.3);
+    background: linear-gradient(135deg, rgba($warning, 0.08) 0%, transparent 100%);
+
+    &:hover {
+      border-color: rgba($warning, 0.5);
+    }
+  }
+
+  &.has-info {
+    border-color: rgba($info, 0.3);
+  }
+
+  &.success {
+    border-color: rgba($primary, 0.2);
+  }
+
+  .status-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    .material-icons {
+      font-size: 24px;
+    }
+
+    &.pending {
+      background: linear-gradient(135deg, rgba($warning, 0.2) 0%, rgba($warning, 0.1) 100%);
+      color: $warning;
+    }
+
+    &.unpaid {
+      background: linear-gradient(135deg, rgba($danger, 0.2) 0%, rgba($danger, 0.1) 100%);
+      color: $danger;
+    }
+
+    &.delivery {
+      background: linear-gradient(135deg, rgba($info, 0.2) 0%, rgba($info, 0.1) 100%);
+      color: $info;
+    }
+
+    &.completed {
+      background: linear-gradient(135deg, rgba($primary, 0.2) 0%, rgba($primary, 0.1) 100%);
+      color: $primary;
+    }
+  }
+
+  .status-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .status-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: $text-primary;
+      line-height: 1;
+    }
+
+    .status-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: $text-primary;
+    }
+
+    .status-desc {
+      font-size: 12px;
+      color: $text-muted;
+    }
+  }
+
+  .alert-badge {
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    width: 28px;
+    height: 28px;
+    background: $warning;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s ease-in-out infinite;
+
+    .material-icons {
+      font-size: 16px;
+      color: #000;
+    }
+
+    &.danger {
+      background: $danger;
+
+      .material-icons {
+        color: #fff;
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+// Actions Section
+.actions-section {
+  margin-bottom: 24px;
+}
+
+.actions-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  color: $text-secondary;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  .material-icons {
+    font-size: 20px;
+  }
+
+  &:hover {
+    background: $bg-hover;
+    border-color: rgba($primary, 0.3);
+    color: $primary;
+    transform: translateY(-2px);
+  }
+
+  &.highlight {
+    background: linear-gradient(135deg, rgba($warning, 0.15) 0%, rgba($warning, 0.05) 100%);
+    border-color: rgba($warning, 0.3);
+    color: $warning;
+
+    &:hover {
+      background: rgba($warning, 0.2);
+      border-color: rgba($warning, 0.5);
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .store-dashboard {
+    padding: 16px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    padding: 20px;
+
+    .header-content {
+      flex-direction: column;
+
+      .header-text h1 {
+        font-size: 22px;
+      }
+    }
+
+    .refresh-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .status-card {
+    .status-info .status-value {
+      font-size: 24px;
+    }
+  }
+
+  .actions-grid {
+    .action-btn {
+      flex: 1;
+      min-width: calc(50% - 6px);
+      justify-content: center;
+    }
+  }
+}

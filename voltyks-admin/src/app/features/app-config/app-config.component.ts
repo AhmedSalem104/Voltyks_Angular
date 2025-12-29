@@ -5,7 +5,7 @@ import { AppConfigService } from '../../core/services/admin/app-config.service';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
-import { AdminMobileConfigDto, UpdateAdminMobileConfigDto } from '../../core/models';
+import { AdminMobileConfigDto, UpdateAdminMobileConfigDto, ChargingModeConfigDto } from '../../core/models';
 
 @Component({
   selector: 'app-app-config',
@@ -32,6 +32,13 @@ export class AppConfigComponent implements OnInit {
     ios_min_version: null
   };
 
+  // Charging Mode State
+  chargingModeConfig: ChargingModeConfigDto | null = null;
+  chargingModeEnabled = false;
+  isChargingModeLoading = false;
+  isChargingModeSaving = false;
+  chargingModeLoadError = false;
+
   // Confirm dialog state
   showConfirmDialog = false;
   confirmDialogTitle = '';
@@ -46,6 +53,7 @@ export class AppConfigComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadConfig();
+    this.loadChargingModeConfig();
   }
 
   loadConfig(): void {
@@ -195,5 +203,68 @@ export class AppConfigComponent implements OnInit {
     // Semantic version pattern: X.Y.Z
     const pattern = /^\d+\.\d+\.\d+$/;
     return pattern.test(version);
+  }
+
+  // ============ Charging Mode Methods ============
+
+  loadChargingModeConfig(): void {
+    this.isChargingModeLoading = true;
+    this.chargingModeLoadError = false;
+
+    this.appConfigService.getChargingModeStatus().subscribe({
+      next: (res) => {
+        if (res.status && res.data) {
+          this.chargingModeConfig = res.data;
+          this.chargingModeEnabled = res.data.charging_mode_enabled;
+        } else {
+          this.chargingModeLoadError = true;
+        }
+        this.isChargingModeLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.chargingModeLoadError = true;
+        this.isChargingModeLoading = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  toggleChargingMode(): void {
+    const newStatus = !this.chargingModeEnabled;
+    const actionText = newStatus ? 'تفعيل' : 'تعطيل';
+
+    this.confirmDialogTitle = `${actionText} وضع الشحن`;
+    this.confirmDialogMessage = newStatus
+      ? 'هل أنت متأكد من تفعيل وضع الشحن؟ سيتمكن المستخدمون من استخدام الشواحن وإجراء عمليات الشحن.'
+      : 'هل أنت متأكد من تعطيل وضع الشحن؟ لن يتمكن المستخدمون من استخدام الشواحن أو إجراء عمليات شحن جديدة. ستظهر لهم رسالة "الشحن غير مفعّل حالياً".';
+
+    this.pendingAction = () => this.confirmChargingModeToggle(newStatus);
+    this.showConfirmDialog = true;
+    this.cdr.markForCheck();
+  }
+
+  private confirmChargingModeToggle(newStatus: boolean): void {
+    this.isChargingModeSaving = true;
+    this.cdr.markForCheck();
+
+    this.appConfigService.updateAdminChargingMode({ enabled: newStatus }).subscribe({
+      next: (res: any) => {
+        if (res.status || res.enabled !== undefined || res.data) {
+          // Update the local state with the new status
+          this.chargingModeEnabled = res.data?.enabled ?? res.enabled ?? newStatus;
+          this.toaster.success(newStatus ? 'تم تفعيل وضع الشحن بنجاح' : 'تم تعطيل وضع الشحن');
+        } else {
+          this.toaster.error(res.message || 'فشل تحديث وضع الشحن');
+        }
+        this.isChargingModeSaving = false;
+        this.cdr.markForCheck();
+      },
+      error: (err: any) => {
+        this.toaster.error(err.error?.message || 'فشل تحديث وضع الشحن');
+        this.isChargingModeSaving = false;
+        this.cdr.markForCheck();
+      }
+    });
   }
 }

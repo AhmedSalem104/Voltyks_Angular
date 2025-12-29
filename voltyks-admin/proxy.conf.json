@@ -11,5 +11,11 @@
     "changeOrigin": true,
     "ws": true,
     "logLevel": "debug"
+  },
+  "/images": {
+    "target": "https://voltyks-dqh6fzgwdndrdng7.canadacentral-01.azurewebsites.net",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
 }

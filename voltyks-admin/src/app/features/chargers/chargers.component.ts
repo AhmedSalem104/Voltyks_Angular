@@ -499,7 +499,7 @@ export class ChargersComponent implements OnInit {
 
   getPriceValue(priceOptionId: number): string {
     const price = this.priceOptions.find(p => p.id === priceOptionId);
-    return price ? `${price.value} ر.س` : '-';
+    return price ? `${price.value} ج.م` : '-';
   }
 
   formatDate(dateString: string): string {

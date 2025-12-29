@@ -1,0 +1,530 @@
+<div class="store-reservations-container">
+  @if (isLoading || isSaving) {
+    <app-loading-overlay></app-loading-overlay>
+  }
+
+  <!-- Back Navigation -->
+  <nav class="breadcrumb-nav">
+    <a routerLink="/store" class="back-link">
+      <span class="material-icons">arrow_forward</span>
+      <span>العودة للمتجر</span>
+    </a>
+    <div class="breadcrumb-path">
+      <a routerLink="/store" class="path-item">المتجر</a>
+      <span class="material-icons separator">chevron_left</span>
+      <span class="path-item current">الحجوزات</span>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <span class="material-icons">shopping_cart</span>
+      </div>
+      <div class="header-text">
+        <h2>حجوزات المتجر</h2>
+        <p class="page-description">إدارة ومتابعة حجوزات العملاء</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section voltyks-card">
+    <div class="filters-wrapper">
+      <!-- Search -->
+      <div class="filter-item search-filter">
+        <div class="search-box">
+          <span class="material-icons search-icon">search</span>
+          <input
+            type="text"
+            class="voltyks-input"
+            placeholder="البحث (اسم/هاتف/منتج)..."
+            [ngModel]="searchTerm"
+            (ngModelChange)="onSearchChange($event)"
+          />
+        </div>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="filter-item">
+        <select class="voltyks-input" [(ngModel)]="statusFilter" (ngModelChange)="onFilterChange()">
+          <option value="">جميع الحالات</option>
+          @for (option of statusOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Payment Status Filter -->
+      <div class="filter-item">
+        <select class="voltyks-input" [(ngModel)]="paymentStatusFilter" (ngModelChange)="onFilterChange()">
+          <option value="">جميع حالات الدفع</option>
+          @for (option of paymentStatusOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Delivery Status Filter -->
+      <div class="filter-item">
+        <select class="voltyks-input" [(ngModel)]="deliveryStatusFilter" (ngModelChange)="onFilterChange()">
+          <option value="">جميع حالات التسليم</option>
+          @for (option of deliveryStatusOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="filters-row-2">
+      <!-- From Date -->
+      <div class="filter-item">
+        <label>من تاريخ:</label>
+        <input type="date" class="voltyks-input" [(ngModel)]="fromDate" (ngModelChange)="onFilterChange()" />
+      </div>
+
+      <!-- To Date -->
+      <div class="filter-item">
+        <label>إلى تاريخ:</label>
+        <input type="date" class="voltyks-input" [(ngModel)]="toDate" (ngModelChange)="onFilterChange()" />
+      </div>
+
+      <!-- Clear Filters -->
+      <button class="voltyks-btn btn-secondary btn-small" (click)="clearFilters()">
+        <span class="material-icons">clear_all</span>
+        مسح الفلاتر
+      </button>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="voltyks-card">
+    <div class="table-header">
+      <h3>قائمة الحجوزات</h3>
+      <div class="header-actions">
+        <span class="total-count">إجمالي: {{ totalItems }}</span>
+        <button class="voltyks-btn print-btn" (click)="printToPdf()">
+          <span class="material-icons">print</span>
+          <span>طباعة PDF</span>
+        </button>
+      </div>
+    </div>
+
+    @if (paginatedReservations.length > 0) {
+      <div class="table-wrapper">
+        <table class="voltyks-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>المنتج</th>
+              <th>العميل</th>
+              <th>الحالة</th>
+              <th>الدفع</th>
+              <th>التسليم</th>
+              <th>التاريخ</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (reservation of paginatedReservations; track reservation.id) {
+              <tr [class.cancelled-row]="reservation.status === 'cancelled'" [class.completed-row]="reservation.status === 'completed'">
+                <td>{{ reservation.id }}</td>
+                <td>
+                  <div class="product-cell">
+                    @if (reservation.productThumbnail) {
+                      <img [src]="getFullImageUrl(reservation.productThumbnail)" alt="product" class="product-thumb" />
+                    } @else {
+                      <span class="material-icons no-thumb">inventory_2</span>
+                    }
+                    <div class="product-info">
+                      <span class="product-name">{{ reservation.productName }}</span>
+                      <span class="product-price">{{ formatPrice(reservation.unitPrice) }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="user-cell">
+                    <span class="user-name">{{ reservation.userName }}</span>
+                    @if (reservation.userPhone) {
+                      <span class="user-phone">{{ reservation.userPhone }}</span>
+                    }
+                  </div>
+                </td>
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(reservation.status)">
+                    {{ getStatusLabel(reservation.status) }}
+                  </span>
+                </td>
+                <td>
+                  <span class="payment-badge" [ngClass]="getPaymentStatusClass(reservation.paymentStatus)">
+                    {{ getPaymentStatusLabel(reservation.paymentStatus) }}
+                  </span>
+                </td>
+                <td>
+                  <span class="delivery-badge" [ngClass]="getDeliveryStatusClass(reservation.deliveryStatus)">
+                    {{ getDeliveryStatusLabel(reservation.deliveryStatus) }}
+                  </span>
+                </td>
+                <td>{{ formatShortDate(reservation.createdAt) }}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="voltyks-btn btn-icon btn-view" title="عرض التفاصيل" (click)="openDetailsDialog(reservation)">
+                      <span class="material-icons">visibility</span>
+                    </button>
+
+                    @if (canContact(reservation)) {
+                      <button class="voltyks-btn btn-icon btn-contact" title="تسجيل تواصل" (click)="openContactDialog(reservation)">
+                        <span class="material-icons">phone</span>
+                      </button>
+                    }
+
+                    @if (canRecordPayment(reservation)) {
+                      <button class="voltyks-btn btn-icon btn-payment" title="تسجيل دفع" (click)="openPaymentDialog(reservation)">
+                        <span class="material-icons">payments</span>
+                      </button>
+                    }
+
+                    @if (canRecordDelivery(reservation)) {
+                      <button class="voltyks-btn btn-icon btn-delivery" title="تسجيل تسليم" (click)="openDeliveryDialog(reservation)">
+                        <span class="material-icons">local_shipping</span>
+                      </button>
+                    }
+
+                    @if (canComplete(reservation)) {
+                      <button class="voltyks-btn btn-icon btn-complete" title="إكمال الحجز" (click)="openCompleteConfirm(reservation)">
+                        <span class="material-icons">check_circle</span>
+                      </button>
+                    }
+
+                    @if (canCancel(reservation)) {
+                      <button class="voltyks-btn btn-icon btn-danger" title="إلغاء الحجز" (click)="openCancelConfirm(reservation)">
+                        <span class="material-icons">cancel</span>
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalItems]="totalItems"
+        [pageSize]="pageSize"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      ></app-pagination>
+    } @else {
+      <div class="no-data">
+        <span class="material-icons">shopping_cart</span>
+        <p>لا توجد حجوزات</p>
+      </div>
+    }
+  </div>
+
+  <!-- Details Dialog -->
+  @if (showDetailsDialog && currentReservation) {
+    <div class="modal-overlay" (click)="closeDetailsDialog()">
+      <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>تفاصيل الحجز #{{ currentReservation.id }}</h3>
+          <button type="button" class="close-btn" (click)="closeDetailsDialog()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="modal-body details-body">
+          <!-- Status Timeline -->
+          <div class="status-timeline">
+            <div class="timeline-step" [class.active]="true" [class.completed]="currentReservation.status !== 'pending'">
+              <span class="step-icon material-icons">pending</span>
+              <span class="step-label">قيد الانتظار</span>
+            </div>
+            <div class="timeline-connector" [class.active]="currentReservation.status !== 'pending'"></div>
+            <div class="timeline-step" [class.active]="currentReservation.contactedAt" [class.completed]="currentReservation.paymentStatus === 'paid'">
+              <span class="step-icon material-icons">phone</span>
+              <span class="step-label">تم التواصل</span>
+            </div>
+            <div class="timeline-connector" [class.active]="currentReservation.paymentStatus === 'paid'"></div>
+            <div class="timeline-step" [class.active]="currentReservation.paymentStatus === 'paid'" [class.completed]="currentReservation.deliveryStatus === 'delivered'">
+              <span class="step-icon material-icons">payments</span>
+              <span class="step-label">تم الدفع</span>
+            </div>
+            <div class="timeline-connector" [class.active]="currentReservation.deliveryStatus === 'delivered'"></div>
+            <div class="timeline-step" [class.active]="currentReservation.deliveryStatus === 'delivered'" [class.completed]="currentReservation.status === 'completed'">
+              <span class="step-icon material-icons">local_shipping</span>
+              <span class="step-label">تم التسليم</span>
+            </div>
+            <div class="timeline-connector" [class.active]="currentReservation.status === 'completed'"></div>
+            <div class="timeline-step" [class.active]="currentReservation.status === 'completed'">
+              <span class="step-icon material-icons">check_circle</span>
+              <span class="step-label">مكتمل</span>
+            </div>
+          </div>
+
+          @if (currentReservation.status === 'cancelled') {
+            <div class="cancelled-notice">
+              <span class="material-icons">cancel</span>
+              <span>تم إلغاء هذا الحجز</span>
+            </div>
+          }
+
+          <div class="details-sections">
+            <!-- Product Info -->
+            <div class="detail-section">
+              <h4>
+                <span class="material-icons">inventory_2</span>
+                معلومات المنتج
+              </h4>
+              <div class="detail-content product-detail">
+                @if (currentReservation.productThumbnail) {
+                  <img [src]="getFullImageUrl(currentReservation.productThumbnail)" alt="product" class="product-image" />
+                }
+                <div class="product-details">
+                  <p class="product-name">{{ currentReservation.productName }}</p>
+                  <p class="product-price">{{ formatPrice(currentReservation.unitPrice) }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- User Info -->
+            <div class="detail-section">
+              <h4>
+                <span class="material-icons">person</span>
+                معلومات العميل
+              </h4>
+              <div class="detail-content">
+                <div class="info-row">
+                  <span class="label">الاسم:</span>
+                  <span class="value">{{ currentReservation.userName }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">البريد الإلكتروني:</span>
+                  <span class="value">{{ currentReservation.userEmail }}</span>
+                </div>
+                @if (currentReservation.userPhone) {
+                  <div class="info-row">
+                    <span class="label">الهاتف:</span>
+                    <span class="value">{{ currentReservation.userPhone }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Status Info -->
+            <div class="detail-section">
+              <h4>
+                <span class="material-icons">info</span>
+                معلومات الحالة
+              </h4>
+              <div class="detail-content">
+                <div class="info-row">
+                  <span class="label">الحالة:</span>
+                  <span class="status-badge" [ngClass]="getStatusClass(currentReservation.status)">
+                    {{ getStatusLabel(currentReservation.status) }}
+                  </span>
+                </div>
+                <div class="info-row">
+                  <span class="label">حالة الدفع:</span>
+                  <span class="payment-badge" [ngClass]="getPaymentStatusClass(currentReservation.paymentStatus)">
+                    {{ getPaymentStatusLabel(currentReservation.paymentStatus) }}
+                  </span>
+                </div>
+                <div class="info-row">
+                  <span class="label">حالة التسليم:</span>
+                  <span class="delivery-badge" [ngClass]="getDeliveryStatusClass(currentReservation.deliveryStatus)">
+                    {{ getDeliveryStatusLabel(currentReservation.deliveryStatus) }}
+                  </span>
+                </div>
+                @if (currentReservation.paymentMethod) {
+                  <div class="info-row">
+                    <span class="label">طريقة الدفع:</span>
+                    <span class="value">{{ getPaymentMethodLabel(currentReservation.paymentMethod) }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Timeline Dates -->
+            <div class="detail-section">
+              <h4>
+                <span class="material-icons">schedule</span>
+                التواريخ
+              </h4>
+              <div class="detail-content">
+                <div class="info-row">
+                  <span class="label">تاريخ الإنشاء:</span>
+                  <span class="value">{{ formatDate(currentReservation.createdAt) }}</span>
+                </div>
+                @if (currentReservation.contactedAt) {
+                  <div class="info-row">
+                    <span class="label">تاريخ التواصل:</span>
+                    <span class="value">{{ formatDate(currentReservation.contactedAt) }}</span>
+                  </div>
+                }
+                @if (currentReservation.paidAt) {
+                  <div class="info-row">
+                    <span class="label">تاريخ الدفع:</span>
+                    <span class="value">{{ formatDate(currentReservation.paidAt) }}</span>
+                  </div>
+                }
+                @if (currentReservation.deliveredAt) {
+                  <div class="info-row">
+                    <span class="label">تاريخ التسليم:</span>
+                    <span class="value">{{ formatDate(currentReservation.deliveredAt) }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Notes -->
+            @if (currentReservation.adminNotes) {
+              <div class="detail-section full-width">
+                <h4>
+                  <span class="material-icons">notes</span>
+                  ملاحظات
+                </h4>
+                <div class="detail-content">
+                  <p class="notes-text">{{ currentReservation.adminNotes }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="voltyks-btn btn-secondary" (click)="closeDetailsDialog()">إغلاق</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Contact Dialog -->
+  @if (showContactDialog && currentReservation) {
+    <div class="modal-overlay" (click)="closeContactDialog()">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>تسجيل تواصل</h3>
+          <button type="button" class="close-btn" (click)="closeContactDialog()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="reservation-summary">
+            <p><strong>المنتج:</strong> {{ currentReservation.productName }}</p>
+            <p><strong>العميل:</strong> {{ currentReservation.userName }}</p>
+            @if (currentReservation.userPhone) {
+              <p><strong>الهاتف:</strong> {{ currentReservation.userPhone }}</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label>ملاحظات التواصل</label>
+            <textarea class="voltyks-input" [(ngModel)]="contactDto.notes" rows="4" placeholder="أدخل ملاحظات التواصل مع العميل..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="voltyks-btn btn-secondary" (click)="closeContactDialog()">إلغاء</button>
+          <button class="voltyks-btn btn-primary" (click)="recordContact()" [disabled]="isSaving">
+            {{ isSaving ? 'جاري الحفظ...' : 'تسجيل التواصل' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Payment Dialog -->
+  @if (showPaymentDialog && currentReservation) {
+    <div class="modal-overlay" (click)="closePaymentDialog()">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>تسجيل الدفع</h3>
+          <button type="button" class="close-btn" (click)="closePaymentDialog()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="reservation-summary">
+            <p><strong>المنتج:</strong> {{ currentReservation.productName }}</p>
+            <p><strong>السعر:</strong> {{ formatPrice(currentReservation.unitPrice) }}</p>
+            <p><strong>العميل:</strong> {{ currentReservation.userName }}</p>
+          </div>
+
+          <div class="form-group">
+            <label>طريقة الدفع <span class="required">*</span></label>
+            <select class="voltyks-input" [(ngModel)]="paymentDto.paymentMethod">
+              @for (method of paymentMethods; track method.value) {
+                <option [value]="method.value">{{ method.label }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>ملاحظات</label>
+            <textarea class="voltyks-input" [(ngModel)]="paymentDto.notes" rows="3" placeholder="ملاحظات إضافية..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="voltyks-btn btn-secondary" (click)="closePaymentDialog()">إلغاء</button>
+          <button class="voltyks-btn btn-primary" (click)="recordPayment()" [disabled]="isSaving">
+            {{ isSaving ? 'جاري الحفظ...' : 'تسجيل الدفع' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Delivery Dialog -->
+  @if (showDeliveryDialog && currentReservation) {
+    <div class="modal-overlay" (click)="closeDeliveryDialog()">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>تسجيل التسليم</h3>
+          <button type="button" class="close-btn" (click)="closeDeliveryDialog()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="reservation-summary">
+            <p><strong>المنتج:</strong> {{ currentReservation.productName }}</p>
+            <p><strong>العميل:</strong> {{ currentReservation.userName }}</p>
+          </div>
+
+          <div class="form-group">
+            <label>ملاحظات التسليم</label>
+            <textarea class="voltyks-input" [(ngModel)]="deliveryDto.notes" rows="4" placeholder="ملاحظات التسليم..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="voltyks-btn btn-secondary" (click)="closeDeliveryDialog()">إلغاء</button>
+          <button class="voltyks-btn btn-primary" (click)="recordDelivery()" [disabled]="isSaving">
+            {{ isSaving ? 'جاري الحفظ...' : 'تسجيل التسليم' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Complete Confirm -->
+  <app-confirm-dialog
+    [isOpen]="showCompleteConfirm"
+    title="تأكيد إكمال الحجز"
+    [message]="'هل أنت متأكد من إكمال الحجز #' + (currentReservation?.id || '') + '؟'"
+    confirmText="إكمال"
+    type="primary"
+    (confirm)="confirmComplete()"
+    (cancel)="closeCompleteConfirm()"
+  ></app-confirm-dialog>
+
+  <!-- Cancel Confirm -->
+  <app-confirm-dialog
+    [isOpen]="showCancelConfirm"
+    title="تأكيد إلغاء الحجز"
+    [message]="'هل أنت متأكد من إلغاء الحجز #' + (currentReservation?.id || '') + '؟ لا يمكن التراجع عن هذا الإجراء.'"
+    confirmText="إلغاء الحجز"
+    type="danger"
+    (confirm)="confirmCancel()"
+    (cancel)="closeCancelConfirm()"
+  ></app-confirm-dialog>
+</div>

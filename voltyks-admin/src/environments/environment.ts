@@ -3,6 +3,8 @@ export const environment = {
   production: false,
   // API Base URL - Empty to use Angular proxy (proxy.conf.json)
   apiBaseUrl: '',
+  // Enable SignalR for real-time notifications
+  enableSignalR: true,
   apiEndpoints: {
     admin: {
       users: '/api/admin/users',

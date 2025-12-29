@@ -1,0 +1,706 @@
+<div class="store-products-container">
+  @if (isLoading || isSaving) {
+    <app-loading-overlay></app-loading-overlay>
+  }
+
+  <!-- Back Navigation -->
+  <nav class="breadcrumb-nav">
+    <a routerLink="/store" class="back-link">
+      <span class="material-icons">arrow_forward</span>
+      <span>العودة للمتجر</span>
+    </a>
+    <div class="breadcrumb-path">
+      <a routerLink="/store" class="path-item">المتجر</a>
+      <span class="material-icons separator">chevron_left</span>
+      <span class="path-item current">المنتجات</span>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <span class="material-icons">inventory_2</span>
+      </div>
+      <div class="header-text">
+        <h2>منتجات المتجر</h2>
+        <p class="page-description">إدارة منتجات المتجر والحجوزات</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section voltyks-card">
+    <div class="filters-wrapper">
+      <!-- Search -->
+      <div class="filter-item search-filter">
+        <div class="search-box">
+          <span class="material-icons search-icon">search</span>
+          <input
+            type="text"
+            class="voltyks-input"
+            placeholder="البحث في المنتجات..."
+            [ngModel]="searchTerm"
+            (ngModelChange)="onSearchChange($event)"
+          />
+        </div>
+      </div>
+
+      <!-- Category Filter -->
+      <div class="filter-item">
+        <select class="voltyks-input" [(ngModel)]="categoryFilter" (ngModelChange)="onCategoryFilterChange()">
+          <option value="">جميع الفئات</option>
+          @for (category of categories; track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="filter-item">
+        <select class="voltyks-input" [(ngModel)]="statusFilter" (ngModelChange)="onStatusFilterChange()">
+          <option value="">جميع الحالات</option>
+          @for (option of statusOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Trashed Filter -->
+      <div class="filter-item checkbox-filter">
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="showTrashed" (ngModelChange)="onTrashedFilterChange()" />
+          <span>إظهار المحذوفة</span>
+        </label>
+      </div>
+
+      <div class="filter-item checkbox-filter">
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="onlyTrashed" (ngModelChange)="onTrashedFilterChange()" />
+          <span>المحذوفة فقط</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="voltyks-card">
+    <div class="table-header">
+      <h3>قائمة المنتجات</h3>
+      <div class="header-actions">
+        <span class="total-count">إجمالي: {{ totalItems }}</span>
+        <button class="voltyks-btn print-btn" (click)="printToPdf()">
+          <span class="material-icons">print</span>
+          <span>طباعة PDF</span>
+        </button>
+        <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
+          <span class="material-icons">add</span>
+          إضافة منتج
+        </button>
+      </div>
+    </div>
+
+    @if (paginatedProducts.length > 0) {
+      <div class="table-wrapper">
+        <table class="voltyks-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>الصورة</th>
+              <th>الاسم</th>
+              <th>الفئة</th>
+              <th>السعر</th>
+              <th>الحالة</th>
+              <th>قابل للحجز</th>
+              <th>الحجوزات</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of paginatedProducts; track product.id; let i = $index) {
+              <tr [class.deleted-row]="product.isDeleted">
+                <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                <td class="image-cell">
+                  @if (product.thumbnailUrl) {
+                    <img [src]="getFullImageUrl(product.thumbnailUrl)" alt="thumbnail" class="product-thumbnail" />
+                  } @else {
+                    @if (product.images && product.images.length > 0) {
+                      <img [src]="getFullImageUrl(product.images[0])" alt="thumbnail" class="product-thumbnail" />
+                    } @else {
+                      <span class="material-icons no-thumbnail">inventory_2</span>
+                    }
+                  }
+                </td>
+                <td>
+                  <div class="product-name">
+                    <span>{{ product.name }}</span>
+                    <span class="slug">{{ product.slug }}</span>
+                  </div>
+                </td>
+                <td>{{ getCategoryName(product.categoryId) }}</td>
+                <td>
+                  <span class="price">{{ formatPrice(product.price) }}</span>
+                </td>
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(product.status)">
+                    {{ getStatusLabel(product.status) }}
+                  </span>
+                  @if (product.isDeleted) {
+                    <span class="deleted-badge">محذوف</span>
+                  }
+                </td>
+                <td>
+                  <span class="reservable-badge" [class.yes]="product.isReservable" [class.no]="!product.isReservable">
+                    {{ product.isReservable ? 'نعم' : 'لا' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="reservation-count">{{ product.reservationCount }}</span>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="voltyks-btn btn-icon btn-view" title="عرض التفاصيل" (click)="openDetailsDialog(product)">
+                      <span class="material-icons">visibility</span>
+                    </button>
+                    @if (!product.isDeleted) {
+                      <button class="voltyks-btn btn-icon btn-images" title="إدارة الصور" (click)="openImageManager(product)">
+                        <span class="material-icons">collections</span>
+                      </button>
+                      <button class="voltyks-btn btn-icon btn-edit" title="تعديل" (click)="openEditDialog(product)">
+                        <span class="material-icons">edit</span>
+                      </button>
+                      <button class="voltyks-btn btn-icon btn-danger" title="حذف" (click)="openDeleteConfirm(product)">
+                        <span class="material-icons">delete</span>
+                      </button>
+                    } @else {
+                      <button class="voltyks-btn btn-icon btn-restore" title="استرجاع" (click)="restoreProduct(product)">
+                        <span class="material-icons">restore</span>
+                      </button>
+                      <button class="voltyks-btn btn-icon btn-danger" title="حذف نهائي" (click)="openForceDeleteConfirm(product)">
+                        <span class="material-icons">delete_forever</span>
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalItems]="totalItems"
+        [pageSize]="pageSize"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      ></app-pagination>
+    } @else {
+      <div class="no-data">
+        <span class="material-icons">inventory_2</span>
+        <p>لا توجد منتجات</p>
+      </div>
+    }
+  </div>
+
+  <!-- Create Dialog -->
+  @if (showCreateDialog) {
+    <div class="modal-overlay" (click)="closeCreateDialog()">
+      <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>إضافة منتج جديد</h3>
+          <button type="button" class="close-btn" (click)="closeCreateDialog()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>اسم المنتج <span class="required">*</span></label>
+              <input type="text" class="voltyks-input" [(ngModel)]="createDto.name" placeholder="أدخل اسم المنتج" />
+            </div>
+
+            <div class="form-group">
+              <label>Slug (اختياري)</label>
+              <input type="text" class="voltyks-input" [(ngModel)]="createDto.slug" placeholder="يُنشأ تلقائياً من الاسم" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>الوصف</label>
+            <textarea class="voltyks-input" [(ngModel)]="createDto.description" rows="3" placeholder="وصف المنتج"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>الفئة <span class="required">*</span></label>
+              <select class="voltyks-input" [(ngModel)]="createDto.categoryId">
+                <option [value]="0" disabled>اختر الفئة</option>
+                @for (category of categories; track category.id) {
+                  <option [value]="category.id">{{ category.name }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>السعر <span class="required">*</span></label>
+              <input type="number" class="voltyks-input" [(ngModel)]="createDto.price" min="0" step="0.01" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>الحالة <span class="required">*</span></label>
+              <select class="voltyks-input" [(ngModel)]="createDto.status">
+                @for (option of statusOptions; track option.value) {
+                  <option [value]="option.value">{{ option.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>الترتيب</label>
+              <input type="number" class="voltyks-input" [(ngModel)]="createDto.sortOrder" min="0" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>رابط الصورة المصغرة</label>
+              <input type="text" class="voltyks-input" [(ngModel)]="createDto.thumbnailUrl" placeholder="https://..." />
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" [(ngModel)]="createDto.isReservable" />
+                <span>قابل للحجز</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Specifications -->
+          <div class="form-section">
+            <div class="section-header">
+              <label>المواصفات</label>
+              <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="addSpecification(true)">
+                <span class="material-icons">add</span>
+                إضافة
+              </button>
+            </div>
+            @for (spec of createSpecs; track $index; let i = $index) {
+              <div class="spec-row">
+                <input type="text" class="voltyks-input" [(ngModel)]="spec.key" placeholder="المفتاح" />
+                <input type="text" class="voltyks-input" [(ngModel)]="spec.value" placeholder="القيمة" />
+                <button type="button" class="voltyks-btn btn-icon btn-danger" (click)="removeSpecification(i, true)">
+                  <span class="material-icons">close</span>
+                </button>
+              </div>
+            }
+          </div>
+
+          <!-- Images Note -->
+          <div class="form-section images-note">
+            <div class="note-content">
+              <span class="material-icons">info</span>
+              <span>سيتم فتح نافذة إدارة الصور تلقائياً بعد إنشاء المنتج لرفع الصور</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">إلغاء</button>
+          <button class="voltyks-btn btn-primary" (click)="createProduct()" [disabled]="isSaving">
+            {{ isSaving ? 'جاري الحفظ...' : 'حفظ' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Edit Dialog -->
+  @if (showEditDialog && currentProduct) {
+    <div class="modal-overlay" (click)="closeEditDialog()">
+      <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>تعديل المنتج</h3>
+          <button type="button" class="close-btn" (click)="closeEditDialog()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>اسم المنتج</label>
+              <input type="text" class="voltyks-input" [(ngModel)]="updateDto.name" placeholder="أدخل اسم المنتج" />
+            </div>
+
+            <div class="form-group">
+              <label>Slug</label>
+              <input type="text" class="voltyks-input" [(ngModel)]="updateDto.slug" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>الوصف</label>
+            <textarea class="voltyks-input" [(ngModel)]="updateDto.description" rows="3" placeholder="وصف المنتج"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>الفئة</label>
+              <select class="voltyks-input" [(ngModel)]="updateDto.categoryId">
+                @for (category of categories; track category.id) {
+                  <option [value]="category.id">{{ category.name }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>السعر</label>
+              <input type="number" class="voltyks-input" [(ngModel)]="updateDto.price" min="0" step="0.01" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>الحالة</label>
+              <select class="voltyks-input" [(ngModel)]="updateDto.status">
+                @for (option of statusOptions; track option.value) {
+                  <option [value]="option.value">{{ option.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>الترتيب</label>
+              <input type="number" class="voltyks-input" [(ngModel)]="updateDto.sortOrder" min="0" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>رابط الصورة المصغرة</label>
+              <input type="text" class="voltyks-input" [(ngModel)]="updateDto.thumbnailUrl" placeholder="https://..." />
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" [(ngModel)]="updateDto.isReservable" />
+                <span>قابل للحجز</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Specifications -->
+          <div class="form-section">
+            <div class="section-header">
+              <label>المواصفات</label>
+              <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="addSpecification(false)">
+                <span class="material-icons">add</span>
+                إضافة
+              </button>
+            </div>
+            @for (spec of updateSpecs; track $index; let i = $index) {
+              <div class="spec-row">
+                <input type="text" class="voltyks-input" [(ngModel)]="spec.key" placeholder="المفتاح" />
+                <input type="text" class="voltyks-input" [(ngModel)]="spec.value" placeholder="القيمة" />
+                <button type="button" class="voltyks-btn btn-icon btn-danger" (click)="removeSpecification(i, false)">
+                  <span class="material-icons">close</span>
+                </button>
+              </div>
+            }
+          </div>
+
+          <!-- Images Section -->
+          <div class="form-section">
+            <div class="section-header">
+              <label>صور المنتج</label>
+              <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="closeEditDialog(); openImageManager(currentProduct!)">
+                <span class="material-icons">collections</span>
+                إدارة الصور
+              </button>
+            </div>
+            @if (currentProduct!.images && currentProduct!.images.length > 0) {
+              <div class="images-preview small-preview">
+                @for (img of currentProduct!.images.slice(0, 4); track $index) {
+                  <div class="image-item">
+                    <img [src]="getFullImageUrl(img)" alt="product image" />
+                  </div>
+                }
+                @if (currentProduct!.images.length > 4) {
+                  <div class="more-images">
+                    +{{ currentProduct!.images.length - 4 }}
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="no-images-text">لا توجد صور للمنتج</p>
+            }
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">إلغاء</button>
+          <button class="voltyks-btn btn-primary" (click)="updateProduct()" [disabled]="isSaving">
+            {{ isSaving ? 'جاري الحفظ...' : 'حفظ التعديلات' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Details Dialog -->
+  @if (showDetailsDialog && currentProduct) {
+    <div class="modal-overlay" (click)="closeDetailsDialog()">
+      <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>تفاصيل المنتج</h3>
+          <button type="button" class="close-btn" (click)="closeDetailsDialog()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="modal-body details-body">
+          <div class="details-grid">
+            <div class="detail-item">
+              <span class="label">الاسم:</span>
+              <span class="value">{{ currentProduct.name }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Slug:</span>
+              <span class="value">{{ currentProduct.slug }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">الفئة:</span>
+              <span class="value">{{ getCategoryName(currentProduct.categoryId) }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">السعر:</span>
+              <span class="value price">{{ formatPrice(currentProduct.price) }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">الحالة:</span>
+              <span class="status-badge" [ngClass]="getStatusClass(currentProduct.status)">
+                {{ getStatusLabel(currentProduct.status) }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="label">قابل للحجز:</span>
+              <span class="reservable-badge" [class.yes]="currentProduct.isReservable">
+                {{ currentProduct.isReservable ? 'نعم' : 'لا' }}
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="label">الترتيب:</span>
+              <span class="value">{{ currentProduct.sortOrder }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">عدد الحجوزات:</span>
+              <span class="reservation-count">{{ currentProduct.reservationCount }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">تاريخ الإنشاء:</span>
+              <span class="value">{{ formatDate(currentProduct.createdAt) }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">آخر تحديث:</span>
+              <span class="value">{{ formatDate(currentProduct.updatedAt) }}</span>
+            </div>
+          </div>
+
+          @if (currentProduct.description) {
+            <div class="detail-section">
+              <h4>الوصف</h4>
+              <p class="description-text">{{ currentProduct.description }}</p>
+            </div>
+          }
+
+          @if (currentProduct.specifications && getSpecsCount(currentProduct.specifications) > 0) {
+            <div class="detail-section">
+              <h4>المواصفات</h4>
+              <div class="specs-list">
+                @for (spec of currentProduct.specifications | keyvalue; track spec.key) {
+                  <div class="spec-item">
+                    <span class="spec-key">{{ spec.key }}:</span>
+                    <span class="spec-value">{{ spec.value }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          @if (currentProduct.images && currentProduct.images.length > 0) {
+            <div class="detail-section">
+              <h4>صور المنتج ({{ currentProduct.images.length }})</h4>
+              <div class="images-gallery">
+                @for (img of currentProduct.images; track $index) {
+                  <div class="gallery-image-wrapper" (click)="openLightbox(img)">
+                    <img [src]="getFullImageUrl(img)" alt="product image" class="gallery-image" />
+                    <div class="image-overlay">
+                      <span class="material-icons">zoom_in</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+        <div class="modal-footer">
+          <button class="voltyks-btn btn-secondary" (click)="closeDetailsDialog()">إغلاق</button>
+          @if (!currentProduct.isDeleted) {
+            <button class="voltyks-btn btn-primary" (click)="closeDetailsDialog(); openEditDialog(currentProduct)">
+              <span class="material-icons">edit</span>
+              تعديل
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Delete Confirm -->
+  <app-confirm-dialog
+    [isOpen]="showDeleteConfirm"
+    title="تأكيد الحذف"
+    [message]="'هل أنت متأكد من حذف المنتج \'' + (currentProduct?.name || '') + '\'؟ يمكن استرجاعه لاحقاً.'"
+    confirmText="حذف"
+    type="danger"
+    (confirm)="confirmDelete()"
+    (cancel)="closeDeleteConfirm()"
+  ></app-confirm-dialog>
+
+  <!-- Force Delete Confirm -->
+  <app-confirm-dialog
+    [isOpen]="showForceDeleteConfirm"
+    title="تأكيد الحذف النهائي"
+    [message]="'هل أنت متأكد من حذف المنتج \'' + (currentProduct?.name || '') + '\' نهائياً؟ لا يمكن استرجاعه!'"
+    confirmText="حذف نهائي"
+    type="danger"
+    (confirm)="confirmForceDelete()"
+    (cancel)="closeForceDeleteConfirm()"
+  ></app-confirm-dialog>
+
+  <!-- Image Manager Dialog -->
+  @if (showImageManager && currentProduct) {
+    <div class="modal-overlay" (click)="closeImageManager()">
+      <div class="modal-dialog modal-lg image-manager-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>
+            <span class="material-icons">collections</span>
+            إدارة صور المنتج: {{ currentProduct.name }}
+          </h3>
+          <button type="button" class="close-btn" (click)="closeImageManager()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          @if (isUploading) {
+            <div class="upload-progress">
+              <div class="spinner"></div>
+              <span>جاري رفع الصور...</span>
+            </div>
+          }
+
+          <!-- Upload Section -->
+          <div class="upload-section">
+            <h4>رفع صور جديدة</h4>
+            <div class="upload-area" (click)="fileInput.click()">
+              <input
+                type="file"
+                #fileInput
+                multiple
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                (change)="onFilesSelected($event)"
+                style="display: none"
+              />
+              <div class="upload-placeholder">
+                <span class="material-icons">cloud_upload</span>
+                <p>اضغط لاختيار الصور أو اسحبها هنا</p>
+                <span class="upload-hint">الأنواع المسموحة: JPG, PNG, WEBP | الحد الأقصى: 5MB لكل صورة</span>
+              </div>
+            </div>
+
+            <!-- Selected Files Preview -->
+            @if (selectedFiles.length > 0) {
+              <div class="selected-files">
+                <h5>الصور المحددة للرفع ({{ selectedFiles.length }})</h5>
+                <div class="files-grid">
+                  @for (file of selectedFiles; track $index; let i = $index) {
+                    <div class="file-item">
+                      <div class="file-info">
+                        <span class="material-icons">image</span>
+                        <div class="file-details">
+                          <span class="file-name">{{ file.name }}</span>
+                          <span class="file-size">{{ formatFileSize(file.size) }}</span>
+                        </div>
+                      </div>
+                      <button type="button" class="remove-file-btn" (click)="removeSelectedFile(i)">
+                        <span class="material-icons">close</span>
+                      </button>
+                    </div>
+                  }
+                </div>
+                <button class="voltyks-btn btn-primary upload-btn" (click)="uploadImages()" [disabled]="isUploading">
+                  <span class="material-icons">upload</span>
+                  رفع {{ selectedFiles.length }} صورة
+                </button>
+              </div>
+            }
+          </div>
+
+          <!-- Current Images -->
+          <div class="current-images-section">
+            <h4>الصور الحالية ({{ productImages.length }})</h4>
+            @if (productImages.length > 0) {
+              <div class="images-grid">
+                @for (img of productImages; track $index) {
+                  <div class="image-card">
+                    <div class="image-wrapper" (click)="openLightbox(img)">
+                      <img [src]="getFullImageUrl(img)" alt="product image" />
+                      <div class="image-hover-overlay">
+                        <span class="material-icons">zoom_in</span>
+                      </div>
+                    </div>
+                    <div class="image-actions">
+                      <button class="voltyks-btn btn-icon btn-danger btn-small" title="حذف الصورة" (click)="openDeleteImageConfirm(img)">
+                        <span class="material-icons">delete</span>
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="no-images">
+                <span class="material-icons">image_not_supported</span>
+                <p>لا توجد صور للمنتج</p>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="voltyks-btn btn-secondary" (click)="closeImageManager()">إغلاق</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Lightbox -->
+  @if (showLightbox) {
+    <div class="lightbox-overlay" (click)="closeLightbox()">
+      <button class="lightbox-close" (click)="closeLightbox()">
+        <span class="material-icons">close</span>
+      </button>
+      <div class="lightbox-content" (click)="$event.stopPropagation()">
+        <img [src]="lightboxImageUrl" alt="full size image" />
+      </div>
+    </div>
+  }
+
+  <!-- Delete Image Confirm -->
+  <app-confirm-dialog
+    [isOpen]="showDeleteImageConfirm"
+    title="تأكيد حذف الصورة"
+    message="هل أنت متأكد من حذف هذه الصورة؟ لا يمكن استرجاعها."
+    confirmText="حذف"
+    type="danger"
+    (confirm)="confirmDeleteImage()"
+    (cancel)="closeDeleteImageConfirm()"
+  ></app-confirm-dialog>
+</div>

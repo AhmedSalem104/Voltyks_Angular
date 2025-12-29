@@ -1,21 +1,31 @@
-// Notification Dropdown Styles
-$voltyks-primary: #00C853;
-$notification-report-color: #FFA726;
-$notification-complaint-color: #42A5F5;
+// Modern Notification Dropdown Styles
+$primary: #00C853;
+$primary-dark: #00A843;
+$report-color: #FF9800;
+$complaint-color: #2196F3;
+$reservation-color: #9C27B0;
+
+$bg-dark: #1a1a1a;
+$bg-card: #242424;
+$bg-hover: #2a2a2a;
+$border-color: rgba(255, 255, 255, 0.08);
+$text-primary: #ffffff;
+$text-secondary: rgba(255, 255, 255, 0.7);
+$text-muted: rgba(255, 255, 255, 0.4);
 
 .notification-dropdown {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 12px);
   left: 0;
-  width: 420px;
-  max-height: 600px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-height: 85vh;
+  background: $bg-dark;
+  border: 1px solid $border-color;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-10px);
+  transform: translateY(-20px) scale(0.95);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
   overflow: hidden;
@@ -25,398 +35,806 @@ $notification-complaint-color: #42A5F5;
   &.show {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
+}
 
-  // Header
-  .dropdown-header {
+// Header
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba($primary, 0.15) 0%, rgba($primary, 0.05) 100%);
+  border-bottom: 1px solid $border-color;
+
+  .header-title {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border-color);
-    background: linear-gradient(135deg, var(--bg-elevated) 0%, rgba($voltyks-primary, 0.05) 100%);
+    gap: 14px;
 
-    .header-title {
+    .header-icon-wrapper {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+      border-radius: 14px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
 
-      .header-icon {
-        font-size: 24px;
-        color: $voltyks-primary;
-        animation: bellRing 2s ease-in-out infinite;
+      .material-icons {
+        font-size: 26px;
+        color: #000;
       }
+
+      .pulse-dot {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 14px;
+        height: 14px;
+        background: #ef4444;
+        border-radius: 50%;
+        border: 3px solid $bg-dark;
+        animation: pulse 2s ease-in-out infinite;
+      }
+    }
+
+    .header-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
 
       h3 {
         margin: 0;
         font-size: 18px;
         font-weight: 700;
-        color: var(--text-primary);
+        color: $text-primary;
       }
 
-      .unread-badge {
-        background: linear-gradient(135deg, $voltyks-primary 0%, darken($voltyks-primary, 10%) 100%);
-        color: white;
-        font-size: 11px;
-        font-weight: 700;
-        padding: 2px 8px;
-        border-radius: 12px;
-        min-width: 20px;
-        text-align: center;
+      .unread-count {
+        font-size: 13px;
+        color: $primary;
+        font-weight: 600;
       }
     }
+  }
 
-    .mark-all-btn {
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    .unread-count {
+      font-size: 13px;
+      color: $primary;
+      font-weight: 600;
+    }
+
+    .connection-status {
       display: flex;
       align-items: center;
-      gap: 6px;
-      background: linear-gradient(135deg, rgba($voltyks-primary, 0.15) 0%, rgba($voltyks-primary, 0.05) 100%);
-      border: 1px solid rgba($voltyks-primary, 0.3);
-      color: $voltyks-primary;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      padding: 8px 14px;
-      border-radius: 10px;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
+      gap: 5px;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
 
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s ease;
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: $text-muted;
       }
 
-      .material-icons {
-        font-size: 16px;
-        transition: transform 0.3s ease;
-      }
-
-      &:hover {
-        background: linear-gradient(135deg, $voltyks-primary 0%, darken($voltyks-primary, 10%) 100%);
-        border-color: $voltyks-primary;
-        color: #000;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba($voltyks-primary, 0.4);
-
-        &::before {
-          left: 100%;
-        }
-
-        .material-icons {
-          transform: scale(1.1);
+      &.connection-connected {
+        color: $primary;
+        .status-dot {
+          background: $primary;
+          box-shadow: 0 0 6px $primary;
         }
       }
 
-      &:active {
-        transform: translateY(0);
+      &.connection-connecting {
+        color: $report-color;
+        .status-dot {
+          background: $report-color;
+          animation: blink 1s infinite;
+        }
+      }
+
+      &.connection-disconnected {
+        color: $text-muted;
+      }
+
+      &.connection-error {
+        color: #ef4444;
+        .status-dot {
+          background: #ef4444;
+        }
       }
     }
   }
 
-  @keyframes bellRing {
-    0%, 100% {
-      transform: rotate(0);
-    }
-    10%, 30% {
-      transform: rotate(10deg);
-    }
-    20%, 40% {
-      transform: rotate(-10deg);
-    }
-    50% {
-      transform: rotate(0);
-    }
-  }
-
-  // Notifications List
-  .notification-list {
-    flex: 1;
-    overflow-y: auto;
-    max-height: 450px;
-
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: var(--border-color);
-      border-radius: 3px;
-    }
-  }
-
-  // Notification Item
-  .notification-item {
-    position: relative;
+  .header-actions {
     display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 16px 20px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-bottom: 1px solid var(--border-color);
+    align-items: center;
+    gap: 6px;
+  }
 
-    &:last-child {
-      border-bottom: none;
-    }
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    color: $text-muted;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
 
     &:hover {
-      background: var(--bg-hover);
-
-      .mark-read-btn {
-        opacity: 1;
-      }
+      background: rgba(255, 255, 255, 0.1);
+      color: $text-primary;
     }
 
-    &.unread {
-      background: linear-gradient(90deg, rgba($voltyks-primary, 0.12) 0%, rgba($voltyks-primary, 0.05) 100%);
-      border-right: 4px solid $voltyks-primary;
-
-      &::before {
-        content: '';
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        width: 100%;
-        background: linear-gradient(90deg, transparent 0%, rgba($voltyks-primary, 0.03) 100%);
-        pointer-events: none;
-      }
-
-      &::after {
-        content: 'جديد';
-        position: absolute;
-        top: 8px;
-        left: 8px;
-        font-size: 9px;
-        font-weight: 700;
-        color: white;
-        background: $voltyks-primary;
-        padding: 2px 8px;
-        border-radius: 10px;
-        text-transform: uppercase;
-      }
-
-      .notification-title {
-        color: $voltyks-primary !important;
-        font-weight: 700 !important;
-      }
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
-
-    // Icon
-    .notification-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-      &.report {
-        background: linear-gradient(135deg, rgba($notification-report-color, 0.2) 0%, rgba($notification-report-color, 0.1) 100%);
-        color: $notification-report-color;
-        border: 1px solid rgba($notification-report-color, 0.3);
-      }
-
-      &.complaint {
-        background: linear-gradient(135deg, rgba($notification-complaint-color, 0.2) 0%, rgba($notification-complaint-color, 0.1) 100%);
-        color: $notification-complaint-color;
-        border: 1px solid rgba($notification-complaint-color, 0.3);
-      }
-
-      .material-icons {
-        font-size: 24px;
-      }
-    }
-
-    // Content
-    .notification-content {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-
-      .notification-title {
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--text-primary);
-      }
-
-      .notification-message {
-        font-size: 13px;
-        color: var(--text-secondary);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 240px;
-      }
-
-      .notification-meta {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 12px;
-        color: var(--text-disabled);
-        margin-top: 4px;
-
-        .notification-user {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          color: var(--text-primary);
-          font-weight: 600;
-          font-size: 13px;
-          background: rgba($voltyks-primary, 0.1);
-          padding: 3px 10px;
-          border-radius: 12px;
-          border: 1px solid rgba($voltyks-primary, 0.2);
-
-          &::before {
-            content: 'person';
-            font-family: 'Material Icons';
-            font-size: 14px;
-            color: $voltyks-primary;
-          }
-        }
-
-        .notification-time {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          color: var(--text-secondary);
-          font-size: 11px;
-          background: var(--bg-hover);
-          padding: 3px 8px;
-          border-radius: 8px;
-
-          .time-icon {
-            font-size: 12px;
-            color: var(--text-disabled);
-          }
-        }
-      }
-    }
-
-    // Mark as read button
-    .mark-read-btn {
-      background: rgba($voltyks-primary, 0.1);
-      border: 1px solid rgba($voltyks-primary, 0.2);
-      padding: 8px;
-      color: $voltyks-primary;
-      cursor: pointer;
-      border-radius: 10px;
-      transition: all 0.3s ease;
-      opacity: 0;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      &:hover {
-        background: $voltyks-primary;
-        border-color: $voltyks-primary;
-        color: #000;
-        transform: scale(1.1);
-        box-shadow: 0 4px 12px rgba($voltyks-primary, 0.3);
-      }
-
-      .material-icons {
-        font-size: 18px;
-      }
-    }
-
-    // Always show mark-read button for unread notifications
-    &.unread .mark-read-btn {
-      opacity: 1;
-      animation: fadeInSlide 0.3s ease-out forwards;
-    }
-  }
-
-  @keyframes fadeInSlide {
-    from {
-      opacity: 0;
-      transform: translateX(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  // Empty State
-  .empty-state {
-    padding: 48px 20px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
 
     .material-icons {
-      font-size: 56px;
-      color: var(--text-disabled);
-      opacity: 0.5;
-    }
+      font-size: 20px;
 
-    p {
-      margin: 0;
-      color: var(--text-secondary);
-      font-size: 14px;
+      &.spinning {
+        animation: spin 1s linear infinite;
+      }
     }
   }
 
-  // Footer
-  .dropdown-footer {
-    display: flex;
-    justify-content: space-around;
-    padding: 12px 16px;
-    border-top: 1px solid var(--border-color);
-    background: var(--bg-elevated);
-
-    .footer-link {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: transparent;
-      border: none;
-      color: $voltyks-primary;
-      font-size: 13px;
-      font-weight: 500;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-
-      &:hover {
-        background: rgba($voltyks-primary, 0.1);
-      }
-
-      .material-icons {
-        font-size: 18px;
-      }
+  .close-btn {
+    &:hover {
+      background: rgba(#ef4444, 0.15);
+      color: #ef4444;
     }
   }
 }
 
-// Animations
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+// Settings View
+.settings-view {
+  padding: 16px;
+  overflow-y: auto;
+  max-height: 400px;
+
+  .settings-title {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  .setting-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px;
+    background: $bg-card;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    margin-bottom: 10px;
+
+    .setting-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .material-icons {
+        font-size: 22px;
+        color: $text-muted;
+
+        &.text-warning { color: $report-color; }
+        &.text-info { color: $complaint-color; }
+        &.text-purple { color: $reservation-color; }
+      }
+
+      .setting-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: $text-primary;
+        margin-bottom: 2px;
+      }
+
+      .setting-desc {
+        display: block;
+        font-size: 12px;
+        color: $text-muted;
+      }
+    }
+  }
+
+  .settings-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 14px;
+
+    span {
+      font-size: 11px;
+      font-weight: 600;
+      color: $text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: $border-color;
+    }
+  }
+}
+
+// Toggle Switch
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+  flex-shrink: 0;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:checked + .slider {
+      background: $primary;
+
+      &::before {
+        transform: translateX(22px);
+      }
+    }
+
+    &:focus + .slider {
+      box-shadow: 0 0 0 3px rgba($primary, 0.3);
+    }
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 26px;
+    transition: all 0.3s;
+
+    &::before {
+      position: absolute;
+      content: '';
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: all 0.3s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+// Danger Button
+.danger-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  background: rgba(#ef4444, 0.1);
+  border: 1px solid rgba(#ef4444, 0.3);
+  border-radius: 12px;
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  .material-icons {
+    font-size: 20px;
+  }
+
+  &:hover {
+    background: rgba(#ef4444, 0.2);
+    border-color: #ef4444;
+  }
+}
+
+// Filter Tabs
+.filter-tabs {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+  gap: 10px;
+  background: $bg-card;
+  border-bottom: 1px solid $border-color;
+
+  .tabs-row {
+    display: flex;
+    gap: 6px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 12px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    color: $text-muted;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    .material-icons {
+      font-size: 18px;
+    }
+
+    .tab-count {
+      font-size: 11px;
+      color: $text-muted;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .tab-badge {
+      background: $primary;
+      color: #000;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 8px;
+      min-width: 18px;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: $text-secondary;
+    }
+
+    &.active {
+      background: rgba($primary, 0.15);
+      border-color: rgba($primary, 0.3);
+      color: $primary;
+
+      .tab-count {
+        background: rgba($primary, 0.2);
+        color: $primary;
+      }
+    }
+
+    // Type-specific tabs
+    &.type-report {
+      &.active {
+        background: rgba($report-color, 0.15);
+        border-color: rgba($report-color, 0.3);
+        color: $report-color;
+      }
+    }
+
+    &.type-complaint {
+      &.active {
+        background: rgba($complaint-color, 0.15);
+        border-color: rgba($complaint-color, 0.3);
+        color: $complaint-color;
+      }
+    }
+
+    &.type-reservation {
+      &.active {
+        background: rgba($reservation-color, 0.15);
+        border-color: rgba($reservation-color, 0.3);
+        color: $reservation-color;
+      }
+    }
+  }
+
+  .mark-all-read-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: transparent;
+    border: 1px solid rgba($primary, 0.3);
+    border-radius: 10px;
+    color: $primary;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    .material-icons {
+      font-size: 16px;
+    }
+
+    &:hover {
+      background: rgba($primary, 0.15);
+      border-color: $primary;
+    }
+  }
+}
+
+// Loading State
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  gap: 16px;
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba($primary, 0.2);
+    border-top-color: $primary;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  span {
+    font-size: 14px;
+    color: $text-muted;
+  }
+}
+
+// Error State
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+
+  .material-icons {
+    font-size: 48px;
+    color: #ef4444;
+    margin-bottom: 16px;
+  }
+
+  p {
+    margin: 0 0 20px 0;
+    font-size: 14px;
+    color: $text-secondary;
+  }
+
+  .retry-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: rgba($primary, 0.1);
+    border: 1px solid rgba($primary, 0.3);
+    border-radius: 10px;
+    color: $primary;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    .material-icons {
+      font-size: 18px;
+      color: $primary;
+      margin-bottom: 0;
+    }
+
+    &:hover {
+      background: rgba($primary, 0.2);
+      border-color: $primary;
+    }
+  }
+}
+
+// Notification Group
+.notification-group {
+  margin-bottom: 16px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+
+    .group-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: $text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .group-count {
+      font-size: 11px;
+      color: $text-muted;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+  }
+}
+
+// Notifications List
+.notification-list {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 400px;
+  padding: 8px;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
+// Notification Item
+.notification-item {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  margin-bottom: 6px;
+  background: $bg-card;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  animation: slideIn 0.3s ease-out forwards;
+  opacity: 0;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    background: $bg-hover;
+    border-color: $border-color;
+    transform: translateX(-4px);
+  }
+
+  &.unread {
+    background: linear-gradient(135deg, rgba($primary, 0.08) 0%, rgba($primary, 0.02) 100%);
+    border-color: rgba($primary, 0.2);
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 4px;
+      background: $primary;
+      border-radius: 0 16px 16px 0;
+    }
+  }
+
+  &.read {
+    opacity: 0.7;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  // Type Icon
+  .notification-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    .material-icons {
+      font-size: 22px;
+    }
+
+    &.report {
+      background: linear-gradient(135deg, rgba($report-color, 0.2) 0%, rgba($report-color, 0.1) 100%);
+      color: $report-color;
+    }
+
+    &.complaint {
+      background: linear-gradient(135deg, rgba($complaint-color, 0.2) 0%, rgba($complaint-color, 0.1) 100%);
+      color: $complaint-color;
+    }
+
+    &.reservation {
+      background: linear-gradient(135deg, rgba($reservation-color, 0.2) 0%, rgba($reservation-color, 0.1) 100%);
+      color: $reservation-color;
+    }
+  }
+
+  // Content
+  .notification-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    .notification-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+
+      .notification-type-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: $primary;
+        background: rgba($primary, 0.1);
+        padding: 3px 10px;
+        border-radius: 8px;
+      }
+
+      .notification-time {
+        font-size: 11px;
+        color: $text-muted;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+    }
+
+    .notification-message {
+      margin: 0;
+      font-size: 14px;
+      color: $text-primary;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .notification-footer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+
+      .notification-user,
+      .notification-product {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: $text-secondary;
+
+        .material-icons {
+          font-size: 14px;
+          color: $text-muted;
+        }
+      }
+
+      .notification-product {
+        color: $reservation-color;
+
+        .material-icons {
+          color: $reservation-color;
+        }
+      }
+    }
+  }
+
+  // Notification Actions
+  .notification-actions {
+    display: flex;
+    align-items: flex-start;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  &:hover .notification-actions {
+    opacity: 1;
+  }
+
+  .delete-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: $text-muted;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    .material-icons {
+      font-size: 16px;
+    }
+
+    &:hover {
+      background: rgba(#ef4444, 0.15);
+      color: #ef4444;
+    }
+  }
+
+  // Unread Indicator
+  .unread-indicator {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 8px;
+    height: 8px;
+    background: $primary;
+    border-radius: 50%;
+    animation: glow 2s ease-in-out infinite;
+  }
+}
+
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateX(20px);
   }
   to {
     opacity: 1;
@@ -424,12 +842,147 @@ $notification-complaint-color: #42A5F5;
   }
 }
 
-.notification-item {
-  animation: slideIn 0.3s ease-out forwards;
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba($primary, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba($primary, 0);
+  }
+}
 
-  @for $i from 1 through 10 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{$i * 0.03}s;
+// Empty State
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba($primary, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    .material-icons {
+      font-size: 40px;
+      color: $primary;
+      opacity: 0.6;
+    }
+  }
+
+  h4 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: $text-muted;
+  }
+}
+
+// Quick Navigation
+.quick-nav {
+  padding: 16px;
+  background: $bg-card;
+  border-top: 1px solid $border-color;
+
+  .nav-title {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 8px;
+
+    .nav-link {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid $border-color;
+      border-radius: 12px;
+      color: $text-secondary;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      .material-icons {
+        font-size: 20px;
+      }
+
+      .nav-count {
+        font-size: 10px;
+        color: $text-muted;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 2px 8px;
+        border-radius: 6px;
+        min-width: 20px;
+        text-align: center;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+
+      &.reports {
+        &:hover {
+          background: rgba($report-color, 0.1);
+          border-color: rgba($report-color, 0.3);
+          color: $report-color;
+
+          .nav-count {
+            background: rgba($report-color, 0.2);
+            color: $report-color;
+          }
+        }
+      }
+
+      &.complaints {
+        &:hover {
+          background: rgba($complaint-color, 0.1);
+          border-color: rgba($complaint-color, 0.3);
+          color: $complaint-color;
+
+          .nav-count {
+            background: rgba($complaint-color, 0.2);
+            color: $complaint-color;
+          }
+        }
+      }
+
+      &.reservations {
+        &:hover {
+          background: rgba($reservation-color, 0.1);
+          border-color: rgba($reservation-color, 0.3);
+          color: $reservation-color;
+
+          .nav-count {
+            background: rgba($reservation-color, 0.2);
+            color: $reservation-color;
+          }
+        }
+      }
     }
   }
 }
@@ -438,46 +991,154 @@ $notification-complaint-color: #42A5F5;
 @media (max-width: 480px) {
   .notification-dropdown {
     position: fixed;
-    top: 60px;
-    left: 12px;
-    right: 12px;
-    width: auto;
-    max-height: calc(100vh - 80px);
-    border-radius: 12px;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 80vh;
+    border-radius: 24px 24px 0 0;
+    transform: translateY(100%);
 
-    .notification-content {
-      .notification-message {
-        max-width: 180px;
-      }
+    &.show {
+      transform: translateY(0);
     }
   }
-}
 
-@media (max-width: 768px) {
-  .notification-dropdown {
-    width: 380px;
+  .dropdown-header {
+    padding: 16px;
 
-    .notification-item {
-      padding: 14px 16px;
+    .header-title {
+      .header-icon-wrapper {
+        width: 42px;
+        height: 42px;
 
-      .notification-icon {
-        width: 44px;
-        height: 44px;
+        .material-icons {
+          font-size: 22px;
+        }
       }
 
-      &.unread::after {
-        font-size: 8px;
+      .header-text h3 {
+        font-size: 16px;
+      }
+    }
+
+    .header-meta {
+      .connection-status {
+        font-size: 10px;
         padding: 2px 6px;
       }
     }
 
-    .dropdown-footer {
-      flex-direction: column;
-      gap: 8px;
+    .header-actions {
+      gap: 4px;
+    }
 
-      .footer-link {
-        width: 100%;
-        justify-content: center;
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+
+      .material-icons {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .filter-tabs {
+    padding: 10px 12px;
+    gap: 8px;
+
+    .tabs-row {
+      gap: 4px;
+    }
+
+    .tab-btn {
+      padding: 8px 8px;
+      font-size: 11px;
+
+      .tab-count {
+        display: none;
+      }
+    }
+
+    .mark-all-read-btn {
+      padding: 6px 10px;
+      font-size: 10px;
+    }
+  }
+
+  .settings-view {
+    padding: 12px;
+
+    .setting-item {
+      padding: 12px;
+    }
+  }
+
+  .toggle {
+    width: 44px;
+    height: 24px;
+
+    .slider::before {
+      height: 18px;
+      width: 18px;
+    }
+
+    input:checked + .slider::before {
+      transform: translateX(20px);
+    }
+  }
+
+  .notification-item {
+    padding: 12px;
+
+    // Always show delete button on mobile (no hover)
+    .notification-actions {
+      opacity: 1;
+    }
+
+    .notification-icon {
+      width: 40px;
+      height: 40px;
+
+      .material-icons {
+        font-size: 20px;
+      }
+    }
+
+    .notification-content {
+      .notification-message {
+        font-size: 13px;
+      }
+
+      .notification-footer {
+        gap: 8px;
+      }
+    }
+  }
+
+  .loading-state,
+  .error-state,
+  .empty-state {
+    padding: 32px 16px;
+  }
+
+  .quick-nav {
+    padding: 12px;
+
+    .nav-links {
+      .nav-link {
+        padding: 10px 6px;
+        font-size: 10px;
+
+        .material-icons {
+          font-size: 18px;
+        }
+
+        .nav-count {
+          font-size: 9px;
+          padding: 2px 6px;
+        }
       }
     }
   }

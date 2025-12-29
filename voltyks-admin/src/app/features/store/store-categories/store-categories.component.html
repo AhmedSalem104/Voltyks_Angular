@@ -1,0 +1,317 @@
+<div class="store-categories-container">
+  @if (isLoading || isSaving) {
+    <app-loading-overlay></app-loading-overlay>
+  }
+
+  <!-- Back Navigation -->
+  <nav class="breadcrumb-nav">
+    <a routerLink="/store" class="back-link">
+      <span class="material-icons">arrow_forward</span>
+      <span>العودة للمتجر</span>
+    </a>
+    <div class="breadcrumb-path">
+      <a routerLink="/store" class="path-item">المتجر</a>
+      <span class="material-icons separator">chevron_left</span>
+      <span class="path-item current">الفئات</span>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <span class="material-icons">category</span>
+      </div>
+      <div class="header-text">
+        <h2>فئات المتجر</h2>
+        <p class="page-description">إدارة فئات المنتجات في المتجر</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section voltyks-card">
+    <div class="filters-wrapper">
+      <!-- Search -->
+      <div class="filter-item search-filter">
+        <div class="search-box">
+          <span class="material-icons search-icon">search</span>
+          <input
+            type="text"
+            class="voltyks-input"
+            placeholder="البحث في الفئات..."
+            [ngModel]="searchTerm"
+            (ngModelChange)="onSearchChange($event)"
+          />
+        </div>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="filter-item">
+        <select class="voltyks-input" [(ngModel)]="statusFilter" (ngModelChange)="onStatusFilterChange()">
+          <option value="">جميع الحالات</option>
+          @for (option of statusOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Trashed Filter -->
+      <div class="filter-item checkbox-filter">
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="showTrashed" (ngModelChange)="onTrashedFilterChange()" />
+          <span>إظهار المحذوفة</span>
+        </label>
+      </div>
+
+      <div class="filter-item checkbox-filter">
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="onlyTrashed" (ngModelChange)="onTrashedFilterChange()" />
+          <span>المحذوفة فقط</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="voltyks-card">
+    <div class="table-header">
+      <h3>قائمة الفئات</h3>
+      <div class="header-actions">
+        <span class="total-count">إجمالي: {{ totalItems }}</span>
+        <button class="voltyks-btn print-btn" (click)="printToPdf()">
+          <span class="material-icons">print</span>
+          <span>طباعة PDF</span>
+        </button>
+        <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
+          <span class="material-icons">add</span>
+          إضافة فئة
+        </button>
+      </div>
+    </div>
+
+    @if (paginatedCategories.length > 0) {
+      <div class="table-wrapper">
+        <table class="voltyks-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>الأيقونة</th>
+              <th>الاسم</th>
+              <th>الحالة</th>
+              <th>عدد المنتجات</th>
+              <th>الترتيب</th>
+              <th>تاريخ الإنشاء</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (category of paginatedCategories; track category.id; let i = $index) {
+              <tr [class.deleted-row]="category.isDeleted">
+                <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                <td>
+                  @if (category.icon) {
+                    <img [src]="category.icon" alt="icon" class="category-icon" />
+                  } @else {
+                    <span class="material-icons no-icon">category</span>
+                  }
+                </td>
+                <td>
+                  <div class="category-name">
+                    <span>{{ category.name }}</span>
+                    <span class="slug">{{ category.slug }}</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(category.status)">
+                    {{ getStatusLabel(category.status) }}
+                  </span>
+                  @if (category.isDeleted) {
+                    <span class="deleted-badge">محذوفة</span>
+                  }
+                </td>
+                <td>
+                  <span class="product-count">{{ category.productCount }}</span>
+                </td>
+                <td>{{ category.sortOrder }}</td>
+                <td>{{ formatDate(category.createdAt) }}</td>
+                <td>
+                  <div class="action-buttons">
+                    @if (!category.isDeleted) {
+                      <button class="voltyks-btn btn-icon btn-edit" title="تعديل" (click)="openEditDialog(category)">
+                        <span class="material-icons">edit</span>
+                      </button>
+                      <button class="voltyks-btn btn-icon btn-danger" title="حذف" (click)="openDeleteConfirm(category)">
+                        <span class="material-icons">delete</span>
+                      </button>
+                    } @else {
+                      <button class="voltyks-btn btn-icon btn-restore" title="استرجاع" (click)="restoreCategory(category)">
+                        <span class="material-icons">restore</span>
+                      </button>
+                      <button class="voltyks-btn btn-icon btn-danger" title="حذف نهائي" (click)="openForceDeleteConfirm(category)">
+                        <span class="material-icons">delete_forever</span>
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalItems]="totalItems"
+        [pageSize]="pageSize"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      ></app-pagination>
+    } @else {
+      <div class="no-data">
+        <span class="material-icons">category</span>
+        <p>لا توجد فئات</p>
+      </div>
+    }
+  </div>
+
+  <!-- Create Dialog -->
+  @if (showCreateDialog) {
+    <div class="modal-overlay" (click)="closeCreateDialog()">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>إضافة فئة جديدة</h3>
+          <button type="button" class="close-btn" (click)="closeCreateDialog()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>اسم الفئة <span class="required">*</span></label>
+            <input type="text" class="voltyks-input" [(ngModel)]="createDto.name" placeholder="أدخل اسم الفئة" />
+          </div>
+
+          <div class="form-group">
+            <label>Slug (اختياري)</label>
+            <input type="text" class="voltyks-input" [(ngModel)]="createDto.slug" placeholder="يُنشأ تلقائياً من الاسم" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>الحالة <span class="required">*</span></label>
+              <select class="voltyks-input" [(ngModel)]="createDto.status">
+                @for (option of statusOptions; track option.value) {
+                  <option [value]="option.value">{{ option.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>الترتيب <span class="required">*</span></label>
+              <input type="number" class="voltyks-input" [(ngModel)]="createDto.sortOrder" min="0" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>رابط الأيقونة</label>
+            <input type="text" class="voltyks-input" [(ngModel)]="createDto.icon" placeholder="https://..." />
+          </div>
+
+          @if (createDto.status === 'coming_soon') {
+            <div class="form-group">
+              <label>رسالة قريباً</label>
+              <textarea class="voltyks-input" [(ngModel)]="createDto.placeholderMessage" rows="3" placeholder="رسالة تظهر للمستخدمين"></textarea>
+            </div>
+          }
+        </div>
+        <div class="modal-footer">
+          <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">إلغاء</button>
+          <button class="voltyks-btn btn-primary" (click)="createCategory()" [disabled]="isSaving">
+            {{ isSaving ? 'جاري الحفظ...' : 'حفظ' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Edit Dialog -->
+  @if (showEditDialog && currentCategory) {
+    <div class="modal-overlay" (click)="closeEditDialog()">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>تعديل الفئة</h3>
+          <button type="button" class="close-btn" (click)="closeEditDialog()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>اسم الفئة</label>
+            <input type="text" class="voltyks-input" [(ngModel)]="updateDto.name" placeholder="أدخل اسم الفئة" />
+          </div>
+
+          <div class="form-group">
+            <label>Slug</label>
+            <input type="text" class="voltyks-input" [(ngModel)]="updateDto.slug" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>الحالة</label>
+              <select class="voltyks-input" [(ngModel)]="updateDto.status">
+                @for (option of statusOptions; track option.value) {
+                  <option [value]="option.value">{{ option.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>الترتيب</label>
+              <input type="number" class="voltyks-input" [(ngModel)]="updateDto.sortOrder" min="0" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>رابط الأيقونة</label>
+            <input type="text" class="voltyks-input" [(ngModel)]="updateDto.icon" placeholder="https://..." />
+          </div>
+
+          @if (updateDto.status === 'coming_soon') {
+            <div class="form-group">
+              <label>رسالة قريباً</label>
+              <textarea class="voltyks-input" [(ngModel)]="updateDto.placeholderMessage" rows="3" placeholder="رسالة تظهر للمستخدمين"></textarea>
+            </div>
+          }
+        </div>
+        <div class="modal-footer">
+          <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">إلغاء</button>
+          <button class="voltyks-btn btn-primary" (click)="updateCategory()" [disabled]="isSaving">
+            {{ isSaving ? 'جاري الحفظ...' : 'حفظ التعديلات' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Delete Confirm -->
+  <app-confirm-dialog
+    [isOpen]="showDeleteConfirm"
+    title="تأكيد الحذف"
+    [message]="'هل أنت متأكد من حذف الفئة \'' + (currentCategory?.name || '') + '\'؟ يمكن استرجاعها لاحقاً.'"
+    confirmText="حذف"
+    type="danger"
+    (confirm)="confirmDelete()"
+    (cancel)="closeDeleteConfirm()"
+  ></app-confirm-dialog>
+
+  <!-- Force Delete Confirm -->
+  <app-confirm-dialog
+    [isOpen]="showForceDeleteConfirm"
+    title="تأكيد الحذف النهائي"
+    [message]="'هل أنت متأكد من حذف الفئة \'' + (currentCategory?.name || '') + '\' نهائياً؟ لا يمكن استرجاعها!'"
+    confirmText="حذف نهائي"
+    type="danger"
+    (confirm)="confirmForceDelete()"
+    (cancel)="closeForceDeleteConfirm()"
+  ></app-confirm-dialog>
+</div>

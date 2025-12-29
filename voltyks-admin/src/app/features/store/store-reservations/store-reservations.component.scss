@@ -1,0 +1,958 @@
+// Animations
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes tableRowFadeIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+// Variables
+$primary-green: #00C853;
+$dark-bg: #1A1A1A;
+$card-bg: #2A2A2A;
+$border-color: #333;
+$text-primary: #ffffff;
+$text-secondary: #B0B0B0;
+$text-muted: #6C6C6C;
+$danger-color: #FF5252;
+$warning-color: #FFC107;
+$info-color: #2196F3;
+$purple-color: #9C27B0;
+
+.store-reservations-container {
+  padding: 24px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+// Breadcrumb Navigation
+.breadcrumb-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  background: $card-bg;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba($primary-green, 0.1);
+    border: 1px solid rgba($primary-green, 0.2);
+    border-radius: 8px;
+    color: $primary-green;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    .material-icons {
+      font-size: 20px;
+    }
+
+    &:hover {
+      background: $primary-green;
+      color: $dark-bg;
+      transform: translateX(4px);
+    }
+  }
+
+  .breadcrumb-path {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .path-item {
+      color: $text-secondary;
+      font-size: 14px;
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      &:hover:not(.current) {
+        color: $primary-green;
+      }
+
+      &.current {
+        color: $text-primary;
+        font-weight: 600;
+      }
+    }
+
+    .separator {
+      font-size: 18px;
+      color: $text-muted;
+    }
+  }
+}
+
+// Page Header
+.page-header {
+  margin-bottom: 24px;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .header-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, rgba($primary-green, 0.2) 0%, rgba($primary-green, 0.1) 100%);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .material-icons {
+      font-size: 28px;
+      color: $primary-green;
+    }
+  }
+
+  .header-text {
+    h2 {
+      color: $text-primary;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+    }
+
+    .page-description {
+      color: $text-secondary;
+      font-size: 14px;
+      margin: 0;
+    }
+  }
+}
+
+// Filters Section
+.filters-section {
+  margin-bottom: 16px;
+  padding: 16px !important;
+  animation: scaleIn 0.4s ease-out 0.1s both;
+
+  .filters-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .filters-row-2 {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-top: 12px;
+    border-top: 1px solid $border-color;
+
+    .filter-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      label {
+        color: $text-muted;
+        font-size: 12px;
+      }
+
+      input[type="date"] {
+        min-width: 150px;
+      }
+    }
+  }
+
+  .filter-item {
+    &.search-filter {
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+    }
+
+    .search-box {
+      position: relative;
+
+      .search-icon {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $text-muted;
+        font-size: 20px;
+      }
+
+      input {
+        padding-right: 40px;
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Cards
+.voltyks-card {
+  background-color: $card-bg;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+// Input
+.voltyks-input {
+  background-color: $card-bg;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: $text-primary;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  width: 100%;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-green;
+    box-shadow: 0 0 0 2px rgba($primary-green, 0.2);
+  }
+
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+select.voltyks-input {
+  cursor: pointer;
+  min-width: 140px;
+}
+
+textarea.voltyks-input {
+  resize: vertical;
+  min-height: 80px;
+}
+
+// Table Header
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+
+  h3 {
+    color: $text-primary;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    .total-count {
+      color: $text-secondary;
+      font-size: 13px;
+      margin-left: 8px;
+    }
+  }
+}
+
+// Buttons
+.voltyks-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+
+  &.btn-primary {
+    background-color: $primary-green;
+    color: $dark-bg;
+
+    &:hover:not(:disabled) {
+      background-color: darken($primary-green, 5%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba($primary-green, 0.3);
+    }
+  }
+
+  &.btn-secondary {
+    background-color: $card-bg;
+    color: $text-secondary;
+    border: 1px solid $border-color;
+
+    &:hover:not(:disabled) {
+      border-color: $primary-green;
+      color: $primary-green;
+    }
+  }
+
+  &.btn-danger {
+    color: $danger-color;
+    background-color: transparent;
+
+    &:hover:not(:disabled) {
+      background-color: rgba($danger-color, 0.1);
+    }
+  }
+
+  &.btn-icon {
+    padding: 6px 10px;
+    min-width: 36px;
+    justify-content: center;
+  }
+
+  &.btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  &.btn-view {
+    color: $text-secondary;
+    background-color: transparent;
+
+    &:hover {
+      background-color: rgba($text-secondary, 0.1);
+      color: $text-primary;
+    }
+  }
+
+  &.btn-contact {
+    color: $info-color;
+    background-color: transparent;
+
+    &:hover {
+      background-color: rgba($info-color, 0.1);
+    }
+  }
+
+  &.btn-payment {
+    color: $warning-color;
+    background-color: transparent;
+
+    &:hover {
+      background-color: rgba($warning-color, 0.1);
+    }
+  }
+
+  &.btn-delivery {
+    color: $purple-color;
+    background-color: transparent;
+
+    &:hover {
+      background-color: rgba($purple-color, 0.1);
+    }
+  }
+
+  &.btn-complete {
+    color: $primary-green;
+    background-color: transparent;
+
+    &:hover {
+      background-color: rgba($primary-green, 0.1);
+    }
+  }
+
+  &.print-btn {
+    background-color: transparent;
+    color: $text-secondary;
+    border: 1px solid $border-color;
+
+    &:hover {
+      border-color: $primary-green;
+      color: $primary-green;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Table
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.voltyks-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background-color: rgba($dark-bg, 0.5);
+
+    th {
+      padding: 12px;
+      text-align: center;
+      color: $text-secondary;
+      font-weight: 600;
+      font-size: 13px;
+      border-bottom: 1px solid $border-color;
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    tr {
+      animation: tableRowFadeIn 0.3s ease-out;
+      border-bottom: 1px solid $border-color;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: rgba($dark-bg, 0.5);
+      }
+
+      &.cancelled-row {
+        opacity: 0.6;
+        background-color: rgba($danger-color, 0.05);
+      }
+
+      &.completed-row {
+        background-color: rgba($primary-green, 0.03);
+      }
+
+      td {
+        padding: 12px;
+        color: $text-secondary;
+        font-size: 13px;
+        vertical-align: middle;
+        text-align: center;
+      }
+    }
+  }
+}
+
+// Cell styles
+.product-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .product-thumb {
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    object-fit: cover;
+    background-color: $dark-bg;
+  }
+
+  .no-thumb {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $dark-bg;
+    border-radius: 8px;
+    color: $text-muted;
+    font-size: 20px;
+  }
+
+  .product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .product-name {
+      color: $text-primary;
+      font-weight: 500;
+    }
+
+    .product-price {
+      color: $primary-green;
+      font-size: 12px;
+    }
+  }
+}
+
+.user-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .user-name {
+    color: $text-primary;
+    font-weight: 500;
+  }
+
+  .user-phone {
+    color: $text-muted;
+    font-size: 12px;
+  }
+}
+
+// Status Badges
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+
+  &.status-pending {
+    background-color: rgba($warning-color, 0.1);
+    color: $warning-color;
+  }
+
+  &.status-contacted {
+    background-color: rgba($info-color, 0.1);
+    color: $info-color;
+  }
+
+  &.status-completed {
+    background-color: rgba($primary-green, 0.1);
+    color: $primary-green;
+  }
+
+  &.status-cancelled {
+    background-color: rgba($danger-color, 0.1);
+    color: $danger-color;
+  }
+}
+
+.payment-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+
+  &.payment-paid {
+    background-color: rgba($primary-green, 0.1);
+    color: $primary-green;
+  }
+
+  &.payment-unpaid {
+    background-color: rgba($danger-color, 0.1);
+    color: $danger-color;
+  }
+}
+
+.delivery-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+
+  &.delivery-delivered {
+    background-color: rgba($purple-color, 0.1);
+    color: $purple-color;
+  }
+
+  &.delivery-pending {
+    background-color: rgba($text-muted, 0.2);
+    color: $text-muted;
+  }
+}
+
+// Action Buttons
+.action-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+// No Data
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: $text-muted;
+
+  .material-icons {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 16px;
+    margin: 0;
+  }
+}
+
+// Modal
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-dialog {
+  background-color: $card-bg;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: scaleIn 0.3s ease-out;
+
+  &.modal-lg {
+    max-width: 750px;
+  }
+
+  .modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid $border-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background-color: $card-bg;
+    z-index: 1;
+
+    h3 {
+      color: $text-primary;
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: $text-muted;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: rgba($danger-color, 0.1);
+        color: $danger-color;
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 20px;
+
+    .form-group {
+      margin-bottom: 16px;
+
+      label {
+        display: block;
+        color: $text-secondary;
+        font-size: 13px;
+        margin-bottom: 6px;
+
+        .required {
+          color: $danger-color;
+        }
+      }
+    }
+
+    .reservation-summary {
+      background-color: $dark-bg;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+
+      p {
+        margin: 0 0 4px 0;
+        color: $text-secondary;
+        font-size: 13px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        strong {
+          color: $text-primary;
+        }
+      }
+    }
+
+    &.details-body {
+      // Status Timeline
+      .status-timeline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        padding: 16px;
+        background-color: $dark-bg;
+        border-radius: 12px;
+        overflow-x: auto;
+
+        .timeline-step {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          opacity: 0.4;
+          transition: all 0.3s ease;
+
+          &.active {
+            opacity: 1;
+
+            .step-icon {
+              background-color: rgba($primary-green, 0.2);
+              color: $primary-green;
+              border-color: $primary-green;
+            }
+          }
+
+          &.completed {
+            .step-icon {
+              background-color: $primary-green;
+              color: $dark-bg;
+            }
+          }
+
+          .step-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 2px solid $border-color;
+            background-color: $card-bg;
+            color: $text-muted;
+            font-size: 20px;
+            transition: all 0.3s ease;
+          }
+
+          .step-label {
+            font-size: 11px;
+            color: $text-secondary;
+            white-space: nowrap;
+          }
+        }
+
+        .timeline-connector {
+          flex: 1;
+          height: 2px;
+          background-color: $border-color;
+          margin: 0 8px;
+          min-width: 20px;
+          transition: background-color 0.3s ease;
+
+          &.active {
+            background-color: $primary-green;
+          }
+        }
+      }
+
+      .cancelled-notice {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background-color: rgba($danger-color, 0.1);
+        color: $danger-color;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+
+        .material-icons {
+          font-size: 24px;
+        }
+      }
+
+      .details-sections {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+
+        .detail-section {
+          background-color: $dark-bg;
+          border-radius: 8px;
+          padding: 16px;
+
+          &.full-width {
+            grid-column: span 2;
+          }
+
+          h4 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: $text-primary;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 0 12px 0;
+
+            .material-icons {
+              font-size: 18px;
+              color: $primary-green;
+            }
+          }
+
+          .detail-content {
+            .info-row {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 6px 0;
+              border-bottom: 1px solid $border-color;
+
+              &:last-child {
+                border-bottom: none;
+              }
+
+              .label {
+                color: $text-muted;
+                font-size: 12px;
+              }
+
+              .value {
+                color: $text-primary;
+                font-size: 13px;
+              }
+            }
+
+            &.product-detail {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+
+              .product-image {
+                width: 60px;
+                height: 60px;
+                border-radius: 8px;
+                object-fit: cover;
+              }
+
+              .product-details {
+                .product-name {
+                  color: $text-primary;
+                  font-weight: 500;
+                  margin: 0 0 4px 0;
+                }
+
+                .product-price {
+                  color: $primary-green;
+                  font-weight: 600;
+                  margin: 0;
+                }
+              }
+            }
+
+            .notes-text {
+              color: $text-secondary;
+              font-size: 13px;
+              line-height: 1.6;
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .modal-footer {
+    padding: 16px 20px;
+    border-top: 1px solid $border-color;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    position: sticky;
+    bottom: 0;
+    background-color: $card-bg;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .store-reservations-container {
+    padding: 16px;
+  }
+
+  .page-header h2 {
+    font-size: 24px;
+  }
+
+  .filters-wrapper,
+  .filters-row-2 {
+    flex-direction: column;
+    align-items: stretch;
+
+    .filter-item {
+      &.search-filter {
+        max-width: 100%;
+      }
+    }
+  }
+
+  .table-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+
+    .header-actions {
+      justify-content: space-between;
+    }
+  }
+
+  .modal-dialog {
+    width: 95%;
+    max-height: 95vh;
+
+    &.modal-lg {
+      max-width: 95%;
+    }
+
+    .modal-body.details-body {
+      .status-timeline {
+        padding: 12px 8px;
+
+        .timeline-step {
+          .step-icon {
+            width: 32px;
+            height: 32px;
+            font-size: 16px;
+          }
+
+          .step-label {
+            font-size: 10px;
+          }
+        }
+      }
+
+      .details-sections {
+        grid-template-columns: 1fr;
+
+        .detail-section.full-width {
+          grid-column: span 1;
+        }
+      }
+    }
+  }
+}

@@ -91,6 +91,10 @@ export const routes: Routes = [
       {
         path: 'app-config',
         loadComponent: () => import('./features/app-config/app-config.component').then(m => m.AppConfigComponent)
+      },
+      {
+        path: 'store',
+        loadChildren: () => import('./features/store/store.routes').then(m => m.storeRoutes)
       }
     ]
   },

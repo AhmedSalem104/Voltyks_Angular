@@ -3,6 +3,8 @@ export const environment = {
   production: true,
   // API Base URL - Direct connection to Azure backend
   apiBaseUrl: 'https://voltyks-dqh6fzgwdndrdng7.canadacentral-01.azurewebsites.net',
+  // Enable SignalR for real-time notifications
+  enableSignalR: true,
   apiEndpoints: {
     admin: {
       users: '/api/admin/users',

@@ -20,6 +20,107 @@
     </div>
   </section>
 
+  <!-- Revenue & Store Status Cards - Progressive Loading -->
+  <section class="revenue-section">
+    <!-- Total Revenue Card -->
+    @if (sectionLoading.store) {
+      <div class="revenue-card skeleton-revenue">
+        <div class="skeleton-icon"></div>
+        <div class="skeleton-content">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line tiny"></div>
+        </div>
+      </div>
+    } @else {
+      <div class="revenue-card total-revenue fade-in" title="مجموع قيمة كل الحجوزات (غير الملغية) = سعر المنتج × الكمية">
+        <div class="revenue-icon">
+          <span class="material-icons">account_balance_wallet</span>
+        </div>
+        <div class="revenue-content">
+          <span class="revenue-label">إجمالي الإيرادات</span>
+          <span class="revenue-value">{{ formatCurrency(stats.totalRevenue) }}</span>
+          <span class="revenue-hint">قيمة جميع الحجوزات</span>
+        </div>
+      </div>
+    }
+
+    <!-- Paid Revenue Card -->
+    @if (sectionLoading.store) {
+      <div class="revenue-card skeleton-revenue">
+        <div class="skeleton-icon"></div>
+        <div class="skeleton-content">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line tiny"></div>
+        </div>
+      </div>
+    } @else {
+      <div class="revenue-card paid-revenue fade-in" title="قيمة الحجوزات التي تم دفعها فعلياً">
+        <div class="revenue-icon">
+          <span class="material-icons">paid</span>
+        </div>
+        <div class="revenue-content">
+          <span class="revenue-label">الإيرادات المحصلة</span>
+          <span class="revenue-value">{{ formatCurrency(stats.paidRevenue) }}</span>
+          <span class="revenue-hint">المدفوع فعلياً</span>
+        </div>
+      </div>
+    }
+
+    <!-- Store Products Card -->
+    @if (sectionLoading.store) {
+      <div class="revenue-card skeleton-revenue">
+        <div class="skeleton-icon"></div>
+        <div class="skeleton-content">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line tiny"></div>
+        </div>
+      </div>
+    } @else {
+      <div class="revenue-card products-card fade-in" title="عدد المنتجات المسجلة في المتجر">
+        <div class="revenue-icon">
+          <span class="material-icons">inventory_2</span>
+        </div>
+        <div class="revenue-content">
+          <span class="revenue-label">منتجات المتجر</span>
+          <span class="revenue-value">{{ stats.totalProducts }}</span>
+          <span class="revenue-hint">{{ stats.activeProducts }} نشط</span>
+        </div>
+        @if (stats.outOfStockProducts > 0) {
+          <span class="stock-warning">{{ stats.outOfStockProducts }} غير متاح</span>
+        }
+      </div>
+    }
+
+    <!-- Reservations Card -->
+    @if (sectionLoading.store) {
+      <div class="revenue-card skeleton-revenue">
+        <div class="skeleton-icon"></div>
+        <div class="skeleton-content">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line tiny"></div>
+        </div>
+      </div>
+    } @else {
+      <div class="revenue-card reservations-card fade-in" title="عدد طلبات حجز المنتجات من العملاء">
+        <div class="revenue-icon">
+          <span class="material-icons">shopping_cart</span>
+        </div>
+        <div class="revenue-content">
+          <span class="revenue-label">الحجوزات</span>
+          <span class="revenue-value">{{ stats.totalReservations }}</span>
+          <span class="revenue-hint">{{ stats.completedReservations }} مكتمل</span>
+        </div>
+        @if (stats.pendingReservations > 0) {
+          <span class="pending-badge pulse-badge">{{ stats.pendingReservations }} جديد</span>
+        }
+      </div>
+    }
+  </section>
+
   <!-- Status Cards Section -->
   <section class="status-cards-section">
     <!-- App Config Status Card -->
@@ -36,6 +137,31 @@
             مفعّل
           } @else {
             معطّل
+          }
+        </span>
+      </div>
+      <div class="status-indicator">
+        <span class="indicator-dot"></span>
+      </div>
+      <a routerLink="/app-config" class="status-link">
+        <span class="material-icons">settings</span>
+      </a>
+    </div>
+
+    <!-- Charging Mode Status Card -->
+    <div class="status-card charging-status" [class.enabled]="chargingModeEnabled === true" [class.disabled]="chargingModeEnabled === false">
+      <div class="status-icon">
+        <span class="material-icons">{{ chargingModeEnabled ? 'electric_bolt' : 'power_off' }}</span>
+      </div>
+      <div class="status-content">
+        <h4>وضع الشحن</h4>
+        <span class="status-text">
+          @if (chargingModeEnabled === null) {
+            جاري التحميل...
+          } @else if (chargingModeEnabled) {
+            مفعّل
+          } @else {
+            وضع الإعداد
           }
         </span>
       </div>
@@ -70,7 +196,7 @@
 
   <!-- Recent Notifications Section -->
   @if (recentNotifications.length > 0) {
-    <section class="notifications-section">
+    <section class="notifications-section fade-in">
       <div class="section-header">
         <h3>
           <span class="material-icons">notifications</span>
@@ -88,6 +214,7 @@
             [class.unread]="!notification.isRead"
             [class.report]="notification.type === 'report'"
             [class.complaint]="notification.type === 'complaint'"
+            [class.reservation]="notification.type === 'reservation'"
             (click)="onNotificationClick(notification)"
           >
             <div class="notification-icon">
@@ -118,220 +245,425 @@
     </section>
   }
 
-  @if (isLoading) {
-    <div class="loading-skeleton">
-      <div class="skeleton-grid">
-        @for (item of [1,2,3,4,5,6]; track item) {
-          <div class="skeleton-card"></div>
+  <!-- Stats & Charts Section -->
+  <section class="main-section">
+    <div class="main-grid">
+      <!-- Overview Chart -->
+      <div class="chart-card overview-chart">
+        <h3>نظرة عامة</h3>
+        @if (sectionLoading.users && sectionLoading.chargers && sectionLoading.vehicles && sectionLoading.reports) {
+          <div class="chart-skeleton">
+            <div class="skeleton-circle"></div>
+            <div class="skeleton-legend">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line"></div>
+            </div>
+          </div>
+        } @else {
+          <div class="chart-container fade-in">
+            <canvas baseChart
+              [data]="overviewChartData"
+              [options]="overviewChartOptions"
+              type="doughnut">
+            </canvas>
+            <div class="chart-center">
+              <span class="total-value">{{ stats.totalUsers + stats.totalChargers + stats.totalVehicles }}</span>
+              <span class="total-label">إجمالي</span>
+            </div>
+          </div>
+          <div class="chart-legend fade-in">
+            <div class="legend-item" [class.loading]="sectionLoading.users">
+              <span class="legend-color users"></span>
+              <span class="legend-label">مستخدمين</span>
+              <span class="legend-value">{{ sectionLoading.users ? '...' : stats.totalUsers }}</span>
+            </div>
+            <div class="legend-item" [class.loading]="sectionLoading.chargers">
+              <span class="legend-color chargers"></span>
+              <span class="legend-label">شواحن</span>
+              <span class="legend-value">{{ sectionLoading.chargers ? '...' : stats.totalChargers }}</span>
+            </div>
+            <div class="legend-item" [class.loading]="sectionLoading.vehicles">
+              <span class="legend-color vehicles"></span>
+              <span class="legend-label">مركبات</span>
+              <span class="legend-value">{{ sectionLoading.vehicles ? '...' : stats.totalVehicles }}</span>
+            </div>
+            <div class="legend-item" [class.loading]="sectionLoading.reports">
+              <span class="legend-color reports"></span>
+              <span class="legend-label">بلاغات</span>
+              <span class="legend-value">{{ sectionLoading.reports ? '...' : stats.totalReports }}</span>
+            </div>
+          </div>
         }
+      </div>
+
+      <!-- Reports Chart -->
+      <div class="chart-card reports-chart">
+        <h3>حالة البلاغات</h3>
+        @if (sectionLoading.reports) {
+          <div class="bar-chart-skeleton">
+            <div class="skeleton-bar"></div>
+            <div class="skeleton-bar short"></div>
+          </div>
+        } @else {
+          <div class="bar-chart-container fade-in">
+            <canvas baseChart
+              [data]="reportsChartData"
+              [options]="reportsChartOptions"
+              type="bar">
+            </canvas>
+          </div>
+        }
+      </div>
+
+      <!-- Reservations Chart -->
+      <div class="chart-card reservations-chart">
+        <h3>
+          <span class="material-icons">shopping_cart</span>
+          حالة الحجوزات
+        </h3>
+        @if (sectionLoading.store) {
+          <div class="chart-skeleton">
+            <div class="skeleton-circle small"></div>
+            <div class="skeleton-legend">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line"></div>
+            </div>
+          </div>
+        } @else {
+          <div class="chart-container fade-in">
+            <canvas baseChart
+              [data]="reservationsChartData"
+              [options]="reservationsChartOptions"
+              type="doughnut">
+            </canvas>
+            <div class="chart-center">
+              <span class="total-value">{{ stats.totalReservations }}</span>
+              <span class="total-label">حجز</span>
+            </div>
+          </div>
+          <div class="chart-legend fade-in">
+            <div class="legend-item">
+              <span class="legend-color pending"></span>
+              <span class="legend-label">قيد الانتظار</span>
+              <span class="legend-value">{{ stats.pendingReservations }}</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color contacted"></span>
+              <span class="legend-label">تم التواصل</span>
+              <span class="legend-value">{{ stats.totalReservations - stats.pendingReservations - stats.completedReservations - stats.cancelledReservations }}</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color completed"></span>
+              <span class="legend-label">مكتمل</span>
+              <span class="legend-value">{{ stats.completedReservations }}</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color cancelled"></span>
+              <span class="legend-label">ملغي</span>
+              <span class="legend-value">{{ stats.cancelledReservations }}</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Stats Chips - Progressive Loading -->
+      <div class="stats-chips">
+        <!-- Users Chip -->
+        <a routerLink="/users" class="stat-chip" [class.loading]="sectionLoading.users">
+          <span class="material-icons">group</span>
+          <div class="chip-data">
+            @if (sectionLoading.users) {
+              <span class="chip-value skeleton-text">--</span>
+            } @else {
+              <span class="chip-value">{{ stats.totalUsers }}</span>
+            }
+            <span class="chip-label">مستخدم</span>
+          </div>
+          @if (!sectionLoading.users && stats.activeUsers > 0) {
+            <span class="chip-badge active">{{ stats.activeUsers }}</span>
+          }
+        </a>
+
+        <!-- Chargers Chip -->
+        <a routerLink="/chargers" class="stat-chip" [class.loading]="sectionLoading.chargers">
+          <span class="material-icons">ev_station</span>
+          <div class="chip-data">
+            @if (sectionLoading.chargers) {
+              <span class="chip-value skeleton-text">--</span>
+            } @else {
+              <span class="chip-value">{{ stats.totalChargers }}</span>
+            }
+            <span class="chip-label">شاحن</span>
+          </div>
+        </a>
+
+        <!-- Vehicles Chip -->
+        <a routerLink="/vehicles" class="stat-chip" [class.loading]="sectionLoading.vehicles">
+          <span class="material-icons">electric_car</span>
+          <div class="chip-data">
+            @if (sectionLoading.vehicles) {
+              <span class="chip-value skeleton-text">--</span>
+            } @else {
+              <span class="chip-value">{{ stats.totalVehicles }}</span>
+            }
+            <span class="chip-label">مركبة</span>
+          </div>
+        </a>
+
+        <!-- Reports Chip -->
+        <a routerLink="/reports" class="stat-chip" [class.loading]="sectionLoading.reports">
+          <span class="material-icons">flag</span>
+          <div class="chip-data">
+            @if (sectionLoading.reports) {
+              <span class="chip-value skeleton-text">--</span>
+            } @else {
+              <span class="chip-value">{{ stats.totalReports }}</span>
+            }
+            <span class="chip-label">بلاغ</span>
+          </div>
+          @if (!sectionLoading.reports && stats.pendingReports > 0) {
+            <span class="chip-badge pending">{{ stats.pendingReports }}</span>
+          }
+        </a>
+
+        <!-- Brands Chip -->
+        <a routerLink="/brands" class="stat-chip" [class.loading]="sectionLoading.brands">
+          <span class="material-icons">business</span>
+          <div class="chip-data">
+            @if (sectionLoading.brands) {
+              <span class="chip-value skeleton-text">--</span>
+            } @else {
+              <span class="chip-value">{{ stats.totalBrands }}</span>
+            }
+            <span class="chip-label">علامة</span>
+          </div>
+        </a>
+
+        <!-- Fees Chip -->
+        <a routerLink="/fees" class="stat-chip" [class.loading]="sectionLoading.fees">
+          <span class="material-icons">percent</span>
+          <div class="chip-data">
+            @if (sectionLoading.fees) {
+              <span class="chip-value skeleton-text">--</span>
+            } @else {
+              <span class="chip-value">{{ stats.currentFees }}%</span>
+            }
+            <span class="chip-label">رسوم</span>
+          </div>
+        </a>
+
+        <!-- Processes Chip -->
+        <a routerLink="/processes" class="stat-chip" [class.loading]="sectionLoading.processes">
+          <span class="material-icons">electric_bolt</span>
+          <div class="chip-data">
+            @if (sectionLoading.processes) {
+              <span class="chip-value skeleton-text">--</span>
+            } @else {
+              <span class="chip-value">{{ stats.totalProcesses }}</span>
+            }
+            <span class="chip-label">عملية شحن</span>
+          </div>
+        </a>
+
+        <!-- Complaints Chip -->
+        <a routerLink="/complaints" class="stat-chip" [class.loading]="sectionLoading.complaints">
+          <span class="material-icons">feedback</span>
+          <div class="chip-data">
+            @if (sectionLoading.complaints) {
+              <span class="chip-value skeleton-text">--</span>
+            } @else {
+              <span class="chip-value">{{ stats.totalComplaints }}</span>
+            }
+            <span class="chip-label">شكوى</span>
+          </div>
+          @if (!sectionLoading.complaints && stats.pendingComplaints > 0) {
+            <span class="chip-badge pending">{{ stats.pendingComplaints }}</span>
+          }
+        </a>
+
+        <!-- Complaint Categories Chip -->
+        <a routerLink="/complaint-categories" class="stat-chip" [class.loading]="sectionLoading.complaints">
+          <span class="material-icons">category</span>
+          <div class="chip-data">
+            @if (sectionLoading.complaints) {
+              <span class="chip-value skeleton-text">--</span>
+            } @else {
+              <span class="chip-value">{{ stats.totalComplaintCategories }}</span>
+            }
+            <span class="chip-label">نوع شكوى</span>
+          </div>
+        </a>
+
+        <!-- Store Categories Chip -->
+        <a routerLink="/store/categories" class="stat-chip store-chip" [class.loading]="sectionLoading.store">
+          <span class="material-icons">storefront</span>
+          <div class="chip-data">
+            @if (sectionLoading.store) {
+              <span class="chip-value skeleton-text">--</span>
+            } @else {
+              <span class="chip-value">{{ stats.totalCategories }}</span>
+            }
+            <span class="chip-label">فئة منتج</span>
+          </div>
+        </a>
+
+        <!-- Store Products Chip -->
+        <a routerLink="/store/products" class="stat-chip store-chip" [class.loading]="sectionLoading.store">
+          <span class="material-icons">inventory_2</span>
+          <div class="chip-data">
+            @if (sectionLoading.store) {
+              <span class="chip-value skeleton-text">--</span>
+            } @else {
+              <span class="chip-value">{{ stats.totalProducts }}</span>
+            }
+            <span class="chip-label">منتج</span>
+          </div>
+          @if (!sectionLoading.store && stats.outOfStockProducts > 0) {
+            <span class="chip-badge warning">{{ stats.outOfStockProducts }}</span>
+          }
+        </a>
+
+        <!-- Store Reservations Chip -->
+        <a routerLink="/store/reservations" class="stat-chip store-chip" [class.loading]="sectionLoading.store">
+          <span class="material-icons">shopping_cart</span>
+          <div class="chip-data">
+            @if (sectionLoading.store) {
+              <span class="chip-value skeleton-text">--</span>
+            } @else {
+              <span class="chip-value">{{ stats.totalReservations }}</span>
+            }
+            <span class="chip-label">حجز</span>
+          </div>
+          @if (!sectionLoading.store && stats.pendingReservations > 0) {
+            <span class="chip-badge pending">{{ stats.pendingReservations }}</span>
+          }
+        </a>
       </div>
     </div>
-  } @else {
-    <!-- Stats & Charts Section -->
-    <section class="main-section">
-      <div class="main-grid">
-        <!-- Overview Chart -->
-        @defer (on viewport) {
-          <div class="chart-card overview-chart">
-            <h3>نظرة عامة</h3>
-            <div class="chart-container">
-              <canvas baseChart
-                [data]="overviewChartData"
-                [options]="overviewChartOptions"
-                type="doughnut">
-              </canvas>
-              <div class="chart-center">
-                <span class="total-value">{{ stats.totalUsers + stats.totalChargers + stats.totalVehicles }}</span>
-                <span class="total-label">إجمالي</span>
-              </div>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="quick-actions">
+    <h3>الوصول السريع</h3>
+    <div class="actions-grid">
+      <a routerLink="/users" class="action-item">
+        <span class="material-icons">people</span>
+        <span>المستخدمين</span>
+      </a>
+      <a routerLink="/processes" class="action-item">
+        <span class="material-icons">electric_bolt</span>
+        <span>عمليات الشحن</span>
+      </a>
+      <a routerLink="/chargers" class="action-item">
+        <span class="material-icons">ev_station</span>
+        <span>الشواحن</span>
+      </a>
+      <a routerLink="/vehicles" class="action-item">
+        <span class="material-icons">electric_car</span>
+        <span>المركبات</span>
+      </a>
+      <a routerLink="/brands" class="action-item">
+        <span class="material-icons">category</span>
+        <span>العلامات</span>
+      </a>
+      <a routerLink="/reports" class="action-item">
+        <span class="material-icons">flag</span>
+        <span>البلاغات</span>
+      </a>
+      <a routerLink="/complaints" class="action-item">
+        <span class="material-icons">feedback</span>
+        <span>الشكاوى</span>
+      </a>
+      <a routerLink="/complaint-categories" class="action-item">
+        <span class="material-icons">category</span>
+        <span>أنواع الشكاوى</span>
+      </a>
+      <a routerLink="/fees" class="action-item">
+        <span class="material-icons">payments</span>
+        <span>الرسوم</span>
+      </a>
+      <a routerLink="/terms" class="action-item">
+        <span class="material-icons">article</span>
+        <span>الشروط</span>
+      </a>
+      <a routerLink="/protocol" class="action-item">
+        <span class="material-icons">policy</span>
+        <span>البروتوكول</span>
+      </a>
+      <a routerLink="/app-config" class="action-item">
+        <span class="material-icons">smartphone</span>
+        <span>تطبيق الجوال</span>
+      </a>
+      <a routerLink="/store" class="action-item store-action">
+        <span class="material-icons">storefront</span>
+        <span>المتجر</span>
+      </a>
+      <a routerLink="/store/products" class="action-item store-action">
+        <span class="material-icons">inventory_2</span>
+        <span>المنتجات</span>
+      </a>
+      <a routerLink="/store/reservations" class="action-item store-action">
+        <span class="material-icons">shopping_cart</span>
+        <span>الحجوزات</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Recent Reservations Section -->
+  @if (!sectionLoading.store && recentReservations.length > 0) {
+    <section class="recent-reservations-section fade-in">
+      <div class="section-header">
+        <h3>
+          <span class="material-icons">shopping_cart</span>
+          آخر الحجوزات
+        </h3>
+        <a routerLink="/store/reservations" class="view-all-link">
+          عرض الكل
+          <span class="material-icons">arrow_back</span>
+        </a>
+      </div>
+      <div class="reservations-grid">
+        @for (reservation of recentReservations; track reservation.id) {
+          <div class="reservation-card" [class]="getReservationStatusClass(reservation.status)">
+            <div class="reservation-product">
+              <span class="product-name">{{ reservation.productName }}</span>
+              <span class="product-qty">x{{ reservation.quantity }}</span>
             </div>
-            <div class="chart-legend">
-              <div class="legend-item">
-                <span class="legend-color users"></span>
-                <span class="legend-label">مستخدمين</span>
-                <span class="legend-value">{{ stats.totalUsers }}</span>
-              </div>
-              <div class="legend-item">
-                <span class="legend-color chargers"></span>
-                <span class="legend-label">شواحن</span>
-                <span class="legend-value">{{ stats.totalChargers }}</span>
-              </div>
-              <div class="legend-item">
-                <span class="legend-color vehicles"></span>
-                <span class="legend-label">مركبات</span>
-                <span class="legend-value">{{ stats.totalVehicles }}</span>
-              </div>
-              <div class="legend-item">
-                <span class="legend-color reports"></span>
-                <span class="legend-label">بلاغات</span>
-                <span class="legend-value">{{ stats.totalReports }}</span>
-              </div>
+            <div class="reservation-info">
+              <span class="user-name">
+                <span class="material-icons">person</span>
+                {{ reservation.userName }}
+              </span>
+              <span class="reservation-price">{{ formatCurrency(reservation.unitPrice * reservation.quantity) }}</span>
             </div>
-          </div>
-        } @placeholder {
-          <div class="chart-card overview-chart skeleton-chart">
-            <h3>نظرة عامة</h3>
-            <div class="chart-placeholder"></div>
+            <div class="reservation-footer">
+              <span class="reservation-status">{{ getReservationStatusLabel(reservation.status) }}</span>
+              <span class="reservation-time">{{ formatDate(reservation.createdAt) }}</span>
+            </div>
           </div>
         }
-
-        <!-- Reports Chart -->
-        @defer (on viewport) {
-          <div class="chart-card reports-chart">
-            <h3>حالة البلاغات</h3>
-            <div class="bar-chart-container">
-              <canvas baseChart
-                [data]="reportsChartData"
-                [options]="reportsChartOptions"
-                type="bar">
-              </canvas>
-            </div>
-          </div>
-        } @placeholder {
-          <div class="chart-card reports-chart skeleton-chart">
-            <h3>حالة البلاغات</h3>
-            <div class="chart-placeholder"></div>
-          </div>
-        }
-
-        <!-- Stats Chips -->
-        <div class="stats-chips">
-          <a routerLink="/users" class="stat-chip">
-            <span class="material-icons">group</span>
-            <div class="chip-data">
-              <span class="chip-value">{{ stats.totalUsers }}</span>
-              <span class="chip-label">مستخدم</span>
-            </div>
-            @if (stats.activeUsers > 0) {
-              <span class="chip-badge active">{{ stats.activeUsers }}</span>
-            }
-          </a>
-
-          <a routerLink="/chargers" class="stat-chip">
-            <span class="material-icons">ev_station</span>
-            <div class="chip-data">
-              <span class="chip-value">{{ stats.totalChargers }}</span>
-              <span class="chip-label">شاحن</span>
-            </div>
-          </a>
-
-          <a routerLink="/vehicles" class="stat-chip">
-            <span class="material-icons">electric_car</span>
-            <div class="chip-data">
-              <span class="chip-value">{{ stats.totalVehicles }}</span>
-              <span class="chip-label">مركبة</span>
-            </div>
-          </a>
-
-          <a routerLink="/reports" class="stat-chip">
-            <span class="material-icons">flag</span>
-            <div class="chip-data">
-              <span class="chip-value">{{ stats.totalReports }}</span>
-              <span class="chip-label">بلاغ</span>
-            </div>
-            @if (stats.pendingReports > 0) {
-              <span class="chip-badge pending">{{ stats.pendingReports }}</span>
-            }
-          </a>
-
-          <a routerLink="/brands" class="stat-chip">
-            <span class="material-icons">business</span>
-            <div class="chip-data">
-              <span class="chip-value">{{ stats.totalBrands }}</span>
-              <span class="chip-label">علامة</span>
-            </div>
-          </a>
-
-          <a routerLink="/fees" class="stat-chip">
-            <span class="material-icons">percent</span>
-            <div class="chip-data">
-              <span class="chip-value">{{ stats.currentFees }}%</span>
-              <span class="chip-label">رسوم</span>
-            </div>
-          </a>
-
-          <a routerLink="/processes" class="stat-chip">
-            <span class="material-icons">electric_bolt</span>
-            <div class="chip-data">
-              <span class="chip-value">{{ stats.totalProcesses }}</span>
-              <span class="chip-label">عملية شحن</span>
-            </div>
-          </a>
-
-          <a routerLink="/complaints" class="stat-chip">
-            <span class="material-icons">feedback</span>
-            <div class="chip-data">
-              <span class="chip-value">{{ stats.totalComplaints }}</span>
-              <span class="chip-label">شكوى</span>
-            </div>
-            @if (stats.pendingComplaints > 0) {
-              <span class="chip-badge pending">{{ stats.pendingComplaints }}</span>
-            }
-          </a>
-
-          <a routerLink="/complaint-categories" class="stat-chip">
-            <span class="material-icons">category</span>
-            <div class="chip-data">
-              <span class="chip-value">{{ stats.totalComplaintCategories }}</span>
-              <span class="chip-label">نوع شكوى</span>
-            </div>
-          </a>
-        </div>
       </div>
     </section>
-
-    <!-- Quick Actions -->
-    <section class="quick-actions">
-      <h3>الوصول السريع</h3>
-      <div class="actions-grid">
-        <a routerLink="/users" class="action-item">
-          <span class="material-icons">people</span>
-          <span>المستخدمين</span>
-        </a>
-        <a routerLink="/processes" class="action-item">
-          <span class="material-icons">electric_bolt</span>
-          <span>عمليات الشحن</span>
-        </a>
-        <a routerLink="/chargers" class="action-item">
-          <span class="material-icons">ev_station</span>
-          <span>الشواحن</span>
-        </a>
-        <a routerLink="/vehicles" class="action-item">
-          <span class="material-icons">electric_car</span>
-          <span>المركبات</span>
-        </a>
-        <a routerLink="/brands" class="action-item">
-          <span class="material-icons">category</span>
-          <span>العلامات</span>
-        </a>
-        <a routerLink="/reports" class="action-item">
-          <span class="material-icons">flag</span>
-          <span>البلاغات</span>
-        </a>
-        <a routerLink="/complaints" class="action-item">
-          <span class="material-icons">feedback</span>
-          <span>الشكاوى</span>
-        </a>
-        <a routerLink="/complaint-categories" class="action-item">
-          <span class="material-icons">category</span>
-          <span>أنواع الشكاوى</span>
-        </a>
-        <a routerLink="/fees" class="action-item">
-          <span class="material-icons">payments</span>
-          <span>الرسوم</span>
-        </a>
-        <a routerLink="/terms" class="action-item">
-          <span class="material-icons">article</span>
-          <span>الشروط</span>
-        </a>
-        <a routerLink="/protocol" class="action-item">
-          <span class="material-icons">policy</span>
-          <span>البروتوكول</span>
-        </a>
-        <a routerLink="/app-config" class="action-item">
-          <span class="material-icons">smartphone</span>
-          <span>تطبيق الجوال</span>
-        </a>
+  } @else if (sectionLoading.store) {
+    <section class="recent-reservations-section">
+      <div class="section-header">
+        <h3>
+          <span class="material-icons">shopping_cart</span>
+          آخر الحجوزات
+        </h3>
+      </div>
+      <div class="reservations-grid">
+        @for (i of [1, 2, 3, 4, 5]; track i) {
+          <div class="reservation-card skeleton-reservation">
+            <div class="skeleton-line long"></div>
+            <div class="skeleton-line medium"></div>
+            <div class="skeleton-line short"></div>
+          </div>
+        }
       </div>
     </section>
   }

@@ -1,9 +1,92 @@
 <div class="app-config-container">
   <div class="page-header-row">
     <div>
-      <h2>إعدادات تطبيق الموبايل</h2>
-      <p class="subtitle">التحكم في حالة تطبيق الموبايل لكل منصة</p>
+      <h2>إعدادات التطبيق</h2>
+      <p class="subtitle">التحكم في إعدادات التطبيق ووضع الشحن</p>
     </div>
+  </div>
+
+  <!-- Charging Mode Section -->
+  <div class="section-header">
+    <span class="material-icons">bolt</span>
+    <h3>وضع الشحن</h3>
+  </div>
+
+  @if (isChargingModeLoading) {
+    <div class="charging-mode-card loading">
+      <div class="loading-spinner small"></div>
+      <span>جاري تحميل حالة الشحن...</span>
+    </div>
+  } @else if (chargingModeLoadError) {
+    <div class="charging-mode-card error">
+      <span class="material-icons">error_outline</span>
+      <span>فشل تحميل حالة الشحن</span>
+      <button class="retry-btn" (click)="loadChargingModeConfig()">
+        <span class="material-icons">refresh</span>
+        إعادة المحاولة
+      </button>
+    </div>
+  } @else {
+    <div class="charging-mode-card" [class.enabled]="chargingModeEnabled" [class.disabled]="!chargingModeEnabled">
+      <div class="charging-mode-header">
+        <div class="charging-mode-icon" [class.active]="chargingModeEnabled">
+          <span class="material-icons">{{ chargingModeEnabled ? 'electric_bolt' : 'power_off' }}</span>
+        </div>
+        <div class="charging-mode-info">
+          <h4>حالة الشحن</h4>
+          <span class="status-badge" [class]="chargingModeEnabled ? 'status-active' : 'status-inactive'">
+            {{ chargingModeEnabled ? 'مفعّل' : 'معطّل' }}
+          </span>
+        </div>
+        <div class="charging-mode-toggle">
+          <button
+            class="toggle-btn-large"
+            [class.active]="chargingModeEnabled"
+            [disabled]="isChargingModeSaving"
+            (click)="toggleChargingMode()"
+          >
+            @if (isChargingModeSaving) {
+              <span class="material-icons spin">sync</span>
+            } @else {
+              <span class="material-icons">{{ chargingModeEnabled ? 'toggle_on' : 'toggle_off' }}</span>
+            }
+            <span>{{ chargingModeEnabled ? 'تعطيل' : 'تفعيل' }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="charging-mode-description">
+        @if (chargingModeEnabled) {
+          <div class="status-message success">
+            <span class="material-icons">check_circle</span>
+            <div>
+              <strong>الشحن مفعّل</strong>
+              <p>يمكن للمستخدمين استخدام الشواحن وإجراء عمليات الشحن بشكل طبيعي.</p>
+            </div>
+          </div>
+        } @else {
+          <div class="status-message warning">
+            <span class="material-icons">warning</span>
+            <div>
+              <strong>الشحن معطّل - وضع الإعداد</strong>
+              <p>التطبيق في وضع التسجيل فقط. لن يتمكن المستخدمون من:</p>
+              <ul>
+                <li>تفعيل الشواحن</li>
+                <li>بدء عمليات شحن جديدة</li>
+                <li>استخدام أي من ميزات الشحن</li>
+              </ul>
+              <p class="user-message">رسالة للمستخدمين: "الشحن غير مفعّل حالياً. في انتظار تفعيل المسؤول."</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Mobile App Section -->
+  <div class="section-header">
+    <span class="material-icons">smartphone</span>
+    <h3>إعدادات تطبيق الموبايل</h3>
   </div>
 
   @if (config !== null) {
