@@ -414,8 +414,7 @@ export class NotificationService implements OnDestroy {
     if (!environment.enableSignalR) {
       // Use polling fallback only
       this.startPolling();
-      this.loadNotifications();
-      this.loadUnreadCount();
+      this.loadNotifications(); // This recalculates unread count from local state
       return;
     }
 
@@ -467,9 +466,8 @@ export class NotificationService implements OnDestroy {
         this.startPolling();
         // Join broadcast group for admin notifications
         this.joinBroadcastGroup();
-        // Load initial notifications after connection
+        // Load initial notifications after connection (this recalculates unread count)
         this.loadNotifications();
-        this.loadUnreadCount();
         console.log('SignalR connected - polling active as backup');
       })
       .catch((err) => {
@@ -481,9 +479,8 @@ export class NotificationService implements OnDestroy {
         });
         // Start polling as fallback
         this.startPolling();
-        // Load notifications via REST API
+        // Load notifications via REST API (this recalculates unread count)
         this.loadNotifications();
-        this.loadUnreadCount();
         // Schedule reconnect attempt
         this.scheduleReconnect();
       });
@@ -511,10 +508,9 @@ export class NotificationService implements OnDestroy {
       this.clearReconnectInterval();
       // Rejoin broadcast group after reconnection
       this.joinBroadcastGroup();
-      // Refresh notifications after reconnection
+      // Refresh notifications after reconnection (this recalculates unread count)
       setTimeout(() => {
         this.loadNotifications();
-        this.loadUnreadCount();
       }, 1000);
     });
 
@@ -539,8 +535,9 @@ export class NotificationService implements OnDestroy {
 
     console.log('Starting notification polling...');
     this.pollingInterval = setInterval(() => {
+      // Only load notifications - it will recalculate unread count from local state
+      // Don't call loadUnreadCount() separately as it may override the correct local count
       this.loadNotifications();
-      this.loadUnreadCount();
     }, this.POLLING_DELAY);
   }
 
@@ -1257,8 +1254,8 @@ export class NotificationService implements OnDestroy {
    * Refresh notifications from server
    */
   refresh(): void {
+    // loadNotifications() also recalculates unread count from local state
     this.loadNotifications();
-    this.loadUnreadCount();
   }
 
   /**
