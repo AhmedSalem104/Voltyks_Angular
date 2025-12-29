@@ -1,0 +1,447 @@
+<div class="notification-detail">
+  <!-- Header -->
+  <div class="detail-header">
+    <button class="back-btn" (click)="goBack()">
+      <span class="material-icons">arrow_forward</span>
+      رجوع
+    </button>
+    <div class="header-title">
+      <span class="material-icons type-icon" [class]="type">{{ getTypeIcon() }}</span>
+      <h1>تفاصيل {{ getTypeLabel() }}</h1>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <span>جاري التحميل...</span>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (loadError && !isLoading) {
+    <div class="error-state">
+      <span class="material-icons">error_outline</span>
+      <h3>فشل تحميل البيانات</h3>
+      <p>لم نتمكن من تحميل تفاصيل الإشعار. قد يكون تم حذفه أو غير موجود.</p>
+      <button class="retry-btn" (click)="loadData()">
+        <span class="material-icons">refresh</span>
+        إعادة المحاولة
+      </button>
+    </div>
+  }
+
+  <!-- Report Detail -->
+  @if (type === 'report' && report && !isLoading && !loadError) {
+    <div class="detail-content report-detail fade-in">
+      <!-- Status Badge -->
+      <div class="status-banner" [class.resolved]="report.isResolved" [class.pending]="!report.isResolved">
+        <span class="material-icons">{{ report.isResolved ? 'check_circle' : 'pending' }}</span>
+        <span>{{ report.isResolved ? 'تم الحل' : 'معلق' }}</span>
+      </div>
+
+      <!-- Main Info Card -->
+      <div class="info-card">
+        <div class="card-header">
+          <span class="material-icons">description</span>
+          <h3>محتوى البلاغ</h3>
+        </div>
+        <div class="card-body">
+          <p class="content-text">{{ report.reportContent }}</p>
+        </div>
+      </div>
+
+      <!-- User Info Card -->
+      <div class="info-card">
+        <div class="card-header">
+          <span class="material-icons">person</span>
+          <h3>معلومات المُبلِّغ</h3>
+        </div>
+        <div class="card-body">
+          <div class="info-row">
+            <span class="label">الاسم:</span>
+            <span class="value">{{ report.userFullName }}</span>
+          </div>
+          @if (report.userEmail) {
+            <div class="info-row">
+              <span class="label">البريد الإلكتروني:</span>
+              <a class="value link" href="mailto:{{ report.userEmail }}">{{ report.userEmail }}</a>
+            </div>
+          }
+          @if (report.userPhone) {
+            <div class="info-row">
+              <span class="label">رقم الهاتف:</span>
+              <a class="value link" href="tel:{{ report.userPhone }}">{{ report.userPhone }}</a>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Meta Info -->
+      <div class="info-card">
+        <div class="card-header">
+          <span class="material-icons">info</span>
+          <h3>معلومات إضافية</h3>
+        </div>
+        <div class="card-body">
+          <div class="info-row">
+            <span class="label">تاريخ البلاغ:</span>
+            <span class="value">{{ formatDate(report.reportDate) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">رقم البلاغ:</span>
+            <span class="value">#{{ report.id }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions-card">
+        @if (!report.isResolved) {
+          <button class="action-btn success" (click)="resolveReport()" [disabled]="isSaving">
+            <span class="material-icons">check_circle</span>
+            حل البلاغ
+          </button>
+        }
+        <button class="action-btn danger" (click)="deleteReport()" [disabled]="isSaving">
+          <span class="material-icons">delete</span>
+          حذف البلاغ
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Complaint Detail -->
+  @if (type === 'complaint' && complaint && !isLoading && !loadError) {
+    <div class="detail-content complaint-detail fade-in">
+      <!-- Status Badge -->
+      <div class="status-banner" [class.resolved]="complaint.isResolved" [class.pending]="!complaint.isResolved">
+        <span class="material-icons">{{ complaint.isResolved ? 'check_circle' : 'pending' }}</span>
+        <span>{{ complaint.isResolved ? 'تم الحل' : 'معلقة' }}</span>
+      </div>
+
+      <!-- Main Info Card -->
+      <div class="info-card">
+        <div class="card-header">
+          <span class="material-icons">feedback</span>
+          <h3>محتوى الشكوى</h3>
+        </div>
+        <div class="card-body">
+          <p class="content-text">{{ complaint.content }}</p>
+        </div>
+      </div>
+
+      <!-- Category Card -->
+      @if (complaint.categoryName) {
+        <div class="info-card category-card">
+          <div class="card-header">
+            <span class="material-icons">category</span>
+            <h3>التصنيف</h3>
+          </div>
+          <div class="card-body">
+            <span class="category-badge">{{ complaint.categoryName }}</span>
+          </div>
+        </div>
+      }
+
+      <!-- User Info Card -->
+      <div class="info-card">
+        <div class="card-header">
+          <span class="material-icons">person</span>
+          <h3>معلومات المشتكي</h3>
+        </div>
+        <div class="card-body">
+          <div class="info-row">
+            <span class="label">الاسم:</span>
+            <span class="value">{{ complaint.userName }}</span>
+          </div>
+          @if (complaint.userEmail) {
+            <div class="info-row">
+              <span class="label">البريد الإلكتروني:</span>
+              <a class="value link" href="mailto:{{ complaint.userEmail }}">{{ complaint.userEmail }}</a>
+            </div>
+          }
+          @if (complaint.userPhone) {
+            <div class="info-row">
+              <span class="label">رقم الهاتف:</span>
+              <a class="value link" href="tel:{{ complaint.userPhone }}">{{ complaint.userPhone }}</a>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Meta Info -->
+      <div class="info-card">
+        <div class="card-header">
+          <span class="material-icons">info</span>
+          <h3>معلومات إضافية</h3>
+        </div>
+        <div class="card-body">
+          <div class="info-row">
+            <span class="label">تاريخ الشكوى:</span>
+            <span class="value">{{ formatDate(complaint.createdAt) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">رقم الشكوى:</span>
+            <span class="value">#{{ complaint.id }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Replies -->
+      @if (complaint.replies && complaint.replies.length > 0) {
+        <div class="info-card replies-card">
+          <div class="card-header">
+            <span class="material-icons">chat</span>
+            <h3>الردود ({{ complaint.replies.length }})</h3>
+          </div>
+          <div class="card-body">
+            <div class="replies-list">
+              @for (reply of complaint.replies; track reply.id) {
+                <div class="reply-item" [class.admin]="reply.isAdmin">
+                  <div class="reply-header">
+                    <span class="reply-author">
+                      <span class="material-icons">{{ reply.isAdmin ? 'admin_panel_settings' : 'person' }}</span>
+                      {{ reply.isAdmin ? 'الإدارة' : complaint.userName }}
+                    </span>
+                    <span class="reply-date">{{ formatDate(reply.createdAt) }}</span>
+                  </div>
+                  <p class="reply-content">{{ reply.content }}</p>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Add Reply -->
+      @if (!complaint.isResolved) {
+        <div class="info-card reply-form-card">
+          <div class="card-header">
+            <span class="material-icons">reply</span>
+            <h3>إضافة رد</h3>
+          </div>
+          <div class="card-body">
+            <textarea
+              class="reply-input"
+              [(ngModel)]="replyContent"
+              placeholder="اكتب ردك هنا..."
+              rows="4"
+            ></textarea>
+            <button class="action-btn primary" (click)="addReply()" [disabled]="isSaving || !replyContent.trim()">
+              <span class="material-icons">send</span>
+              إرسال الرد
+            </button>
+          </div>
+        </div>
+      }
+
+      <!-- Actions -->
+      <div class="actions-card">
+        @if (!complaint.isResolved) {
+          <button class="action-btn success" (click)="resolveComplaint()" [disabled]="isSaving">
+            <span class="material-icons">check_circle</span>
+            حل الشكوى
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Reservation Detail -->
+  @if (type === 'reservation' && reservation && !isLoading && !loadError) {
+    <div class="detail-content reservation-detail fade-in">
+      <!-- Status Badges -->
+      <div class="status-badges">
+        <div class="status-banner" [class]="'status-' + reservation.status">
+          <span class="material-icons">local_shipping</span>
+          <span>{{ getReservationStatusLabel(reservation.status) }}</span>
+        </div>
+        <div class="status-banner payment" [class]="'payment-' + reservation.paymentStatus">
+          <span class="material-icons">payment</span>
+          <span>{{ getPaymentStatusLabel(reservation.paymentStatus) }}</span>
+        </div>
+      </div>
+
+      <!-- Product Info Card -->
+      <div class="info-card product-card">
+        <div class="card-header">
+          <span class="material-icons">inventory_2</span>
+          <h3>تفاصيل المنتج</h3>
+        </div>
+        <div class="card-body">
+          <div class="product-info">
+            @if (reservation.productThumbnail) {
+              <img [src]="reservation.productThumbnail" alt="{{ reservation.productName }}" class="product-image">
+            } @else {
+              <div class="product-image placeholder">
+                <span class="material-icons">image</span>
+              </div>
+            }
+            <div class="product-details">
+              <h4 class="product-name">{{ reservation.productName }}</h4>
+              <div class="product-meta">
+                <span class="quantity">الكمية: {{ reservation.quantity }}</span>
+                <span class="unit-price">سعر الوحدة: {{ formatCurrency(reservation.unitPrice) }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="total-price">
+            <span class="label">الإجمالي:</span>
+            <span class="value">{{ formatCurrency(reservation.totalPrice || (reservation.unitPrice * reservation.quantity)) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Info Card -->
+      <div class="info-card">
+        <div class="card-header">
+          <span class="material-icons">person</span>
+          <h3>معلومات العميل</h3>
+        </div>
+        <div class="card-body">
+          <div class="info-row">
+            <span class="label">الاسم:</span>
+            <span class="value">{{ reservation.userName }}</span>
+          </div>
+          @if (reservation.userEmail) {
+            <div class="info-row">
+              <span class="label">البريد الإلكتروني:</span>
+              <a class="value link" href="mailto:{{ reservation.userEmail }}">{{ reservation.userEmail }}</a>
+            </div>
+          }
+          @if (reservation.userPhone) {
+            <div class="info-row">
+              <span class="label">رقم الهاتف:</span>
+              <a class="value link" href="tel:{{ reservation.userPhone }}">{{ reservation.userPhone }}</a>
+            </div>
+          }
+          @if (reservation.address) {
+            <div class="info-row">
+              <span class="label">العنوان:</span>
+              <span class="value">{{ reservation.address }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Notes -->
+      @if (reservation.notes) {
+        <div class="info-card">
+          <div class="card-header">
+            <span class="material-icons">notes</span>
+            <h3>ملاحظات العميل</h3>
+          </div>
+          <div class="card-body">
+            <p class="content-text">{{ reservation.notes }}</p>
+          </div>
+        </div>
+      }
+
+      <!-- Meta Info -->
+      <div class="info-card">
+        <div class="card-header">
+          <span class="material-icons">info</span>
+          <h3>معلومات إضافية</h3>
+        </div>
+        <div class="card-body">
+          <div class="info-row">
+            <span class="label">تاريخ الحجز:</span>
+            <span class="value">{{ formatDate(reservation.createdAt) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">رقم الحجز:</span>
+            <span class="value">#{{ reservation.id }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status Actions -->
+      <div class="info-card actions-section">
+        <div class="card-header">
+          <span class="material-icons">edit</span>
+          <h3>تغيير الحالة</h3>
+        </div>
+        <div class="card-body">
+          <div class="status-actions">
+            <h4>حالة الحجز</h4>
+            <div class="status-buttons">
+              <button
+                class="status-btn"
+                [class.active]="reservation.status === 'pending'"
+                (click)="updateReservationStatus('pending')"
+                [disabled]="isSaving || reservation.status === 'pending'"
+              >
+                قيد الانتظار
+              </button>
+              <button
+                class="status-btn"
+                [class.active]="reservation.status === 'contacted'"
+                (click)="updateReservationStatus('contacted')"
+                [disabled]="isSaving || reservation.status === 'contacted'"
+              >
+                تم التواصل
+              </button>
+              <button
+                class="status-btn success"
+                [class.active]="reservation.status === 'completed'"
+                (click)="updateReservationStatus('completed')"
+                [disabled]="isSaving || reservation.status === 'completed'"
+              >
+                مكتمل
+              </button>
+              <button
+                class="status-btn danger"
+                [class.active]="reservation.status === 'cancelled'"
+                (click)="updateReservationStatus('cancelled')"
+                [disabled]="isSaving || reservation.status === 'cancelled'"
+              >
+                ملغي
+              </button>
+            </div>
+          </div>
+
+          <div class="status-actions">
+            <h4>حالة الدفع</h4>
+            <div class="status-buttons">
+              <button
+                class="status-btn"
+                [class.active]="reservation.paymentStatus === 'pending'"
+                (click)="updatePaymentStatus('pending')"
+                [disabled]="isSaving || reservation.paymentStatus === 'pending'"
+              >
+                في انتظار الدفع
+              </button>
+              <button
+                class="status-btn success"
+                [class.active]="reservation.paymentStatus === 'paid'"
+                (click)="updatePaymentStatus('paid')"
+                [disabled]="isSaving || reservation.paymentStatus === 'paid'"
+              >
+                مدفوع
+              </button>
+              <button
+                class="status-btn warning"
+                [class.active]="reservation.paymentStatus === 'refunded'"
+                (click)="updatePaymentStatus('refunded')"
+                [disabled]="isSaving || reservation.paymentStatus === 'refunded'"
+              >
+                مسترد
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Confirm Dialog -->
+<app-confirm-dialog
+  [isOpen]="showConfirmDialog"
+  [title]="confirmDialogTitle"
+  [message]="confirmDialogMessage"
+  (confirm)="confirmAction()"
+  (cancel)="cancelAction()"
+></app-confirm-dialog>

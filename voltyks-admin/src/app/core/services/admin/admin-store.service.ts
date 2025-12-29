@@ -309,4 +309,35 @@ export class AdminStoreService {
   cancelReservation(id: number): Observable<ApiResponse<boolean>> {
     return this.http.put<ApiResponse<boolean>>(`${this.baseUrl}/reservations/${id}/cancel`, {});
   }
+
+  /**
+   * Update reservation status
+   * Routes to appropriate endpoint based on status
+   */
+  updateReservationStatus(id: number, status: string): Observable<ApiResponse<any>> {
+    switch (status) {
+      case 'contacted':
+        return this.recordContact(id, { notes: '' });
+      case 'completed':
+        return this.completeReservation(id);
+      case 'cancelled':
+        return this.cancelReservation(id);
+      default:
+        // For pending or unknown status, use a generic PATCH
+        return this.http.patch<ApiResponse<any>>(`${this.baseUrl}/reservations/${id}/status`, { status });
+    }
+  }
+
+  /**
+   * Update payment status
+   * PUT /api/admin/store/reservations/{id}/payment
+   */
+  updatePaymentStatus(id: number, status: string): Observable<ApiResponse<AdminReservationDto>> {
+    // Map status to appropriate payment method for the API
+    const dto: RecordPaymentDto = {
+      paymentMethod: status === 'paid' ? 'cash' : 'other',
+      notes: status === 'refunded' ? 'Refunded' : undefined
+    };
+    return this.recordPayment(id, dto);
+  }
 }

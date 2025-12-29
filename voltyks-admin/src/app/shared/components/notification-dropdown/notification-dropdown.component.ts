@@ -187,6 +187,7 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
 
   /**
    * Handle click on notification item
+   * Navigate to notification detail page for full control
    */
   onNotificationClick(notification: AppNotification, event: MouseEvent): void {
     // Prevent navigation if clicking delete button
@@ -199,24 +200,8 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
       this.notificationService.markAsReadOptimistic(notification.id);
     }
 
-    // Navigate based on type
-    switch (notification.type) {
-      case 'report':
-        this.router.navigate(['/reports'], {
-          queryParams: { highlight: notification.originalId }
-        });
-        break;
-      case 'complaint':
-        this.router.navigate(['/complaints'], {
-          queryParams: { highlight: notification.originalId }
-        });
-        break;
-      case 'reservation':
-        this.router.navigate(['/store/reservations'], {
-          queryParams: { highlight: notification.originalId }
-        });
-        break;
-    }
+    // Navigate to notification detail page
+    this.router.navigate(['/notifications', notification.type, notification.originalId]);
 
     this.close();
   }

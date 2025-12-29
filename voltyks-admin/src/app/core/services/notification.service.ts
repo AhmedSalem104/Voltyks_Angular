@@ -897,20 +897,36 @@ export class NotificationService implements OnDestroy {
 
   /**
    * Normalize notification type from API response
-   * NOTE: Backend currently sends wrong type (complaint for reservations), so we check message FIRST
+   * PRIORITY: API type > Title/Message keywords > Fields > Default
    */
   private normalizeNotificationType(notification: any): NotificationType {
     const message = notification?.message || '';
     const title = notification?.title || '';
     const combinedText = `${message} ${title}`.toLowerCase();
 
-    // PRIORITY 1: Check message/title content FIRST (backend sends wrong type!)
-    // Reservation keywords (Arabic and English)
-    if (combinedText.includes('حجز') || combinedText.includes('بحجز') ||
-        combinedText.includes('الكمية') || combinedText.includes('reserved') ||
-        combinedText.includes('reservation') || combinedText.includes('order') ||
-        combinedText.includes('product') && (combinedText.includes('new') || combinedText.includes('جديد'))) {
+    // PRIORITY 1: Check type field from API FIRST (most reliable)
+    const type = (notification?.type || '').toString().toLowerCase().trim();
+    if (type === 'complaint' || type === 'complaints') {
+      return 'complaint';
+    }
+    if (type === 'report' || type === 'reports') {
+      return 'report';
+    }
+    if (type === 'reservation' || type === 'reservations' || type === 'product_reservation') {
       return 'reservation';
+    }
+
+    // PRIORITY 2: Check notification ID format
+    const id = (notification?.id || '').toString().toLowerCase();
+    if (id.startsWith('complaint_') || id.includes('complaint')) return 'complaint';
+    if (id.startsWith('report_') || id.includes('report')) return 'report';
+    if (id.startsWith('reservation_') || id.includes('reservation')) return 'reservation';
+
+    // PRIORITY 3: Check message/title content
+    // Complaint keywords (Arabic) - check FIRST
+    if (combinedText.includes('شكوى') || combinedText.includes('شكوي') ||
+        combinedText.includes('complaint')) {
+      return 'complaint';
     }
 
     // Report keywords
@@ -918,36 +934,26 @@ export class NotificationService implements OnDestroy {
       return 'report';
     }
 
-    // Complaint keywords (check AFTER reservation since backend wrongly labels reservations as complaints)
-    if (combinedText.includes('شكوى') || combinedText.includes('شكوي')) {
+    // Reservation keywords - must have specific product-related terms
+    if ((combinedText.includes('حجز') && combinedText.includes('منتج')) ||
+        combinedText.includes('حجز منتج') ||
+        combinedText.includes('reservation') ||
+        (combinedText.includes('product') && combinedText.includes('reserved'))) {
+      return 'reservation';
+    }
+
+    // PRIORITY 4: Check reservation-specific fields (only if has product data)
+    if ((notification?.productName || notification?.product_name) &&
+        (notification?.quantity !== undefined || notification?.totalPrice !== undefined)) {
+      return 'reservation';
+    }
+
+    // Default based on source
+    if (notification?.categoryName || notification?.category_name) {
       return 'complaint';
     }
 
-    // PRIORITY 2: Check reservation-specific fields
-    if (notification?.productName || notification?.product_name ||
-        notification?.quantity !== undefined || notification?.totalPrice !== undefined ||
-        notification?.total_price !== undefined || notification?.productId !== undefined ||
-        notification?.product_id !== undefined) {
-      return 'reservation';
-    }
-
-    // PRIORITY 3: Check type field from API (but backend sends wrong values!)
-    const type = (notification?.type || '').toString().toLowerCase().trim();
-
-    // Only trust specific type values
-    if (type === 'reservation' || type === 'reservations' || type === 'product_reservation') {
-      return 'reservation';
-    }
-    if (type === 'report' || type === 'reports') {
-      return 'report';
-    }
-
-    // PRIORITY 4: Check notification ID format
-    const id = (notification?.id || '').toString().toLowerCase();
-    if (id.includes('reservation') || id.includes('product')) return 'reservation';
-    if (id.includes('report')) return 'report';
-
-    // Default to complaint (for actual complaints)
+    // Final default to complaint
     return 'complaint';
   }
 

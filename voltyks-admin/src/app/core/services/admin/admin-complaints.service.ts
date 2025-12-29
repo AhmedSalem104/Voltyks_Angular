@@ -59,4 +59,20 @@ export class AdminComplaintsService {
     const params = new HttpParams().set('isResolved', isResolved.toString());
     return this.http.patch<ApiResponse<UpdateComplaintStatusResponse>>(`${this.adminUrl}/${id}/status`, null, { params });
   }
+
+  /**
+   * Resolve complaint (mark as resolved)
+   * PATCH /api/admin/complaints/{id}/status?isResolved=true
+   */
+  resolveComplaint(id: number): Observable<ApiResponse<UpdateComplaintStatusResponse>> {
+    return this.updateComplaintStatus(id, true);
+  }
+
+  /**
+   * Add reply to complaint
+   * POST /api/admin/complaints/{id}/replies
+   */
+  addReply(id: number, dto: { content: string }): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.adminUrl}/${id}/replies`, dto);
+  }
 }

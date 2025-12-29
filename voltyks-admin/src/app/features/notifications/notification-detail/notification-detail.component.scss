@@ -1,0 +1,683 @@
+// Variables
+$primary: #00C853;
+$primary-dark: #00A843;
+$danger: #ef4444;
+$warning: #f59e0b;
+$info: #3b82f6;
+$success: #10b981;
+
+$glass-bg: rgba(20, 20, 25, 0.7);
+$glass-border: rgba(255, 255, 255, 0.08);
+$text-primary: #ffffff;
+$text-secondary: rgba(255, 255, 255, 0.7);
+$text-muted: rgba(255, 255, 255, 0.4);
+
+// Animations
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+// Container
+.notification-detail {
+  padding: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+// Header
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+
+  .back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: $glass-bg;
+    border: 1px solid $glass-border;
+    border-radius: 12px;
+    color: $text-secondary;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba($primary, 0.1);
+      border-color: rgba($primary, 0.3);
+      color: $primary;
+    }
+
+    .material-icons {
+      font-size: 20px;
+    }
+  }
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .type-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+
+      &.report {
+        background: linear-gradient(135deg, rgba($warning, 0.2), rgba($warning, 0.05));
+        color: $warning;
+      }
+
+      &.complaint {
+        background: linear-gradient(135deg, rgba($info, 0.2), rgba($info, 0.05));
+        color: $info;
+      }
+
+      &.reservation {
+        background: linear-gradient(135deg, rgba($primary, 0.2), rgba($primary, 0.05));
+        color: $primary;
+      }
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+      color: $text-primary;
+    }
+  }
+}
+
+// Loading State
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  gap: 20px;
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid $glass-border;
+    border-top-color: $primary;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  span {
+    color: $text-secondary;
+    font-size: 16px;
+  }
+}
+
+// Error State
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+
+  .material-icons {
+    font-size: 64px;
+    color: $danger;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    color: $text-primary;
+  }
+
+  p {
+    margin: 0 0 24px;
+    color: $text-secondary;
+    max-width: 400px;
+  }
+
+  .retry-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: rgba($primary, 0.1);
+    border: 1px solid rgba($primary, 0.3);
+    border-radius: 12px;
+    color: $primary;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba($primary, 0.2);
+    }
+  }
+}
+
+// Content
+.detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// Status Banner
+.status-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  width: fit-content;
+
+  .material-icons {
+    font-size: 20px;
+  }
+
+  &.resolved, &.status-completed {
+    background: rgba($success, 0.15);
+    color: $success;
+    border: 1px solid rgba($success, 0.3);
+  }
+
+  &.pending, &.status-pending {
+    background: rgba($warning, 0.15);
+    color: $warning;
+    border: 1px solid rgba($warning, 0.3);
+  }
+
+  &.status-contacted {
+    background: rgba($info, 0.15);
+    color: $info;
+    border: 1px solid rgba($info, 0.3);
+  }
+
+  &.status-cancelled {
+    background: rgba($danger, 0.15);
+    color: $danger;
+    border: 1px solid rgba($danger, 0.3);
+  }
+
+  &.payment-pending {
+    background: rgba($warning, 0.15);
+    color: $warning;
+    border: 1px solid rgba($warning, 0.3);
+  }
+
+  &.payment-paid {
+    background: rgba($success, 0.15);
+    color: $success;
+    border: 1px solid rgba($success, 0.3);
+  }
+
+  &.payment-refunded {
+    background: rgba($info, 0.15);
+    color: $info;
+    border: 1px solid rgba($info, 0.3);
+  }
+}
+
+.status-badges {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+// Info Card
+.info-card {
+  background: $glass-bg;
+  backdrop-filter: blur(20px);
+  border: 1px solid $glass-border;
+  border-radius: 16px;
+  overflow: hidden;
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid $glass-border;
+
+    .material-icons {
+      font-size: 20px;
+      color: $primary;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: $text-primary;
+    }
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+}
+
+// Content Text
+.content-text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: $text-primary;
+  white-space: pre-wrap;
+}
+
+// Info Row
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  .label {
+    min-width: 120px;
+    color: $text-muted;
+    font-size: 14px;
+  }
+
+  .value {
+    color: $text-primary;
+    font-size: 14px;
+
+    &.link {
+      color: $primary;
+      text-decoration: none;
+      transition: opacity 0.3s ease;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+// Category Badge
+.category-badge {
+  display: inline-flex;
+  padding: 8px 16px;
+  background: rgba($info, 0.15);
+  color: $info;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+// Replies
+.replies-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reply-item {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border-right: 3px solid $text-muted;
+
+  &.admin {
+    border-right-color: $primary;
+    background: rgba($primary, 0.05);
+  }
+
+  .reply-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+    .reply-author {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: $text-secondary;
+      font-size: 13px;
+
+      .material-icons {
+        font-size: 16px;
+      }
+    }
+
+    .reply-date {
+      color: $text-muted;
+      font-size: 12px;
+    }
+  }
+
+  .reply-content {
+    margin: 0;
+    color: $text-primary;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+// Reply Form
+.reply-input {
+  width: 100%;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $glass-border;
+  border-radius: 12px;
+  color: $text-primary;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 16px;
+  transition: border-color 0.3s ease;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba($primary, 0.5);
+  }
+}
+
+// Product Card
+.product-card {
+  .product-info {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+
+    .product-image {
+      width: 100px;
+      height: 100px;
+      border-radius: 12px;
+      object-fit: cover;
+      background: rgba(255, 255, 255, 0.05);
+
+      &.placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .material-icons {
+          font-size: 40px;
+          color: $text-muted;
+        }
+      }
+    }
+
+    .product-details {
+      flex: 1;
+
+      .product-name {
+        margin: 0 0 12px;
+        font-size: 18px;
+        font-weight: 600;
+        color: $text-primary;
+      }
+
+      .product-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        span {
+          color: $text-secondary;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .total-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: rgba($primary, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba($primary, 0.2);
+
+    .label {
+      color: $text-secondary;
+      font-size: 14px;
+    }
+
+    .value {
+      font-size: 20px;
+      font-weight: 700;
+      color: $primary;
+    }
+  }
+}
+
+// Actions Card
+.actions-card {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 20px;
+  background: $glass-bg;
+  border: 1px solid $glass-border;
+  border-radius: 16px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  .material-icons {
+    font-size: 20px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.primary {
+    background: linear-gradient(135deg, $primary, $primary-dark);
+    color: #000;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba($primary, 0.3);
+    }
+  }
+
+  &.success {
+    background: rgba($success, 0.15);
+    color: $success;
+    border: 1px solid rgba($success, 0.3);
+
+    &:hover:not(:disabled) {
+      background: rgba($success, 0.25);
+    }
+  }
+
+  &.danger {
+    background: rgba($danger, 0.15);
+    color: $danger;
+    border: 1px solid rgba($danger, 0.3);
+
+    &:hover:not(:disabled) {
+      background: rgba($danger, 0.25);
+    }
+  }
+}
+
+// Status Actions Section
+.actions-section {
+  .status-actions {
+    margin-bottom: 24px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    h4 {
+      margin: 0 0 12px;
+      font-size: 14px;
+      color: $text-secondary;
+      font-weight: 500;
+    }
+
+    .status-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+  }
+}
+
+.status-btn {
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid $glass-border;
+  border-radius: 10px;
+  color: $text-secondary;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    color: $text-primary;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.active {
+    background: rgba($primary, 0.15);
+    border-color: rgba($primary, 0.3);
+    color: $primary;
+  }
+
+  &.success {
+    &:hover:not(:disabled):not(.active) {
+      background: rgba($success, 0.1);
+      border-color: rgba($success, 0.3);
+      color: $success;
+    }
+
+    &.active {
+      background: rgba($success, 0.15);
+      border-color: rgba($success, 0.3);
+      color: $success;
+    }
+  }
+
+  &.danger {
+    &:hover:not(:disabled):not(.active) {
+      background: rgba($danger, 0.1);
+      border-color: rgba($danger, 0.3);
+      color: $danger;
+    }
+
+    &.active {
+      background: rgba($danger, 0.15);
+      border-color: rgba($danger, 0.3);
+      color: $danger;
+    }
+  }
+
+  &.warning {
+    &:hover:not(:disabled):not(.active) {
+      background: rgba($warning, 0.1);
+      border-color: rgba($warning, 0.3);
+      color: $warning;
+    }
+
+    &.active {
+      background: rgba($warning, 0.15);
+      border-color: rgba($warning, 0.3);
+      color: $warning;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 640px) {
+  .notification-detail {
+    padding: 16px;
+  }
+
+  .detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .info-row {
+    flex-direction: column;
+    gap: 4px;
+
+    .label {
+      min-width: auto;
+    }
+  }
+
+  .product-card .product-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .status-buttons {
+    flex-direction: column;
+
+    .status-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .actions-card {
+    flex-direction: column;
+
+    .action-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

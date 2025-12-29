@@ -61,4 +61,20 @@ export class AdminReportsService {
       null
     );
   }
+
+  /**
+   * Resolve report (mark as resolved)
+   * PATCH /api/admin/reports/{id}/status?isResolved=true
+   */
+  resolveReport(id: number): Observable<ApiResponse<any>> {
+    return this.updateReportStatus(id, true);
+  }
+
+  /**
+   * Delete report
+   * DELETE /api/admin/reports/{id}
+   */
+  deleteReport(id: number): Observable<ApiResponse<any>> {
+    return this.http.delete<ApiResponse<any>>(`${this.baseUrl}/${id}`);
+  }
 }
