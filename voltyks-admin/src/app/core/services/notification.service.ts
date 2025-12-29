@@ -61,7 +61,7 @@ export class NotificationService implements OnDestroy {
 
   // Polling fallback interval (when SignalR fails)
   private pollingInterval: any = null;
-  private readonly POLLING_DELAY = 10000; // 10 seconds - faster polling for better responsiveness
+  private readonly POLLING_DELAY = 5000; // 5 seconds - fast polling for real-time feel
 
   // Notifications state
   private notificationsSubject = new BehaviorSubject<AppNotification[]>([]);
@@ -463,14 +463,14 @@ export class NotificationService implements OnDestroy {
           this.connectionStateSubject.next('connected');
           this.errorSubject.next(null);
         });
-        // Stop polling since SignalR is connected
-        this.stopPolling();
+        // Keep polling active as backup - backend may not send all events via SignalR
+        this.startPolling();
         // Join broadcast group for admin notifications
         this.joinBroadcastGroup();
         // Load initial notifications after connection
         this.loadNotifications();
         this.loadUnreadCount();
-        console.log('SignalR connected successfully');
+        console.log('SignalR connected - polling active as backup');
       })
       .catch((err) => {
         console.error('SignalR connection failed:', err);
@@ -505,8 +505,8 @@ export class NotificationService implements OnDestroy {
         this.connectionStateSubject.next('connected');
         this.errorSubject.next(null);
       });
-      // Stop polling since SignalR is reconnected
-      this.stopPolling();
+      // Keep polling active as backup
+      this.startPolling();
       // Clear reconnect interval
       this.clearReconnectInterval();
       // Rejoin broadcast group after reconnection
