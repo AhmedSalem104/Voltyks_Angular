@@ -646,13 +646,39 @@ export class NotificationService implements OnDestroy {
       }
     });
 
-    // Listen for broadcast notifications (reservations, etc.)
+    // Listen for broadcast notifications (can be any type)
     this.hubConnection.on('ReceiveBroadcast', (title: string, body: string, data: any) => {
       console.log('[SignalR] ReceiveBroadcast received:', { title, body, data });
-      if (this.settings.showReservations) {
+
+      // Detect notification type from title, body, or data
+      const combinedText = `${title} ${body}`.toLowerCase();
+      let type: NotificationType = 'reservation'; // default
+
+      // Check for complaint keywords first
+      if (combinedText.includes('شكوى') || combinedText.includes('شكوي') ||
+          combinedText.includes('complaint') || data?.type === 'complaint') {
+        type = 'complaint';
+      }
+      // Check for report keywords
+      else if (combinedText.includes('بلاغ') || combinedText.includes('report') ||
+               data?.type === 'report') {
+        type = 'report';
+      }
+      // Check for reservation keywords
+      else if (combinedText.includes('حجز') || combinedText.includes('reservation') ||
+               data?.productName || data?.type === 'reservation') {
+        type = 'reservation';
+      }
+
+      // Check if we should show this notification type
+      const shouldShow = (type === 'complaint' && this.settings.showComplaints) ||
+                         (type === 'report' && this.settings.showReports) ||
+                         (type === 'reservation' && this.settings.showReservations);
+
+      if (shouldShow) {
         const notification: AppNotification = {
-          id: data?.id || `reservation_${data?.originalId || Date.now()}`,
-          type: 'reservation',
+          id: data?.id || `${type}_${data?.originalId || Date.now()}`,
+          type: type,
           originalId: data?.originalId,
           title: title,
           message: body,
