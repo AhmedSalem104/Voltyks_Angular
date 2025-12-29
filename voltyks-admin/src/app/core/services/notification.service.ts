@@ -61,7 +61,7 @@ export class NotificationService implements OnDestroy {
 
   // Polling fallback interval (when SignalR fails)
   private pollingInterval: any = null;
-  private readonly POLLING_DELAY = 30000; // 30 seconds
+  private readonly POLLING_DELAY = 10000; // 10 seconds - faster polling for better responsiveness
 
   // Notifications state
   private notificationsSubject = new BehaviorSubject<AppNotification[]>([]);
@@ -632,17 +632,22 @@ export class NotificationService implements OnDestroy {
 
     // Listen for new complaints
     this.hubConnection.on('NewComplaint', (notification: AppNotification) => {
-      console.log('[SignalR] NewComplaint received:', notification);
+      console.log('[SignalR] ✅ NewComplaint received:', notification);
+      console.log('[SignalR] showComplaints setting:', this.settings.showComplaints);
       if (this.settings.showComplaints) {
         const enrichedNotification: AppNotification = {
           ...notification,
           id: notification.id || `complaint_${notification.originalId || Date.now()}`,
           type: 'complaint',
+          message: notification.message || `شكوى جديدة من ${notification.userName || 'مستخدم'}`,
           isRead: false,
           timestamp: notification.timestamp || new Date().toISOString()
         };
+        console.log('[SignalR] Enriched complaint notification:', enrichedNotification);
         // Queue the notification for sequential processing
         this.notificationQueue.next(enrichedNotification);
+      } else {
+        console.log('[SignalR] ⚠️ Complaint ignored - showComplaints is disabled');
       }
     });
 
