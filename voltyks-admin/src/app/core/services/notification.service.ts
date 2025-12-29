@@ -650,45 +650,32 @@ export class NotificationService implements OnDestroy {
     this.hubConnection.on('ReceiveBroadcast', (title: string, body: string, data: any) => {
       console.log('[SignalR] ReceiveBroadcast received:', { title, body, data });
 
-      // Detect notification type from title, body, or data
-      const combinedText = `${title} ${body}`.toLowerCase();
-      let type: NotificationType = 'reservation'; // default
+      // Detect notification type using robust logic
+      const detectedType = this.detectNotificationType(title, body, data);
 
-      // Check for complaint keywords first
-      if (combinedText.includes('شكوى') || combinedText.includes('شكوي') ||
-          combinedText.includes('complaint') || data?.type === 'complaint') {
-        type = 'complaint';
-      }
-      // Check for report keywords
-      else if (combinedText.includes('بلاغ') || combinedText.includes('report') ||
-               data?.type === 'report') {
-        type = 'report';
-      }
-      // Check for reservation keywords
-      else if (combinedText.includes('حجز') || combinedText.includes('reservation') ||
-               data?.productName || data?.type === 'reservation') {
-        type = 'reservation';
-      }
+      // Generate appropriate message if backend sends inconsistent data
+      const correctedMessage = this.generateConsistentMessage(detectedType, body, data);
 
       // Check if we should show this notification type
-      const shouldShow = (type === 'complaint' && this.settings.showComplaints) ||
-                         (type === 'report' && this.settings.showReports) ||
-                         (type === 'reservation' && this.settings.showReservations);
+      const shouldShow = (detectedType === 'complaint' && this.settings.showComplaints) ||
+                         (detectedType === 'report' && this.settings.showReports) ||
+                         (detectedType === 'reservation' && this.settings.showReservations);
 
       if (shouldShow) {
         const notification: AppNotification = {
-          id: data?.id || `${type}_${data?.originalId || Date.now()}`,
-          type: type,
-          originalId: data?.originalId,
+          id: data?.id || `${detectedType}_${data?.originalId || Date.now()}`,
+          type: detectedType,
+          originalId: data?.originalId || data?.id,
           title: title,
-          message: body,
-          userName: data?.userName || 'مستخدم',
-          timestamp: data?.timestamp || new Date().toISOString(),
+          message: correctedMessage,
+          userName: data?.userName || data?.userFullName || 'مستخدم',
+          timestamp: data?.timestamp || data?.createdAt || new Date().toISOString(),
           isRead: false,
-          productName: data?.productName,
-          quantity: data?.quantity,
-          totalPrice: data?.totalPrice,
-          currency: data?.currency
+          // Only include product data for reservations
+          productName: detectedType === 'reservation' ? data?.productName : undefined,
+          quantity: detectedType === 'reservation' ? data?.quantity : undefined,
+          totalPrice: detectedType === 'reservation' ? data?.totalPrice : undefined,
+          currency: detectedType === 'reservation' ? data?.currency : undefined
         };
         // Queue the notification for sequential processing
         this.notificationQueue.next(notification);
@@ -713,13 +700,28 @@ export class NotificationService implements OnDestroy {
     // Listen for generic notification event
     this.hubConnection.on('ReceiveNotification', (notification: any) => {
       console.log('[SignalR] ReceiveNotification received:', notification);
-      const type = this.normalizeNotificationType(notification);
+      const type = this.detectNotificationType(
+        notification.title || '',
+        notification.message || notification.body || '',
+        notification
+      );
+      const correctedMessage = this.generateConsistentMessage(
+        type,
+        notification.message || notification.body || '',
+        notification
+      );
+
       const enrichedNotification: AppNotification = {
         ...notification,
         id: notification.id || `${type}_${notification.originalId || Date.now()}`,
         type: type,
+        message: correctedMessage,
         isRead: false,
-        timestamp: notification.timestamp || new Date().toISOString()
+        timestamp: notification.timestamp || new Date().toISOString(),
+        // Only include product data for reservations
+        productName: type === 'reservation' ? notification.productName : undefined,
+        quantity: type === 'reservation' ? notification.quantity : undefined,
+        totalPrice: type === 'reservation' ? notification.totalPrice : undefined
       };
 
       // Check if we should show this type
@@ -733,13 +735,27 @@ export class NotificationService implements OnDestroy {
     // Listen for any other possible event names the backend might use
     this.hubConnection.on('SendNotification', (notification: any) => {
       console.log('[SignalR] SendNotification received:', notification);
-      const type = this.normalizeNotificationType(notification);
+      const type = this.detectNotificationType(
+        notification.title || '',
+        notification.message || notification.body || '',
+        notification
+      );
+      const correctedMessage = this.generateConsistentMessage(
+        type,
+        notification.message || notification.body || '',
+        notification
+      );
+
       const enrichedNotification: AppNotification = {
         ...notification,
         id: notification.id || `${type}_${notification.originalId || Date.now()}`,
         type: type,
+        message: correctedMessage,
         isRead: false,
-        timestamp: notification.timestamp || new Date().toISOString()
+        timestamp: notification.timestamp || new Date().toISOString(),
+        productName: type === 'reservation' ? notification.productName : undefined,
+        quantity: type === 'reservation' ? notification.quantity : undefined,
+        totalPrice: type === 'reservation' ? notification.totalPrice : undefined
       };
 
       if ((type === 'report' && this.settings.showReports) ||
@@ -981,6 +997,103 @@ export class NotificationService implements OnDestroy {
 
     // Final default to complaint
     return 'complaint';
+  }
+
+  /**
+   * Detect notification type with robust logic
+   * PRIORITY: 1. Explicit type field, 2. Title keywords, 3. Data fields, 4. Body keywords
+   */
+  private detectNotificationType(title: string, body: string, data: any): NotificationType {
+    const titleLower = (title || '').toLowerCase();
+    const bodyLower = (body || '').toLowerCase();
+    const dataType = (data?.type || '').toString().toLowerCase().trim();
+
+    // PRIORITY 1: Check explicit type field from data
+    if (dataType === 'complaint' || dataType === 'complaints') return 'complaint';
+    if (dataType === 'report' || dataType === 'reports') return 'report';
+    if (dataType === 'reservation' || dataType === 'reservations') return 'reservation';
+
+    // PRIORITY 2: Check TITLE for type keywords (most reliable indicator)
+    // Title usually contains the notification type explicitly
+    if (titleLower.includes('شكوى') || titleLower.includes('شكوي') || titleLower === 'complaint') {
+      return 'complaint';
+    }
+    if (titleLower.includes('بلاغ') || titleLower === 'report') {
+      return 'report';
+    }
+    if (titleLower.includes('حجز') || titleLower.includes('reservation')) {
+      return 'reservation';
+    }
+
+    // PRIORITY 3: Check data fields that indicate type
+    // Complaints usually have categoryId/categoryName
+    if (data?.categoryId || data?.categoryName || data?.complaintContent) {
+      return 'complaint';
+    }
+    // Reports have reportContent
+    if (data?.reportContent) {
+      return 'report';
+    }
+    // Reservations have product-related data
+    if (data?.productName || data?.productId || (data?.quantity !== undefined && data?.totalPrice !== undefined)) {
+      return 'reservation';
+    }
+
+    // PRIORITY 4: Check body keywords as last resort
+    // Note: Body might contain misleading content, so this is lowest priority
+    if (bodyLower.includes('شكوى') && !bodyLower.includes('حجز')) {
+      return 'complaint';
+    }
+    if (bodyLower.includes('بلاغ') && !bodyLower.includes('حجز')) {
+      return 'report';
+    }
+    if (bodyLower.includes('حجز') && bodyLower.includes('منتج')) {
+      return 'reservation';
+    }
+
+    // Default based on what's most common
+    return 'complaint';
+  }
+
+  /**
+   * Generate consistent message based on notification type
+   * Fixes backend sending wrong message content for a type
+   */
+  private generateConsistentMessage(type: NotificationType, originalBody: string, data: any): string {
+    const bodyLower = (originalBody || '').toLowerCase();
+    const userName = data?.userName || data?.userFullName || 'مستخدم';
+
+    // Check if the message content matches the detected type
+    const bodyHasReservationContent = bodyLower.includes('بحجز') || bodyLower.includes('الكمية') ||
+                                       bodyLower.includes('reserved') || bodyLower.includes('quantity');
+    const bodyHasComplaintContent = bodyLower.includes('شكوى') || bodyLower.includes('complaint');
+    const bodyHasReportContent = bodyLower.includes('بلاغ') || bodyLower.includes('report');
+
+    // If type is complaint but body has reservation content, generate correct message
+    if (type === 'complaint' && bodyHasReservationContent && !bodyHasComplaintContent) {
+      if (data?.content || data?.complaintContent) {
+        return data.content || data.complaintContent;
+      }
+      return `قام ${userName} بتقديم شكوى جديدة`;
+    }
+
+    // If type is report but body has reservation content, generate correct message
+    if (type === 'report' && bodyHasReservationContent && !bodyHasReportContent) {
+      if (data?.reportContent) {
+        return data.reportContent;
+      }
+      return `قام ${userName} بتقديم بلاغ جديد`;
+    }
+
+    // If type is reservation but body doesn't have reservation content, generate correct message
+    if (type === 'reservation' && !bodyHasReservationContent) {
+      const productName = data?.productName || 'منتج';
+      const quantity = data?.quantity || 1;
+      return `قام ${userName} بحجز ${productName} (الكمية: ${quantity})`;
+    }
+
+    // Original body is fine
+    return originalBody;
   }
 
   /**
