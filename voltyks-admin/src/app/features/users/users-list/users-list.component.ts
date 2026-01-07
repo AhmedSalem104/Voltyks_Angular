@@ -7,8 +7,12 @@ import { AdminUsersService } from '../../../core/services/admin/admin-users.serv
 import { AdminUserDto } from '../../../core/models';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ToasterService } from '../../../shared/components/toaster/toaster.service';
 import { PrintService } from '../../../core/services/print.service';
+
+type UserFilter = 'active' | 'deleted' | 'all';
+type DeleteAction = 'soft' | 'permanent' | 'restore' | null;
 
 @Component({
   selector: 'app-users-list',
@@ -18,7 +22,8 @@ import { PrintService } from '../../../core/services/print.service';
     RouterModule,
     FormsModule,
     PaginationComponent,
-    LoadingOverlayComponent
+    LoadingOverlayComponent,
+    ConfirmDialogComponent
   ],
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.scss'],
@@ -34,10 +39,20 @@ export class UsersListComponent implements OnInit {
 
   isLoading: boolean = false;
 
+  // Filter for deleted users
+  userFilter: UserFilter = 'active';
+
   // Pagination
   currentPage: number = 1;
   pageSize: number = 10;
   totalItems: number = 0;
+
+  // Confirm dialog state
+  showConfirmDialog: boolean = false;
+  confirmDialogTitle: string = '';
+  confirmDialogMessage: string = '';
+  selectedUser: AdminUserDto | null = null;
+  pendingAction: DeleteAction = null;
 
   constructor(
     private usersService: AdminUsersService,
@@ -63,15 +78,15 @@ export class UsersListComponent implements OnInit {
   loadUsers(search?: string): void {
     this.isLoading = true;
 
-    this.usersService.getUsers(search).subscribe({
+    const includeDeleted = this.userFilter === 'deleted' || this.userFilter === 'all';
+
+    this.usersService.getUsers({ search, includeDeleted }).subscribe({
       next: (response) => {
         if (response.status && response.data) {
           this.users = response.data;
-          this.filteredUsers = [...this.users];
-          this.totalItems = this.filteredUsers.length;
+          this.applyLocalFilter();
           this.currentPage = 1;
           this.updatePaginatedUsers();
-          this.toaster.success('تم تحميل المستخدمين بنجاح');
         }
         this.isLoading = false;
         this.cdr.markForCheck();
@@ -82,6 +97,26 @@ export class UsersListComponent implements OnInit {
         this.cdr.markForCheck();
       }
     });
+  }
+
+  private applyLocalFilter(): void {
+    switch (this.userFilter) {
+      case 'active':
+        this.filteredUsers = this.users.filter(u => !u.isDeleted);
+        break;
+      case 'deleted':
+        this.filteredUsers = this.users.filter(u => u.isDeleted);
+        break;
+      case 'all':
+        this.filteredUsers = [...this.users];
+        break;
+    }
+    this.totalItems = this.filteredUsers.length;
+  }
+
+  onFilterChange(filter: UserFilter): void {
+    this.userFilter = filter;
+    this.loadUsers(this.searchTerm.trim() || undefined);
   }
 
   onSearchChange(searchTerm: string): void {
@@ -112,11 +147,175 @@ export class UsersListComponent implements OnInit {
   }
 
   getStatusClass(user: AdminUserDto): string {
-    return user.isBanned ? 'status-banned' : 'status-active';
+    if (user.isDeleted) return 'status-deleted';
+    if (user.isBanned) return 'status-banned';
+    return 'status-active';
   }
 
   getStatusText(user: AdminUserDto): string {
-    return user.isBanned ? 'محظور' : 'نشط';
+    if (user.isDeleted) return 'محذوف';
+    if (user.isBanned) return 'محظور';
+    return 'نشط';
+  }
+
+  // ========== Delete Actions ==========
+
+  /**
+   * Initiate soft delete
+   */
+  onDeleteUser(user: AdminUserDto): void {
+    this.selectedUser = user;
+    this.pendingAction = 'soft';
+    this.confirmDialogTitle = 'حذف المستخدم';
+    this.confirmDialogMessage = `هل أنت متأكد من حذف المستخدم "${user.fullName}"؟\n\nسيتم إخفاء المستخدم ولكن يمكن استعادته لاحقاً.`;
+    this.showConfirmDialog = true;
+    this.cdr.markForCheck();
+  }
+
+  /**
+   * Initiate permanent delete
+   */
+  onPermanentDeleteUser(user: AdminUserDto): void {
+    this.selectedUser = user;
+    this.pendingAction = 'permanent';
+    this.confirmDialogTitle = '⚠️ حذف نهائي';
+    this.confirmDialogMessage = `تحذير: هذا الإجراء لا يمكن التراجع عنه!\n\nهل أنت متأكد من الحذف النهائي للمستخدم "${user.fullName}"؟\n\nسيتم حذف جميع بيانات المستخدم بشكل دائم.`;
+    this.showConfirmDialog = true;
+    this.cdr.markForCheck();
+  }
+
+  /**
+   * Initiate restore
+   */
+  onRestoreUser(user: AdminUserDto): void {
+    this.selectedUser = user;
+    this.pendingAction = 'restore';
+    this.confirmDialogTitle = 'استعادة المستخدم';
+    this.confirmDialogMessage = `هل تريد استعادة المستخدم "${user.fullName}"؟`;
+    this.showConfirmDialog = true;
+    this.cdr.markForCheck();
+  }
+
+  /**
+   * Confirm dialog action
+   */
+  onConfirmAction(): void {
+    if (!this.selectedUser || !this.pendingAction) return;
+
+    this.showConfirmDialog = false;
+    this.isLoading = true;
+    this.cdr.markForCheck();
+
+    switch (this.pendingAction) {
+      case 'soft':
+        this.executeSoftDelete();
+        break;
+      case 'permanent':
+        this.executePermanentDelete();
+        break;
+      case 'restore':
+        this.executeRestore();
+        break;
+    }
+  }
+
+  /**
+   * Cancel dialog action
+   */
+  onCancelAction(): void {
+    this.showConfirmDialog = false;
+    this.selectedUser = null;
+    this.pendingAction = null;
+    this.cdr.markForCheck();
+  }
+
+  private executeSoftDelete(): void {
+    if (!this.selectedUser) return;
+
+    this.usersService.deleteUser(this.selectedUser.id).subscribe({
+      next: (response) => {
+        if (response.status) {
+          this.toaster.success(`تم حذف المستخدم "${this.selectedUser?.fullName}" بنجاح`);
+          this.loadUsers(this.searchTerm.trim() || undefined);
+        } else {
+          this.toaster.error(response.message || 'فشل حذف المستخدم');
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        }
+        this.resetActionState();
+      },
+      error: (error) => {
+        this.toaster.error(error.error?.message || 'فشل حذف المستخدم');
+        this.isLoading = false;
+        this.resetActionState();
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  private executePermanentDelete(): void {
+    if (!this.selectedUser) return;
+
+    this.usersService.permanentDeleteUser(this.selectedUser.id).subscribe({
+      next: (response) => {
+        if (response.status) {
+          this.toaster.success(`تم الحذف النهائي للمستخدم "${this.selectedUser?.fullName}"`);
+          this.loadUsers(this.searchTerm.trim() || undefined);
+        } else {
+          this.toaster.error(response.message || 'فشل الحذف النهائي');
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        }
+        this.resetActionState();
+      },
+      error: (error) => {
+        this.toaster.error(error.error?.message || 'فشل الحذف النهائي');
+        this.isLoading = false;
+        this.resetActionState();
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  private executeRestore(): void {
+    if (!this.selectedUser) return;
+
+    this.usersService.restoreUser(this.selectedUser.id).subscribe({
+      next: (response) => {
+        if (response.status) {
+          this.toaster.success(`تم استعادة المستخدم "${this.selectedUser?.fullName}" بنجاح`);
+          this.loadUsers(this.searchTerm.trim() || undefined);
+        } else {
+          this.toaster.error(response.message || 'فشل استعادة المستخدم');
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        }
+        this.resetActionState();
+      },
+      error: (error) => {
+        this.toaster.error(error.error?.message || 'فشل استعادة المستخدم');
+        this.isLoading = false;
+        this.resetActionState();
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  private resetActionState(): void {
+    this.selectedUser = null;
+    this.pendingAction = null;
+  }
+
+  formatDeletedDate(dateString: string | null | undefined): string {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ar-EG', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 
   formatDate(dateString: string): string {

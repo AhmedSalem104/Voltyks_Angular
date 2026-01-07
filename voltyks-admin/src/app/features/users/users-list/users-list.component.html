@@ -20,13 +20,47 @@
           />
         </div>
       </div>
+
+      <!-- User Filter Tabs -->
+      <div class="filter-item filter-tabs">
+        <button
+          class="filter-tab"
+          [class.active]="userFilter === 'active'"
+          (click)="onFilterChange('active')"
+        >
+          <span class="material-icons">person</span>
+          النشطين
+        </button>
+        <button
+          class="filter-tab"
+          [class.active]="userFilter === 'deleted'"
+          (click)="onFilterChange('deleted')"
+        >
+          <span class="material-icons">person_off</span>
+          المحذوفين
+        </button>
+        <button
+          class="filter-tab"
+          [class.active]="userFilter === 'all'"
+          (click)="onFilterChange('all')"
+        >
+          <span class="material-icons">people</span>
+          الكل
+        </button>
+      </div>
     </div>
   </div>
 
   <!-- Users Table -->
   <div class="voltyks-card" id="users-table-container">
     <div class="table-header">
-      <h3>قائمة المستخدمين</h3>
+      <h3>
+        @switch (userFilter) {
+          @case ('active') { قائمة المستخدمين النشطين }
+          @case ('deleted') { قائمة المستخدمين المحذوفين }
+          @default { قائمة جميع المستخدمين }
+        }
+      </h3>
       <div class="table-header-actions">
         <span class="total-count">إجمالي: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredUsers.length === 0">
@@ -46,13 +80,23 @@
               <th>رقم الهاتف</th>
               <th>تاريخ التسجيل</th>
               <th>الحالة</th>
+              @if (userFilter === 'deleted' || userFilter === 'all') {
+                <th>تاريخ الحذف</th>
+              }
               <th>الإجراءات</th>
             </tr>
           </thead>
           <tbody>
             @for (user of paginatedUsers; track user.id) {
-              <tr>
-                <td>{{ user.fullName }}</td>
+              <tr [class.deleted-row]="user.isDeleted">
+                <td>
+                  <div class="user-name-cell">
+                    {{ user.fullName }}
+                    @if (user.isDeleted) {
+                      <span class="deleted-badge">محذوف</span>
+                    }
+                  </div>
+                </td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.phoneNumber }}</td>
                 <td>{{ formatDate(user.dateCreated) }}</td>
@@ -61,13 +105,55 @@
                     {{ getStatusText(user) }}
                   </span>
                 </td>
+                @if (userFilter === 'deleted' || userFilter === 'all') {
+                  <td>
+                    @if (user.isDeleted && user.deletedAt) {
+                      {{ formatDeletedDate(user.deletedAt) }}
+                    } @else {
+                      -
+                    }
+                  </td>
+                }
                 <td>
-                  <a
-                    [routerLink]="['/users', user.id]"
-                    class="voltyks-btn btn-primary btn-sm"
-                  >
-                    عرض التفاصيل
-                  </a>
+                  <div class="action-buttons">
+                    <!-- View Details -->
+                    <a
+                      [routerLink]="['/users', user.id]"
+                      class="voltyks-btn btn-primary btn-sm"
+                      title="عرض التفاصيل"
+                    >
+                      <span class="material-icons">visibility</span>
+                    </a>
+
+                    @if (!user.isDeleted) {
+                      <!-- Soft Delete Button -->
+                      <button
+                        class="voltyks-btn btn-warning btn-sm"
+                        (click)="onDeleteUser(user)"
+                        title="حذف المستخدم"
+                      >
+                        <span class="material-icons">delete</span>
+                      </button>
+                    } @else {
+                      <!-- Restore Button -->
+                      <button
+                        class="voltyks-btn btn-success btn-sm"
+                        (click)="onRestoreUser(user)"
+                        title="استعادة المستخدم"
+                      >
+                        <span class="material-icons">restore</span>
+                      </button>
+
+                      <!-- Permanent Delete Button -->
+                      <button
+                        class="voltyks-btn btn-danger btn-sm"
+                        (click)="onPermanentDeleteUser(user)"
+                        title="حذف نهائي"
+                      >
+                        <span class="material-icons">delete_forever</span>
+                      </button>
+                    }
+                  </div>
                 </td>
               </tr>
             }
@@ -85,12 +171,31 @@
       ></app-pagination>
     } @else {
       <div class="empty-state">
-        <span class="material-icons empty-icon">people_outline</span>
-        <p>لا يوجد مستخدمون</p>
+        <span class="material-icons empty-icon">
+          @switch (userFilter) {
+            @case ('deleted') { person_off }
+            @default { people_outline }
+          }
+        </span>
+        <p>
+          @switch (userFilter) {
+            @case ('deleted') { لا يوجد مستخدمون محذوفون }
+            @default { لا يوجد مستخدمون }
+          }
+        </p>
       </div>
     }
   </div>
 </div>
+
+<!-- Confirm Dialog -->
+<app-confirm-dialog
+  [isOpen]="showConfirmDialog"
+  [title]="confirmDialogTitle"
+  [message]="confirmDialogMessage"
+  (confirm)="onConfirmAction()"
+  (cancel)="onCancelAction()"
+></app-confirm-dialog>
 
 @if (isLoading) {
   <app-loading-overlay></app-loading-overlay>

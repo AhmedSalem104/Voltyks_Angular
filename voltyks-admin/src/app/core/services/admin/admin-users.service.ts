@@ -12,6 +12,11 @@ import {
   AddBalanceRequestDto
 } from '../../models';
 
+export interface UserFilterParams {
+  search?: string;
+  includeDeleted?: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,13 +26,18 @@ export class AdminUsersService {
   constructor(private http: HttpClient) {}
 
   /**
-   * Get all users with optional search
+   * Get all users with optional filters
+   * GET /api/admin/users
+   * GET /api/admin/users?includeDeleted=true (includes soft-deleted users)
    * GET /api/admin/users?search=...
    */
-  getUsers(search?: string): Observable<ApiResponse<AdminUserDto[]>> {
+  getUsers(filters?: UserFilterParams): Observable<ApiResponse<AdminUserDto[]>> {
     let params = new HttpParams();
-    if (search) {
-      params = params.set('search', search);
+    if (filters?.search) {
+      params = params.set('search', filters.search);
+    }
+    if (filters?.includeDeleted) {
+      params = params.set('includeDeleted', 'true');
     }
     return this.http.get<ApiResponse<AdminUserDto[]>>(this.baseUrl, { params });
   }
@@ -78,5 +88,32 @@ export class AdminUsersService {
    */
   addBalance(id: string, dto: AddBalanceRequestDto): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(`${this.baseUrl}/${id}/add-balance`, dto);
+  }
+
+  /**
+   * Soft delete user (hides user but keeps in DB)
+   * DELETE /api/admin/users/{id}
+   * Returns: isDeleted=true, deletedAt=timestamp
+   */
+  deleteUser(id: string): Observable<ApiResponse<AdminUserDto>> {
+    return this.http.delete<ApiResponse<AdminUserDto>>(`${this.baseUrl}/${id}`);
+  }
+
+  /**
+   * Permanent delete user (irreversible)
+   * DELETE /api/admin/users/{id}/permanent
+   * WARNING: This action cannot be undone
+   */
+  permanentDeleteUser(id: string): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.baseUrl}/${id}/permanent`);
+  }
+
+  /**
+   * Restore soft-deleted user
+   * PATCH /api/admin/users/{id}/restore
+   * Returns: isDeleted=false
+   */
+  restoreUser(id: string): Observable<ApiResponse<AdminUserDto>> {
+    return this.http.patch<ApiResponse<AdminUserDto>>(`${this.baseUrl}/${id}/restore`, {});
   }
 }

@@ -9,6 +9,9 @@ export interface AdminUserDto {
   isAvailable: boolean;
   rating: number;
   dateCreated: string;
+  // Soft delete fields
+  isDeleted?: boolean;
+  deletedAt?: string | null;
 }
 
 export interface AdminUserDetailsDto {
@@ -29,6 +32,9 @@ export interface AdminUserDetailsDto {
   totalChargers: number;
   totalVehicles: number;
   totalChargingRequests: number;
+  // Soft delete fields
+  isDeleted?: boolean;
+  deletedAt?: string | null;
 }
 
 export interface AdminWalletDto {
