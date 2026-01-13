@@ -689,3 +689,292 @@
     overflow-y: auto;
   }
 }
+
+// Light Theme Overrides
+:host-context([data-theme='light']) {
+  .complaints-container {
+    .page-header {
+      .header-content {
+        h2 {
+          background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary-green) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .page-description {
+          color: var(--text-secondary);
+        }
+      }
+    }
+
+    .stats-grid .stat-card {
+      background: var(--card-bg);
+      border-color: var(--border-color);
+      box-shadow: var(--shadow-sm);
+
+      &:hover {
+        border-color: var(--primary-green);
+        box-shadow: 0 4px 16px rgba(0, 168, 68, 0.15);
+      }
+
+      .stat-icon {
+        &.active {
+          background: rgba(0, 168, 68, 0.1);
+          color: #00A844;
+        }
+
+        &.complaints {
+          background: rgba(33, 150, 243, 0.1);
+          color: #1976D2;
+        }
+
+        &.deleted {
+          background: rgba(255, 82, 82, 0.1);
+          color: #D32F2F;
+        }
+      }
+
+      .stat-content {
+        .stat-value {
+          color: var(--text-primary);
+        }
+
+        .stat-label {
+          color: var(--text-secondary);
+        }
+      }
+    }
+
+    .filters-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+
+      .search-icon {
+        color: var(--primary-green) !important;
+      }
+
+      input.voltyks-input {
+        background: var(--input-bg);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+
+        &::placeholder {
+          color: var(--text-disabled);
+        }
+      }
+
+      .toggle-filter .toggle-label {
+        .toggle-switch {
+          background: var(--border-color);
+        }
+
+        input:checked + .toggle-switch {
+          background: linear-gradient(135deg, var(--primary-green) 0%, #00E676 100%);
+        }
+
+        .toggle-text {
+          color: var(--text-secondary);
+        }
+      }
+    }
+
+    .table-header {
+      border-bottom-color: var(--border-color);
+
+      h3 {
+        color: var(--text-primary);
+      }
+
+      .total-count {
+        color: var(--primary-green);
+        background: var(--primary-green-soft);
+      }
+    }
+
+    .category-name .category-icon {
+      color: var(--primary-green);
+    }
+
+    .description-cell {
+      color: var(--text-secondary);
+    }
+
+    .complaints-badge {
+      background: rgba(158, 158, 158, 0.12);
+      color: #757575;
+
+      &.has-complaints {
+        background: rgba(33, 150, 243, 0.12);
+        color: #1976D2;
+      }
+    }
+
+    .date-cell {
+      color: var(--text-secondary);
+    }
+
+    .status-badge {
+      &.active {
+        background: rgba(0, 168, 68, 0.1);
+        color: #00A844;
+      }
+
+      &.deleted {
+        background: rgba(255, 82, 82, 0.1);
+        color: #D32F2F;
+      }
+    }
+
+    .deleted-row {
+      background: rgba(255, 82, 82, 0.05);
+
+      .category-icon {
+        color: #D32F2F !important;
+      }
+    }
+
+    .actions-cell .action-btn {
+      &.edit {
+        background: rgba(33, 150, 243, 0.1);
+        color: #1976D2;
+
+        &:hover {
+          background: #1976D2;
+          color: white;
+        }
+      }
+
+      &.delete {
+        background: rgba(255, 82, 82, 0.1);
+        color: #D32F2F;
+
+        &:hover {
+          background: #D32F2F;
+          color: white;
+        }
+      }
+
+      &.restore {
+        background: rgba(0, 168, 68, 0.1);
+        color: #00A844;
+
+        &:hover {
+          background: #00A844;
+          color: white;
+        }
+      }
+    }
+
+    .empty-state {
+      .empty-icon {
+        color: var(--border-color);
+      }
+
+      p {
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  // Modal Light Theme
+  .modal-overlay {
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .modal {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-lg);
+
+    .modal-header {
+      background: var(--bg-hover);
+      border-bottom-color: var(--border-color);
+
+      &.danger {
+        background: rgba(255, 82, 82, 0.08);
+
+        h3 {
+          color: #D32F2F;
+        }
+
+        .material-icons {
+          color: #D32F2F;
+        }
+      }
+
+      h3 {
+        color: var(--text-primary);
+      }
+
+      .close-btn {
+        background: var(--bg-elevated);
+
+        &:hover {
+          background: rgba(239, 83, 80, 0.1);
+          color: #D32F2F;
+        }
+      }
+    }
+
+    .modal-body {
+      .form-group {
+        label {
+          color: var(--text-secondary);
+
+          .material-icons {
+            color: var(--primary-green);
+          }
+
+          .required {
+            color: #D32F2F;
+          }
+        }
+
+        input.voltyks-input,
+        select.voltyks-input,
+        textarea.voltyks-input {
+          background: var(--input-bg);
+          border-color: var(--border-color);
+          color: var(--text-primary);
+        }
+
+        .char-count {
+          color: var(--text-disabled);
+        }
+      }
+
+      .confirm-message {
+        color: var(--text-secondary);
+
+        strong {
+          color: var(--text-primary);
+        }
+      }
+
+      .warning-box {
+        background: rgba(255, 167, 38, 0.08);
+        border-color: rgba(255, 167, 38, 0.2);
+        color: #F57C00;
+      }
+
+      .note {
+        color: var(--text-disabled);
+      }
+    }
+
+    .modal-footer {
+      border-top-color: var(--border-color);
+      background: var(--bg-elevated);
+
+      .voltyks-btn.btn-danger {
+        box-shadow: 0 2px 6px rgba(255, 82, 82, 0.2);
+
+        &:hover:not(:disabled) {
+          box-shadow: 0 4px 12px rgba(255, 82, 82, 0.3);
+        }
+      }
+    }
+  }
+}

@@ -14,6 +14,7 @@
   --bg-elevated: #2A2A2A;
   --bg-hover: rgba(0, 200, 83, 0.1);
   --border-color: #333333;
+  --divider-color: #404040;
   --text-primary: #FFFFFF;
   --text-secondary: #B0B0B0;
   --text-disabled: #666666;
@@ -21,32 +22,86 @@
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.4);
 
-  /* Additional Dark Theme Colors */
+  /* Component Backgrounds - Dark */
   --card-bg: #1E1E1E;
   --table-bg: #1E1E1E;
   --table-header-bg: #2A2A2A;
   --input-bg: #2A2A2A;
+  --sidebar-bg: #1E1E1E;
+  --header-bg: #1E1E1E;
+
+  /* Brand Colors - Dark */
+  --primary-green: #00C853;
+  --primary-green-hover: #00E676;
+  --primary-green-soft: rgba(0, 200, 83, 0.15);
+  --primary-green-rgb: 0, 200, 83;
+
+  /* Scrollbar - Dark */
+  --scrollbar-bg: #121212;
+  --scrollbar-thumb: #333333;
+  --scrollbar-thumb-hover: #444444;
+
+  /* Skeleton Loading - Dark */
+  --skeleton-base: #2A2A2A;
+  --skeleton-highlight: #333333;
+
+  /* Status Colors - Dark */
+  --status-success: #00C853;
+  --status-warning: #FFA726;
+  --status-error: #EF5350;
+  --status-info: #42A5F5;
 }
 
-/* Light Theme */
+/* Light Theme - Modern Clean Design */
 [data-theme='light'] {
-  --bg-primary: #F5F5F5;
+  /* Core Backgrounds */
+  --bg-primary: #FAFAFA;
   --bg-secondary: #FFFFFF;
   --bg-elevated: #FFFFFF;
-  --bg-hover: rgba(0, 200, 83, 0.08);
-  --border-color: #E0E0E0;
-  --text-primary: #1A1A1A;
-  --text-secondary: #616161;
-  --text-disabled: #9E9E9E;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.2);
+  --bg-hover: rgba(0, 168, 68, 0.08);
 
-  /* Additional Light Theme Colors */
+  /* Text Colors */
+  --text-primary: #1A1A1A;
+  --text-secondary: #5F6368;
+  --text-disabled: #9AA0A6;
+
+  /* Borders & Dividers */
+  --border-color: #E8EAED;
+  --divider-color: #DADCE0;
+
+  /* Shadows - Google Material Design Style */
+  --shadow-sm: 0 1px 2px rgba(60, 64, 67, 0.1), 0 1px 3px rgba(60, 64, 67, 0.08);
+  --shadow-md: 0 1px 3px rgba(60, 64, 67, 0.15), 0 4px 8px rgba(60, 64, 67, 0.1);
+  --shadow-lg: 0 2px 6px rgba(60, 64, 67, 0.15), 0 8px 24px rgba(60, 64, 67, 0.12);
+
+  /* Component Backgrounds */
   --card-bg: #FFFFFF;
   --table-bg: #FFFFFF;
-  --table-header-bg: #F5F5F5;
+  --table-header-bg: #F8F9FA;
   --input-bg: #FFFFFF;
+  --sidebar-bg: #FFFFFF;
+  --header-bg: #FFFFFF;
+
+  /* Brand Colors for Light Mode */
+  --primary-green: #00A844;
+  --primary-green-hover: #008F3A;
+  --primary-green-soft: rgba(0, 168, 68, 0.1);
+  --primary-green-rgb: 0, 168, 68;
+
+  /* Scrollbar */
+  --scrollbar-bg: #F1F3F4;
+  --scrollbar-thumb: #BDC1C6;
+  --scrollbar-thumb-hover: #9AA0A6;
+
+  /* Skeleton Loading */
+  --skeleton-base: #E8EAED;
+  --skeleton-highlight: #F8F9FA;
+
+  /* Status Colors (adjusted for light bg) */
+  --status-success: #1E8E3E;
+  --status-warning: #F9AB00;
+  --status-error: #D93025;
+  --status-info: #1A73E8;
 }
 
 /* ========================================
@@ -430,15 +485,15 @@ p {
 }
 
 ::-webkit-scrollbar-track {
-  background: $voltyks-dark-bg;
+  background: var(--scrollbar-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $voltyks-dark-border;
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
 
   &:hover {
-    background: lighten($voltyks-dark-border, 10%);
+    background: var(--scrollbar-thumb-hover);
   }
 }
 
@@ -707,7 +762,7 @@ p {
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%);
+  background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-highlight) 50%, var(--skeleton-base) 75%);
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s infinite;
   border-radius: 8px;

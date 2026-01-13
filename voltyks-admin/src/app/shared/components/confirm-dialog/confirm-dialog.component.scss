@@ -13,24 +13,24 @@
   animation: fadeIn 0.2s ease-out;
 
   .dialog-container {
-    background-color: #1E1E1E;
+    background-color: var(--card-bg);
     border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-lg);
     min-width: 400px;
     max-width: 600px;
     animation: slideIn 0.3s ease-out;
-    border: 1px solid #333;
+    border: 1px solid var(--border-color);
 
     .dialog-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 20px 24px;
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid var(--border-color);
 
       h3 {
         margin: 0;
-        color: white;
+        color: var(--text-primary);
         font-family: 'Cairo', sans-serif;
         font-size: 20px;
         font-weight: 600;
@@ -39,7 +39,7 @@
       .close-btn {
         background: transparent;
         border: none;
-        color: #B0B0B0;
+        color: var(--text-secondary);
         font-size: 32px;
         cursor: pointer;
         padding: 0;
@@ -49,7 +49,7 @@
         transition: color 0.2s;
 
         &:hover {
-          color: white;
+          color: var(--text-primary);
         }
       }
     }
@@ -59,7 +59,7 @@
 
       p {
         margin: 0;
-        color: #B0B0B0;
+        color: var(--text-secondary);
         font-family: 'Cairo', sans-serif;
         font-size: 16px;
         line-height: 1.6;
@@ -71,7 +71,7 @@
       justify-content: flex-end;
       gap: 12px;
       padding: 20px 24px;
-      border-top: 1px solid #333;
+      border-top: 1px solid var(--border-color);
     }
   }
 }
@@ -100,5 +100,17 @@
   .dialog-overlay .dialog-container {
     min-width: auto;
     width: 90%;
+  }
+}
+
+// Light Theme Overrides
+:host-context([data-theme='light']) {
+  .dialog-overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+
+    .dialog-container {
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
   }
 }

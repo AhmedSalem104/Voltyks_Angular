@@ -1143,3 +1143,215 @@ $text-muted: rgba(255, 255, 255, 0.4);
     }
   }
 }
+
+// ========================================
+// Light Theme Overrides - Modern Clean
+// ========================================
+:host-context([data-theme='light']) {
+  .notification-dropdown {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .dropdown-header {
+    background: linear-gradient(135deg, rgba(0, 168, 68, 0.08) 0%, rgba(0, 168, 68, 0.02) 100%);
+    border-bottom: 1px solid var(--border-color);
+
+    .header-title {
+      .header-icon-wrapper {
+        background: linear-gradient(135deg, var(--primary-green) 0%, #4CAF50 100%);
+
+        .pulse-dot {
+          border-color: var(--card-bg);
+        }
+      }
+
+      .header-text {
+        h3 {
+          color: var(--text-primary);
+        }
+
+        .unread-count {
+          color: var(--primary-green);
+        }
+      }
+    }
+
+    .header-actions {
+      .action-btn {
+        background: transparent;
+        color: var(--text-secondary);
+
+        &:hover {
+          background: var(--bg-hover);
+          color: var(--primary-green);
+        }
+
+        &.active {
+          background: var(--primary-green-soft);
+          color: var(--primary-green);
+        }
+      }
+    }
+  }
+
+  .tabs-row {
+    border-bottom: 1px solid var(--border-color);
+
+    .tab-btn {
+      background: transparent;
+      color: var(--text-secondary);
+
+      &:hover {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+      }
+
+      &.active {
+        background: var(--primary-green-soft);
+        color: var(--primary-green);
+        border-color: var(--primary-green);
+      }
+
+      .tab-count {
+        background: rgba(0, 0, 0, 0.08);
+        color: var(--text-secondary);
+      }
+
+      &.active .tab-count {
+        background: var(--primary-green);
+        color: white;
+      }
+    }
+
+    .mark-all-read-btn {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+
+      &:hover {
+        background: var(--primary-green-soft);
+        color: var(--primary-green);
+        border-color: var(--primary-green);
+      }
+    }
+  }
+
+  .notification-item {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+
+    &:hover {
+      background: var(--bg-hover);
+    }
+
+    &.unread {
+      background: rgba(0, 168, 68, 0.03);
+      border-right: 3px solid var(--primary-green);
+
+      &:hover {
+        background: rgba(0, 168, 68, 0.06);
+      }
+    }
+
+    .notification-content {
+      .notification-message {
+        color: var(--text-primary);
+      }
+
+      .notification-footer {
+        .time {
+          color: var(--text-disabled);
+        }
+      }
+    }
+
+    .notification-actions {
+      .delete-btn {
+        background: rgba(244, 67, 54, 0.08);
+        color: #D32F2F;
+
+        &:hover {
+          background: rgba(244, 67, 54, 0.15);
+        }
+      }
+    }
+  }
+
+  .loading-state,
+  .error-state,
+  .empty-state {
+    .spinner {
+      border-color: var(--border-color);
+      border-top-color: var(--primary-green);
+    }
+
+    .material-icons {
+      color: var(--text-disabled);
+    }
+
+    h4 {
+      color: var(--text-primary);
+    }
+
+    p {
+      color: var(--text-secondary);
+    }
+
+    .retry-btn {
+      background: var(--primary-green-soft);
+      color: var(--primary-green);
+      border: 1px solid var(--primary-green);
+
+      &:hover {
+        background: var(--primary-green);
+        color: white;
+      }
+    }
+  }
+
+  .settings-view {
+    .setting-item {
+      background: transparent;
+      border-bottom: 1px solid var(--border-color);
+
+      .setting-info {
+        .setting-title {
+          color: var(--text-primary);
+        }
+
+        .setting-description {
+          color: var(--text-secondary);
+        }
+      }
+    }
+
+    .toggle {
+      .slider {
+        background: var(--border-color);
+      }
+
+      input:checked + .slider {
+        background: var(--primary-green);
+      }
+    }
+  }
+
+  .quick-nav {
+    background: var(--table-header-bg);
+    border-top: 1px solid var(--border-color);
+
+    .nav-link {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+
+      &:hover {
+        border-color: var(--primary-green);
+        color: var(--primary-green);
+        background: var(--primary-green-soft);
+      }
+    }
+  }
+}

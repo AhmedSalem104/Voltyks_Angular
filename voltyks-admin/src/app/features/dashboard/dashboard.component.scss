@@ -2000,3 +2000,296 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
     background: rgba($primary, 0.5);
   }
 }
+
+// ============================================
+// LIGHT THEME - MODERN CLEAN DESIGN
+// ============================================
+:host-context([data-theme='light']) {
+  // Dashboard Container - Remove orbs, clean bg
+  .dashboard {
+    background: var(--bg-primary);
+
+    &::before,
+    &::after {
+      display: none; // Remove animated orbs
+    }
+  }
+
+  // Hero Section - Clean Card Design
+  .hero-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: none;
+
+    &:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-content {
+      .welcome-text {
+        .greeting {
+          color: var(--text-secondary);
+        }
+
+        .title {
+          color: var(--text-primary);
+
+          .highlight {
+            color: var(--primary-green);
+          }
+        }
+
+        .subtitle {
+          color: var(--text-secondary);
+        }
+      }
+    }
+
+    .date-time {
+      background: var(--primary-green-soft);
+      border: 1px solid rgba(0, 168, 68, 0.2);
+
+      .time {
+        color: var(--primary-green);
+      }
+
+      .date {
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  // Revenue Cards - Clean Flat Design
+  .revenue-card {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--shadow-sm) !important;
+    backdrop-filter: none !important;
+
+    &:hover {
+      box-shadow: var(--shadow-md) !important;
+      transform: translateY(-4px);
+    }
+
+    &::before,
+    &::after {
+      display: none !important; // Remove glowing effects
+    }
+
+    .card-icon {
+      background: var(--primary-green-soft) !important;
+      box-shadow: none !important;
+
+      .material-icons {
+        color: var(--primary-green) !important;
+      }
+    }
+
+    .card-content {
+      .card-label {
+        color: var(--text-secondary) !important;
+      }
+
+      .card-value {
+        color: var(--text-primary) !important;
+      }
+
+      .card-trend {
+        &.positive {
+          color: var(--status-success) !important;
+        }
+
+        &.negative {
+          color: var(--status-error) !important;
+        }
+      }
+    }
+  }
+
+  // Status Cards - Clean Design
+  .status-card {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--shadow-sm) !important;
+    backdrop-filter: none !important;
+
+    &:hover {
+      box-shadow: var(--shadow-md) !important;
+    }
+
+    &::before {
+      display: none !important;
+    }
+
+    .status-icon {
+      background: var(--primary-green-soft) !important;
+
+      .material-icons {
+        color: var(--primary-green) !important;
+      }
+    }
+
+    .status-content {
+      .status-label {
+        color: var(--text-secondary) !important;
+      }
+
+      .status-value {
+        color: var(--text-primary) !important;
+      }
+    }
+  }
+
+  // Stat Chips - Clean Interactive Buttons
+  .stat-chip {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--shadow-sm) !important;
+
+    &:hover {
+      border-color: var(--primary-green) !important;
+      background: var(--primary-green-soft) !important;
+      box-shadow: var(--shadow-md) !important;
+    }
+
+    &.active {
+      background: var(--primary-green-soft) !important;
+      border-color: var(--primary-green) !important;
+    }
+
+    .chip-icon {
+      color: var(--primary-green) !important;
+    }
+
+    .chip-label {
+      color: var(--text-secondary) !important;
+    }
+
+    .chip-value {
+      color: var(--text-primary) !important;
+    }
+  }
+
+  // Chart Cards - Clean Containers
+  .chart-card {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: var(--shadow-sm) !important;
+    backdrop-filter: none !important;
+
+    &::before {
+      display: none !important;
+    }
+
+    .chart-header {
+      border-bottom: 1px solid var(--border-color);
+
+      h3 {
+        color: var(--text-primary) !important;
+      }
+
+      .header-badge {
+        background: var(--primary-green-soft) !important;
+        color: var(--primary-green) !important;
+      }
+    }
+
+    .chart-legend {
+      .legend-item {
+        .legend-label {
+          color: var(--text-secondary) !important;
+        }
+
+        .legend-value {
+          color: var(--text-primary) !important;
+        }
+      }
+    }
+  }
+
+  // Notification Cards - Clean Design
+  .notification-card {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+
+    &:hover {
+      background: var(--bg-hover) !important;
+    }
+
+    &.unread {
+      background: rgba(0, 168, 68, 0.03) !important;
+      border-right: 3px solid var(--primary-green) !important;
+    }
+
+    .notification-icon {
+      background: var(--primary-green-soft) !important;
+
+      .material-icons {
+        color: var(--primary-green) !important;
+      }
+    }
+
+    .notification-content {
+      .notification-title {
+        color: var(--text-primary) !important;
+      }
+
+      .notification-desc {
+        color: var(--text-secondary) !important;
+      }
+
+      .notification-time {
+        color: var(--text-disabled) !important;
+      }
+    }
+  }
+
+  // Section Headers
+  .section-header {
+    h2 {
+      color: var(--text-primary) !important;
+    }
+
+    .section-badge {
+      background: var(--primary-green-soft) !important;
+      color: var(--primary-green) !important;
+    }
+  }
+
+  // Skeleton Loading
+  .skeleton-card,
+  .skeleton-line,
+  .skeleton-circle,
+  .skeleton {
+    background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-highlight) 50%, var(--skeleton-base) 75%) !important;
+  }
+
+  // Empty States
+  .empty-state {
+    .material-icons {
+      color: var(--text-disabled) !important;
+    }
+
+    h4 {
+      color: var(--text-primary) !important;
+    }
+
+    p {
+      color: var(--text-secondary) !important;
+    }
+  }
+
+  // Custom Scrollbar for Light Theme
+  ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+
+    &:hover {
+      background: var(--scrollbar-thumb-hover);
+    }
+  }
+}

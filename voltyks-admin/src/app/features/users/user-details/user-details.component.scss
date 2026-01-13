@@ -681,3 +681,277 @@
     }
   }
 }
+
+// Light Theme Overrides
+:host-context([data-theme='light']) {
+  .user-details-container {
+    .page-header {
+      h2 {
+        color: var(--text-primary);
+      }
+    }
+
+    .user-overview {
+      .user-avatar-section {
+        border-bottom-color: var(--border-color);
+
+        .user-avatar .material-icons {
+          color: var(--primary-green);
+        }
+
+        .user-basic-info {
+          h3 {
+            color: var(--text-primary);
+          }
+
+          .user-email {
+            color: var(--text-secondary);
+          }
+
+          .status-badge {
+            background-color: rgba(0, 168, 68, 0.12);
+            color: #00A844;
+
+            &.banned {
+              background-color: rgba(239, 83, 80, 0.12);
+              color: #D32F2F;
+            }
+          }
+        }
+      }
+
+      .user-stats .stat-item {
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+
+        .material-icons {
+          color: var(--primary-green);
+        }
+
+        .stat-label {
+          color: var(--text-secondary);
+        }
+
+        .stat-value {
+          color: var(--text-primary);
+        }
+      }
+    }
+
+    .tabs-container {
+      .tabs-header {
+        border-bottom-color: var(--border-color);
+
+        .tab-button {
+          color: var(--text-secondary);
+
+          &:hover {
+            color: var(--primary-green);
+          }
+
+          &.active {
+            color: var(--primary-green);
+            border-bottom-color: var(--primary-green);
+          }
+        }
+      }
+
+      .tabs-content .tab-pane {
+        h4 {
+          color: var(--text-primary);
+        }
+
+        .info-grid .info-item {
+          background-color: var(--bg-elevated);
+          border: 1px solid var(--border-color);
+
+          .info-label {
+            color: var(--text-secondary);
+          }
+
+          .info-value {
+            color: var(--text-primary);
+          }
+        }
+
+        .wallet-info .wallet-balance {
+          box-shadow: var(--shadow-md);
+
+          .balance-label {
+            color: rgba(255, 255, 255, 0.95);
+          }
+        }
+
+        .loading-text,
+        .empty-text {
+          color: var(--text-secondary);
+        }
+
+        .status-badge {
+          background-color: rgba(255, 167, 38, 0.12);
+          color: #F57C00;
+
+          &.resolved {
+            background-color: rgba(0, 168, 68, 0.12);
+            color: #00A844;
+          }
+        }
+
+        &.manage-balance-section {
+          .balance-card {
+            background-color: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+
+            .card-header {
+              &.add-header {
+                background: rgba(0, 168, 68, 0.1);
+                color: #00A844;
+              }
+
+              &.deduct-header {
+                background: rgba(239, 83, 80, 0.1);
+                color: #D32F2F;
+              }
+            }
+
+            .card-body {
+              .form-group {
+                label {
+                  color: var(--text-primary);
+                }
+
+                .voltyks-input {
+                  background-color: var(--input-bg);
+                  border-color: var(--border-color);
+                  color: var(--text-primary);
+
+                  &::placeholder {
+                    color: var(--text-disabled);
+                  }
+
+                  &:focus {
+                    border-color: var(--primary-green);
+                  }
+                }
+              }
+            }
+          }
+
+          .transactions-section {
+            .transactions-header {
+              border-bottom-color: var(--border-color);
+
+              h4 {
+                color: var(--text-primary);
+              }
+
+              .total-count {
+                background: rgba(0, 168, 68, 0.1);
+                color: #00A844;
+              }
+
+              .print-btn {
+                background: rgba(33, 150, 243, 0.1);
+                color: #1976D2;
+                border-color: rgba(33, 150, 243, 0.25);
+
+                &:hover:not(:disabled) {
+                  background: rgba(33, 150, 243, 0.15);
+                  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
+                }
+              }
+            }
+
+            .date-filter {
+              background-color: var(--bg-elevated);
+              border: 1px solid var(--border-color);
+
+              .filter-group {
+                label {
+                  color: var(--text-secondary);
+                }
+
+                .voltyks-input {
+                  background-color: var(--input-bg);
+                  border-color: var(--border-color);
+                  color: var(--text-primary);
+
+                  &:focus {
+                    border-color: var(--primary-green);
+                  }
+
+                  &::-webkit-calendar-picker-indicator {
+                    filter: none;
+                  }
+                }
+              }
+
+              .show-all-btn {
+                background: rgba(0, 168, 68, 0.1);
+                color: #00A844;
+                border-color: rgba(0, 168, 68, 0.25);
+
+                &:hover {
+                  background: rgba(0, 168, 68, 0.15);
+                }
+              }
+            }
+
+            .table-wrapper {
+              border-color: var(--border-color);
+
+              &::-webkit-scrollbar-track {
+                background: var(--bg-secondary);
+              }
+
+              &::-webkit-scrollbar-thumb {
+                background: var(--primary-green);
+
+                &:hover {
+                  background: var(--primary-green-hover);
+                }
+              }
+            }
+
+            .transactions-table {
+              .transaction-type {
+                &.add {
+                  background-color: rgba(0, 168, 68, 0.12);
+                  color: #00A844;
+                }
+
+                &.deduct {
+                  background-color: rgba(239, 83, 80, 0.12);
+                  color: #D32F2F;
+                }
+              }
+
+              .amount-add {
+                color: #00A844;
+              }
+
+              .amount-deduct {
+                color: #D32F2F;
+              }
+            }
+
+            .empty-state {
+              background-color: var(--bg-elevated);
+              border: 1px solid var(--border-color);
+
+              .empty-icon {
+                color: var(--border-color);
+              }
+
+              p {
+                color: var(--text-secondary);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

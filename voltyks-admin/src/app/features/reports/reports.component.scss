@@ -926,3 +926,332 @@
     width: 100%;
   }
 }
+
+// Light Theme Overrides
+:host-context([data-theme='light']) {
+  .reports-container {
+    .page-header {
+      h2 {
+        background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary-green) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .page-description {
+        color: var(--text-secondary);
+      }
+    }
+
+    .filters-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+
+      .search-icon,
+      .date-icon,
+      .select-icon {
+        color: var(--primary-green) !important;
+      }
+
+      input.voltyks-input,
+      select.voltyks-input {
+        background: var(--input-bg);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+
+        &::placeholder {
+          color: var(--text-disabled);
+        }
+
+        &:focus {
+          border-color: var(--primary-green);
+          box-shadow: 0 0 0 2px rgba(0, 168, 68, 0.15);
+        }
+
+        &::-webkit-calendar-picker-indicator {
+          filter: none;
+        }
+      }
+    }
+
+    .table-header {
+      border-bottom-color: var(--border-color);
+
+      h3 {
+        color: var(--text-primary);
+      }
+
+      .total-count {
+        color: var(--primary-green);
+        background: var(--primary-green-soft);
+      }
+    }
+
+    .table-wrapper table tbody tr {
+      &:hover {
+        background-color: var(--bg-hover);
+        box-shadow: 4px 0 0 0 var(--primary-green) inset;
+      }
+    }
+
+    .user-cell {
+      .user-avatar {
+        background: rgba(0, 168, 68, 0.1);
+
+        .material-icons {
+          color: var(--primary-green);
+        }
+      }
+
+      .user-info {
+        .user-name {
+          color: var(--text-primary);
+        }
+
+        .user-contact {
+          color: var(--text-secondary);
+
+          .contact-icon {
+            color: var(--primary-green);
+          }
+        }
+      }
+    }
+
+    .status-cell .status-toggle-btn {
+      &.pending {
+        background: rgba(255, 167, 38, 0.1);
+        color: #F57C00;
+        border-color: rgba(255, 167, 38, 0.25);
+
+        &:hover:not(:disabled) {
+          background: rgba(0, 168, 68, 0.12);
+          color: #00A844;
+          border-color: rgba(0, 168, 68, 0.3);
+        }
+      }
+
+      &.resolved {
+        background: rgba(0, 168, 68, 0.1);
+        color: #00A844;
+        border-color: rgba(0, 168, 68, 0.25);
+
+        &:hover:not(:disabled) {
+          background: rgba(255, 167, 38, 0.12);
+          color: #F57C00;
+          border-color: rgba(255, 167, 38, 0.3);
+        }
+      }
+
+      &.updating {
+        background: var(--bg-hover);
+        color: var(--text-disabled);
+        border-color: var(--border-color);
+      }
+    }
+
+    .actions-cell .btn-icon {
+      background: rgba(0, 168, 68, 0.1);
+      border-color: rgba(0, 168, 68, 0.25);
+      color: #00A844;
+
+      &:hover {
+        background: var(--primary-green);
+        color: white;
+        box-shadow: 0 2px 8px rgba(0, 168, 68, 0.3);
+      }
+    }
+
+    .date-cell {
+      .date-main {
+        color: var(--text-primary);
+      }
+
+      .date-relative {
+        color: var(--primary-green);
+      }
+    }
+
+    .status-badge {
+      background-color: rgba(255, 167, 38, 0.12);
+      color: #F57C00;
+      border-color: rgba(255, 167, 38, 0.25);
+
+      &.resolved {
+        background-color: rgba(0, 168, 68, 0.12);
+        color: #00A844;
+        border-color: rgba(0, 168, 68, 0.25);
+      }
+    }
+
+    .empty-state {
+      .empty-icon {
+        color: var(--border-color);
+      }
+
+      p {
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  // Side Panel Light Theme
+  .side-panel-overlay {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .side-panel {
+    background: var(--card-bg);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+
+    .side-panel-header {
+      background: var(--bg-hover);
+      border-bottom-color: var(--border-color);
+
+      h3 {
+        color: var(--text-primary);
+      }
+
+      .close-btn {
+        background: var(--bg-elevated);
+
+        &:hover {
+          background: rgba(239, 83, 80, 0.1);
+          color: #D32F2F;
+        }
+      }
+    }
+
+    .side-panel-content {
+      &::-webkit-scrollbar-track {
+        background: var(--bg-secondary);
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+
+        &:hover {
+          background: var(--text-disabled);
+        }
+      }
+    }
+  }
+
+  .detail-section {
+    background: var(--bg-elevated);
+    border-color: var(--border-color);
+
+    .section-header {
+      border-bottom-color: var(--border-color);
+
+      .material-icons {
+        color: var(--primary-green);
+      }
+
+      h4 {
+        color: var(--text-primary);
+      }
+    }
+  }
+
+  .detail-row {
+    .detail-label {
+      color: var(--text-secondary);
+    }
+
+    .detail-value {
+      color: var(--text-primary);
+
+      &.highlight {
+        color: var(--primary-green);
+      }
+
+      &.link {
+        color: var(--primary-green);
+      }
+
+      &.active {
+        color: #00A844;
+      }
+
+      &.inactive,
+      &.banned {
+        color: #D32F2F;
+      }
+
+      &.report-content {
+        background: var(--bg-primary);
+      }
+
+      &.loading-text {
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  .status-action .voltyks-btn {
+    &.btn-success {
+      box-shadow: 0 2px 6px rgba(0, 168, 68, 0.2);
+
+      &:hover:not(:disabled) {
+        box-shadow: 0 4px 12px rgba(0, 168, 68, 0.3);
+      }
+    }
+
+    &.btn-warning {
+      box-shadow: 0 2px 6px rgba(255, 167, 38, 0.2);
+
+      &:hover:not(:disabled) {
+        box-shadow: 0 4px 12px rgba(255, 167, 38, 0.3);
+      }
+    }
+  }
+
+  .loading-section,
+  .no-process {
+    color: var(--text-secondary);
+
+    .material-icons {
+      color: var(--primary-green);
+    }
+  }
+
+  .process-status {
+    &.status-pending {
+      background: rgba(255, 167, 38, 0.1);
+      color: #F57C00;
+      border-color: rgba(255, 167, 38, 0.25);
+    }
+
+    &.status-accepted {
+      background: rgba(33, 150, 243, 0.1);
+      color: #1976D2;
+      border-color: rgba(33, 150, 243, 0.25);
+    }
+
+    &.status-in-progress {
+      background: rgba(156, 39, 176, 0.1);
+      color: #7B1FA2;
+      border-color: rgba(156, 39, 176, 0.25);
+    }
+
+    &.status-completed {
+      background: rgba(0, 168, 68, 0.1);
+      color: #00A844;
+      border-color: rgba(0, 168, 68, 0.25);
+    }
+
+    &.status-aborted {
+      background: rgba(255, 82, 82, 0.1);
+      color: #D32F2F;
+      border-color: rgba(255, 82, 82, 0.25);
+    }
+
+    &.status-rejected {
+      background: rgba(158, 158, 158, 0.1);
+      color: #757575;
+      border-color: rgba(158, 158, 158, 0.25);
+    }
+  }
+}

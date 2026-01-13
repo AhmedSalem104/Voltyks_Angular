@@ -511,3 +511,200 @@ $text-muted: rgba(255, 255, 255, 0.4);
     }
   }
 }
+
+// Light Theme Overrides
+:host-context([data-theme='light']) {
+  .loading-state {
+    color: var(--text-secondary);
+
+    .loading-spinner {
+      border-color: var(--border-color);
+      border-top-color: #00A844;
+    }
+  }
+
+  .dashboard-header {
+    background: linear-gradient(135deg, rgba(0, 168, 68, 0.08) 0%, rgba(0, 168, 68, 0.02) 100%);
+    border-color: rgba(0, 168, 68, 0.15);
+
+    .header-text {
+      h1 {
+        color: var(--text-primary);
+      }
+
+      p {
+        color: var(--text-secondary);
+      }
+    }
+
+    .refresh-btn {
+      background: rgba(0, 168, 68, 0.08);
+      border-color: rgba(0, 168, 68, 0.2);
+      color: #00A844;
+
+      &:hover:not(:disabled) {
+        background: #00A844;
+        color: white;
+        box-shadow: 0 2px 8px rgba(0, 168, 68, 0.3);
+      }
+    }
+  }
+
+  .nav-card {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
+
+    &::before {
+      background: #00A844;
+    }
+
+    &:hover {
+      border-color: rgba(0, 168, 68, 0.25);
+      background: var(--bg-hover);
+      box-shadow: var(--shadow-md);
+    }
+
+    &.categories .card-icon {
+      background: rgba(25, 118, 210, 0.1);
+    }
+
+    &.products .card-icon {
+      background: rgba(123, 31, 162, 0.1);
+    }
+
+    &.reservations .card-icon {
+      background: rgba(0, 168, 68, 0.1);
+    }
+
+    .card-content {
+      h3 {
+        color: var(--text-primary);
+      }
+
+      p {
+        color: var(--text-secondary);
+      }
+    }
+
+    .stat-badge {
+      &.active {
+        background: rgba(0, 168, 68, 0.1);
+        color: #00A844;
+      }
+
+      &.pending {
+        background: rgba(255, 152, 0, 0.1);
+        color: #F57C00;
+      }
+
+      &.completed {
+        background: rgba(158, 158, 158, 0.12);
+        color: #757575;
+      }
+    }
+
+    .card-arrow {
+      color: #00A844;
+    }
+  }
+
+  .section-title {
+    color: var(--text-primary);
+
+    .material-icons {
+      color: #00A844;
+    }
+  }
+
+  .status-card {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
+
+    &:hover {
+      border-color: rgba(0, 168, 68, 0.25);
+      box-shadow: var(--shadow-md);
+    }
+
+    &.has-alerts {
+      border-color: rgba(255, 152, 0, 0.25);
+      background: linear-gradient(135deg, rgba(255, 152, 0, 0.05) 0%, transparent 100%);
+
+      &:hover {
+        border-color: rgba(255, 152, 0, 0.4);
+      }
+    }
+
+    &.has-info {
+      border-color: rgba(33, 150, 243, 0.25);
+    }
+
+    &.success {
+      border-color: rgba(0, 168, 68, 0.15);
+    }
+
+    .status-icon {
+      &.pending {
+        background: rgba(255, 152, 0, 0.1);
+      }
+
+      &.unpaid {
+        background: rgba(239, 68, 68, 0.1);
+      }
+
+      &.delivery {
+        background: rgba(33, 150, 243, 0.1);
+      }
+
+      &.completed {
+        background: rgba(0, 168, 68, 0.1);
+      }
+    }
+
+    .status-info {
+      .status-value {
+        color: var(--text-primary);
+      }
+
+      .status-label {
+        color: var(--text-primary);
+      }
+
+      .status-desc {
+        color: var(--text-disabled);
+      }
+    }
+
+    .alert-badge.danger {
+      .material-icons {
+        color: white;
+      }
+    }
+  }
+
+  .action-btn {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-sm);
+
+    &:hover {
+      background: var(--bg-hover);
+      border-color: rgba(0, 168, 68, 0.25);
+      color: #00A844;
+      box-shadow: var(--shadow-md);
+    }
+
+    &.highlight {
+      background: rgba(255, 152, 0, 0.08);
+      border-color: rgba(255, 152, 0, 0.2);
+      color: #F57C00;
+
+      &:hover {
+        background: rgba(255, 152, 0, 0.12);
+        border-color: rgba(255, 152, 0, 0.35);
+      }
+    }
+  }
+}

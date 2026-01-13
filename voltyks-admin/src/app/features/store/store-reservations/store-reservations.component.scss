@@ -956,3 +956,427 @@ textarea.voltyks-input {
     }
   }
 }
+
+// Light Theme Overrides
+:host-context([data-theme='light']) {
+  .store-reservations-container {
+    .breadcrumb-nav {
+      background: var(--card-bg);
+      border-color: var(--border-color);
+      box-shadow: var(--shadow-sm);
+
+      .back-link {
+        background: rgba(0, 168, 68, 0.08);
+        border-color: rgba(0, 168, 68, 0.2);
+        color: #00A844;
+
+        &:hover {
+          background: #00A844;
+          color: white;
+        }
+      }
+
+      .breadcrumb-path {
+        .path-item {
+          color: var(--text-secondary);
+
+          &:hover:not(.current) {
+            color: #00A844;
+          }
+
+          &.current {
+            color: var(--text-primary);
+          }
+        }
+
+        .separator {
+          color: var(--text-disabled);
+        }
+      }
+    }
+
+    .page-header {
+      .header-icon {
+        background: rgba(0, 168, 68, 0.1);
+
+        .material-icons {
+          color: #00A844;
+        }
+      }
+
+      .header-text {
+        h2 {
+          color: var(--text-primary);
+        }
+
+        .page-description {
+          color: var(--text-secondary);
+        }
+      }
+    }
+
+    .filters-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+
+      .filters-row-2 {
+        border-top-color: var(--border-color);
+
+        .filter-item label {
+          color: var(--text-disabled);
+        }
+      }
+
+      .search-icon {
+        color: var(--text-disabled);
+      }
+    }
+
+    .voltyks-card {
+      background-color: var(--card-bg);
+      border-color: var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .voltyks-input {
+      background-color: var(--input-bg);
+      border-color: var(--border-color);
+      color: var(--text-primary);
+
+      &:focus {
+        border-color: #00A844;
+        box-shadow: 0 0 0 2px rgba(0, 168, 68, 0.15);
+      }
+
+      &::placeholder {
+        color: var(--text-disabled);
+      }
+    }
+
+    .table-header {
+      h3 {
+        color: var(--text-primary);
+      }
+
+      .total-count {
+        color: var(--text-secondary);
+      }
+    }
+
+    .voltyks-btn {
+      &.btn-primary {
+        box-shadow: 0 2px 6px rgba(0, 168, 68, 0.2);
+
+        &:hover:not(:disabled) {
+          box-shadow: 0 4px 12px rgba(0, 168, 68, 0.3);
+        }
+      }
+
+      &.btn-secondary {
+        background-color: var(--bg-elevated);
+        color: var(--text-secondary);
+        border-color: var(--border-color);
+
+        &:hover:not(:disabled) {
+          border-color: #00A844;
+          color: #00A844;
+        }
+      }
+
+      &.btn-view {
+        color: var(--text-secondary);
+
+        &:hover {
+          background-color: var(--bg-hover);
+          color: var(--text-primary);
+        }
+      }
+
+      &.btn-contact {
+        color: #1976D2;
+
+        &:hover {
+          background-color: rgba(25, 118, 210, 0.1);
+        }
+      }
+
+      &.btn-payment {
+        color: #F9A825;
+
+        &:hover {
+          background-color: rgba(249, 168, 37, 0.1);
+        }
+      }
+
+      &.btn-delivery {
+        color: #7B1FA2;
+
+        &:hover {
+          background-color: rgba(123, 31, 162, 0.1);
+        }
+      }
+
+      &.btn-complete {
+        color: #00A844;
+
+        &:hover {
+          background-color: rgba(0, 168, 68, 0.1);
+        }
+      }
+
+      &.btn-danger {
+        color: #D32F2F;
+
+        &:hover:not(:disabled) {
+          background-color: rgba(211, 47, 47, 0.1);
+        }
+      }
+    }
+
+    .voltyks-table {
+      thead {
+        background-color: var(--table-header-bg);
+
+        th {
+          color: var(--text-secondary);
+          border-bottom-color: var(--border-color);
+        }
+      }
+
+      tbody tr {
+        border-bottom-color: var(--border-color);
+
+        &:hover {
+          background-color: var(--bg-hover);
+        }
+
+        &.cancelled-row {
+          background-color: rgba(211, 47, 47, 0.05);
+        }
+
+        &.completed-row {
+          background-color: rgba(0, 168, 68, 0.03);
+        }
+
+        td {
+          color: var(--text-secondary);
+        }
+      }
+    }
+
+    .product-cell {
+      .product-thumb,
+      .no-thumb {
+        background-color: var(--bg-primary);
+      }
+
+      .product-info {
+        .product-name {
+          color: var(--text-primary);
+        }
+
+        .product-price {
+          color: #00A844;
+        }
+      }
+    }
+
+    .user-cell {
+      .user-name {
+        color: var(--text-primary);
+      }
+
+      .user-phone {
+        color: var(--text-disabled);
+      }
+    }
+
+    .status-badge {
+      &.status-pending {
+        background-color: rgba(249, 168, 37, 0.1);
+        color: #F9A825;
+      }
+
+      &.status-contacted {
+        background-color: rgba(25, 118, 210, 0.1);
+        color: #1976D2;
+      }
+
+      &.status-completed {
+        background-color: rgba(0, 168, 68, 0.1);
+        color: #00A844;
+      }
+
+      &.status-cancelled {
+        background-color: rgba(211, 47, 47, 0.1);
+        color: #D32F2F;
+      }
+    }
+
+    .payment-badge {
+      &.payment-paid {
+        background-color: rgba(0, 168, 68, 0.1);
+        color: #00A844;
+      }
+
+      &.payment-unpaid {
+        background-color: rgba(211, 47, 47, 0.1);
+        color: #D32F2F;
+      }
+    }
+
+    .delivery-badge {
+      &.delivery-delivered {
+        background-color: rgba(123, 31, 162, 0.1);
+        color: #7B1FA2;
+      }
+
+      &.delivery-pending {
+        background-color: rgba(158, 158, 158, 0.12);
+        color: #757575;
+      }
+    }
+
+    .no-data {
+      color: var(--text-disabled);
+    }
+
+    .modal-overlay {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-dialog {
+      background-color: var(--card-bg);
+      border-color: var(--border-color);
+      box-shadow: var(--shadow-lg);
+
+      .modal-header {
+        border-bottom-color: var(--border-color);
+        background-color: var(--bg-elevated);
+
+        h3 {
+          color: var(--text-primary);
+        }
+
+        .close-btn {
+          color: var(--text-disabled);
+
+          &:hover {
+            background-color: rgba(211, 47, 47, 0.1);
+            color: #D32F2F;
+          }
+        }
+      }
+
+      .modal-body {
+        .form-group label {
+          color: var(--text-secondary);
+
+          .required {
+            color: #D32F2F;
+          }
+        }
+
+        .reservation-summary {
+          background-color: var(--bg-primary);
+
+          p {
+            color: var(--text-secondary);
+
+            strong {
+              color: var(--text-primary);
+            }
+          }
+        }
+
+        &.details-body {
+          .status-timeline {
+            background-color: var(--bg-primary);
+
+            .timeline-step {
+              .step-icon {
+                border-color: var(--border-color);
+                background-color: var(--card-bg);
+                color: var(--text-disabled);
+              }
+
+              &.active .step-icon {
+                background-color: rgba(0, 168, 68, 0.15);
+                color: #00A844;
+                border-color: #00A844;
+              }
+
+              &.completed .step-icon {
+                background-color: #00A844;
+                color: white;
+              }
+
+              .step-label {
+                color: var(--text-secondary);
+              }
+            }
+
+            .timeline-connector {
+              background-color: var(--border-color);
+
+              &.active {
+                background-color: #00A844;
+              }
+            }
+          }
+
+          .cancelled-notice {
+            background-color: rgba(211, 47, 47, 0.08);
+            color: #D32F2F;
+          }
+
+          .details-sections .detail-section {
+            background-color: var(--bg-primary);
+
+            h4 {
+              color: var(--text-primary);
+
+              .material-icons {
+                color: #00A844;
+              }
+            }
+
+            .detail-content {
+              .info-row {
+                border-bottom-color: var(--border-color);
+
+                .label {
+                  color: var(--text-disabled);
+                }
+
+                .value {
+                  color: var(--text-primary);
+                }
+              }
+
+              &.product-detail .product-details {
+                .product-name {
+                  color: var(--text-primary);
+                }
+
+                .product-price {
+                  color: #00A844;
+                }
+              }
+
+              .notes-text {
+                color: var(--text-secondary);
+              }
+            }
+          }
+        }
+      }
+
+      .modal-footer {
+        border-top-color: var(--border-color);
+        background-color: var(--bg-elevated);
+      }
+    }
+  }
+}

@@ -560,3 +560,129 @@
     }
   }
 }
+
+// ========================================
+// Light Theme Overrides - Modern Clean
+// ========================================
+:host-context([data-theme='light']) {
+  .sidebar-wrapper {
+    background: var(--sidebar-bg);
+    border-left: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .logo-section {
+    border-bottom: 1px solid var(--border-color);
+
+    .logo-image {
+      box-shadow: 0 2px 8px rgba(0, 168, 68, 0.25);
+    }
+
+    .logo-text {
+      background: linear-gradient(135deg, var(--primary-green) 0%, #4CAF50 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  }
+
+  .menu-group {
+    &.has-active > .group-header {
+      color: var(--primary-green);
+    }
+  }
+
+  .group-header {
+    color: var(--text-secondary);
+
+    &:hover {
+      background-color: var(--bg-hover);
+      color: var(--primary-green);
+    }
+
+    &.has-active {
+      color: var(--primary-green);
+      border-right-color: var(--primary-green-soft);
+
+      .icon {
+        color: var(--primary-green);
+      }
+    }
+
+    &.expanded {
+      background-color: var(--primary-green-soft);
+    }
+  }
+
+  .group-items {
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  .nav-link {
+    color: var(--text-secondary);
+
+    &:hover {
+      background-color: var(--bg-hover);
+      color: var(--primary-green);
+    }
+
+    &.active {
+      background-color: var(--primary-green-soft);
+      color: var(--primary-green);
+      border-right-color: var(--primary-green);
+
+      .icon {
+        color: var(--primary-green);
+      }
+    }
+  }
+
+  .footer-section {
+    border-top: 1px solid var(--border-color);
+
+    .version-text {
+      color: var(--text-disabled);
+    }
+  }
+
+  .backdrop {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
+  }
+
+  // Mobile Light Theme
+  @media (max-width: 768px) {
+    .sidebar-wrapper {
+      box-shadow: -4px 0 30px rgba(0, 0, 0, 0.15);
+      border-left: 1px solid var(--border-color);
+    }
+
+    .logo-section {
+      background: linear-gradient(135deg, var(--primary-green-soft) 0%, transparent 100%);
+    }
+
+    .group-header {
+      &.expanded {
+        background: var(--primary-green-soft);
+      }
+    }
+
+    .group-items {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    .nav-link {
+      &.active {
+        background: var(--primary-green-soft);
+
+        &::before {
+          background: var(--primary-green);
+        }
+      }
+    }
+
+    .footer-section {
+      background: rgba(0, 0, 0, 0.02);
+    }
+  }
+}
