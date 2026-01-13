@@ -458,7 +458,7 @@
   </div>
 }
 
-<!-- Loading Overlay - Deferred for performance -->
-@defer (when isLoading) {
+<!-- Loading Overlay -->
+@if (isLoading) {
   <app-loading-overlay></app-loading-overlay>
 }

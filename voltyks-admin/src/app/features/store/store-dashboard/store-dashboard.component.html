@@ -1,6 +1,6 @@
 <div class="store-dashboard">
-  <!-- Loading State - Deferred for performance -->
-  @defer (when isLoading) {
+  <!-- Loading State -->
+  @if (isLoading) {
     <div class="loading-state">
       <div class="loading-spinner"></div>
       <span>جاري تحميل البيانات...</span>
