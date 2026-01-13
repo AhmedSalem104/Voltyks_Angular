@@ -1,5 +1,6 @@
 <div class="store-reservations-container">
-  @if (isLoading || isSaving) {
+  <!-- Loading Overlay - Deferred for performance -->
+  @defer (when isLoading || isSaving) {
     <app-loading-overlay></app-loading-overlay>
   }
 
@@ -225,12 +226,13 @@
     }
   </div>
 
-  <!-- Details Dialog -->
-  @if (showDetailsDialog && currentReservation) {
-    <div class="modal-overlay" (click)="closeDetailsDialog()">
-      <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h3>تفاصيل الحجز #{{ currentReservation.id }}</h3>
+  <!-- Details Dialog - Deferred for performance -->
+  @defer (when showDetailsDialog && currentReservation) {
+    @if (currentReservation) {
+      <div class="modal-overlay" (click)="closeDetailsDialog()">
+        <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>تفاصيل الحجز #{{ currentReservation.id }}</h3>
           <button type="button" class="close-btn" (click)="closeDetailsDialog()">
             <span class="material-icons">close</span>
           </button>
@@ -398,133 +400,144 @@
         </div>
       </div>
     </div>
+    }
   }
 
-  <!-- Contact Dialog -->
-  @if (showContactDialog && currentReservation) {
-    <div class="modal-overlay" (click)="closeContactDialog()">
-      <div class="modal-dialog" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h3>تسجيل تواصل</h3>
-          <button type="button" class="close-btn" (click)="closeContactDialog()">
-            <span class="material-icons">close</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="reservation-summary">
-            <p><strong>المنتج:</strong> {{ currentReservation.productName }}</p>
-            <p><strong>العميل:</strong> {{ currentReservation.userName }}</p>
-            @if (currentReservation.userPhone) {
-              <p><strong>الهاتف:</strong> {{ currentReservation.userPhone }}</p>
-            }
+  <!-- Contact Dialog - Deferred for performance -->
+  @defer (when showContactDialog && currentReservation) {
+    @if (currentReservation) {
+      <div class="modal-overlay" (click)="closeContactDialog()">
+        <div class="modal-dialog" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>تسجيل تواصل</h3>
+            <button type="button" class="close-btn" (click)="closeContactDialog()">
+              <span class="material-icons">close</span>
+            </button>
           </div>
-
-          <div class="form-group">
-            <label>ملاحظات التواصل</label>
-            <textarea class="voltyks-input" [(ngModel)]="contactDto.notes" rows="4" placeholder="أدخل ملاحظات التواصل مع العميل..."></textarea>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="voltyks-btn btn-secondary" (click)="closeContactDialog()">إلغاء</button>
-          <button class="voltyks-btn btn-primary" (click)="recordContact()" [disabled]="isSaving">
-            {{ isSaving ? 'جاري الحفظ...' : 'تسجيل التواصل' }}
-          </button>
-        </div>
-      </div>
-    </div>
-  }
-
-  <!-- Payment Dialog -->
-  @if (showPaymentDialog && currentReservation) {
-    <div class="modal-overlay" (click)="closePaymentDialog()">
-      <div class="modal-dialog" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h3>تسجيل الدفع</h3>
-          <button type="button" class="close-btn" (click)="closePaymentDialog()">
-            <span class="material-icons">close</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="reservation-summary">
-            <p><strong>المنتج:</strong> {{ currentReservation.productName }}</p>
-            <p><strong>السعر:</strong> {{ formatPrice(currentReservation.unitPrice) }}</p>
-            <p><strong>العميل:</strong> {{ currentReservation.userName }}</p>
-          </div>
-
-          <div class="form-group">
-            <label>طريقة الدفع <span class="required">*</span></label>
-            <select class="voltyks-input" [(ngModel)]="paymentDto.paymentMethod">
-              @for (method of paymentMethods; track method.value) {
-                <option [value]="method.value">{{ method.label }}</option>
+          <div class="modal-body">
+            <div class="reservation-summary">
+              <p><strong>المنتج:</strong> {{ currentReservation.productName }}</p>
+              <p><strong>العميل:</strong> {{ currentReservation.userName }}</p>
+              @if (currentReservation.userPhone) {
+                <p><strong>الهاتف:</strong> {{ currentReservation.userPhone }}</p>
               }
-            </select>
-          </div>
+            </div>
 
-          <div class="form-group">
-            <label>ملاحظات</label>
-            <textarea class="voltyks-input" [(ngModel)]="paymentDto.notes" rows="3" placeholder="ملاحظات إضافية..."></textarea>
+            <div class="form-group">
+              <label>ملاحظات التواصل</label>
+              <textarea class="voltyks-input" [(ngModel)]="contactDto.notes" rows="4" placeholder="أدخل ملاحظات التواصل مع العميل..."></textarea>
+            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button class="voltyks-btn btn-secondary" (click)="closePaymentDialog()">إلغاء</button>
-          <button class="voltyks-btn btn-primary" (click)="recordPayment()" [disabled]="isSaving">
-            {{ isSaving ? 'جاري الحفظ...' : 'تسجيل الدفع' }}
-          </button>
+          <div class="modal-footer">
+            <button class="voltyks-btn btn-secondary" (click)="closeContactDialog()">إلغاء</button>
+            <button class="voltyks-btn btn-primary" (click)="recordContact()" [disabled]="isSaving">
+              {{ isSaving ? 'جاري الحفظ...' : 'تسجيل التواصل' }}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    }
   }
 
-  <!-- Delivery Dialog -->
-  @if (showDeliveryDialog && currentReservation) {
-    <div class="modal-overlay" (click)="closeDeliveryDialog()">
-      <div class="modal-dialog" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h3>تسجيل التسليم</h3>
-          <button type="button" class="close-btn" (click)="closeDeliveryDialog()">
-            <span class="material-icons">close</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="reservation-summary">
-            <p><strong>المنتج:</strong> {{ currentReservation.productName }}</p>
-            <p><strong>العميل:</strong> {{ currentReservation.userName }}</p>
+  <!-- Payment Dialog - Deferred for performance -->
+  @defer (when showPaymentDialog && currentReservation) {
+    @if (currentReservation) {
+      <div class="modal-overlay" (click)="closePaymentDialog()">
+        <div class="modal-dialog" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>تسجيل الدفع</h3>
+            <button type="button" class="close-btn" (click)="closePaymentDialog()">
+              <span class="material-icons">close</span>
+            </button>
           </div>
+          <div class="modal-body">
+            <div class="reservation-summary">
+              <p><strong>المنتج:</strong> {{ currentReservation.productName }}</p>
+              <p><strong>السعر:</strong> {{ formatPrice(currentReservation.unitPrice) }}</p>
+              <p><strong>العميل:</strong> {{ currentReservation.userName }}</p>
+            </div>
 
-          <div class="form-group">
-            <label>ملاحظات التسليم</label>
-            <textarea class="voltyks-input" [(ngModel)]="deliveryDto.notes" rows="4" placeholder="ملاحظات التسليم..."></textarea>
+            <div class="form-group">
+              <label>طريقة الدفع <span class="required">*</span></label>
+              <select class="voltyks-input" [(ngModel)]="paymentDto.paymentMethod">
+                @for (method of paymentMethods; track method.value) {
+                  <option [value]="method.value">{{ method.label }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>ملاحظات</label>
+              <textarea class="voltyks-input" [(ngModel)]="paymentDto.notes" rows="3" placeholder="ملاحظات إضافية..."></textarea>
+            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button class="voltyks-btn btn-secondary" (click)="closeDeliveryDialog()">إلغاء</button>
-          <button class="voltyks-btn btn-primary" (click)="recordDelivery()" [disabled]="isSaving">
-            {{ isSaving ? 'جاري الحفظ...' : 'تسجيل التسليم' }}
-          </button>
+          <div class="modal-footer">
+            <button class="voltyks-btn btn-secondary" (click)="closePaymentDialog()">إلغاء</button>
+            <button class="voltyks-btn btn-primary" (click)="recordPayment()" [disabled]="isSaving">
+              {{ isSaving ? 'جاري الحفظ...' : 'تسجيل الدفع' }}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    }
   }
 
-  <!-- Complete Confirm -->
-  <app-confirm-dialog
-    [isOpen]="showCompleteConfirm"
-    title="تأكيد إكمال الحجز"
-    [message]="'هل أنت متأكد من إكمال الحجز #' + (currentReservation?.id || '') + '؟'"
-    confirmText="إكمال"
-    type="primary"
-    (confirm)="confirmComplete()"
-    (cancel)="closeCompleteConfirm()"
-  ></app-confirm-dialog>
+  <!-- Delivery Dialog - Deferred for performance -->
+  @defer (when showDeliveryDialog && currentReservation) {
+    @if (currentReservation) {
+      <div class="modal-overlay" (click)="closeDeliveryDialog()">
+        <div class="modal-dialog" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>تسجيل التسليم</h3>
+            <button type="button" class="close-btn" (click)="closeDeliveryDialog()">
+              <span class="material-icons">close</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="reservation-summary">
+              <p><strong>المنتج:</strong> {{ currentReservation.productName }}</p>
+              <p><strong>العميل:</strong> {{ currentReservation.userName }}</p>
+            </div>
 
-  <!-- Cancel Confirm -->
-  <app-confirm-dialog
-    [isOpen]="showCancelConfirm"
-    title="تأكيد إلغاء الحجز"
-    [message]="'هل أنت متأكد من إلغاء الحجز #' + (currentReservation?.id || '') + '؟ لا يمكن التراجع عن هذا الإجراء.'"
-    confirmText="إلغاء الحجز"
-    type="danger"
-    (confirm)="confirmCancel()"
-    (cancel)="closeCancelConfirm()"
-  ></app-confirm-dialog>
+            <div class="form-group">
+              <label>ملاحظات التسليم</label>
+              <textarea class="voltyks-input" [(ngModel)]="deliveryDto.notes" rows="4" placeholder="ملاحظات التسليم..."></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="voltyks-btn btn-secondary" (click)="closeDeliveryDialog()">إلغاء</button>
+            <button class="voltyks-btn btn-primary" (click)="recordDelivery()" [disabled]="isSaving">
+              {{ isSaving ? 'جاري الحفظ...' : 'تسجيل التسليم' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  }
+
+  <!-- Complete Confirm - Deferred for performance -->
+  @defer (when showCompleteConfirm) {
+    <app-confirm-dialog
+      [isOpen]="showCompleteConfirm"
+      title="تأكيد إكمال الحجز"
+      [message]="'هل أنت متأكد من إكمال الحجز #' + (currentReservation?.id || '') + '؟'"
+      confirmText="إكمال"
+      type="primary"
+      (confirm)="confirmComplete()"
+      (cancel)="closeCompleteConfirm()"
+    ></app-confirm-dialog>
+  }
+
+  <!-- Cancel Confirm - Deferred for performance -->
+  @defer (when showCancelConfirm) {
+    <app-confirm-dialog
+      [isOpen]="showCancelConfirm"
+      title="تأكيد إلغاء الحجز"
+      [message]="'هل أنت متأكد من إلغاء الحجز #' + (currentReservation?.id || '') + '؟ لا يمكن التراجع عن هذا الإجراء.'"
+      confirmText="إلغاء الحجز"
+      type="danger"
+      (confirm)="confirmCancel()"
+      (cancel)="closeCancelConfirm()"
+    ></app-confirm-dialog>
+  }
 </div>

@@ -410,39 +410,46 @@
   }
 </div>
 
-<!-- Ban/Unban Confirmation Dialog -->
-<app-confirm-dialog
-  [isOpen]="showBanDialog"
-  [title]="user?.isBanned ? 'إلغاء حظر المستخدم' : 'حظر المستخدم'"
-  [message]="user?.isBanned ? 'هل أنت متأكد من إلغاء حظر هذا المستخدم؟' : 'هل أنت متأكد من حظر هذا المستخدم؟'"
-  [confirmText]="user?.isBanned ? 'إلغاء الحظر' : 'حظر'"
-  [type]="user?.isBanned ? 'primary' : 'danger'"
-  (confirm)="confirmBanToggle()"
-  (cancel)="showBanDialog = false"
-></app-confirm-dialog>
+<!-- Ban/Unban Confirmation Dialog - Deferred for performance -->
+@defer (when showBanDialog) {
+  <app-confirm-dialog
+    [isOpen]="showBanDialog"
+    [title]="user?.isBanned ? 'إلغاء حظر المستخدم' : 'حظر المستخدم'"
+    [message]="user?.isBanned ? 'هل أنت متأكد من إلغاء حظر هذا المستخدم؟' : 'هل أنت متأكد من حظر هذا المستخدم؟'"
+    [confirmText]="user?.isBanned ? 'إلغاء الحظر' : 'حظر'"
+    [type]="user?.isBanned ? 'primary' : 'danger'"
+    (confirm)="confirmBanToggle()"
+    (cancel)="showBanDialog = false"
+  ></app-confirm-dialog>
+}
 
-<!-- Add Balance Confirmation Dialog -->
-<app-confirm-dialog
-  [isOpen]="showAddBalanceDialog"
-  title="تأكيد إضافة الرصيد"
-  [message]="'هل أنت متأكد من إضافة ' + addBalanceDto.amount + ' ج.م للمستخدم ' + user?.fullName + '؟'"
-  confirmText="إضافة"
-  type="primary"
-  (confirm)="confirmAddBalance()"
-  (cancel)="closeAddBalanceDialog()"
-></app-confirm-dialog>
+<!-- Add Balance Confirmation Dialog - Deferred for performance -->
+@defer (when showAddBalanceDialog) {
+  <app-confirm-dialog
+    [isOpen]="showAddBalanceDialog"
+    title="تأكيد إضافة الرصيد"
+    [message]="'هل أنت متأكد من إضافة ' + addBalanceDto.amount + ' ج.م للمستخدم ' + user?.fullName + '؟'"
+    confirmText="إضافة"
+    type="primary"
+    (confirm)="confirmAddBalance()"
+    (cancel)="closeAddBalanceDialog()"
+  ></app-confirm-dialog>
+}
 
-<!-- Deduct Balance Confirmation Dialog -->
-<app-confirm-dialog
-  [isOpen]="showDeductBalanceDialog"
-  title="تأكيد خصم الرصيد"
-  [message]="'هل أنت متأكد من خصم ' + deductBalanceDto.amount + ' ج.م من رصيد المستخدم ' + user?.fullName + '؟'"
-  confirmText="خصم"
-  type="danger"
-  (confirm)="confirmDeductBalance()"
-  (cancel)="closeDeductBalanceDialog()"
-></app-confirm-dialog>
+<!-- Deduct Balance Confirmation Dialog - Deferred for performance -->
+@defer (when showDeductBalanceDialog) {
+  <app-confirm-dialog
+    [isOpen]="showDeductBalanceDialog"
+    title="تأكيد خصم الرصيد"
+    [message]="'هل أنت متأكد من خصم ' + deductBalanceDto.amount + ' ج.م من رصيد المستخدم ' + user?.fullName + '؟'"
+    confirmText="خصم"
+    type="danger"
+    (confirm)="confirmDeductBalance()"
+    (cancel)="closeDeductBalanceDialog()"
+  ></app-confirm-dialog>
+}
 
-@if (isLoading) {
+<!-- Loading Overlay - Deferred for performance -->
+@defer (when isLoading) {
   <app-loading-overlay></app-loading-overlay>
 }

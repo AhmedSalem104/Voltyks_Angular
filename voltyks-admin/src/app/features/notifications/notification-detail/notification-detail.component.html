@@ -437,11 +437,13 @@
   }
 </div>
 
-<!-- Confirm Dialog -->
-<app-confirm-dialog
-  [isOpen]="showConfirmDialog"
-  [title]="confirmDialogTitle"
-  [message]="confirmDialogMessage"
-  (confirm)="confirmAction()"
-  (cancel)="cancelAction()"
-></app-confirm-dialog>
+<!-- Confirm Dialog - Deferred for performance -->
+@defer (when showConfirmDialog) {
+  <app-confirm-dialog
+    [isOpen]="showConfirmDialog"
+    [title]="confirmDialogTitle"
+    [message]="confirmDialogMessage"
+    (confirm)="confirmAction()"
+    (cancel)="cancelAction()"
+  ></app-confirm-dialog>
+}

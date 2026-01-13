@@ -1,5 +1,6 @@
 <div class="store-products-container">
-  @if (isLoading || isSaving) {
+  <!-- Loading Overlay - Deferred for performance -->
+  @defer (when isLoading || isSaving) {
     <app-loading-overlay></app-loading-overlay>
   }
 
@@ -203,8 +204,8 @@
     }
   </div>
 
-  <!-- Create Dialog -->
-  @if (showCreateDialog) {
+  <!-- Create Dialog - Deferred for performance -->
+  @defer (when showCreateDialog) {
     <div class="modal-overlay" (click)="closeCreateDialog()">
       <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
         <div class="modal-header">
@@ -316,8 +317,8 @@
     </div>
   }
 
-  <!-- Edit Dialog -->
-  @if (showEditDialog && currentProduct) {
+  <!-- Edit Dialog - Deferred for performance -->
+  @defer (when showEditDialog && currentProduct) {
     <div class="modal-overlay" (click)="closeEditDialog()">
       <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
         <div class="modal-header">
@@ -447,12 +448,13 @@
     </div>
   }
 
-  <!-- Details Dialog -->
-  @if (showDetailsDialog && currentProduct) {
-    <div class="modal-overlay" (click)="closeDetailsDialog()">
-      <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h3>تفاصيل المنتج</h3>
+  <!-- Details Dialog - Deferred for performance -->
+  @defer (when showDetailsDialog && currentProduct) {
+    @if (currentProduct) {
+      <div class="modal-overlay" (click)="closeDetailsDialog()">
+        <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>تفاصيل المنتج</h3>
           <button type="button" class="close-btn" (click)="closeDetailsDialog()">
             <span class="material-icons">close</span>
           </button>
@@ -553,39 +555,45 @@
         </div>
       </div>
     </div>
+    }
   }
 
-  <!-- Delete Confirm -->
-  <app-confirm-dialog
-    [isOpen]="showDeleteConfirm"
-    title="تأكيد الحذف"
-    [message]="'هل أنت متأكد من حذف المنتج \'' + (currentProduct?.name || '') + '\'؟ يمكن استرجاعه لاحقاً.'"
-    confirmText="حذف"
-    type="danger"
-    (confirm)="confirmDelete()"
-    (cancel)="closeDeleteConfirm()"
-  ></app-confirm-dialog>
+  <!-- Delete Confirm - Deferred for performance -->
+  @defer (when showDeleteConfirm) {
+    <app-confirm-dialog
+      [isOpen]="showDeleteConfirm"
+      title="تأكيد الحذف"
+      [message]="'هل أنت متأكد من حذف المنتج \'' + (currentProduct?.name || '') + '\'؟ يمكن استرجاعه لاحقاً.'"
+      confirmText="حذف"
+      type="danger"
+      (confirm)="confirmDelete()"
+      (cancel)="closeDeleteConfirm()"
+    ></app-confirm-dialog>
+  }
 
-  <!-- Force Delete Confirm -->
-  <app-confirm-dialog
-    [isOpen]="showForceDeleteConfirm"
-    title="تأكيد الحذف النهائي"
-    [message]="'هل أنت متأكد من حذف المنتج \'' + (currentProduct?.name || '') + '\' نهائياً؟ لا يمكن استرجاعه!'"
-    confirmText="حذف نهائي"
-    type="danger"
-    (confirm)="confirmForceDelete()"
-    (cancel)="closeForceDeleteConfirm()"
-  ></app-confirm-dialog>
+  <!-- Force Delete Confirm - Deferred for performance -->
+  @defer (when showForceDeleteConfirm) {
+    <app-confirm-dialog
+      [isOpen]="showForceDeleteConfirm"
+      title="تأكيد الحذف النهائي"
+      [message]="'هل أنت متأكد من حذف المنتج \'' + (currentProduct?.name || '') + '\' نهائياً؟ لا يمكن استرجاعه!'"
+      confirmText="حذف نهائي"
+      type="danger"
+      (confirm)="confirmForceDelete()"
+      (cancel)="closeForceDeleteConfirm()"
+    ></app-confirm-dialog>
+  }
 
-  <!-- Image Manager Dialog -->
-  @if (showImageManager && currentProduct) {
-    <div class="modal-overlay" (click)="closeImageManager()">
-      <div class="modal-dialog modal-lg image-manager-dialog" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h3>
-            <span class="material-icons">collections</span>
-            إدارة صور المنتج: {{ currentProduct.name }}
-          </h3>
+  <!-- Image Manager Dialog - Deferred for performance -->
+  @defer (when showImageManager && currentProduct) {
+    @if (currentProduct) {
+      <div class="modal-overlay" (click)="closeImageManager()">
+        <div class="modal-dialog modal-lg image-manager-dialog" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>
+              <span class="material-icons">collections</span>
+              إدارة صور المنتج: {{ currentProduct.name }}
+            </h3>
           <button type="button" class="close-btn" (click)="closeImageManager()">
             <span class="material-icons">close</span>
           </button>
@@ -679,10 +687,11 @@
         </div>
       </div>
     </div>
+    }
   }
 
-  <!-- Lightbox -->
-  @if (showLightbox) {
+  <!-- Lightbox - Deferred for performance -->
+  @defer (when showLightbox) {
     <div class="lightbox-overlay" (click)="closeLightbox()">
       <button class="lightbox-close" (click)="closeLightbox()">
         <span class="material-icons">close</span>
@@ -693,14 +702,16 @@
     </div>
   }
 
-  <!-- Delete Image Confirm -->
-  <app-confirm-dialog
-    [isOpen]="showDeleteImageConfirm"
-    title="تأكيد حذف الصورة"
-    message="هل أنت متأكد من حذف هذه الصورة؟ لا يمكن استرجاعها."
-    confirmText="حذف"
-    type="danger"
-    (confirm)="confirmDeleteImage()"
-    (cancel)="closeDeleteImageConfirm()"
-  ></app-confirm-dialog>
+  <!-- Delete Image Confirm - Deferred for performance -->
+  @defer (when showDeleteImageConfirm) {
+    <app-confirm-dialog
+      [isOpen]="showDeleteImageConfirm"
+      title="تأكيد حذف الصورة"
+      message="هل أنت متأكد من حذف هذه الصورة؟ لا يمكن استرجاعها."
+      confirmText="حذف"
+      type="danger"
+      (confirm)="confirmDeleteImage()"
+      (cancel)="closeDeleteImageConfirm()"
+    ></app-confirm-dialog>
+  }
 </div>

@@ -1,11 +1,12 @@
 <div class="store-dashboard">
-  <!-- Loading State -->
-  @if (isLoading) {
+  <!-- Loading State - Deferred for performance -->
+  @defer (when isLoading) {
     <div class="loading-state">
       <div class="loading-spinner"></div>
       <span>جاري تحميل البيانات...</span>
     </div>
-  } @else {
+  }
+  @if (!isLoading) {
     <!-- Header Section -->
     <header class="dashboard-header">
       <div class="header-content">

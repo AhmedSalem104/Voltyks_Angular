@@ -245,130 +245,131 @@
     </section>
   }
 
-  <!-- Stats & Charts Section -->
-  <section class="main-section">
-    <div class="main-grid">
-      <!-- Overview Chart -->
-      <div class="chart-card overview-chart">
-        <h3>نظرة عامة</h3>
-        @if (sectionLoading.users && sectionLoading.chargers && sectionLoading.vehicles && sectionLoading.reports) {
-          <div class="chart-skeleton">
-            <div class="skeleton-circle"></div>
-            <div class="skeleton-legend">
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line"></div>
+  <!-- Stats & Charts Section - Deferred for performance -->
+  @defer (on viewport) {
+    <section class="main-section">
+      <div class="main-grid">
+        <!-- Overview Chart -->
+        <div class="chart-card overview-chart">
+          <h3>نظرة عامة</h3>
+          @if (sectionLoading.users && sectionLoading.chargers && sectionLoading.vehicles && sectionLoading.reports) {
+            <div class="chart-skeleton">
+              <div class="skeleton-circle"></div>
+              <div class="skeleton-legend">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+              </div>
             </div>
-          </div>
-        } @else {
-          <div class="chart-container fade-in">
-            <canvas baseChart
-              [data]="overviewChartData"
-              [options]="overviewChartOptions"
-              type="doughnut">
-            </canvas>
-            <div class="chart-center">
-              <span class="total-value">{{ stats.totalUsers + stats.totalChargers + stats.totalVehicles }}</span>
-              <span class="total-label">إجمالي</span>
+          } @else {
+            <div class="chart-container fade-in">
+              <canvas baseChart
+                [data]="overviewChartData"
+                [options]="overviewChartOptions"
+                type="doughnut">
+              </canvas>
+              <div class="chart-center">
+                <span class="total-value">{{ stats.totalUsers + stats.totalChargers + stats.totalVehicles }}</span>
+                <span class="total-label">إجمالي</span>
+              </div>
             </div>
-          </div>
-          <div class="chart-legend fade-in">
-            <div class="legend-item" [class.loading]="sectionLoading.users">
-              <span class="legend-color users"></span>
-              <span class="legend-label">مستخدمين</span>
-              <span class="legend-value">{{ sectionLoading.users ? '...' : stats.totalUsers }}</span>
+            <div class="chart-legend fade-in">
+              <div class="legend-item" [class.loading]="sectionLoading.users">
+                <span class="legend-color users"></span>
+                <span class="legend-label">مستخدمين</span>
+                <span class="legend-value">{{ sectionLoading.users ? '...' : stats.totalUsers }}</span>
+              </div>
+              <div class="legend-item" [class.loading]="sectionLoading.chargers">
+                <span class="legend-color chargers"></span>
+                <span class="legend-label">شواحن</span>
+                <span class="legend-value">{{ sectionLoading.chargers ? '...' : stats.totalChargers }}</span>
+              </div>
+              <div class="legend-item" [class.loading]="sectionLoading.vehicles">
+                <span class="legend-color vehicles"></span>
+                <span class="legend-label">مركبات</span>
+                <span class="legend-value">{{ sectionLoading.vehicles ? '...' : stats.totalVehicles }}</span>
+              </div>
+              <div class="legend-item" [class.loading]="sectionLoading.reports">
+                <span class="legend-color reports"></span>
+                <span class="legend-label">بلاغات</span>
+                <span class="legend-value">{{ sectionLoading.reports ? '...' : stats.totalReports }}</span>
+              </div>
             </div>
-            <div class="legend-item" [class.loading]="sectionLoading.chargers">
-              <span class="legend-color chargers"></span>
-              <span class="legend-label">شواحن</span>
-              <span class="legend-value">{{ sectionLoading.chargers ? '...' : stats.totalChargers }}</span>
-            </div>
-            <div class="legend-item" [class.loading]="sectionLoading.vehicles">
-              <span class="legend-color vehicles"></span>
-              <span class="legend-label">مركبات</span>
-              <span class="legend-value">{{ sectionLoading.vehicles ? '...' : stats.totalVehicles }}</span>
-            </div>
-            <div class="legend-item" [class.loading]="sectionLoading.reports">
-              <span class="legend-color reports"></span>
-              <span class="legend-label">بلاغات</span>
-              <span class="legend-value">{{ sectionLoading.reports ? '...' : stats.totalReports }}</span>
-            </div>
-          </div>
-        }
-      </div>
+          }
+        </div>
 
-      <!-- Reports Chart -->
-      <div class="chart-card reports-chart">
-        <h3>حالة البلاغات</h3>
-        @if (sectionLoading.reports) {
-          <div class="bar-chart-skeleton">
-            <div class="skeleton-bar"></div>
-            <div class="skeleton-bar short"></div>
-          </div>
-        } @else {
-          <div class="bar-chart-container fade-in">
-            <canvas baseChart
-              [data]="reportsChartData"
-              [options]="reportsChartOptions"
-              type="bar">
-            </canvas>
-          </div>
-        }
-      </div>
+        <!-- Reports Chart -->
+        <div class="chart-card reports-chart">
+          <h3>حالة البلاغات</h3>
+          @if (sectionLoading.reports) {
+            <div class="bar-chart-skeleton">
+              <div class="skeleton-bar"></div>
+              <div class="skeleton-bar short"></div>
+            </div>
+          } @else {
+            <div class="bar-chart-container fade-in">
+              <canvas baseChart
+                [data]="reportsChartData"
+                [options]="reportsChartOptions"
+                type="bar">
+              </canvas>
+            </div>
+          }
+        </div>
 
-      <!-- Reservations Chart -->
-      <div class="chart-card reservations-chart">
-        <h3>
-          <span class="material-icons">shopping_cart</span>
-          حالة الحجوزات
-        </h3>
-        @if (sectionLoading.store) {
-          <div class="chart-skeleton">
-            <div class="skeleton-circle small"></div>
-            <div class="skeleton-legend">
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line"></div>
+        <!-- Reservations Chart -->
+        <div class="chart-card reservations-chart">
+          <h3>
+            <span class="material-icons">shopping_cart</span>
+            حالة الحجوزات
+          </h3>
+          @if (sectionLoading.store) {
+            <div class="chart-skeleton">
+              <div class="skeleton-circle small"></div>
+              <div class="skeleton-legend">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+              </div>
             </div>
-          </div>
-        } @else {
-          <div class="chart-container fade-in">
-            <canvas baseChart
-              [data]="reservationsChartData"
-              [options]="reservationsChartOptions"
-              type="doughnut">
-            </canvas>
-            <div class="chart-center">
-              <span class="total-value">{{ stats.totalReservations }}</span>
-              <span class="total-label">حجز</span>
+          } @else {
+            <div class="chart-container fade-in">
+              <canvas baseChart
+                [data]="reservationsChartData"
+                [options]="reservationsChartOptions"
+                type="doughnut">
+              </canvas>
+              <div class="chart-center">
+                <span class="total-value">{{ stats.totalReservations }}</span>
+                <span class="total-label">حجز</span>
+              </div>
             </div>
-          </div>
-          <div class="chart-legend fade-in">
-            <div class="legend-item">
-              <span class="legend-color pending"></span>
-              <span class="legend-label">قيد الانتظار</span>
-              <span class="legend-value">{{ stats.pendingReservations }}</span>
+            <div class="chart-legend fade-in">
+              <div class="legend-item">
+                <span class="legend-color pending"></span>
+                <span class="legend-label">قيد الانتظار</span>
+                <span class="legend-value">{{ stats.pendingReservations }}</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color contacted"></span>
+                <span class="legend-label">تم التواصل</span>
+                <span class="legend-value">{{ stats.totalReservations - stats.pendingReservations - stats.completedReservations - stats.cancelledReservations }}</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color completed"></span>
+                <span class="legend-label">مكتمل</span>
+                <span class="legend-value">{{ stats.completedReservations }}</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-color cancelled"></span>
+                <span class="legend-label">ملغي</span>
+                <span class="legend-value">{{ stats.cancelledReservations }}</span>
+              </div>
             </div>
-            <div class="legend-item">
-              <span class="legend-color contacted"></span>
-              <span class="legend-label">تم التواصل</span>
-              <span class="legend-value">{{ stats.totalReservations - stats.pendingReservations - stats.completedReservations - stats.cancelledReservations }}</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color completed"></span>
-              <span class="legend-label">مكتمل</span>
-              <span class="legend-value">{{ stats.completedReservations }}</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color cancelled"></span>
-              <span class="legend-label">ملغي</span>
-              <span class="legend-value">{{ stats.cancelledReservations }}</span>
-            </div>
-          </div>
-        }
-      </div>
+          }
+        </div>
 
       <!-- Stats Chips - Progressive Loading -->
       <div class="stats-chips">
@@ -545,126 +546,143 @@
       </div>
     </div>
   </section>
+  } @placeholder {
+    <section class="main-section">
+      <div class="chart-skeleton-placeholder">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </section>
+  }
 
-  <!-- Quick Actions -->
-  <section class="quick-actions">
-    <h3>الوصول السريع</h3>
-    <div class="actions-grid">
-      <a routerLink="/users" class="action-item">
-        <span class="material-icons">people</span>
-        <span>المستخدمين</span>
-      </a>
-      <a routerLink="/processes" class="action-item">
-        <span class="material-icons">electric_bolt</span>
-        <span>عمليات الشحن</span>
-      </a>
-      <a routerLink="/chargers" class="action-item">
-        <span class="material-icons">ev_station</span>
-        <span>الشواحن</span>
-      </a>
-      <a routerLink="/vehicles" class="action-item">
-        <span class="material-icons">electric_car</span>
-        <span>المركبات</span>
-      </a>
-      <a routerLink="/brands" class="action-item">
-        <span class="material-icons">category</span>
-        <span>العلامات</span>
-      </a>
-      <a routerLink="/reports" class="action-item">
-        <span class="material-icons">flag</span>
-        <span>البلاغات</span>
-      </a>
-      <a routerLink="/complaints" class="action-item">
-        <span class="material-icons">feedback</span>
-        <span>الشكاوى</span>
-      </a>
-      <a routerLink="/complaint-categories" class="action-item">
-        <span class="material-icons">category</span>
-        <span>أنواع الشكاوى</span>
-      </a>
-      <a routerLink="/fees" class="action-item">
-        <span class="material-icons">payments</span>
-        <span>الرسوم</span>
-      </a>
-      <a routerLink="/terms" class="action-item">
-        <span class="material-icons">article</span>
-        <span>الشروط</span>
-      </a>
-      <a routerLink="/protocol" class="action-item">
-        <span class="material-icons">policy</span>
-        <span>البروتوكول</span>
-      </a>
-      <a routerLink="/app-config" class="action-item">
-        <span class="material-icons">smartphone</span>
-        <span>تطبيق الجوال</span>
-      </a>
-      <a routerLink="/store" class="action-item store-action">
-        <span class="material-icons">storefront</span>
-        <span>المتجر</span>
-      </a>
-      <a routerLink="/store/products" class="action-item store-action">
-        <span class="material-icons">inventory_2</span>
-        <span>المنتجات</span>
-      </a>
-      <a routerLink="/store/reservations" class="action-item store-action">
-        <span class="material-icons">shopping_cart</span>
-        <span>الحجوزات</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- Recent Reservations Section -->
-  @if (!sectionLoading.store && recentReservations.length > 0) {
-    <section class="recent-reservations-section fade-in">
-      <div class="section-header">
-        <h3>
+  <!-- Quick Actions - Deferred for performance -->
+  @defer (on viewport) {
+    <section class="quick-actions">
+      <h3>الوصول السريع</h3>
+      <div class="actions-grid">
+        <a routerLink="/users" class="action-item">
+          <span class="material-icons">people</span>
+          <span>المستخدمين</span>
+        </a>
+        <a routerLink="/processes" class="action-item">
+          <span class="material-icons">electric_bolt</span>
+          <span>عمليات الشحن</span>
+        </a>
+        <a routerLink="/chargers" class="action-item">
+          <span class="material-icons">ev_station</span>
+          <span>الشواحن</span>
+        </a>
+        <a routerLink="/vehicles" class="action-item">
+          <span class="material-icons">electric_car</span>
+          <span>المركبات</span>
+        </a>
+        <a routerLink="/brands" class="action-item">
+          <span class="material-icons">category</span>
+          <span>العلامات</span>
+        </a>
+        <a routerLink="/reports" class="action-item">
+          <span class="material-icons">flag</span>
+          <span>البلاغات</span>
+        </a>
+        <a routerLink="/complaints" class="action-item">
+          <span class="material-icons">feedback</span>
+          <span>الشكاوى</span>
+        </a>
+        <a routerLink="/complaint-categories" class="action-item">
+          <span class="material-icons">category</span>
+          <span>أنواع الشكاوى</span>
+        </a>
+        <a routerLink="/fees" class="action-item">
+          <span class="material-icons">payments</span>
+          <span>الرسوم</span>
+        </a>
+        <a routerLink="/terms" class="action-item">
+          <span class="material-icons">article</span>
+          <span>الشروط</span>
+        </a>
+        <a routerLink="/protocol" class="action-item">
+          <span class="material-icons">policy</span>
+          <span>البروتوكول</span>
+        </a>
+        <a routerLink="/app-config" class="action-item">
+          <span class="material-icons">smartphone</span>
+          <span>تطبيق الجوال</span>
+        </a>
+        <a routerLink="/store" class="action-item store-action">
+          <span class="material-icons">storefront</span>
+          <span>المتجر</span>
+        </a>
+        <a routerLink="/store/products" class="action-item store-action">
+          <span class="material-icons">inventory_2</span>
+          <span>المنتجات</span>
+        </a>
+        <a routerLink="/store/reservations" class="action-item store-action">
           <span class="material-icons">shopping_cart</span>
-          آخر الحجوزات
-        </h3>
-        <a routerLink="/store/reservations" class="view-all-link">
-          عرض الكل
-          <span class="material-icons">arrow_back</span>
+          <span>الحجوزات</span>
         </a>
       </div>
-      <div class="reservations-grid">
-        @for (reservation of recentReservations; track reservation.id) {
-          <div class="reservation-card" [class]="getReservationStatusClass(reservation.status)">
-            <div class="reservation-product">
-              <span class="product-name">{{ reservation.productName }}</span>
-              <span class="product-qty">x{{ reservation.quantity }}</span>
-            </div>
-            <div class="reservation-info">
-              <span class="user-name">
-                <span class="material-icons">person</span>
-                {{ reservation.userName }}
-              </span>
-              <span class="reservation-price">{{ formatCurrency(reservation.unitPrice * reservation.quantity) }}</span>
-            </div>
-            <div class="reservation-footer">
-              <span class="reservation-status">{{ getReservationStatusLabel(reservation.status) }}</span>
-              <span class="reservation-time">{{ formatDate(reservation.createdAt) }}</span>
-            </div>
-          </div>
-        }
-      </div>
     </section>
-  } @else if (sectionLoading.store) {
-    <section class="recent-reservations-section">
-      <div class="section-header">
-        <h3>
-          <span class="material-icons">shopping_cart</span>
-          آخر الحجوزات
-        </h3>
-      </div>
-      <div class="reservations-grid">
-        @for (i of [1, 2, 3, 4, 5]; track i) {
-          <div class="reservation-card skeleton-reservation">
-            <div class="skeleton-line long"></div>
-            <div class="skeleton-line medium"></div>
-            <div class="skeleton-line short"></div>
-          </div>
-        }
-      </div>
-    </section>
+  } @placeholder {
+    <div class="skeleton-card" style="height: 200px;"></div>
+  }
+
+  <!-- Recent Reservations Section - Deferred for performance -->
+  @defer (on viewport) {
+    @if (!sectionLoading.store && recentReservations.length > 0) {
+      <section class="recent-reservations-section fade-in">
+        <div class="section-header">
+          <h3>
+            <span class="material-icons">shopping_cart</span>
+            آخر الحجوزات
+          </h3>
+          <a routerLink="/store/reservations" class="view-all-link">
+            عرض الكل
+            <span class="material-icons">arrow_back</span>
+          </a>
+        </div>
+        <div class="reservations-grid">
+          @for (reservation of recentReservations; track reservation.id) {
+            <div class="reservation-card" [class]="getReservationStatusClass(reservation.status)">
+              <div class="reservation-product">
+                <span class="product-name">{{ reservation.productName }}</span>
+                <span class="product-qty">x{{ reservation.quantity }}</span>
+              </div>
+              <div class="reservation-info">
+                <span class="user-name">
+                  <span class="material-icons">person</span>
+                  {{ reservation.userName }}
+                </span>
+                <span class="reservation-price">{{ formatCurrency(reservation.unitPrice * reservation.quantity) }}</span>
+              </div>
+              <div class="reservation-footer">
+                <span class="reservation-status">{{ getReservationStatusLabel(reservation.status) }}</span>
+                <span class="reservation-time">{{ formatDate(reservation.createdAt) }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    } @else if (sectionLoading.store) {
+      <section class="recent-reservations-section">
+        <div class="section-header">
+          <h3>
+            <span class="material-icons">shopping_cart</span>
+            آخر الحجوزات
+          </h3>
+        </div>
+        <div class="reservations-grid">
+          @for (i of [1, 2, 3, 4, 5]; track i) {
+            <div class="reservation-card skeleton-reservation">
+              <div class="skeleton-line long"></div>
+              <div class="skeleton-line medium"></div>
+              <div class="skeleton-line short"></div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+  } @placeholder {
+    <div class="skeleton-card" style="height: 200px;"></div>
   }
 </div>

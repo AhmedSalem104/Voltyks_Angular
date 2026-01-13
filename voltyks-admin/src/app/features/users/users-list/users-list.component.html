@@ -188,15 +188,18 @@
   </div>
 </div>
 
-<!-- Confirm Dialog -->
-<app-confirm-dialog
-  [isOpen]="showConfirmDialog"
-  [title]="confirmDialogTitle"
-  [message]="confirmDialogMessage"
-  (confirm)="onConfirmAction()"
-  (cancel)="onCancelAction()"
-></app-confirm-dialog>
+<!-- Confirm Dialog - Deferred for performance -->
+@defer (when showConfirmDialog) {
+  <app-confirm-dialog
+    [isOpen]="showConfirmDialog"
+    [title]="confirmDialogTitle"
+    [message]="confirmDialogMessage"
+    (confirm)="onConfirmAction()"
+    (cancel)="onCancelAction()"
+  ></app-confirm-dialog>
+}
 
-@if (isLoading) {
+<!-- Loading Overlay - Deferred for performance -->
+@defer (when isLoading) {
   <app-loading-overlay></app-loading-overlay>
 }

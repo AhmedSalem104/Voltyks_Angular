@@ -168,14 +168,11 @@
   </div>
 </div>
 
-<!-- Side Panel Overlay -->
-@if (showSidePanel) {
+<!-- Side Panel - Deferred for performance -->
+@defer (when showSidePanel) {
   <div class="side-panel-overlay" (click)="closeSidePanel()"></div>
-}
-
-<!-- Side Panel -->
-<div class="side-panel" [class.open]="showSidePanel">
-  @if (selectedProcess) {
+  <div class="side-panel" [class.open]="showSidePanel">
+    @if (selectedProcess) {
     <div class="panel-header">
       <div class="panel-title">
         <h3>تفاصيل العملية {{ selectedProcess.id }}</h3>
@@ -457,9 +454,11 @@
         </div>
       </div>
     </div>
-  }
-</div>
+    }
+  </div>
+}
 
-@if (isLoading) {
+<!-- Loading Overlay - Deferred for performance -->
+@defer (when isLoading) {
   <app-loading-overlay></app-loading-overlay>
 }
