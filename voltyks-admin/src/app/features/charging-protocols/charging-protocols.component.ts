@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { ChargingProtocolService } from '../../core/services/admin/charging-protocol.service';
 import { ChargingProtocolDto, CreateChargingProtocolDto, UpdateChargingProtocolDto } from '../../core/models';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
@@ -24,7 +24,10 @@ import { PrintService } from '../../core/services/print.service';
   styleUrls: ['./charging-protocols.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChargingProtocolsComponent implements OnInit {
+export class ChargingProtocolsComponent implements OnInit, OnDestroy {
+  // Destroy subject for cleanup
+  private destroy$ = new Subject<void>();
+
   // Protocols data
   protocols: ChargingProtocolDto[] = [];
   filteredProtocols: ChargingProtocolDto[] = [];
@@ -74,10 +77,16 @@ export class ChargingProtocolsComponent implements OnInit {
   private setupSearch(): void {
     this.searchSubject.pipe(
       debounceTime(300),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe(searchTerm => {
       this.performSearch(searchTerm);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadProtocols(): void {

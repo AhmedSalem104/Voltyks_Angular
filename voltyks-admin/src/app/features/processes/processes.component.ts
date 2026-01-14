@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { AdminProcessesService } from '../../core/services/admin/admin-processes.service';
 import { AdminProcessDto, ProcessFilterParams, PROCESS_STATUS_OPTIONS } from '../../core/models';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
@@ -22,7 +22,10 @@ import { PrintService } from '../../core/services/print.service';
   styleUrls: ['./processes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProcessesComponent implements OnInit {
+export class ProcessesComponent implements OnInit, OnDestroy {
+  // Destroy subject for cleanup
+  private destroy$ = new Subject<void>();
+
   // Processes data
   processes: AdminProcessDto[] = [];
   filteredProcesses: AdminProcessDto[] = [];
@@ -72,10 +75,16 @@ export class ProcessesComponent implements OnInit {
   private setupSearch(): void {
     this.searchSubject.pipe(
       debounceTime(300),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe(() => {
       this.applyFilters();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadProcesses(): void {

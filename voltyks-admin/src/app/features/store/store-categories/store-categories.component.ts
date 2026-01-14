@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { AdminStoreService } from '../../../core/services/admin/admin-store.service';
 import {
   AdminStoreCategoryDto,
@@ -32,7 +32,10 @@ import { PrintService } from '../../../core/services/print.service';
   styleUrls: ['./store-categories.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StoreCategoriesComponent implements OnInit {
+export class StoreCategoriesComponent implements OnInit, OnDestroy {
+  // Destroy subject for cleanup
+  private destroy$ = new Subject<void>();
+
   // Data
   categories: AdminStoreCategoryDto[] = [];
   filteredCategories: AdminStoreCategoryDto[] = [];
@@ -89,10 +92,16 @@ export class StoreCategoriesComponent implements OnInit {
   private setupSearch(): void {
     this.searchSubject.pipe(
       debounceTime(300),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe(() => {
       this.applyFilters();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadCategories(): void {

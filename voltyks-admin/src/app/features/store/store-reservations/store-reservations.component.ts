@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { AdminStoreService } from '../../../core/services/admin/admin-store.service';
 import {
   AdminReservationDto,
@@ -38,7 +38,10 @@ import { PrintService } from '../../../core/services/print.service';
   styleUrls: ['./store-reservations.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StoreReservationsComponent implements OnInit {
+export class StoreReservationsComponent implements OnInit, OnDestroy {
+  // Destroy subject for cleanup
+  private destroy$ = new Subject<void>();
+
   // Data
   reservations: AdminReservationDto[] = [];
   paginatedReservations: AdminReservationDto[] = [];
@@ -113,11 +116,17 @@ export class StoreReservationsComponent implements OnInit {
   private setupSearch(): void {
     this.searchSubject.pipe(
       debounceTime(300),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe(() => {
       this.currentPage = 1;
       this.loadReservations();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadReservations(): void {

@@ -1,7 +1,8 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { ForgetPasswordDto } from '../../../core/models';
@@ -14,12 +15,15 @@ import { ForgetPasswordDto } from '../../../core/models';
   styleUrl: './forget-password.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ForgetPasswordComponent implements OnInit {
+export class ForgetPasswordComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
   private themeService = inject(ThemeService);
   private cdr = inject(ChangeDetectorRef);
+
+  // Destroy subject for cleanup
+  private destroy$ = new Subject<void>();
 
   forgetPasswordForm!: FormGroup;
   isLoading = false;
@@ -32,10 +36,17 @@ export class ForgetPasswordComponent implements OnInit {
     this.initializeForm();
 
     // Subscribe to theme changes
-    this.themeService.theme$.subscribe(theme => {
+    this.themeService.theme$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(theme => {
       this.currentTheme = theme;
       this.cdr.markForCheck();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private initializeForm(): void {

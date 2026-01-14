@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { AdminChargersService } from '../../core/services/admin/admin-chargers.service';
 import { AdminUsersService } from '../../core/services/admin/admin-users.service';
 import { AdminChargerDto, AdminCreateChargerDto, AdminUpdateChargerDto, AdminUserDto, ProtocolDto, CapacityDto, PriceOptionDto } from '../../core/models';
@@ -25,7 +25,10 @@ import { PrintService } from '../../core/services/print.service';
   styleUrls: ['./chargers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChargersComponent implements OnInit {
+export class ChargersComponent implements OnInit, OnDestroy {
+  // Destroy subject for cleanup
+  private destroy$ = new Subject<void>();
+
   // Chargers data
   chargers: AdminChargerDto[] = [];
   filteredChargers: AdminChargerDto[] = [];
@@ -100,10 +103,16 @@ export class ChargersComponent implements OnInit {
   private setupSearch(): void {
     this.searchSubject.pipe(
       debounceTime(300),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe(searchTerm => {
       this.performSearch(searchTerm);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadChargers(): void {

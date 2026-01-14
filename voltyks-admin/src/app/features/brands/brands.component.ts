@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { AdminBrandsService } from '../../core/services/admin/admin-brands.service';
 import { AdminBrandDto, CreateBrandDto, UpdateBrandDto } from '../../core/models';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
@@ -25,7 +25,10 @@ import { PrintService } from '../../core/services/print.service';
   styleUrls: ['./brands.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BrandsComponent implements OnInit {
+export class BrandsComponent implements OnInit, OnDestroy {
+  // Destroy subject for cleanup
+  private destroy$ = new Subject<void>();
+
   // Brands data
   brands: AdminBrandDto[] = [];
   filteredBrands: AdminBrandDto[] = [];
@@ -76,10 +79,16 @@ export class BrandsComponent implements OnInit {
   private setupSearch(): void {
     this.searchSubject.pipe(
       debounceTime(300),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe(searchTerm => {
       this.performSearch(searchTerm);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadBrands(): void {

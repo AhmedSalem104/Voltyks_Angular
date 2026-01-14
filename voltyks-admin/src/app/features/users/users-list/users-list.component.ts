@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { AdminUsersService } from '../../../core/services/admin/admin-users.service';
 import { AdminUserDto } from '../../../core/models';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
@@ -29,7 +29,10 @@ type DeleteAction = 'soft' | 'permanent' | 'restore' | null;
   styleUrls: ['./users-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UsersListComponent implements OnInit {
+export class UsersListComponent implements OnInit, OnDestroy {
+  // Destroy subject for cleanup
+  private destroy$ = new Subject<void>();
+
   users: AdminUserDto[] = [];
   filteredUsers: AdminUserDto[] = [];
   paginatedUsers: AdminUserDto[] = [];
@@ -69,10 +72,16 @@ export class UsersListComponent implements OnInit {
   private setupSearch(): void {
     this.searchSubject.pipe(
       debounceTime(300),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe(searchTerm => {
       this.performSearch(searchTerm);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadUsers(search?: string): void {

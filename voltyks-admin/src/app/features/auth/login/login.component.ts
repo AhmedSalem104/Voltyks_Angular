@@ -1,7 +1,8 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { LoginDTO } from '../../../core/models';
@@ -14,12 +15,15 @@ import { LoginDTO } from '../../../core/models';
   styleUrl: './login.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
   private themeService = inject(ThemeService);
   private cdr = inject(ChangeDetectorRef);
+
+  // Destroy subject for cleanup
+  private destroy$ = new Subject<void>();
 
   loginForm!: FormGroup;
   isLoading = false;
@@ -38,10 +42,17 @@ export class LoginComponent implements OnInit {
     this.initializeForm();
 
     // Subscribe to theme changes
-    this.themeService.theme$.subscribe(theme => {
+    this.themeService.theme$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(theme => {
       this.currentTheme = theme;
       this.cdr.markForCheck();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private initializeForm(): void {

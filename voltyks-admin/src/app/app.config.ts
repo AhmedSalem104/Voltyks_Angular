@@ -6,7 +6,7 @@ import { registerLocaleData } from '@angular/common';
 import localeAr from '@angular/common/locales/ar-EG';
 
 import { routes } from './app.routes';
-import { authInterceptor, errorInterceptor } from './core/interceptors';
+import { authInterceptor, errorInterceptor, rateLimitInterceptor, retryInterceptor } from './core/interceptors';
 import { caseTransformInterceptor } from './core/interceptors/case-transform.interceptor';
 
 // Register Arabic locale
@@ -18,7 +18,13 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(
-      withInterceptors([caseTransformInterceptor, authInterceptor, errorInterceptor])
+      withInterceptors([
+        rateLimitInterceptor,    // Handle 429 for POST/PUT/DELETE
+        retryInterceptor,        // Handle 429/5xx for GET with exponential backoff
+        caseTransformInterceptor,
+        authInterceptor,
+        errorInterceptor
+      ])
     ),
     provideAnimations(),
     { provide: LOCALE_ID, useValue: 'ar-EG' }

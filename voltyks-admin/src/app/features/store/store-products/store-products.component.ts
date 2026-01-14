@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { AdminStoreService } from '../../../core/services/admin/admin-store.service';
 import {
   AdminStoreProductDto,
@@ -38,8 +38,11 @@ interface SpecificationItem {
   styleUrls: ['./store-products.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StoreProductsComponent implements OnInit {
+export class StoreProductsComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  // Destroy subject for cleanup
+  private destroy$ = new Subject<void>();
 
   // Data
   products: AdminStoreProductDto[] = [];
@@ -118,10 +121,16 @@ export class StoreProductsComponent implements OnInit {
   private setupSearch(): void {
     this.searchSubject.pipe(
       debounceTime(300),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe(() => {
       this.applyFilters();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadCategories(): void {

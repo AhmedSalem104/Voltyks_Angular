@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { AdminBrandsService } from '../../core/services/admin/admin-brands.service';
 import { AdminModelDto, AdminBrandDto, CreateModelDto, UpdateModelDto } from '../../core/models';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
@@ -25,7 +25,10 @@ import { PrintService } from '../../core/services/print.service';
   styleUrls: ['./models.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModelsComponent implements OnInit {
+export class ModelsComponent implements OnInit, OnDestroy {
+  // Destroy subject for cleanup
+  private destroy$ = new Subject<void>();
+
   // Models data
   models: AdminModelDto[] = [];
   filteredModels: AdminModelDto[] = [];
@@ -82,7 +85,9 @@ export class ModelsComponent implements OnInit {
     this.loadBrands();
 
     // Check for brandId in query params
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(params => {
       if (params['brandId']) {
         this.selectedBrandFilter = +params['brandId'];
       }
@@ -93,10 +98,16 @@ export class ModelsComponent implements OnInit {
   private setupSearch(): void {
     this.searchSubject.pipe(
       debounceTime(300),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe(searchTerm => {
       this.performSearch(searchTerm);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadBrands(): void {

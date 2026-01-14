@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subject, debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, forkJoin, takeUntil } from 'rxjs';
 import { AdminReportsService } from '../../core/services/admin/admin-reports.service';
 import { AdminProcessesService } from '../../core/services/admin/admin-processes.service';
 import { AdminReportDto, AdminReportDetailsDto, ReportFilterParams, AdminProcessDto } from '../../core/models';
@@ -36,7 +36,10 @@ const REPORT_STATUS_OPTIONS = [
   styleUrls: ['./reports.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ReportsComponent implements OnInit {
+export class ReportsComponent implements OnInit, OnDestroy {
+  // Destroy subject for cleanup
+  private destroy$ = new Subject<void>();
+
   // Reports data
   reports: ReportWithUserDetails[] = [];
   filteredReports: ReportWithUserDetails[] = [];
@@ -95,11 +98,17 @@ export class ReportsComponent implements OnInit {
   private setupSearch(): void {
     this.searchSubject.pipe(
       debounceTime(300),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
     ).subscribe(() => {
       this.applyFilters();
       this.cdr.markForCheck();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadReports(): void {
