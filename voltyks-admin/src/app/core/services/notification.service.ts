@@ -62,6 +62,10 @@ export class NotificationService implements OnDestroy {
   // Polling fallback interval (when SignalR fails)
   private pollingInterval: any = null;
   private readonly POLLING_DELAY = 5000; // 5 seconds - fast polling for real-time feel
+  private readonly MAX_POLLING_DELAY = 60000; // 60 seconds max backoff
+  private currentPollingDelay = 5000; // Current polling delay (increases on rate limit)
+  private isRateLimited = false; // Flag to track rate limit status
+  private rateLimitResetTimeout: any = null;
 
   // Notifications state
   private notificationsSubject = new BehaviorSubject<AppNotification[]>([]);
@@ -529,16 +533,70 @@ export class NotificationService implements OnDestroy {
 
   /**
    * Start polling for notifications (fallback when SignalR is unavailable)
+   * Uses dynamic delay that increases on rate limit errors
    */
   private startPolling(): void {
     if (this.pollingInterval) return; // Already polling
 
-    console.log('Starting notification polling...');
-    this.pollingInterval = setInterval(() => {
-      // Only load notifications - it will recalculate unread count from local state
-      // Don't call loadUnreadCount() separately as it may override the correct local count
+    console.log(`Starting notification polling (delay: ${this.currentPollingDelay}ms)...`);
+    this.scheduleNextPoll();
+  }
+
+  /**
+   * Schedule next poll with current delay
+   * Uses setTimeout for dynamic delay control (not fixed setInterval)
+   */
+  private scheduleNextPoll(): void {
+    // Clear any existing timeout
+    if (this.pollingInterval) {
+      clearTimeout(this.pollingInterval);
+    }
+
+    this.pollingInterval = setTimeout(() => {
       this.loadNotifications();
-    }, this.POLLING_DELAY);
+      // Schedule next poll after this one completes
+      this.scheduleNextPoll();
+    }, this.currentPollingDelay);
+  }
+
+  /**
+   * Handle rate limit - increase polling delay exponentially
+   */
+  private handleRateLimit(): void {
+    if (!this.isRateLimited) {
+      this.isRateLimited = true;
+      console.warn('Rate limited - increasing polling delay');
+    }
+
+    // Increase delay exponentially (double it), max 60 seconds
+    this.currentPollingDelay = Math.min(this.currentPollingDelay * 2, this.MAX_POLLING_DELAY);
+    console.log(`New polling delay: ${this.currentPollingDelay}ms`);
+
+    // Clear rate limit reset timeout if exists
+    if (this.rateLimitResetTimeout) {
+      clearTimeout(this.rateLimitResetTimeout);
+    }
+
+    // Schedule reset of rate limit state after successful period
+    this.rateLimitResetTimeout = setTimeout(() => {
+      this.resetRateLimitState();
+    }, this.MAX_POLLING_DELAY * 2); // Reset after 2 minutes of no rate limits
+  }
+
+  /**
+   * Reset rate limit state - called after successful requests
+   */
+  private resetRateLimitState(): void {
+    if (this.isRateLimited) {
+      console.log('Rate limit cleared - resetting polling delay');
+      this.isRateLimited = false;
+      this.currentPollingDelay = this.POLLING_DELAY; // Reset to default 5s
+
+      if (this.rateLimitResetTimeout) {
+        clearTimeout(this.rateLimitResetTimeout);
+        this.rateLimitResetTimeout = null;
+      }
+    }
   }
 
   /**
@@ -547,8 +605,13 @@ export class NotificationService implements OnDestroy {
   private stopPolling(): void {
     if (this.pollingInterval) {
       console.log('Stopping notification polling');
-      clearInterval(this.pollingInterval);
+      clearTimeout(this.pollingInterval);
       this.pollingInterval = null;
+    }
+    // Also clear rate limit reset timeout
+    if (this.rateLimitResetTimeout) {
+      clearTimeout(this.rateLimitResetTimeout);
+      this.rateLimitResetTimeout = null;
     }
   }
 
@@ -884,12 +947,25 @@ export class NotificationService implements OnDestroy {
 
     this.http.get<NotificationsResponse>(url).pipe(
       catchError(err => {
+        // Handle rate limit error specifically
+        if (err.status === 429) {
+          this.handleRateLimit();
+          // Don't show error to user for rate limit - just silently back off
+          this.loadingSubject.next(false);
+          return of(null);
+        }
+
         this.errorSubject.next('فشل تحميل الإشعارات');
         this.loadingSubject.next(false);
         return of(null);
       })
     ).subscribe({
       next: response => {
+        // Successful request - reset rate limit state if it was active
+        if (response !== null) {
+          this.resetRateLimitState();
+        }
+
         if (response?.status && response.data) {
           const seenIds = new Set<string>();
 
