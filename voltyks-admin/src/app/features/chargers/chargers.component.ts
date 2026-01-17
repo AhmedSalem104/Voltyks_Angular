@@ -424,15 +424,26 @@ export class ChargersComponent implements OnInit, OnDestroy {
 
   toggleStatus(charger: AdminChargerDto): void {
     const newStatus = !charger.isActive;
+    const originalStatus = charger.isActive;
+
+    // Optimistic Update - تحديث فوري للـ UI
+    charger.isActive = newStatus;
+    this.cdr.markForCheck();
 
     this.chargersService.toggleStatus(charger.id, newStatus).subscribe({
       next: (response) => {
         if (response.status) {
           this.toaster.success(`تم ${newStatus ? 'تفعيل' : 'إيقاف'} الشاحن بنجاح`);
-          this.loadChargers();
+        } else {
+          // Revert on failure
+          charger.isActive = originalStatus;
+          this.cdr.markForCheck();
         }
       },
       error: (error) => {
+        // Revert - إرجاع الحالة الأصلية عند الفشل
+        charger.isActive = originalStatus;
+        this.cdr.markForCheck();
         this.toaster.error(error.message || 'فشل تحديث حالة الشاحن');
       }
     });
