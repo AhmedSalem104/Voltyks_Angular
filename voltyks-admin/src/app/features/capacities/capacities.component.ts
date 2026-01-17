@@ -129,6 +129,7 @@ export class CapacitiesComponent implements OnInit, OnDestroy {
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
     this.paginatedCapacities = this.filteredCapacities.slice(start, end);
+    this.cdr.markForCheck();
   }
 
   onPageChange(page: number): void {

@@ -147,6 +147,7 @@ export class ChargingProtocolsComponent implements OnInit, OnDestroy {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.paginatedProtocols = this.filteredProtocols.slice(startIndex, endIndex);
+    this.cdr.markForCheck();
   }
 
   // CRUD Operations

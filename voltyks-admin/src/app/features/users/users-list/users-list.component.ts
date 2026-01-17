@@ -153,6 +153,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.paginatedUsers = this.filteredUsers.slice(startIndex, endIndex);
+    this.cdr.markForCheck();
   }
 
   getStatusClass(user: AdminUserDto): string {

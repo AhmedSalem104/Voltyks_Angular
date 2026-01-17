@@ -227,6 +227,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.paginatedReports = this.filteredReports.slice(startIndex, endIndex);
+    this.cdr.markForCheck();
   }
 
   // Utility Methods

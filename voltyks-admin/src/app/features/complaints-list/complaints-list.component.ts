@@ -167,6 +167,7 @@ export class ComplaintsListComponent implements OnInit {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.paginatedComplaints = this.filteredComplaints.slice(startIndex, endIndex);
+    this.cdr.markForCheck();
   }
 
   // Details Modal
@@ -182,22 +183,32 @@ export class ComplaintsListComponent implements OnInit {
 
   // Toggle Status
   toggleStatus(complaint: AdminComplaintDto): void {
-    this.updatingComplaintId = complaint.id;
     const newStatus = !complaint.isResolved;
+    const originalStatus = complaint.isResolved;
+
+    // Optimistic Update - تحديث فوري للـ UI
+    complaint.isResolved = newStatus;
+    this.updatingComplaintId = complaint.id;
+    this.calculateStats();
+    this.cdr.markForCheck();
 
     this.complaintsService.updateComplaintStatus(complaint.id, newStatus).subscribe({
       next: (response) => {
         if (response.status) {
-          complaint.isResolved = newStatus;
-          this.calculateStats();
           this.toaster.success(newStatus ? 'تم تحديد الشكوى كمحلولة' : 'تم إلغاء حل الشكوى');
         } else {
+          // Revert on failure
+          complaint.isResolved = originalStatus;
+          this.calculateStats();
           this.toaster.error(response.message || 'فشل تحديث حالة الشكوى');
         }
         this.updatingComplaintId = null;
         this.cdr.markForCheck();
       },
       error: (err) => {
+        // Revert on error
+        complaint.isResolved = originalStatus;
+        this.calculateStats();
         this.toaster.error(err.error?.message || 'فشل تحديث حالة الشكوى');
         this.updatingComplaintId = null;
         this.cdr.markForCheck();

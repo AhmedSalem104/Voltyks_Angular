@@ -145,6 +145,7 @@ export class ComplaintsComponent implements OnInit {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.paginatedCategories = this.filteredCategories.slice(startIndex, endIndex);
+    this.cdr.markForCheck();
   }
 
   // Category Modal Methods

@@ -243,6 +243,7 @@ export class ChargersComponent implements OnInit, OnDestroy {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.paginatedChargers = this.filteredChargers.slice(startIndex, endIndex);
+    this.cdr.markForCheck();
   }
 
   // User dropdown methods - Filter
