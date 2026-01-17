@@ -466,13 +466,13 @@ export class NotificationService implements OnDestroy {
           this.connectionStateSubject.next('connected');
           this.errorSubject.next(null);
         });
-        // Keep polling active as backup - backend may not send all events via SignalR
-        this.startPolling();
+        // Stop polling when SignalR is connected - SignalR handles real-time updates
+        this.stopPolling();
         // Join broadcast group for admin notifications
         this.joinBroadcastGroup();
         // Load initial notifications after connection (this recalculates unread count)
         this.loadNotifications();
-        console.log('SignalR connected - polling active as backup');
+        console.log('SignalR connected - polling stopped to reduce server load');
       })
       .catch((err) => {
         console.error('SignalR connection failed:', err);
@@ -506,8 +506,8 @@ export class NotificationService implements OnDestroy {
         this.connectionStateSubject.next('connected');
         this.errorSubject.next(null);
       });
-      // Keep polling active as backup
-      this.startPolling();
+      // Stop polling when SignalR reconnects - SignalR handles real-time updates
+      this.stopPolling();
       // Clear reconnect interval
       this.clearReconnectInterval();
       // Rejoin broadcast group after reconnection
@@ -534,8 +534,15 @@ export class NotificationService implements OnDestroy {
   /**
    * Start polling for notifications (fallback when SignalR is unavailable)
    * Uses dynamic delay that increases on rate limit errors
+   * IMPORTANT: Only polls when SignalR is NOT connected to reduce server load
    */
   private startPolling(): void {
+    // Don't start polling if SignalR is connected - SignalR handles real-time updates
+    if (this.isConnected) {
+      console.log('SignalR connected - skipping polling to reduce server load');
+      return;
+    }
+
     if (this.pollingInterval) return; // Already polling
 
     console.log(`Starting notification polling (delay: ${this.currentPollingDelay}ms)...`);

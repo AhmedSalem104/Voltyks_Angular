@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
   ApiResponse,
@@ -28,15 +28,50 @@ import {
 export class AdminStoreService {
   private readonly baseUrl = `${environment.apiBaseUrl}/api/admin/store`;
 
+  // Cache state for categories (no filters)
+  private categoriesCache$ = new BehaviorSubject<AdminStoreCategoryDto[] | null>(null);
+  private categoriesCacheLoading = false;
+
+  // Cache state for products (no filters)
+  private productsCache$ = new BehaviorSubject<AdminStoreProductDto[] | null>(null);
+  private productsCacheLoading = false;
+
   constructor(private http: HttpClient) {}
 
   // ==================== Categories ====================
 
   /**
-   * Get all categories with optional filters
+   * Get all categories with optional filters (cached when no filters)
    * GET /api/admin/store/categories
+   * @param params Optional filter parameters
+   * @param forceRefresh Force refresh cache (only when no params)
    */
-  getCategories(params?: CategoryFilterParams): Observable<ApiResponse<AdminStoreCategoryDto[]>> {
+  getCategories(params?: CategoryFilterParams, forceRefresh = false): Observable<ApiResponse<AdminStoreCategoryDto[]>> {
+    // Only cache when no filters are applied
+    const hasFilters = params && (params.withTrashed || params.onlyTrashed || params.status);
+
+    if (!hasFilters) {
+      const cachedCategories = this.categoriesCache$.getValue();
+      if (!forceRefresh && cachedCategories && !this.categoriesCacheLoading) {
+        return of({ status: true, data: cachedCategories, message: 'success' });
+      }
+
+      if (this.categoriesCacheLoading) {
+        return this.http.get<ApiResponse<AdminStoreCategoryDto[]>>(`${this.baseUrl}/categories`);
+      }
+
+      this.categoriesCacheLoading = true;
+      return this.http.get<ApiResponse<AdminStoreCategoryDto[]>>(`${this.baseUrl}/categories`).pipe(
+        tap(response => {
+          if (response.status && response.data) {
+            this.categoriesCache$.next(response.data);
+          }
+          this.categoriesCacheLoading = false;
+        })
+      );
+    }
+
+    // Filtered request - no caching
     let httpParams = new HttpParams();
     if (params) {
       if (params.withTrashed !== undefined) {
@@ -53,6 +88,13 @@ export class AdminStoreService {
   }
 
   /**
+   * Invalidate categories cache
+   */
+  invalidateCategoriesCache(): void {
+    this.categoriesCache$.next(null);
+  }
+
+  /**
    * Get category by ID
    * GET /api/admin/store/categories/{id}
    */
@@ -65,7 +107,13 @@ export class AdminStoreService {
    * POST /api/admin/store/categories
    */
   createCategory(dto: CreateStoreCategoryDto): Observable<ApiResponse<AdminStoreCategoryDto>> {
-    return this.http.post<ApiResponse<AdminStoreCategoryDto>>(`${this.baseUrl}/categories`, dto);
+    return this.http.post<ApiResponse<AdminStoreCategoryDto>>(`${this.baseUrl}/categories`, dto).pipe(
+      tap(response => {
+        if (response.status) {
+          this.invalidateCategoriesCache();
+        }
+      })
+    );
   }
 
   /**
@@ -73,7 +121,13 @@ export class AdminStoreService {
    * PUT /api/admin/store/categories/{id}
    */
   updateCategory(id: number, dto: UpdateStoreCategoryDto): Observable<ApiResponse<AdminStoreCategoryDto>> {
-    return this.http.put<ApiResponse<AdminStoreCategoryDto>>(`${this.baseUrl}/categories/${id}`, dto);
+    return this.http.put<ApiResponse<AdminStoreCategoryDto>>(`${this.baseUrl}/categories/${id}`, dto).pipe(
+      tap(response => {
+        if (response.status) {
+          this.invalidateCategoriesCache();
+        }
+      })
+    );
   }
 
   /**
@@ -81,7 +135,13 @@ export class AdminStoreService {
    * DELETE /api/admin/store/categories/{id}
    */
   deleteCategory(id: number): Observable<ApiResponse<boolean>> {
-    return this.http.delete<ApiResponse<boolean>>(`${this.baseUrl}/categories/${id}`);
+    return this.http.delete<ApiResponse<boolean>>(`${this.baseUrl}/categories/${id}`).pipe(
+      tap(response => {
+        if (response.status) {
+          this.invalidateCategoriesCache();
+        }
+      })
+    );
   }
 
   /**
@@ -89,7 +149,13 @@ export class AdminStoreService {
    * POST /api/admin/store/categories/{id}/restore
    */
   restoreCategory(id: number): Observable<ApiResponse<boolean>> {
-    return this.http.post<ApiResponse<boolean>>(`${this.baseUrl}/categories/${id}/restore`, {});
+    return this.http.post<ApiResponse<boolean>>(`${this.baseUrl}/categories/${id}/restore`, {}).pipe(
+      tap(response => {
+        if (response.status) {
+          this.invalidateCategoriesCache();
+        }
+      })
+    );
   }
 
   /**
@@ -97,16 +163,49 @@ export class AdminStoreService {
    * DELETE /api/admin/store/categories/{id}/force
    */
   forceDeleteCategory(id: number): Observable<ApiResponse<boolean>> {
-    return this.http.delete<ApiResponse<boolean>>(`${this.baseUrl}/categories/${id}/force`);
+    return this.http.delete<ApiResponse<boolean>>(`${this.baseUrl}/categories/${id}/force`).pipe(
+      tap(response => {
+        if (response.status) {
+          this.invalidateCategoriesCache();
+        }
+      })
+    );
   }
 
   // ==================== Products ====================
 
   /**
-   * Get all products with optional filters
+   * Get all products with optional filters (cached when no filters)
    * GET /api/admin/store/products
+   * @param params Optional filter parameters
+   * @param forceRefresh Force refresh cache (only when no params)
    */
-  getProducts(params?: ProductFilterParams): Observable<ApiResponse<AdminStoreProductDto[]>> {
+  getProducts(params?: ProductFilterParams, forceRefresh = false): Observable<ApiResponse<AdminStoreProductDto[]>> {
+    // Only cache when no filters are applied
+    const hasFilters = params && (params.categoryId !== undefined || params.status || params.withTrashed || params.onlyTrashed);
+
+    if (!hasFilters) {
+      const cachedProducts = this.productsCache$.getValue();
+      if (!forceRefresh && cachedProducts && !this.productsCacheLoading) {
+        return of({ status: true, data: cachedProducts, message: 'success' });
+      }
+
+      if (this.productsCacheLoading) {
+        return this.http.get<ApiResponse<AdminStoreProductDto[]>>(`${this.baseUrl}/products`);
+      }
+
+      this.productsCacheLoading = true;
+      return this.http.get<ApiResponse<AdminStoreProductDto[]>>(`${this.baseUrl}/products`).pipe(
+        tap(response => {
+          if (response.status && response.data) {
+            this.productsCache$.next(response.data);
+          }
+          this.productsCacheLoading = false;
+        })
+      );
+    }
+
+    // Filtered request - no caching
     let httpParams = new HttpParams();
     if (params) {
       if (params.categoryId !== undefined) {
@@ -126,6 +225,13 @@ export class AdminStoreService {
   }
 
   /**
+   * Invalidate products cache
+   */
+  invalidateProductsCache(): void {
+    this.productsCache$.next(null);
+  }
+
+  /**
    * Get product by ID
    * GET /api/admin/store/products/{id}
    */
@@ -138,7 +244,14 @@ export class AdminStoreService {
    * POST /api/admin/store/products
    */
   createProduct(dto: CreateStoreProductDto): Observable<ApiResponse<AdminStoreProductDto>> {
-    return this.http.post<ApiResponse<AdminStoreProductDto>>(`${this.baseUrl}/products`, dto);
+    return this.http.post<ApiResponse<AdminStoreProductDto>>(`${this.baseUrl}/products`, dto).pipe(
+      tap(response => {
+        if (response.status) {
+          this.invalidateProductsCache();
+          this.invalidateCategoriesCache(); // Category's product count changes
+        }
+      })
+    );
   }
 
   /**
@@ -146,7 +259,13 @@ export class AdminStoreService {
    * PUT /api/admin/store/products/{id}
    */
   updateProduct(id: number, dto: UpdateStoreProductDto): Observable<ApiResponse<AdminStoreProductDto>> {
-    return this.http.put<ApiResponse<AdminStoreProductDto>>(`${this.baseUrl}/products/${id}`, dto);
+    return this.http.put<ApiResponse<AdminStoreProductDto>>(`${this.baseUrl}/products/${id}`, dto).pipe(
+      tap(response => {
+        if (response.status) {
+          this.invalidateProductsCache();
+        }
+      })
+    );
   }
 
   /**
@@ -154,7 +273,14 @@ export class AdminStoreService {
    * DELETE /api/admin/store/products/{id}
    */
   deleteProduct(id: number): Observable<ApiResponse<boolean>> {
-    return this.http.delete<ApiResponse<boolean>>(`${this.baseUrl}/products/${id}`);
+    return this.http.delete<ApiResponse<boolean>>(`${this.baseUrl}/products/${id}`).pipe(
+      tap(response => {
+        if (response.status) {
+          this.invalidateProductsCache();
+          this.invalidateCategoriesCache(); // Category's product count changes
+        }
+      })
+    );
   }
 
   /**
@@ -162,7 +288,14 @@ export class AdminStoreService {
    * POST /api/admin/store/products/{id}/restore
    */
   restoreProduct(id: number): Observable<ApiResponse<boolean>> {
-    return this.http.post<ApiResponse<boolean>>(`${this.baseUrl}/products/${id}/restore`, {});
+    return this.http.post<ApiResponse<boolean>>(`${this.baseUrl}/products/${id}/restore`, {}).pipe(
+      tap(response => {
+        if (response.status) {
+          this.invalidateProductsCache();
+          this.invalidateCategoriesCache(); // Category's product count changes
+        }
+      })
+    );
   }
 
   /**
@@ -170,7 +303,14 @@ export class AdminStoreService {
    * DELETE /api/admin/store/products/{id}/force
    */
   forceDeleteProduct(id: number): Observable<ApiResponse<boolean>> {
-    return this.http.delete<ApiResponse<boolean>>(`${this.baseUrl}/products/${id}/force`);
+    return this.http.delete<ApiResponse<boolean>>(`${this.baseUrl}/products/${id}/force`).pipe(
+      tap(response => {
+        if (response.status) {
+          this.invalidateProductsCache();
+          this.invalidateCategoriesCache(); // Category's product count changes
+        }
+      })
+    );
   }
 
   // ==================== Product Images ====================

@@ -8,6 +8,7 @@ import localeAr from '@angular/common/locales/ar-EG';
 import { routes } from './app.routes';
 import { authInterceptor, errorInterceptor, rateLimitInterceptor, retryInterceptor } from './core/interceptors';
 import { caseTransformInterceptor } from './core/interceptors/case-transform.interceptor';
+import { cacheInterceptor } from './core/interceptors/cache.interceptor';
 
 // Register Arabic locale
 registerLocaleData(localeAr, 'ar-EG');
@@ -19,6 +20,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(
       withInterceptors([
+        cacheInterceptor,        // Return cached GET responses immediately
         rateLimitInterceptor,    // Handle 429 for POST/PUT/DELETE
         retryInterceptor,        // Handle 429/5xx for GET with exponential backoff
         caseTransformInterceptor,
