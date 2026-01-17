@@ -1,6 +1,6 @@
 <div class="store-products-container">
-  <!-- Loading Overlay - Deferred for performance -->
-  @defer (when isLoading || isSaving) {
+  <!-- Loading Overlay -->
+  @if (isLoading || isSaving) {
     <app-loading-overlay></app-loading-overlay>
   }
 

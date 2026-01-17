@@ -1,7 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { AdminReportsService } from '../../../core/services/admin/admin-reports.service';
 import { AdminComplaintsService } from '../../../core/services/admin/admin-complaints.service';
 import { AdminStoreService } from '../../../core/services/admin/admin-store.service';
@@ -18,7 +19,9 @@ import { NotificationType } from '../../../core/models/notification.model';
   styleUrls: ['./notification-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationDetailComponent implements OnInit {
+export class NotificationDetailComponent implements OnInit, OnDestroy {
+  // Destroy subject for cleanup
+  private destroy$ = new Subject<void>();
   type: NotificationType = 'complaint';
   id: number = 0;
 
@@ -53,11 +56,18 @@ export class NotificationDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.route.params.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(params => {
       this.type = params['type'] as NotificationType;
       this.id = +params['id'];
       this.loadData();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadData(): void {

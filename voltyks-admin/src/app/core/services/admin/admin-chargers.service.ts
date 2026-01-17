@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
   ApiResponse,
@@ -17,6 +17,14 @@ import {
 })
 export class AdminChargersService {
   private readonly baseUrl = `${environment.apiBaseUrl}${environment.apiEndpoints.admin.chargers}`;
+
+  // Cache for lookup tables (long TTL - rarely changes)
+  private protocolsCache$ = new BehaviorSubject<ProtocolDto[] | null>(null);
+  private capacitiesCache$ = new BehaviorSubject<CapacityDto[] | null>(null);
+  private priceOptionsCache$ = new BehaviorSubject<PriceOptionDto[] | null>(null);
+  private protocolsCacheLoading = false;
+  private capacitiesCacheLoading = false;
+  private priceOptionsCacheLoading = false;
 
   constructor(private http: HttpClient) {}
 
@@ -73,29 +81,88 @@ export class AdminChargersService {
     return this.http.patch<ApiResponse<void>>(`${this.baseUrl}/${id}/status`, {}, { params });
   }
 
-  // ========== Lookup Tables ==========
+  // ========== Lookup Tables (Cached) ==========
 
   /**
-   * Get all charging protocols
+   * Get all charging protocols (cached)
    * GET /api/protocol
    */
-  getProtocols(): Observable<ApiResponse<ProtocolDto[]>> {
-    return this.http.get<ApiResponse<ProtocolDto[]>>(`${environment.apiBaseUrl}/api/protocol`);
+  getProtocols(forceRefresh = false): Observable<ApiResponse<ProtocolDto[]>> {
+    const cached = this.protocolsCache$.getValue();
+    if (!forceRefresh && cached && !this.protocolsCacheLoading) {
+      return of({ status: true, data: cached, message: 'success' });
+    }
+
+    if (this.protocolsCacheLoading) {
+      return this.http.get<ApiResponse<ProtocolDto[]>>(`${environment.apiBaseUrl}/api/protocol`);
+    }
+
+    this.protocolsCacheLoading = true;
+    return this.http.get<ApiResponse<ProtocolDto[]>>(`${environment.apiBaseUrl}/api/protocol`).pipe(
+      tap(response => {
+        if (response.status && response.data) {
+          this.protocolsCache$.next(response.data);
+        }
+        this.protocolsCacheLoading = false;
+      })
+    );
   }
 
   /**
-   * Get all capacities
+   * Get all capacities (cached)
    * GET /api/admin/capacity
    */
-  getCapacities(): Observable<ApiResponse<CapacityDto[]>> {
-    return this.http.get<ApiResponse<CapacityDto[]>>(`${environment.apiBaseUrl}/api/admin/capacity`);
+  getCapacities(forceRefresh = false): Observable<ApiResponse<CapacityDto[]>> {
+    const cached = this.capacitiesCache$.getValue();
+    if (!forceRefresh && cached && !this.capacitiesCacheLoading) {
+      return of({ status: true, data: cached, message: 'success' });
+    }
+
+    if (this.capacitiesCacheLoading) {
+      return this.http.get<ApiResponse<CapacityDto[]>>(`${environment.apiBaseUrl}/api/admin/capacity`);
+    }
+
+    this.capacitiesCacheLoading = true;
+    return this.http.get<ApiResponse<CapacityDto[]>>(`${environment.apiBaseUrl}/api/admin/capacity`).pipe(
+      tap(response => {
+        if (response.status && response.data) {
+          this.capacitiesCache$.next(response.data);
+        }
+        this.capacitiesCacheLoading = false;
+      })
+    );
   }
 
   /**
-   * Get all price options
-   * TODO: Add actual endpoint when available in backend
+   * Get all price options (cached)
    */
-  getPriceOptions(): Observable<ApiResponse<PriceOptionDto[]>> {
-    return this.http.get<ApiResponse<PriceOptionDto[]>>(`${environment.apiBaseUrl}/api/admin/price-options`);
+  getPriceOptions(forceRefresh = false): Observable<ApiResponse<PriceOptionDto[]>> {
+    const cached = this.priceOptionsCache$.getValue();
+    if (!forceRefresh && cached && !this.priceOptionsCacheLoading) {
+      return of({ status: true, data: cached, message: 'success' });
+    }
+
+    if (this.priceOptionsCacheLoading) {
+      return this.http.get<ApiResponse<PriceOptionDto[]>>(`${environment.apiBaseUrl}/api/admin/price-options`);
+    }
+
+    this.priceOptionsCacheLoading = true;
+    return this.http.get<ApiResponse<PriceOptionDto[]>>(`${environment.apiBaseUrl}/api/admin/price-options`).pipe(
+      tap(response => {
+        if (response.status && response.data) {
+          this.priceOptionsCache$.next(response.data);
+        }
+        this.priceOptionsCacheLoading = false;
+      })
+    );
+  }
+
+  /**
+   * Invalidate all lookup caches
+   */
+  invalidateLookupCaches(): void {
+    this.protocolsCache$.next(null);
+    this.capacitiesCache$.next(null);
+    this.priceOptionsCache$.next(null);
   }
 }
