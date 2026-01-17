@@ -25,16 +25,8 @@ interface PinnedItem {
   icon: string;
 }
 
-interface RecentPage {
-  route: string;
-  label: string;
-  icon: string;
-  timestamp: number;
-}
-
 const STORAGE_KEY = 'voltyks_sidebar_state';
 const PINNED_STORAGE_KEY = 'voltyks_pinned_items';
-const RECENT_STORAGE_KEY = 'voltyks_recent_pages';
 const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
 
 @Component({
@@ -162,33 +154,6 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
         </div>
       }
 
-      <!-- Recent Pages Section -->
-      @if (recentPages.length > 0) {
-        <div class="recent-section">
-          <div class="section-header">
-            <span class="material-icons section-icon">history</span>
-            <span class="section-title">الأخيرة</span>
-            <button class="clear-recent-btn"
-                    (click)="clearRecentPages()"
-                    title="مسح السجل">
-              <span class="material-icons">delete_sweep</span>
-            </button>
-          </div>
-          <div class="section-items">
-            @for (page of recentPages; track page.route) {
-              <a [routerLink]="page.route"
-                 routerLinkActive="active"
-                 class="nav-link recent-item"
-                 [title]="page.label"
-                 (click)="onItemClick()">
-                <span class="icon material-icons">{{ page.icon }}</span>
-                <span class="text">{{ page.label }}</span>
-              </a>
-            }
-          </div>
-        </div>
-      }
-
       <!-- Navigation Menu -->
       <nav class="nav-menu">
         @for (group of menuGroups; track group.id) {
@@ -280,10 +245,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   // Pinned Items
   pinnedItems: PinnedItem[] = [];
-
-  // Recent Pages
-  recentPages: RecentPage[] = [];
-  private readonly MAX_RECENT = 5;
 
   // Context Menu
   showContextMenu = false;
@@ -405,7 +366,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     // Load saved states
     this.loadExpandedState();
     this.loadPinnedItems();
-    this.loadRecentPages();
     this.loadSidebarPinnedState();
 
     // Subscribe to sidebar state changes
@@ -416,14 +376,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Track navigation for recent pages
+    // Track navigation for expanding active group
     this.subscriptions.push(
       this.router.events.pipe(
         filter(event => event instanceof NavigationEnd)
-      ).subscribe((event) => {
-        const navEvent = event as NavigationEnd;
+      ).subscribe(() => {
         this.expandActiveGroup();
-        this.addToRecentPages(navEvent.urlAfterRedirects);
         this.cdr.markForCheck();
       })
     );
@@ -625,63 +583,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.showContextMenu = false;
     this.contextMenuItem = null;
     this.cdr.markForCheck();
-  }
-
-  // ========== Recent Pages ==========
-  private addToRecentPages(url: string): void {
-    const menuItem = this.findMenuItemByRoute(url);
-    if (!menuItem) return;
-
-    // Remove existing entry
-    this.recentPages = this.recentPages.filter(p => p.route !== url);
-
-    // Add to beginning
-    this.recentPages.unshift({
-      route: url,
-      label: menuItem.item.label,
-      icon: menuItem.item.icon,
-      timestamp: Date.now()
-    });
-
-    // Keep only MAX_RECENT
-    this.recentPages = this.recentPages.slice(0, this.MAX_RECENT);
-    this.saveRecentPages();
-  }
-
-  private findMenuItemByRoute(route: string): { group: MenuGroup; item: MenuItem } | null {
-    for (const group of this.menuGroups) {
-      for (const item of group.items) {
-        if (route === item.route || route.startsWith(item.route + '/')) {
-          return { group, item };
-        }
-      }
-    }
-    return null;
-  }
-
-  clearRecentPages(): void {
-    this.recentPages = [];
-    this.saveRecentPages();
-    this.cdr.markForCheck();
-  }
-
-  private loadRecentPages(): void {
-    try {
-      const saved = localStorage.getItem(RECENT_STORAGE_KEY);
-      if (saved) {
-        this.recentPages = JSON.parse(saved);
-      }
-    } catch (e) {
-      // Invalid storage data
-    }
-  }
-
-  private saveRecentPages(): void {
-    try {
-      localStorage.setItem(RECENT_STORAGE_KEY, JSON.stringify(this.recentPages));
-    } catch (e) {
-      // Storage unavailable
-    }
   }
 
   // ========== Group Methods ==========

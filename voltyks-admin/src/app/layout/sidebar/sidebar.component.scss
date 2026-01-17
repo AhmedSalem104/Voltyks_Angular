@@ -126,70 +126,126 @@
 }
 
 // ========================================
-// Toolbar Section - Glass Effect
+// Toolbar Section - Modern Gradient Icons
 // ========================================
 .sidebar-toolbar {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 10px 14px;
+  gap: 8px;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--border-color);
-  background: rgba(0, 0, 0, 0.02);
-  backdrop-filter: blur(8px);
+  background: var(--bg-secondary);
 
   .toolbar-btn {
-    width: 36px;
-    height: 36px;
-    border: none;
-    border-radius: 10px;
-    background: transparent;
+    width: 40px;
+    height: 40px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(0, 200, 83, 0.08) 0%, rgba(0, 200, 83, 0.02) 100%);
     color: var(--text-secondary);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
 
     .material-icons {
-      font-size: 20px;
-      transition: transform 0.25s ease;
+      font-size: 22px;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
     }
 
+    // Gradient overlay on hover
     &::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at center, rgba(0, 200, 83, 0.2) 0%, transparent 70%);
+      background: linear-gradient(135deg, #00C853 0%, #69F0AE 100%);
       opacity: 0;
-      transition: opacity 0.25s ease;
+      transition: opacity 0.3s ease;
+      border-radius: 10px;
+    }
+
+    // Glow effect
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(135deg, #00C853 0%, #69F0AE 100%);
+      opacity: 0;
+      filter: blur(8px);
+      transition: opacity 0.3s ease;
+      z-index: -1;
+      border-radius: 14px;
     }
 
     &:hover:not(.disabled) {
-      background: rgba(0, 200, 83, 0.12);
-      color: #00C853;
+      border-color: rgba(0, 200, 83, 0.3);
       transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 200, 83, 0.2);
 
       &::before {
         opacity: 1;
       }
 
+      &::after {
+        opacity: 0.3;
+      }
+
       .material-icons {
+        color: white;
         transform: scale(1.1);
       }
     }
 
     &.active {
-      background: linear-gradient(135deg, rgba(0, 200, 83, 0.2) 0%, rgba(0, 200, 83, 0.1) 100%);
-      color: #00C853;
-      box-shadow: 0 2px 8px rgba(0, 200, 83, 0.2);
+      background: linear-gradient(135deg, #00C853 0%, #69F0AE 100%);
+      color: white;
+      box-shadow: 0 4px 16px rgba(0, 200, 83, 0.35);
+      border-color: transparent;
+
+      .material-icons {
+        color: white;
+      }
+
+      &::after {
+        opacity: 0.4;
+      }
     }
 
     &.disabled {
-      opacity: 0.35;
+      opacity: 0.3;
       cursor: not-allowed;
+      background: rgba(0, 0, 0, 0.05);
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
+        border-color: transparent;
+
+        &::before,
+        &::after {
+          opacity: 0;
+        }
+
+        .material-icons {
+          color: var(--text-secondary);
+          transform: none;
+        }
+      }
+    }
+
+    // Search button special style
+    &.search-btn {
+      background: linear-gradient(135deg, rgba(0, 200, 83, 0.12) 0%, rgba(0, 200, 83, 0.04) 100%);
+
+      .material-icons {
+        font-size: 24px;
+      }
     }
   }
 }
@@ -1272,17 +1328,31 @@
   }
 
   .sidebar-toolbar {
-    background: rgba(0, 0, 0, 0.01);
+    background: var(--sidebar-bg);
 
     .toolbar-btn {
+      background: linear-gradient(135deg, rgba(0, 168, 68, 0.06) 0%, rgba(0, 168, 68, 0.02) 100%);
+
       &:hover:not(.disabled) {
-        background: rgba(0, 168, 68, 0.1);
-        color: var(--primary-green);
+        border-color: rgba(0, 168, 68, 0.25);
+        box-shadow: 0 4px 12px rgba(0, 168, 68, 0.15);
+
+        &::before {
+          background: linear-gradient(135deg, var(--primary-green) 0%, #4CAF50 100%);
+        }
+
+        &::after {
+          background: linear-gradient(135deg, var(--primary-green) 0%, #4CAF50 100%);
+        }
       }
 
       &.active {
-        background: linear-gradient(135deg, rgba(0, 168, 68, 0.15) 0%, rgba(0, 168, 68, 0.08) 100%);
-        color: var(--primary-green);
+        background: linear-gradient(135deg, var(--primary-green) 0%, #4CAF50 100%);
+        box-shadow: 0 4px 16px rgba(0, 168, 68, 0.3);
+      }
+
+      &.search-btn {
+        background: linear-gradient(135deg, rgba(0, 168, 68, 0.1) 0%, rgba(0, 168, 68, 0.03) 100%);
       }
     }
   }
