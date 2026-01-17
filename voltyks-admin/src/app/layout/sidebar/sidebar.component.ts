@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDetectorRef, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { Subscription, filter } from 'rxjs';
 
@@ -18,23 +19,175 @@ interface MenuGroup {
   items: MenuItem[];
 }
 
+interface PinnedItem {
+  route: string;
+  label: string;
+  icon: string;
+}
+
+interface RecentPage {
+  route: string;
+  label: string;
+  icon: string;
+  timestamp: number;
+}
+
 const STORAGE_KEY = 'voltyks_sidebar_state';
+const PINNED_STORAGE_KEY = 'voltyks_pinned_items';
+const RECENT_STORAGE_KEY = 'voltyks_recent_pages';
+const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   template: `
     <!-- Backdrop Overlay -->
     <div class="backdrop" [class.is-visible]="isOpen" (click)="close()"></div>
 
     <!-- Sidebar Container -->
-    <aside class="sidebar-wrapper" [class.is-expanded]="isOpen">
+    <aside class="sidebar-wrapper"
+           [class.is-expanded]="isOpen"
+           [class.is-pinned]="isSidebarPinned"
+           #sidebarElement>
+
       <!-- Logo Section -->
       <div class="logo-section">
         <img class="logo-image" src="assets/images/Voltyks_Logo.jpg" alt="Voltyks Logo" />
         <h1 class="logo-text">Voltyks</h1>
+        <!-- Pin Sidebar Button -->
+        <button class="pin-sidebar-btn"
+                (click)="toggleSidebarPin()"
+                [class.is-pinned]="isSidebarPinned"
+                [title]="isSidebarPinned ? 'إلغاء التثبيت' : 'تثبيت القائمة'">
+          <span class="material-icons">{{ isSidebarPinned ? 'push_pin' : 'push_pin' }}</span>
+        </button>
       </div>
+
+      <!-- Toolbar Section -->
+      <div class="sidebar-toolbar">
+        <!-- Search Button -->
+        <button class="toolbar-btn search-btn"
+                (click)="toggleSearch()"
+                [class.active]="isSearchOpen"
+                title="البحث (Ctrl+K)">
+          <span class="material-icons">search</span>
+        </button>
+        <!-- Collapse All -->
+        <button class="toolbar-btn"
+                (click)="collapseAll()"
+                [class.disabled]="!hasExpandedGroups"
+                [disabled]="!hasExpandedGroups"
+                title="طي الكل">
+          <span class="material-icons">unfold_less</span>
+        </button>
+        <!-- Expand All -->
+        <button class="toolbar-btn"
+                (click)="expandAll()"
+                [class.disabled]="allGroupsExpanded"
+                [disabled]="allGroupsExpanded"
+                title="فتح الكل">
+          <span class="material-icons">unfold_more</span>
+        </button>
+      </div>
+
+      <!-- Search Container -->
+      @if (isSearchOpen) {
+        <div class="search-container" [class.active]="isSearchOpen">
+          <div class="search-input-wrapper">
+            <span class="material-icons search-icon">search</span>
+            <input #searchInput
+                   type="text"
+                   [(ngModel)]="searchQuery"
+                   (ngModelChange)="onSearchQueryChange()"
+                   (keydown.enter)="navigateToFirstResult()"
+                   (keydown.escape)="closeSearch()"
+                   (keydown.arrowdown)="focusNextSearchResult($event)"
+                   (keydown.arrowup)="focusPreviousSearchResult($event)"
+                   placeholder="البحث في القائمة..."
+                   class="search-input">
+            <span class="keyboard-hint">Esc</span>
+          </div>
+          @if (searchQuery && filteredItems.length > 0) {
+            <div class="search-results">
+              @for (result of filteredItems; track result.item.route; let i = $index) {
+                <a [routerLink]="result.item.route"
+                   class="search-result-item"
+                   [class.focused]="focusedSearchIndex === i"
+                   (click)="onSearchResultClick()"
+                   (mouseenter)="focusedSearchIndex = i">
+                  <span class="material-icons result-icon">{{ result.item.icon }}</span>
+                  <div class="result-text">
+                    <span class="result-label">{{ result.item.label }}</span>
+                    <span class="result-group">{{ result.group.label }}</span>
+                  </div>
+                </a>
+              }
+            </div>
+          }
+          @if (searchQuery && filteredItems.length === 0) {
+            <div class="search-no-results">
+              <span class="material-icons">search_off</span>
+              <span>لا توجد نتائج</span>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Pinned Items Section -->
+      @if (pinnedItems.length > 0) {
+        <div class="pinned-section">
+          <div class="section-header">
+            <span class="material-icons section-icon">push_pin</span>
+            <span class="section-title">المثبتة</span>
+            <span class="section-count">{{ pinnedItems.length }}</span>
+          </div>
+          <div class="section-items">
+            @for (item of pinnedItems; track item.route) {
+              <a [routerLink]="item.route"
+                 routerLinkActive="active"
+                 class="nav-link pinned-item"
+                 [title]="item.label"
+                 (click)="onItemClick()">
+                <span class="icon material-icons">{{ item.icon }}</span>
+                <span class="text">{{ item.label }}</span>
+                <button class="unpin-btn"
+                        (click)="unpinItem(item, $event)"
+                        title="إلغاء التثبيت">
+                  <span class="material-icons">close</span>
+                </button>
+              </a>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Recent Pages Section -->
+      @if (recentPages.length > 0) {
+        <div class="recent-section">
+          <div class="section-header">
+            <span class="material-icons section-icon">history</span>
+            <span class="section-title">الأخيرة</span>
+            <button class="clear-recent-btn"
+                    (click)="clearRecentPages()"
+                    title="مسح السجل">
+              <span class="material-icons">delete_sweep</span>
+            </button>
+          </div>
+          <div class="section-items">
+            @for (page of recentPages; track page.route) {
+              <a [routerLink]="page.route"
+                 routerLinkActive="active"
+                 class="nav-link recent-item"
+                 [title]="page.label"
+                 (click)="onItemClick()">
+                <span class="icon material-icons">{{ page.icon }}</span>
+                <span class="text">{{ page.label }}</span>
+              </a>
+            }
+          </div>
+        </div>
+      }
 
       <!-- Navigation Menu -->
       <nav class="nav-menu">
@@ -64,9 +217,13 @@ const STORAGE_KEY = 'voltyks_sidebar_state';
                   class="nav-link"
                   [title]="item.label"
                   (click)="onItemClick()"
+                  (contextmenu)="onItemRightClick(item, $event)"
                 >
                   <span class="icon material-icons">{{ item.icon }}</span>
                   <span class="text">{{ item.label }}</span>
+                  @if (isPinned(item.route)) {
+                    <span class="pin-indicator material-icons">push_pin</span>
+                  }
                 </a>
               }
             </div>
@@ -79,17 +236,60 @@ const STORAGE_KEY = 'voltyks_sidebar_state';
         <p class="version-text">v1.0.0</p>
       </div>
     </aside>
+
+    <!-- Context Menu for Pin -->
+    @if (showContextMenu) {
+      <div class="context-menu"
+           [style.top.px]="contextMenuY"
+           [style.left.px]="contextMenuX"
+           (mouseleave)="closeContextMenu()">
+        @if (contextMenuItem && !isPinned(contextMenuItem.route)) {
+          <button class="context-menu-item" (click)="pinItem(contextMenuItem)">
+            <span class="material-icons">push_pin</span>
+            <span>تثبيت</span>
+          </button>
+        }
+        @if (contextMenuItem && isPinned(contextMenuItem.route)) {
+          <button class="context-menu-item" (click)="unpinItemByRoute(contextMenuItem.route)">
+            <span class="material-icons">push_pin</span>
+            <span>إلغاء التثبيت</span>
+          </button>
+        }
+      </div>
+    }
   `,
   styleUrls: ['./sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent implements OnInit, OnDestroy {
+  @ViewChild('searchInput') searchInputRef!: ElementRef<HTMLInputElement>;
+  @ViewChild('sidebarElement') sidebarElement!: ElementRef<HTMLElement>;
+
   private sidebarService = inject(SidebarService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
   private subscriptions: Subscription[] = [];
 
   isOpen = false;
+  isSidebarPinned = false;
+
+  // Search
+  isSearchOpen = false;
+  searchQuery = '';
+  focusedSearchIndex = 0;
+
+  // Pinned Items
+  pinnedItems: PinnedItem[] = [];
+
+  // Recent Pages
+  recentPages: RecentPage[] = [];
+  private readonly MAX_RECENT = 5;
+
+  // Context Menu
+  showContextMenu = false;
+  contextMenuX = 0;
+  contextMenuY = 0;
+  contextMenuItem: MenuItem | null = null;
 
   menuGroups: MenuGroup[] = [
     {
@@ -176,9 +376,37 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
   ];
 
+  // Computed properties
+  get hasExpandedGroups(): boolean {
+    return this.menuGroups.some(g => g.expanded);
+  }
+
+  get allGroupsExpanded(): boolean {
+    return this.menuGroups.every(g => g.expanded);
+  }
+
+  get filteredItems(): { group: MenuGroup; item: MenuItem }[] {
+    if (!this.searchQuery.trim()) return [];
+    const query = this.searchQuery.toLowerCase();
+    const results: { group: MenuGroup; item: MenuItem }[] = [];
+
+    this.menuGroups.forEach(group => {
+      group.items.forEach(item => {
+        if (item.label.toLowerCase().includes(query) ||
+            group.label.toLowerCase().includes(query)) {
+          results.push({ group, item });
+        }
+      });
+    });
+    return results;
+  }
+
   ngOnInit(): void {
-    // Load saved expanded state from localStorage
+    // Load saved states
     this.loadExpandedState();
+    this.loadPinnedItems();
+    this.loadRecentPages();
+    this.loadSidebarPinnedState();
 
     // Subscribe to sidebar state changes
     this.subscriptions.push(
@@ -188,12 +416,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Auto-expand group containing active route on navigation
+    // Track navigation for recent pages
     this.subscriptions.push(
       this.router.events.pipe(
         filter(event => event instanceof NavigationEnd)
-      ).subscribe(() => {
+      ).subscribe((event) => {
+        const navEvent = event as NavigationEnd;
         this.expandActiveGroup();
+        this.addToRecentPages(navEvent.urlAfterRedirects);
         this.cdr.markForCheck();
       })
     );
@@ -206,44 +436,276 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  /**
-   * Toggle group expanded state
-   */
+  // ========== Keyboard Shortcuts ==========
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    // Ctrl+K or Cmd+K to toggle search
+    if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+      event.preventDefault();
+      this.toggleSearch();
+    }
+
+    // Escape to close search or context menu
+    if (event.key === 'Escape') {
+      if (this.isSearchOpen) {
+        this.closeSearch();
+      }
+      if (this.showContextMenu) {
+        this.closeContextMenu();
+      }
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    // Close context menu on outside click
+    if (this.showContextMenu) {
+      this.closeContextMenu();
+    }
+  }
+
+  // ========== Search Methods ==========
+  toggleSearch(): void {
+    this.isSearchOpen = !this.isSearchOpen;
+    this.searchQuery = '';
+    this.focusedSearchIndex = 0;
+    this.cdr.markForCheck();
+
+    if (this.isSearchOpen) {
+      setTimeout(() => {
+        this.searchInputRef?.nativeElement?.focus();
+      }, 100);
+    }
+  }
+
+  closeSearch(): void {
+    this.isSearchOpen = false;
+    this.searchQuery = '';
+    this.focusedSearchIndex = 0;
+    this.cdr.markForCheck();
+  }
+
+  onSearchQueryChange(): void {
+    this.focusedSearchIndex = 0;
+    this.cdr.markForCheck();
+  }
+
+  navigateToFirstResult(): void {
+    if (this.filteredItems.length > 0) {
+      const result = this.filteredItems[this.focusedSearchIndex];
+      this.router.navigate([result.item.route]);
+      this.closeSearch();
+      this.onItemClick();
+    }
+  }
+
+  onSearchResultClick(): void {
+    this.closeSearch();
+    this.onItemClick();
+  }
+
+  focusNextSearchResult(event: Event): void {
+    event.preventDefault();
+    if (this.focusedSearchIndex < this.filteredItems.length - 1) {
+      this.focusedSearchIndex++;
+      this.cdr.markForCheck();
+    }
+  }
+
+  focusPreviousSearchResult(event: Event): void {
+    event.preventDefault();
+    if (this.focusedSearchIndex > 0) {
+      this.focusedSearchIndex--;
+      this.cdr.markForCheck();
+    }
+  }
+
+  // ========== Collapse/Expand All ==========
+  collapseAll(): void {
+    this.menuGroups.forEach(group => group.expanded = false);
+    this.saveExpandedState();
+    this.cdr.markForCheck();
+  }
+
+  expandAll(): void {
+    this.menuGroups.forEach(group => group.expanded = true);
+    this.saveExpandedState();
+    this.cdr.markForCheck();
+  }
+
+  // ========== Sidebar Pin ==========
+  toggleSidebarPin(): void {
+    this.isSidebarPinned = !this.isSidebarPinned;
+    this.saveSidebarPinnedState();
+    this.cdr.markForCheck();
+  }
+
+  private loadSidebarPinnedState(): void {
+    try {
+      const saved = localStorage.getItem(SIDEBAR_PINNED_KEY);
+      if (saved) {
+        this.isSidebarPinned = JSON.parse(saved);
+      }
+    } catch (e) {
+      // Invalid storage data
+    }
+  }
+
+  private saveSidebarPinnedState(): void {
+    try {
+      localStorage.setItem(SIDEBAR_PINNED_KEY, JSON.stringify(this.isSidebarPinned));
+    } catch (e) {
+      // Storage unavailable
+    }
+  }
+
+  // ========== Pinned Items ==========
+  isPinned(route: string): boolean {
+    return this.pinnedItems.some(p => p.route === route);
+  }
+
+  pinItem(item: MenuItem): void {
+    if (!this.isPinned(item.route)) {
+      this.pinnedItems.push({
+        route: item.route,
+        label: item.label,
+        icon: item.icon
+      });
+      this.savePinnedItems();
+      this.cdr.markForCheck();
+    }
+    this.closeContextMenu();
+  }
+
+  unpinItem(item: PinnedItem, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.pinnedItems = this.pinnedItems.filter(p => p.route !== item.route);
+    this.savePinnedItems();
+    this.cdr.markForCheck();
+  }
+
+  unpinItemByRoute(route: string): void {
+    this.pinnedItems = this.pinnedItems.filter(p => p.route !== route);
+    this.savePinnedItems();
+    this.closeContextMenu();
+    this.cdr.markForCheck();
+  }
+
+  private loadPinnedItems(): void {
+    try {
+      const saved = localStorage.getItem(PINNED_STORAGE_KEY);
+      if (saved) {
+        this.pinnedItems = JSON.parse(saved);
+      }
+    } catch (e) {
+      // Invalid storage data
+    }
+  }
+
+  private savePinnedItems(): void {
+    try {
+      localStorage.setItem(PINNED_STORAGE_KEY, JSON.stringify(this.pinnedItems));
+    } catch (e) {
+      // Storage unavailable
+    }
+  }
+
+  // ========== Context Menu ==========
+  onItemRightClick(item: MenuItem, event: MouseEvent): void {
+    event.preventDefault();
+    this.contextMenuItem = item;
+    this.contextMenuX = event.clientX;
+    this.contextMenuY = event.clientY;
+    this.showContextMenu = true;
+    this.cdr.markForCheck();
+  }
+
+  closeContextMenu(): void {
+    this.showContextMenu = false;
+    this.contextMenuItem = null;
+    this.cdr.markForCheck();
+  }
+
+  // ========== Recent Pages ==========
+  private addToRecentPages(url: string): void {
+    const menuItem = this.findMenuItemByRoute(url);
+    if (!menuItem) return;
+
+    // Remove existing entry
+    this.recentPages = this.recentPages.filter(p => p.route !== url);
+
+    // Add to beginning
+    this.recentPages.unshift({
+      route: url,
+      label: menuItem.item.label,
+      icon: menuItem.item.icon,
+      timestamp: Date.now()
+    });
+
+    // Keep only MAX_RECENT
+    this.recentPages = this.recentPages.slice(0, this.MAX_RECENT);
+    this.saveRecentPages();
+  }
+
+  private findMenuItemByRoute(route: string): { group: MenuGroup; item: MenuItem } | null {
+    for (const group of this.menuGroups) {
+      for (const item of group.items) {
+        if (route === item.route || route.startsWith(item.route + '/')) {
+          return { group, item };
+        }
+      }
+    }
+    return null;
+  }
+
+  clearRecentPages(): void {
+    this.recentPages = [];
+    this.saveRecentPages();
+    this.cdr.markForCheck();
+  }
+
+  private loadRecentPages(): void {
+    try {
+      const saved = localStorage.getItem(RECENT_STORAGE_KEY);
+      if (saved) {
+        this.recentPages = JSON.parse(saved);
+      }
+    } catch (e) {
+      // Invalid storage data
+    }
+  }
+
+  private saveRecentPages(): void {
+    try {
+      localStorage.setItem(RECENT_STORAGE_KEY, JSON.stringify(this.recentPages));
+    } catch (e) {
+      // Storage unavailable
+    }
+  }
+
+  // ========== Group Methods ==========
   toggleGroup(group: MenuGroup): void {
     group.expanded = !group.expanded;
     this.saveExpandedState();
     this.cdr.markForCheck();
   }
 
-  /**
-   * Check if any item in the group is currently active
-   */
   isGroupActive(group: MenuGroup): boolean {
     const currentUrl = this.router.url;
     return group.items.some(item => {
-      // Check if current URL starts with the item route
-      // This handles child routes like /store/products, /users/123
       return currentUrl === item.route || currentUrl.startsWith(item.route + '/');
     });
   }
 
-  /**
-   * Handle navigation item click
-   */
   onItemClick(): void {
     this.close();
   }
 
-  /**
-   * Close sidebar
-   */
   close(): void {
     this.sidebarService.close();
   }
 
-  /**
-   * Load expanded state from localStorage
-   */
   private loadExpandedState(): void {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -256,13 +718,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
         });
       }
     } catch (e) {
-      // Invalid storage data - use defaults
+      // Invalid storage data
     }
   }
 
-  /**
-   * Save expanded state to localStorage
-   */
   private saveExpandedState(): void {
     try {
       const state: Record<string, boolean> = {};
@@ -275,9 +734,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Expand the group containing the currently active route
-   */
   private expandActiveGroup(): void {
     const currentUrl = this.router.url;
     this.menuGroups.forEach(group => {
