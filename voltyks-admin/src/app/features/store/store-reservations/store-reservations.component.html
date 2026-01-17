@@ -226,9 +226,8 @@
     }
   </div>
 
-  <!-- Details Dialog - Deferred for performance -->
-  @defer (when showDetailsDialog && currentReservation) {
-    @if (currentReservation) {
+  <!-- Details Dialog -->
+  @if (showDetailsDialog && currentReservation) {
       <div class="modal-overlay" (click)="closeDetailsDialog()">
         <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
           <div class="modal-header">
@@ -400,12 +399,10 @@
         </div>
       </div>
     </div>
-    }
   }
 
-  <!-- Contact Dialog - Deferred for performance -->
-  @defer (when showContactDialog && currentReservation) {
-    @if (currentReservation) {
+  <!-- Contact Dialog -->
+  @if (showContactDialog && currentReservation) {
       <div class="modal-overlay" (click)="closeContactDialog()">
         <div class="modal-dialog" (click)="$event.stopPropagation()">
           <div class="modal-header">
@@ -436,12 +433,10 @@
           </div>
         </div>
       </div>
-    }
   }
 
-  <!-- Payment Dialog - Deferred for performance -->
-  @defer (when showPaymentDialog && currentReservation) {
-    @if (currentReservation) {
+  <!-- Payment Dialog -->
+  @if (showPaymentDialog && currentReservation) {
       <div class="modal-overlay" (click)="closePaymentDialog()">
         <div class="modal-dialog" (click)="$event.stopPropagation()">
           <div class="modal-header">
@@ -479,12 +474,10 @@
           </div>
         </div>
       </div>
-    }
   }
 
-  <!-- Delivery Dialog - Deferred for performance -->
-  @defer (when showDeliveryDialog && currentReservation) {
-    @if (currentReservation) {
+  <!-- Delivery Dialog -->
+  @if (showDeliveryDialog && currentReservation) {
       <div class="modal-overlay" (click)="closeDeliveryDialog()">
         <div class="modal-dialog" (click)="$event.stopPropagation()">
           <div class="modal-header">
@@ -512,12 +505,10 @@
           </div>
         </div>
       </div>
-    }
   }
 
-  <!-- Complete Confirm - Deferred for performance -->
-  @defer (when showCompleteConfirm) {
-    <app-confirm-dialog
+  <!-- Complete Confirm -->
+  <app-confirm-dialog
       [isOpen]="showCompleteConfirm"
       title="تأكيد إكمال الحجز"
       [message]="'هل أنت متأكد من إكمال الحجز #' + (currentReservation?.id || '') + '؟'"
@@ -525,12 +516,10 @@
       type="primary"
       (confirm)="confirmComplete()"
       (cancel)="closeCompleteConfirm()"
-    ></app-confirm-dialog>
-  }
+  ></app-confirm-dialog>
 
-  <!-- Cancel Confirm - Deferred for performance -->
-  @defer (when showCancelConfirm) {
-    <app-confirm-dialog
+  <!-- Cancel Confirm -->
+  <app-confirm-dialog
       [isOpen]="showCancelConfirm"
       title="تأكيد إلغاء الحجز"
       [message]="'هل أنت متأكد من إلغاء الحجز #' + (currentReservation?.id || '') + '؟ لا يمكن التراجع عن هذا الإجراء.'"
@@ -538,6 +527,5 @@
       type="danger"
       (confirm)="confirmCancel()"
       (cancel)="closeCancelConfirm()"
-    ></app-confirm-dialog>
-  }
+  ></app-confirm-dialog>
 </div>
