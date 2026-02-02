@@ -101,9 +101,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Connect to notification service
-    this.notificationService.connect();
-
     // Subscribe to unread count
     this.subscriptions.push(
       this.notificationService.unreadCount$.subscribe(count => {
@@ -111,6 +108,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       })
     );
+
+    // Delay notification service connection to improve initial page load
+    // Connect after 3 seconds to let the main content load first
+    setTimeout(() => {
+      this.notificationService.connect();
+    }, 3000);
   }
 
   ngOnDestroy(): void {

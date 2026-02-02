@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+
+// Lazy loaded - not imported at top level to reduce bundle size
+type jsPDFType = import('jspdf').jsPDF;
+type Html2CanvasType = typeof import('html2canvas').default;
 
 export interface PrintOptions {
   title: string;
@@ -22,7 +24,32 @@ const VOLTYKS_LOGO = `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0i
 export class PrintService {
   private readonly ROWS_PER_PAGE = 15;
 
+  // Cached lazy loaded modules
+  private jsPDFModule: typeof import('jspdf') | null = null;
+  private html2canvasModule: Html2CanvasType | null = null;
+
   constructor() {}
+
+  /**
+   * Lazy load jsPDF library
+   */
+  private async getJsPDF(): Promise<typeof import('jspdf')> {
+    if (!this.jsPDFModule) {
+      this.jsPDFModule = await import('jspdf');
+    }
+    return this.jsPDFModule;
+  }
+
+  /**
+   * Lazy load html2canvas library
+   */
+  private async getHtml2Canvas(): Promise<Html2CanvasType> {
+    if (!this.html2canvasModule) {
+      const module = await import('html2canvas');
+      this.html2canvasModule = module.default;
+    }
+    return this.html2canvasModule;
+  }
 
   /**
    * Professional Table PDF with Arabic support using html2canvas
@@ -47,6 +74,9 @@ export class PrintService {
     const loadingEl = this.showLoading();
 
     try {
+      // Lazy load jsPDF
+      const { jsPDF } = await this.getJsPDF();
+
       const pdf = new jsPDF({
         orientation,
         unit: 'mm',
@@ -348,6 +378,9 @@ export class PrintService {
    * Render HTML string to canvas
    */
   private async renderHtmlToCanvas(html: string, orientation: string): Promise<HTMLCanvasElement> {
+    // Lazy load html2canvas
+    const html2canvas = await this.getHtml2Canvas();
+
     const container = document.createElement('div');
     container.style.cssText = `
       position: fixed;
@@ -543,6 +576,9 @@ export class PrintService {
 
       const canvas = await this.renderHtmlToCanvas(html, orientation);
 
+      // Lazy load jsPDF
+      const { jsPDF } = await this.getJsPDF();
+
       const pdf = new jsPDF({ orientation, unit: 'mm', format: 'a4' });
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
@@ -568,7 +604,7 @@ export class PrintService {
    * Add image to PDF with smart pagination
    */
   private async addImageWithPagination(
-    pdf: jsPDF,
+    pdf: jsPDFType,
     canvas: HTMLCanvasElement,
     imgWidth: number,
     imgHeight: number,
