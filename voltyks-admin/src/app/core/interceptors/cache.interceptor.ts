@@ -20,8 +20,11 @@ import { CacheService } from '../services/cache.service';
 export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
   const cacheService = inject(CacheService);
 
-  // Only cache GET requests
+  // For non-GET requests (POST/PUT/PATCH/DELETE), invalidate related caches
   if (req.method !== 'GET') {
+    // Clear any cached GET for the same base URL path
+    const basePath = req.url.split('?')[0];
+    cacheService.invalidate(`http_cache_${basePath}`);
     return next(req);
   }
 
@@ -61,6 +64,8 @@ function shouldSkipCache(url: string): boolean {
     '/auth/',           // Authentication endpoints
     '/reservations',    // Reservation data changes frequently
     '/unread-count',    // Notification count
+    '/settings/',       // Admin settings (charging mode, etc.)
+    '/app-config/',     // App configuration endpoints
     'forceRefresh=true' // Explicit cache bypass
   ];
 
