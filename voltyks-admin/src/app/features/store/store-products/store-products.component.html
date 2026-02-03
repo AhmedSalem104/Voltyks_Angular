@@ -123,10 +123,10 @@
                 <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
                 <td class="image-cell">
                   @if (product.thumbnailUrl) {
-                    <img [src]="getFullImageUrl(product.thumbnailUrl)" alt="thumbnail" class="product-thumbnail" />
+                    <img [src]="getFullImageUrl(product.thumbnailUrl)" alt="thumbnail" class="product-thumbnail" (error)="onImageError($event)" />
                   } @else {
                     @if (product.images && product.images.length > 0) {
-                      <img [src]="getFullImageUrl(product.images[0])" alt="thumbnail" class="product-thumbnail" />
+                      <img [src]="getFullImageUrl(product.images[0])" alt="thumbnail" class="product-thumbnail" (error)="onImageError($event)" />
                     } @else {
                       <span class="material-icons no-thumbnail">inventory_2</span>
                     }
@@ -424,7 +424,7 @@
               <div class="images-preview small-preview">
                 @for (img of currentProduct!.images.slice(0, 4); track $index) {
                   <div class="image-item">
-                    <img [src]="getFullImageUrl(img)" alt="product image" />
+                    <img [src]="getFullImageUrl(img)" alt="product image" (error)="onImageError($event)" />
                   </div>
                 }
                 @if (currentProduct!.images.length > 4) {
@@ -534,7 +534,7 @@
               <div class="images-gallery">
                 @for (img of currentProduct.images; track $index) {
                   <div class="gallery-image-wrapper" (click)="openLightbox(img)">
-                    <img [src]="getFullImageUrl(img)" alt="product image" class="gallery-image" />
+                    <img [src]="getFullImageUrl(img)" alt="product image" class="gallery-image" (error)="onImageError($event)" />
                     <div class="image-overlay">
                       <span class="material-icons">zoom_in</span>
                     </div>
@@ -609,7 +609,13 @@
           <!-- Upload Section -->
           <div class="upload-section">
             <h4>رفع صور جديدة</h4>
-            <div class="upload-area" (click)="fileInput.click()">
+            <div class="upload-area"
+                 [class.drag-over]="isDragOver"
+                 (click)="fileInput.click()"
+                 (dragover)="onDragOver($event)"
+                 (dragenter)="onDragEnter($event)"
+                 (dragleave)="onDragLeave($event)"
+                 (drop)="onDrop($event)">
               <input
                 type="file"
                 #fileInput
@@ -631,9 +637,11 @@
                 <h5>الصور المحددة للرفع ({{ selectedFiles.length }})</h5>
                 <div class="files-grid">
                   @for (file of selectedFiles; track $index; let i = $index) {
-                    <div class="file-item">
+                    <div class="file-item file-item-with-preview">
+                      <div class="file-preview-thumb">
+                        <img [src]="getFilePreviewUrl(file)" alt="preview" />
+                      </div>
                       <div class="file-info">
-                        <span class="material-icons">image</span>
                         <div class="file-details">
                           <span class="file-name">{{ file.name }}</span>
                           <span class="file-size">{{ formatFileSize(file.size) }}</span>
@@ -661,7 +669,7 @@
                 @for (img of productImages; track $index) {
                   <div class="image-card">
                     <div class="image-wrapper" (click)="openLightbox(img)">
-                      <img [src]="getFullImageUrl(img)" alt="product image" />
+                      <img [src]="getFullImageUrl(img)" alt="product image" (error)="onImageError($event)" />
                       <div class="image-hover-overlay">
                         <span class="material-icons">zoom_in</span>
                       </div>

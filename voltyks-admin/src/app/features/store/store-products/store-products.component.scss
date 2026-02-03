@@ -993,9 +993,20 @@ textarea.voltyks-input {
       transition: all 0.3s ease;
       text-align: center;
 
-      &:hover {
+      &:hover,
+      &.drag-over {
         border-color: $primary-green;
         background-color: rgba($primary-green, 0.05);
+      }
+
+      &.drag-over {
+        border-style: solid;
+        background-color: rgba($primary-green, 0.1);
+
+        .upload-placeholder .material-icons {
+          color: $primary-green;
+          transform: scale(1.1);
+        }
       }
 
       .upload-placeholder {
@@ -1047,10 +1058,32 @@ textarea.voltyks-input {
         border: 1px solid $border-color;
         border-radius: 6px;
 
+        &.file-item-with-preview {
+          gap: 10px;
+        }
+
+        .file-preview-thumb {
+          width: 48px;
+          height: 48px;
+          border-radius: 6px;
+          overflow: hidden;
+          flex-shrink: 0;
+          border: 1px solid $border-color;
+          background-color: $dark-bg;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
         .file-info {
           display: flex;
           align-items: center;
           gap: 10px;
+          flex: 1;
+          min-width: 0;
 
           .material-icons {
             color: $primary-green;
@@ -1757,9 +1790,14 @@ textarea.voltyks-input {
         .upload-area {
           border-color: var(--border-color);
 
-          &:hover {
+          &:hover,
+          &.drag-over {
             border-color: #00A844;
             background-color: rgba(0, 168, 68, 0.05);
+          }
+
+          &.drag-over {
+            background-color: rgba(0, 168, 68, 0.1);
           }
 
           .upload-placeholder {
@@ -1788,6 +1826,11 @@ textarea.voltyks-input {
         .file-item {
           background-color: var(--card-bg);
           border-color: var(--border-color);
+
+          .file-preview-thumb {
+            border-color: var(--border-color);
+            background-color: var(--bg-primary);
+          }
 
           .file-info {
             .material-icons {

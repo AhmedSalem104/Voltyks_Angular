@@ -356,13 +356,10 @@ export class AdminStoreService {
     if (imagePath.startsWith('http')) {
       return imagePath;
     }
-    // If path already contains /images, use it
-    if (imagePath.includes('/images/')) {
-      return imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
-    }
     // Ensure path starts with /
     const normalizedPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
-    return normalizedPath;
+    // Prepend API base URL for local images (critical for production)
+    return environment.apiBaseUrl ? `${environment.apiBaseUrl}${normalizedPath}` : normalizedPath;
   }
 
   // ==================== Reservations ====================

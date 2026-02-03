@@ -101,6 +101,12 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
     { value: 'hidden', label: 'مخفي' }
   ];
 
+  // Drag & drop
+  isDragOver = false;
+
+  // Image preview cache
+  private previewUrls = new Map<File, string>();
+
   // Allowed file types
   readonly allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
   readonly maxFileSize = 5 * 1024 * 1024; // 5MB
@@ -131,6 +137,7 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.revokeImagePreviews();
   }
 
   loadCategories(): void {
@@ -496,6 +503,7 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
     this.currentProduct = null;
     this.productImages = [];
     this.selectedFiles = [];
+    this.revokeImagePreviews();
     if (this.fileInput) {
       this.fileInput.nativeElement.value = '';
     }
@@ -531,6 +539,12 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
   }
 
   removeSelectedFile(index: number): void {
+    const file = this.selectedFiles[index];
+    const previewUrl = this.previewUrls.get(file);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      this.previewUrls.delete(file);
+    }
     this.selectedFiles.splice(index, 1);
     this.cdr.markForCheck();
   }
@@ -547,6 +561,8 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
           this.toaster.success(`تم رفع ${response.data.uploadedUrls.length} صورة بنجاح`);
           this.productImages = response.data.allImages;
           this.selectedFiles = [];
+          this.revokeImagePreviews();
+          this.storeService.invalidateProductsCache();
           this.loadProducts();
         } else {
           this.toaster.error(response.message || 'فشل رفع الصور');
@@ -584,6 +600,7 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
           this.toaster.success('تم حذف الصورة بنجاح');
           this.productImages = this.productImages.filter(img => img !== this.currentImageToDelete);
           this.closeDeleteImageConfirm();
+          this.storeService.invalidateProductsCache();
           this.loadProducts();
         } else {
           this.toaster.error(response.message || 'فشل حذف الصورة');
@@ -613,6 +630,83 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
   // Get full image URL
   getFullImageUrl(imagePath: string): string {
     return this.storeService.getImageUrl(imagePath);
+  }
+
+  // Image error handler - replace broken image with placeholder icon
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+    // Insert a placeholder icon after the broken image
+    const placeholder = document.createElement('span');
+    placeholder.className = 'material-icons no-thumbnail';
+    placeholder.textContent = 'broken_image';
+    placeholder.style.cssText = 'width:64px;height:64px;display:flex;align-items:center;justify-content:center;color:#6C6C6C;font-size:28px;';
+    img.parentElement?.appendChild(placeholder);
+  }
+
+  // ==================== Drag & Drop ====================
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  onDragEnter(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragOver = true;
+    this.cdr.markForCheck();
+  }
+
+  onDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragOver = false;
+    this.cdr.markForCheck();
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragOver = false;
+
+    const files = event.dataTransfer?.files;
+    if (!files?.length) return;
+
+    const fileArray = Array.from(files);
+    const validFiles: File[] = [];
+    const errors: string[] = [];
+
+    fileArray.forEach(file => {
+      if (!this.allowedTypes.includes(file.type)) {
+        errors.push(`${file.name}: نوع ملف غير مدعوم. الأنواع المسموحة: jpg, png, webp`);
+      } else if (file.size > this.maxFileSize) {
+        errors.push(`${file.name}: حجم الملف يتجاوز 5MB`);
+      } else {
+        validFiles.push(file);
+      }
+    });
+
+    if (errors.length > 0) {
+      errors.forEach(err => this.toaster.error(err));
+    }
+
+    this.selectedFiles = [...this.selectedFiles, ...validFiles];
+    this.cdr.markForCheck();
+  }
+
+  // ==================== Image Preview ====================
+
+  getFilePreviewUrl(file: File): string {
+    if (!this.previewUrls.has(file)) {
+      this.previewUrls.set(file, URL.createObjectURL(file));
+    }
+    return this.previewUrls.get(file)!;
+  }
+
+  private revokeImagePreviews(): void {
+    this.previewUrls.forEach(url => URL.revokeObjectURL(url));
+    this.previewUrls.clear();
   }
 
   // Validation
