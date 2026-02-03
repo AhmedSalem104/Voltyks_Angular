@@ -168,8 +168,9 @@ export class ChargersComponent implements OnInit, OnDestroy {
           this.users = response.data;
           this.filteredUsers = response.data;
         }
+        this.cdr.markForCheck();
       },
-      error: () => {}
+      error: () => { this.cdr.markForCheck(); }
     });
   }
 
@@ -179,8 +180,9 @@ export class ChargersComponent implements OnInit, OnDestroy {
         if (response.status && response.data) {
           this.protocols = response.data;
         }
+        this.cdr.markForCheck();
       },
-      error: () => {}
+      error: () => { this.cdr.markForCheck(); }
     });
   }
 
@@ -190,8 +192,9 @@ export class ChargersComponent implements OnInit, OnDestroy {
         if (response.status && response.data) {
           this.capacities = response.data;
         }
+        this.cdr.markForCheck();
       },
-      error: () => {}
+      error: () => { this.cdr.markForCheck(); }
     });
   }
 
@@ -201,8 +204,9 @@ export class ChargersComponent implements OnInit, OnDestroy {
         if (response.status && response.data) {
           this.priceOptions = response.data;
         }
+        this.cdr.markForCheck();
       },
-      error: () => {}
+      error: () => { this.cdr.markForCheck(); }
     });
   }
 

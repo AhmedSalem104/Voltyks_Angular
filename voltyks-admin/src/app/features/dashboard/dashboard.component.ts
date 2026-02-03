@@ -382,7 +382,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.stats.totalBrands = response.data.length;
         }
         this.cdr.markForCheck();
-      }
+      },
+      error: () => { this.cdr.markForCheck(); }
     });
 
     this.brandsService.getModels().subscribe({
@@ -426,7 +427,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.stats.resolvedComplaints = complaints.filter(c => c.isResolved).length;
         }
         this.cdr.markForCheck();
-      }
+      },
+      error: () => { this.cdr.markForCheck(); }
     });
 
     this.complaintCategoriesService.getCategories({ includeDeleted: false }).subscribe({
@@ -470,7 +472,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.stats.activeCategories = categories.filter(c => c.status === 'active').length;
         }
         this.cdr.markForCheck();
-      }
+      },
+      error: () => { this.cdr.markForCheck(); }
     });
 
     // Load products
@@ -483,7 +486,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.stats.outOfStockProducts = products.filter(p => !p.isReservable).length;
         }
         this.cdr.markForCheck();
-      }
+      },
+      error: () => { this.cdr.markForCheck(); }
     });
 
     // Load reservations
