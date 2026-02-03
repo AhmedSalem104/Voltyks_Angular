@@ -5,7 +5,7 @@ import { AppConfigService } from '../../core/services/admin/app-config.service';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
-import { AdminMobileConfigDto, UpdateAdminMobileConfigDto, ChargingModeConfigDto } from '../../core/models';
+import { AdminMobileConfigDto, UpdateAdminMobileConfigDto } from '../../core/models';
 
 @Component({
   selector: 'app-app-config',
@@ -33,7 +33,6 @@ export class AppConfigComponent implements OnInit {
   };
 
   // Charging Mode State
-  chargingModeConfig: ChargingModeConfigDto | null = null;
   chargingModeEnabled = false;
   isChargingModeLoading = false;
   isChargingModeSaving = false;
@@ -61,9 +60,9 @@ export class AppConfigComponent implements OnInit {
     this.loadError = false;
 
     this.appConfigService.getAdminMobileConfig().subscribe({
-      next: (res) => {
+      next: (res: any) => {
         if (res.status && res.data) {
-          this.config = res.data;
+          this.config = this.normalizeMobileConfig(res.data);
           this.syncFormWithConfig();
           this.hasChanges = false;
         } else {
@@ -80,6 +79,19 @@ export class AppConfigComponent implements OnInit {
         this.cdr.markForCheck();
       }
     });
+  }
+
+  /**
+   * Normalize response data to handle both camelCase (from interceptor)
+   * and snake_case field names from the API
+   */
+  private normalizeMobileConfig(data: any): AdminMobileConfigDto {
+    return {
+      android_enabled: data.android_enabled ?? data.androidEnabled ?? false,
+      ios_enabled: data.ios_enabled ?? data.iosEnabled ?? false,
+      android_min_version: data.android_min_version ?? data.androidMinVersion ?? null,
+      ios_min_version: data.ios_min_version ?? data.iosMinVersion ?? null
+    };
   }
 
   private syncFormWithConfig(): void {
@@ -164,9 +176,9 @@ export class AppConfigComponent implements OnInit {
     };
 
     this.appConfigService.updateAdminMobileConfig(updateDto).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         if (res.status && res.data) {
-          this.config = res.data;
+          this.config = this.normalizeMobileConfig(res.data);
           this.syncFormWithConfig();
           this.hasChanges = false;
           this.toaster.success('تم حفظ الإعدادات بنجاح');
@@ -211,11 +223,12 @@ export class AppConfigComponent implements OnInit {
     this.isChargingModeLoading = true;
     this.chargingModeLoadError = false;
 
-    this.appConfigService.getChargingModeStatus().subscribe({
-      next: (res) => {
+    this.appConfigService.getAdminChargingMode().subscribe({
+      next: (res: any) => {
         if (res.status && res.data) {
-          this.chargingModeConfig = res.data;
-          this.chargingModeEnabled = res.data.charging_mode_enabled;
+          this.chargingModeEnabled = res.data.enabled ?? res.data.chargingModeEnabled ?? res.data.charging_mode_enabled ?? false;
+        } else if (res.enabled !== undefined) {
+          this.chargingModeEnabled = res.enabled;
         } else {
           this.chargingModeLoadError = true;
         }
@@ -250,9 +263,12 @@ export class AppConfigComponent implements OnInit {
 
     this.appConfigService.updateAdminChargingMode({ enabled: newStatus }).subscribe({
       next: (res: any) => {
-        if (res.status || res.enabled !== undefined || res.data) {
-          // Update the local state with the new status
-          this.chargingModeEnabled = res.data?.enabled ?? res.enabled ?? newStatus;
+        if (res.status && res.data) {
+          this.chargingModeEnabled = res.data.enabled ?? res.data.chargingModeEnabled ?? res.data.charging_mode_enabled ?? newStatus;
+          this.toaster.success(newStatus ? 'تم تفعيل وضع الشحن بنجاح' : 'تم تعطيل وضع الشحن');
+        } else if (res.status) {
+          // Response has status but no data - use the intended value
+          this.chargingModeEnabled = newStatus;
           this.toaster.success(newStatus ? 'تم تفعيل وضع الشحن بنجاح' : 'تم تعطيل وضع الشحن');
         } else {
           this.toaster.error(res.message || 'فشل تحديث وضع الشحن');
