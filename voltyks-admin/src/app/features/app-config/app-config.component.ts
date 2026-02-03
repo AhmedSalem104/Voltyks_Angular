@@ -168,14 +168,15 @@ export class AppConfigComponent implements OnInit {
     this.isSaving = true;
     this.cdr.markForCheck();
 
-    const updateDto: UpdateAdminMobileConfigDto = {
-      android_enabled: this.formConfig.android_enabled,
-      ios_enabled: this.formConfig.ios_enabled,
-      android_min_version: this.formConfig.android_min_version || null,
-      ios_min_version: this.formConfig.ios_min_version || null
+    // Send camelCase keys to match .NET backend expectations
+    const updateDto = {
+      androidEnabled: this.formConfig.android_enabled,
+      iosEnabled: this.formConfig.ios_enabled,
+      androidMinVersion: this.formConfig.android_min_version || null,
+      iosMinVersion: this.formConfig.ios_min_version || null
     };
 
-    this.appConfigService.updateAdminMobileConfig(updateDto).subscribe({
+    this.appConfigService.updateAdminMobileConfig(updateDto as any).subscribe({
       next: (res: any) => {
         if (res.status && res.data) {
           this.config = this.normalizeMobileConfig(res.data);
