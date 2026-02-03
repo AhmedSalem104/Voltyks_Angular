@@ -571,7 +571,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.mobileAppEnabled = response.data.mobile_app_enabled;
           this.cdr.markForCheck();
         }
-      }
+      },
+      error: () => { this.cdr.markForCheck(); }
     });
 
     // Load charging mode status
@@ -581,7 +582,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.chargingModeEnabled = response.data.charging_mode_enabled;
           this.cdr.markForCheck();
         }
-      }
+      },
+      error: () => { this.cdr.markForCheck(); }
     });
   }
 
