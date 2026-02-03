@@ -167,10 +167,12 @@ export class FeesComponent implements OnInit {
           this.toaster.success('تم تحديث الرسوم بنجاح');
           this.loadFees();
         }
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error(err.message || 'فشل تحديث الرسوم');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -187,10 +189,12 @@ export class FeesComponent implements OnInit {
           this.selectedUser = null;
           this.loadFees();
         }
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error(err.message || 'فشل تحويل الرسوم');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }

@@ -359,6 +359,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
     this.updatingReportIds.add(report.id);
     this.isUpdatingStatus = true;
+    this.cdr.markForCheck();
     const newStatus = !report.isResolved;
 
     this.reportsService.updateReportStatus(report.id, newStatus).subscribe({

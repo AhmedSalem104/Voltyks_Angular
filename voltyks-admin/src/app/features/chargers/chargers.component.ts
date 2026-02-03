@@ -341,10 +341,12 @@ export class ChargersComponent implements OnInit, OnDestroy {
           this.loadChargers();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل إضافة الشاحن');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -385,10 +387,12 @@ export class ChargersComponent implements OnInit, OnDestroy {
           this.loadChargers();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل تحديث الشاحن');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -415,10 +419,12 @@ export class ChargersComponent implements OnInit, OnDestroy {
           this.loadChargers();
         }
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.toaster.error(error.message || 'فشل حذف الشاحن');
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
