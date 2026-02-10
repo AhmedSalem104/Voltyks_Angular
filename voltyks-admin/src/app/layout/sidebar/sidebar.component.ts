@@ -268,7 +268,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       icon: 'people',
       expanded: false,
       items: [
-        { label: 'المستخدمون', icon: 'people', route: '/users' }
+        { label: 'المستخدمون', icon: 'people', route: '/users' },
+        { label: 'إنشاء أدمن', icon: 'admin_panel_settings', route: '/create-admin' }
       ]
     },
     {

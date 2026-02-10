@@ -1,0 +1,218 @@
+<div class="create-admin-container">
+  <div class="page-header">
+    <h2>إنشاء حساب أدمن جديد</h2>
+    <p class="page-description">إنشاء حساب مسؤول جديد عبر التحقق من OTP</p>
+  </div>
+
+  <!-- Step Indicator -->
+  <div class="steps-indicator voltyks-card">
+    <div class="step" [class.active]="step === 'send-otp'" [class.completed]="step === 'create-form' || step === 'success'">
+      <div class="step-number">
+        @if (step === 'create-form' || step === 'success') {
+          <span class="material-icons">check</span>
+        } @else {
+          1
+        }
+      </div>
+      <span class="step-label">إرسال كود التحقق</span>
+    </div>
+    <div class="step-line" [class.active]="step === 'create-form' || step === 'success'"></div>
+    <div class="step" [class.active]="step === 'create-form'" [class.completed]="step === 'success'">
+      <div class="step-number">
+        @if (step === 'success') {
+          <span class="material-icons">check</span>
+        } @else {
+          2
+        }
+      </div>
+      <span class="step-label">بيانات الأدمن</span>
+    </div>
+    <div class="step-line" [class.active]="step === 'success'"></div>
+    <div class="step" [class.active]="step === 'success'">
+      <div class="step-number">3</div>
+      <span class="step-label">تم الإنشاء</span>
+    </div>
+  </div>
+
+  <!-- Step 1: Send OTP -->
+  @if (step === 'send-otp') {
+    <div class="voltyks-card otp-card">
+      <div class="otp-card-content">
+        <span class="material-icons otp-icon">verified_user</span>
+        <h3>التحقق من الهوية</h3>
+        <p>سيتم إرسال كود تحقق OTP إلى رقم هاتفك المسجل للتأكد من هويتك قبل إنشاء حساب أدمن جديد.</p>
+        <button class="voltyks-btn btn-primary send-otp-btn" (click)="sendOtp()" [disabled]="isLoading">
+          <span class="material-icons">send</span>
+          إرسال كود التحقق
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Step 2: Create Form -->
+  @if (step === 'create-form') {
+    <div class="voltyks-card form-card">
+      <!-- OTP Timer Bar -->
+      <div class="otp-timer-bar">
+        <div class="timer-info">
+          <span class="material-icons">timer</span>
+          @if (otpExpirySeconds > 0) {
+            <span>صلاحية الكود: <strong>{{ formatTime(otpExpirySeconds) }}</strong></span>
+          } @else {
+            <span class="expired">انتهت صلاحية الكود</span>
+          }
+        </div>
+        <div class="phone-hint">
+          <span class="material-icons">phone_android</span>
+          <span>تم الإرسال إلى: <strong>{{ phoneHint }}</strong></span>
+        </div>
+        <button
+          class="voltyks-btn btn-secondary resend-btn"
+          (click)="resendOtp()"
+          [disabled]="resendCooldown > 0 || isLoading"
+        >
+          <span class="material-icons">refresh</span>
+          @if (resendCooldown > 0) {
+            إعادة الإرسال ({{ resendCooldown }}ث)
+          } @else {
+            إعادة الإرسال
+          }
+        </button>
+      </div>
+
+      <!-- Form -->
+      <form class="admin-form">
+        <!-- OTP Code -->
+        <div class="form-group">
+          <label>كود التحقق <span class="required">*</span></label>
+          <input
+            type="text"
+            class="voltyks-input otp-input"
+            [(ngModel)]="createDto.otpCode"
+            name="otpCode"
+            placeholder="0000"
+            maxlength="4"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+          />
+          <span class="form-hint">أدخل الكود المكون من 4 أرقام</span>
+        </div>
+
+        <!-- Full Name -->
+        <div class="form-group">
+          <label>الاسم الكامل <span class="required">*</span></label>
+          <input
+            type="text"
+            class="voltyks-input"
+            [(ngModel)]="createDto.fullName"
+            name="fullName"
+            placeholder="مثال: أحمد محمد"
+          />
+        </div>
+
+        <!-- Email -->
+        <div class="form-group" [class.has-error]="emailError">
+          <label>البريد الإلكتروني <span class="required">*</span></label>
+          <input
+            type="email"
+            class="voltyks-input"
+            [(ngModel)]="createDto.email"
+            name="email"
+            placeholder="example@domain.com"
+            dir="ltr"
+          />
+          @if (emailError) {
+            <span class="field-error">{{ emailError }}</span>
+          }
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group" [class.has-error]="phoneError">
+          <label>رقم الهاتف <span class="required">*</span></label>
+          <input
+            type="tel"
+            class="voltyks-input"
+            [(ngModel)]="createDto.phoneNumber"
+            name="phoneNumber"
+            placeholder="مثال: 01012345678"
+            dir="ltr"
+          />
+          @if (phoneError) {
+            <span class="field-error">{{ phoneError }}</span>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label>كلمة المرور <span class="required">*</span></label>
+          <input
+            type="password"
+            class="voltyks-input"
+            [(ngModel)]="createDto.password"
+            name="password"
+            placeholder="6 أحرف على الأقل"
+          />
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button class="voltyks-btn btn-secondary" (click)="resetToStart()" [disabled]="isLoading">
+            <span class="material-icons">arrow_back</span>
+            رجوع
+          </button>
+          <button
+            class="voltyks-btn btn-primary"
+            (click)="submitCreateAdmin()"
+            [disabled]="isLoading || otpExpirySeconds <= 0"
+          >
+            <span class="material-icons">person_add</span>
+            إنشاء الأدمن
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- Step 3: Success -->
+  @if (step === 'success' && createdAdmin) {
+    <div class="voltyks-card success-card">
+      <div class="success-content">
+        <span class="material-icons success-icon">check_circle</span>
+        <h3>تم إنشاء الأدمن بنجاح!</h3>
+
+        <div class="admin-details">
+          <div class="detail-row">
+            <span class="material-icons">person</span>
+            <div>
+              <span class="detail-label">الاسم</span>
+              <span class="detail-value">{{ createdAdmin.fullName }}</span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <span class="material-icons">email</span>
+            <div>
+              <span class="detail-label">البريد الإلكتروني</span>
+              <span class="detail-value">{{ createdAdmin.email }}</span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <span class="material-icons">phone</span>
+            <div>
+              <span class="detail-label">رقم الهاتف</span>
+              <span class="detail-value">{{ createdAdmin.phoneNumber }}</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="voltyks-btn btn-primary" (click)="resetToStart()">
+          <span class="material-icons">add</span>
+          إنشاء أدمن آخر
+        </button>
+      </div>
+    </div>
+  }
+</div>
+
+@if (isLoading) {
+  <app-loading-overlay></app-loading-overlay>
+}

@@ -68,3 +68,17 @@ export interface AddBalanceRequestDto {
   amount: number;
   notes: string | null;
 }
+
+export interface CreateAdminDto {
+  otpCode: string;
+  phoneNumber: string;
+  password: string;
+  fullName: string;
+  email: string;
+}
+
+export interface CreatedAdminDto {
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+}

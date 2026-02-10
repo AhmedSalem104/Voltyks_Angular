@@ -99,6 +99,10 @@ export const routes: Routes = [
       {
         path: 'notifications',
         loadChildren: () => import('./features/notifications/notifications.routes').then(m => m.NOTIFICATIONS_ROUTES)
+      },
+      {
+        path: 'create-admin',
+        loadComponent: () => import('./features/create-admin/create-admin.component').then(m => m.CreateAdminComponent)
       }
     ]
   },

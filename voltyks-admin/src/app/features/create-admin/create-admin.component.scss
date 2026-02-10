@@ -1,0 +1,488 @@
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.create-admin-container {
+  max-width: 700px;
+  margin: 0 auto;
+  animation: fadeIn 0.3s ease-out;
+
+  .page-header {
+    margin-bottom: 32px;
+    animation: slideDown 0.4s ease-out;
+
+    h2 {
+      color: white;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff 0%, #00C853 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-description {
+      color: #B0B0B0;
+      font-size: 16px;
+    }
+  }
+
+  // ========== Steps Indicator ==========
+  .steps-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 24px !important;
+    margin-bottom: 24px;
+    animation: scaleIn 0.4s ease-out 0.1s both;
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .step-number {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 600;
+        background: #2A2A2A;
+        color: #B0B0B0;
+        border: 2px solid #444;
+        transition: all 0.3s ease;
+
+        .material-icons {
+          font-size: 18px;
+        }
+      }
+
+      .step-label {
+        font-size: 13px;
+        color: #B0B0B0;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      &.active {
+        .step-number {
+          background: #00C853;
+          color: white;
+          border-color: #00C853;
+          box-shadow: 0 0 12px rgba(0, 200, 83, 0.4);
+        }
+        .step-label {
+          color: #00C853;
+        }
+      }
+
+      &.completed {
+        .step-number {
+          background: rgba(0, 200, 83, 0.2);
+          color: #00C853;
+          border-color: #00C853;
+        }
+        .step-label {
+          color: #00C853;
+        }
+      }
+    }
+
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: #333;
+      margin: 0 12px;
+      max-width: 80px;
+      transition: background 0.3s ease;
+
+      &.active {
+        background: #00C853;
+      }
+    }
+  }
+
+  // ========== OTP Card (Step 1) ==========
+  .otp-card {
+    animation: slideUp 0.4s ease-out 0.2s both;
+
+    .otp-card-content {
+      text-align: center;
+      padding: 40px 24px;
+
+      .otp-icon {
+        font-size: 72px;
+        color: #00C853;
+        margin-bottom: 20px;
+        display: block;
+      }
+
+      h3 {
+        color: white;
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      p {
+        color: #B0B0B0;
+        font-size: 15px;
+        line-height: 1.6;
+        max-width: 450px;
+        margin: 0 auto 28px;
+      }
+
+      .send-otp-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 36px;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+
+        .material-icons {
+          font-size: 20px;
+        }
+
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(0, 200, 83, 0.4);
+        }
+
+        &:active:not(:disabled) {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+
+  // ========== Form Card (Step 2) ==========
+  .form-card {
+    animation: slideUp 0.4s ease-out 0.2s both;
+
+    .otp-timer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 16px 24px;
+      background: #252525;
+      border-radius: 12px;
+      margin-bottom: 28px;
+
+      .timer-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #B0B0B0;
+        font-size: 14px;
+
+        .material-icons {
+          font-size: 20px;
+          color: #00C853;
+        }
+
+        strong {
+          color: #00C853;
+          font-family: monospace;
+          font-size: 16px;
+        }
+
+        .expired {
+          color: #F44336;
+          font-weight: 600;
+        }
+      }
+
+      .phone-hint {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #B0B0B0;
+        font-size: 13px;
+
+        .material-icons {
+          font-size: 18px;
+          color: #2196F3;
+        }
+
+        strong {
+          color: white;
+          direction: ltr;
+        }
+      }
+
+      .resend-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        font-size: 13px;
+
+        .material-icons {
+          font-size: 16px;
+        }
+      }
+    }
+
+    .admin-form {
+      padding: 0 8px;
+
+      .form-group {
+        margin-bottom: 22px;
+
+        label {
+          display: block;
+          color: #B0B0B0;
+          font-size: 14px;
+          font-weight: 500;
+          margin-bottom: 8px;
+
+          .required {
+            color: #F44336;
+            margin-right: 4px;
+          }
+        }
+
+        .voltyks-input {
+          transition: all 0.3s ease;
+
+          &:focus {
+            border-color: #00C853;
+            box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.1);
+            transform: translateY(-2px);
+          }
+        }
+
+        .otp-input {
+          text-align: center;
+          font-size: 28px;
+          font-weight: 700;
+          letter-spacing: 16px;
+          padding-left: 16px;
+          max-width: 200px;
+          font-family: monospace;
+        }
+
+        .form-hint {
+          display: block;
+          color: #666;
+          font-size: 12px;
+          margin-top: 6px;
+        }
+
+        &.has-error {
+          .voltyks-input {
+            border-color: #F44336 !important;
+            box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.15) !important;
+          }
+        }
+
+        .field-error {
+          display: block;
+          color: #F44336;
+          font-size: 13px;
+          margin-top: 6px;
+          font-weight: 500;
+        }
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid #333;
+
+        button {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 28px;
+          font-size: 15px;
+          font-weight: 500;
+          transition: all 0.3s ease;
+
+          .material-icons {
+            font-size: 18px;
+          }
+
+          &:hover:not(:disabled) {
+            transform: translateY(-2px);
+          }
+
+          &:active:not(:disabled) {
+            transform: translateY(0);
+          }
+
+          &.btn-primary:hover:not(:disabled) {
+            box-shadow: 0 4px 16px rgba(0, 200, 83, 0.4);
+          }
+        }
+      }
+    }
+  }
+
+  // ========== Success Card (Step 3) ==========
+  .success-card {
+    animation: slideUp 0.4s ease-out 0.2s both;
+
+    .success-content {
+      text-align: center;
+      padding: 40px 24px;
+
+      .success-icon {
+        font-size: 80px;
+        color: #00C853;
+        margin-bottom: 16px;
+        display: block;
+        animation: pulse 1s ease-in-out;
+      }
+
+      h3 {
+        color: white;
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 28px;
+      }
+
+      .admin-details {
+        background: #252525;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 28px;
+        text-align: right;
+
+        .detail-row {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          padding: 14px 0;
+
+          &:not(:last-child) {
+            border-bottom: 1px solid #333;
+          }
+
+          .material-icons {
+            font-size: 22px;
+            color: #00C853;
+            flex-shrink: 0;
+          }
+
+          div {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .detail-label {
+              color: #888;
+              font-size: 12px;
+            }
+
+            .detail-value {
+              color: white;
+              font-size: 15px;
+              font-weight: 500;
+            }
+          }
+        }
+      }
+
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 28px;
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+
+        .material-icons {
+          font-size: 18px;
+        }
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 16px rgba(0, 200, 83, 0.4);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+}
+
+// ========== Responsive ==========
+@media (max-width: 768px) {
+  .create-admin-container {
+    .page-header h2 {
+      font-size: 24px;
+    }
+
+    .steps-indicator {
+      padding: 16px 12px !important;
+
+      .step-label {
+        display: none;
+      }
+
+      .step-line {
+        max-width: 40px;
+      }
+    }
+
+    .form-card {
+      .otp-timer-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .admin-form .form-actions {
+        flex-direction: column-reverse;
+
+        button {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .create-admin-container {
+    .page-header h2 {
+      font-size: 20px;
+    }
+  }
+}

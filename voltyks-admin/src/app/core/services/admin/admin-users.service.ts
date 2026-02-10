@@ -9,7 +9,9 @@ import {
   AdminWalletDto,
   AdminUserVehicleDto,
   AdminUserReportDto,
-  AddBalanceRequestDto
+  AddBalanceRequestDto,
+  CreateAdminDto,
+  CreatedAdminDto
 } from '../../models';
 
 export interface UserFilterParams {
@@ -115,5 +117,21 @@ export class AdminUsersService {
    */
   restoreUser(id: string): Observable<ApiResponse<AdminUserDto>> {
     return this.http.patch<ApiResponse<AdminUserDto>>(`${this.baseUrl}/${id}/restore`, {});
+  }
+
+  /**
+   * Send OTP to current admin's phone for creating a new admin
+   * POST /api/admin/users/create-admin/send-otp
+   */
+  sendCreateAdminOtp(): Observable<ApiResponse<{ phoneHint: string }>> {
+    return this.http.post<ApiResponse<{ phoneHint: string }>>(`${this.baseUrl}/create-admin/send-otp`, {});
+  }
+
+  /**
+   * Create a new admin account (requires OTP verification)
+   * POST /api/admin/users/create-admin
+   */
+  createAdmin(dto: CreateAdminDto): Observable<ApiResponse<CreatedAdminDto>> {
+    return this.http.post<ApiResponse<CreatedAdminDto>>(`${this.baseUrl}/create-admin`, dto);
   }
 }
