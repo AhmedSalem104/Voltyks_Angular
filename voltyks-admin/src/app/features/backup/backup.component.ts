@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { AdminBackupService } from '../../core/services/admin/admin-backup.service';
 import { BackupResultDto, BackupFileDto } from '../../core/models/backup.model';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
 
 @Component({
   selector: 'app-backup',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingOverlayComponent],
+  imports: [CommonModule, FormsModule, LoadingOverlayComponent, PaginationComponent],
   templateUrl: './backup.component.html',
   styleUrls: ['./backup.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -25,6 +26,10 @@ export class BackupComponent implements OnInit {
   dateFrom = '';
   dateTo = '';
   activePreset: string | null = 'today';
+
+  // Pagination
+  currentPage = 1;
+  pageSize = 10;
 
   constructor(
     private backupService: AdminBackupService,
@@ -127,6 +132,7 @@ export class BackupComponent implements OnInit {
 
   setPreset(preset: string): void {
     this.activePreset = preset;
+    this.currentPage = 1;
     const now = new Date();
     const fmt = (d: Date) => d.toISOString().split('T')[0];
     this.dateTo = fmt(now);
@@ -168,6 +174,23 @@ export class BackupComponent implements OnInit {
 
   onDateChange(): void {
     this.activePreset = null;
+    this.currentPage = 1;
+    this.cdr.markForCheck();
+  }
+
+  get paginatedBackups(): BackupFileDto[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredBackups.slice(start, start + this.pageSize);
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.cdr.markForCheck();
+  }
+
+  onPageSizeChange(size: number): void {
+    this.pageSize = size;
+    this.currentPage = 1;
     this.cdr.markForCheck();
   }
 

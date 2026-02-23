@@ -113,9 +113,9 @@
             </tr>
           </thead>
           <tbody>
-            @for (backup of filteredBackups; track backup.fileName; let i = $index) {
+            @for (backup of paginatedBackups; track backup.fileName; let i = $index) {
               <tr>
-                <td>{{ i + 1 }}</td>
+                <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
                 <td class="file-name">
                   <span class="material-icons file-icon">description</span>
                   {{ backup.fileName }}
@@ -141,6 +141,14 @@
           </tbody>
         </table>
       </div>
+
+      <app-pagination
+        [totalItems]="filteredBackups.length"
+        [pageSize]="pageSize"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      ></app-pagination>
     } @else if (!isLoading && hasFilter) {
       <div class="empty-state">
         <span class="material-icons empty-icon">event_busy</span>
