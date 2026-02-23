@@ -38,12 +38,12 @@
         <div class="result-item">
           <span class="material-icons">data_usage</span>
           <span class="result-label">الحجم</span>
-          <span class="result-value">{{ formatSize(lastResult.fileSizeKb) }}</span>
+          <span class="result-value">{{ formatSize(lastResult.sizeMb) }}</span>
         </div>
         <div class="result-item">
           <span class="material-icons">table_chart</span>
           <span class="result-label">الجداول</span>
-          <span class="result-value">{{ lastResult.tablesCount }}</span>
+          <span class="result-value">{{ lastResult.tablesExported }}</span>
         </div>
         <div class="result-item">
           <span class="material-icons">storage</span>
@@ -53,7 +53,7 @@
         <div class="result-item">
           <span class="material-icons">timer</span>
           <span class="result-label">المدة</span>
-          <span class="result-value">{{ formatDuration(lastResult.durationMs) }}</span>
+          <span class="result-value">{{ formatDuration(lastResult.durationSeconds) }}</span>
         </div>
       </div>
     </div>
@@ -86,7 +86,7 @@
                   <span class="material-icons file-icon">description</span>
                   {{ backup.fileName }}
                 </td>
-                <td>{{ formatSize(backup.fileSizeKb) }}</td>
+                <td>{{ formatSize(backup.sizeMb) }}</td>
                 <td>{{ formatDate(backup.createdAt) }}</td>
                 <td>
                   <button

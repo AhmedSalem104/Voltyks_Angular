@@ -35,7 +35,7 @@ export class BackupComponent implements OnInit {
     this.backupService.listBackups().subscribe({
       next: (response) => {
         if (response.status && response.data) {
-          this.backups = response.data;
+          this.backups = response.data.files || [];
         }
         this.isLoading = false;
         this.cdr.markForCheck();
@@ -86,7 +86,7 @@ export class BackupComponent implements OnInit {
         this.downloadingFile = null;
         this.cdr.markForCheck();
       },
-      error: (error) => {
+      error: () => {
         this.toaster.error('فشل تحميل الملف');
         this.downloadingFile = null;
         this.cdr.markForCheck();
@@ -94,11 +94,12 @@ export class BackupComponent implements OnInit {
     });
   }
 
-  formatSize(kb: number): string {
-    if (kb >= 1024) {
-      return (kb / 1024).toFixed(2) + ' MB';
+  formatSize(mb: number): string {
+    if (mb == null) return '-';
+    if (mb >= 1024) {
+      return (mb / 1024).toFixed(2) + ' GB';
     }
-    return kb.toFixed(1) + ' KB';
+    return mb.toFixed(2) + ' MB';
   }
 
   formatDate(dateString: string): string {
@@ -113,8 +114,9 @@ export class BackupComponent implements OnInit {
     });
   }
 
-  formatDuration(ms: number): string {
-    if (ms < 1000) return ms + 'ms';
-    return (ms / 1000).toFixed(1) + 's';
+  formatDuration(seconds: number): string {
+    if (seconds == null) return '-';
+    if (seconds < 1) return (seconds * 1000).toFixed(0) + 'ms';
+    return seconds.toFixed(1) + 's';
   }
 }

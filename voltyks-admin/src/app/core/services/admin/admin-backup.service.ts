@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../models';
-import { BackupResultDto, BackupFileDto } from '../../models/backup.model';
+import { BackupResultDto, BackupListDto } from '../../models/backup.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +17,8 @@ export class AdminBackupService {
     return this.http.post<ApiResponse<BackupResultDto>>(`${this.baseUrl}/trigger`, {});
   }
 
-  listBackups(): Observable<ApiResponse<BackupFileDto[]>> {
-    return this.http.get<ApiResponse<BackupFileDto[]>>(`${this.baseUrl}/list`);
+  listBackups(): Observable<ApiResponse<BackupListDto>> {
+    return this.http.get<ApiResponse<BackupListDto>>(`${this.baseUrl}/list`);
   }
 
   downloadBackup(fileName: string): Observable<Blob> {

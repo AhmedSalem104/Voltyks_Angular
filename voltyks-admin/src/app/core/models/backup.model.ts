@@ -1,13 +1,21 @@
 export interface BackupResultDto {
   fileName: string;
-  fileSizeKb: number;
-  tablesCount: number;
+  filePath: string;
+  sizeMb: number;
+  tablesExported: number;
   totalRows: number;
-  durationMs: number;
+  durationSeconds: number;
+  tableRowCounts: Record<string, number>;
 }
 
 export interface BackupFileDto {
   fileName: string;
-  fileSizeKb: number;
+  sizeMb: number;
   createdAt: string;
+}
+
+export interface BackupListDto {
+  backupDirectory: string;
+  count: number;
+  files: BackupFileDto[];
 }
