@@ -9,6 +9,10 @@ export const caseTransformInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     map(event => {
       if (event instanceof HttpResponse && event.body) {
+        // Skip transformation for Blob/ArrayBuffer responses (file downloads)
+        if (event.body instanceof Blob || event.body instanceof ArrayBuffer) {
+          return event;
+        }
         const transformedBody = transformToCamelCase(event.body);
         return event.clone({ body: transformedBody });
       }

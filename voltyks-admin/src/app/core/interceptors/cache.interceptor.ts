@@ -66,6 +66,7 @@ function shouldSkipCache(url: string): boolean {
     '/unread-count',    // Notification count
     '/settings/',       // Admin settings (charging mode, etc.)
     '/app-config/',     // App configuration endpoints
+    '/backup/',         // Backup downloads and listing
     'forceRefresh=true' // Explicit cache bypass
   ];
 

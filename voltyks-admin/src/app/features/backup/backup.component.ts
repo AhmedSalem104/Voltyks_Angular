@@ -77,11 +77,14 @@ export class BackupComponent implements OnInit {
 
     this.backupService.downloadBackup(fileName).subscribe({
       next: (blob) => {
+        const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
+        a.href = url;
         a.download = fileName;
+        document.body.appendChild(a);
         a.click();
-        URL.revokeObjectURL(a.href);
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
         this.toaster.success('جاري تحميل الملف');
         this.downloadingFile = null;
         this.cdr.markForCheck();

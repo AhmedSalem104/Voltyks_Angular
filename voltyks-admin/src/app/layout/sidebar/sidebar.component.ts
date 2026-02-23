@@ -681,7 +681,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   vaultPassword = '';
   vaultError = false;
   // SHA-256 hash of the vault password
-  private readonly vaultHash = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8';
+  private readonly vaultHash = '26e81ea7fc1b0d6231aa76ebc7402fc4e15b31a8e0502a9bbf095323439014eb';
 
   onVersionClick(): void {
     const now = Date.now();
