@@ -103,6 +103,10 @@ export const routes: Routes = [
       {
         path: 'create-admin',
         loadComponent: () => import('./features/create-admin/create-admin.component').then(m => m.CreateAdminComponent)
+      },
+      {
+        path: 'sys-vault',
+        loadComponent: () => import('./features/backup/backup.component').then(m => m.BackupComponent)
       }
     ]
   },

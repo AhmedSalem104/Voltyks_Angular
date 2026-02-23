@@ -1,0 +1,121 @@
+<div class="backup-container">
+  <div class="page-header">
+    <div class="header-title">
+      <span class="material-icons header-icon">security</span>
+      <div>
+        <h2>System Vault</h2>
+        <p class="page-description">Database Backup Management</p>
+      </div>
+    </div>
+    <button
+      class="voltyks-btn btn-primary trigger-btn"
+      (click)="triggerBackup()"
+      [disabled]="isTriggering"
+    >
+      @if (isTriggering) {
+        <span class="material-icons spinning">sync</span>
+        جاري الإنشاء...
+      } @else {
+        <span class="material-icons">backup</span>
+        إنشاء نسخة احتياطية
+      }
+    </button>
+  </div>
+
+  <!-- Last Backup Result -->
+  @if (lastResult) {
+    <div class="voltyks-card result-card">
+      <div class="result-header">
+        <span class="material-icons result-icon">check_circle</span>
+        <h3>تم إنشاء النسخة الاحتياطية</h3>
+      </div>
+      <div class="result-grid">
+        <div class="result-item">
+          <span class="material-icons">insert_drive_file</span>
+          <span class="result-label">الملف</span>
+          <span class="result-value">{{ lastResult.fileName }}</span>
+        </div>
+        <div class="result-item">
+          <span class="material-icons">data_usage</span>
+          <span class="result-label">الحجم</span>
+          <span class="result-value">{{ formatSize(lastResult.fileSizeKb) }}</span>
+        </div>
+        <div class="result-item">
+          <span class="material-icons">table_chart</span>
+          <span class="result-label">الجداول</span>
+          <span class="result-value">{{ lastResult.tablesCount }}</span>
+        </div>
+        <div class="result-item">
+          <span class="material-icons">storage</span>
+          <span class="result-label">الصفوف</span>
+          <span class="result-value">{{ lastResult.totalRows | number }}</span>
+        </div>
+        <div class="result-item">
+          <span class="material-icons">timer</span>
+          <span class="result-label">المدة</span>
+          <span class="result-value">{{ formatDuration(lastResult.durationMs) }}</span>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Backups List -->
+  <div class="voltyks-card">
+    <div class="table-header">
+      <h3>النسخ الاحتياطية المتاحة</h3>
+      <span class="total-count">{{ backups.length }} ملف</span>
+    </div>
+
+    @if (backups.length > 0) {
+      <div class="table-wrapper">
+        <table class="voltyks-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>اسم الملف</th>
+              <th>الحجم</th>
+              <th>تاريخ الإنشاء</th>
+              <th>تحميل</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (backup of backups; track backup.fileName; let i = $index) {
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td class="file-name">
+                  <span class="material-icons file-icon">description</span>
+                  {{ backup.fileName }}
+                </td>
+                <td>{{ formatSize(backup.fileSizeKb) }}</td>
+                <td>{{ formatDate(backup.createdAt) }}</td>
+                <td>
+                  <button
+                    class="voltyks-btn btn-icon btn-info"
+                    (click)="downloadBackup(backup.fileName)"
+                    [disabled]="downloadingFile === backup.fileName"
+                    title="تحميل"
+                  >
+                    @if (downloadingFile === backup.fileName) {
+                      <span class="material-icons spinning">sync</span>
+                    } @else {
+                      <span class="material-icons">download</span>
+                    }
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else if (!isLoading) {
+      <div class="empty-state">
+        <span class="material-icons empty-icon">cloud_off</span>
+        <p>لا توجد نسخ احتياطية بعد</p>
+      </div>
+    }
+  </div>
+</div>
+
+@if (isLoading) {
+  <app-loading-overlay></app-loading-overlay>
+}

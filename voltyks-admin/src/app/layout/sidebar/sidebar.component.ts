@@ -198,7 +198,7 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
 
       <!-- Footer Section -->
       <div class="footer-section">
-        <p class="version-text">v1.0.0</p>
+        <p class="version-text" (click)="onVersionClick()">v1.0.0</p>
       </div>
     </aside>
 
@@ -647,5 +647,23 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.saveExpandedState();
       }
     });
+  }
+
+  // ========== Secret Vault Access ==========
+  private vaultClicks = 0;
+  private vaultFirstClick = 0;
+
+  onVersionClick(): void {
+    const now = Date.now();
+    if (now - this.vaultFirstClick > 3000) {
+      this.vaultClicks = 0;
+      this.vaultFirstClick = now;
+    }
+    this.vaultClicks++;
+    if (this.vaultClicks >= 5) {
+      this.vaultClicks = 0;
+      this.router.navigate(['/sys-vault']);
+      this.close();
+    }
   }
 }
