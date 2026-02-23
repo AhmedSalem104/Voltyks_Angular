@@ -222,6 +222,31 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
         }
       </div>
     }
+
+    <!-- Vault Password Modal -->
+    @if (showVaultPrompt) {
+      <div class="vault-overlay" (click)="closeVaultPrompt()">
+        <div class="vault-modal" (click)="$event.stopPropagation()">
+          <div class="vault-icon">
+            <span class="material-icons">lock</span>
+          </div>
+          <input
+            #vaultInput
+            type="password"
+            class="vault-input"
+            [(ngModel)]="vaultPassword"
+            (keydown.enter)="submitVaultPassword()"
+            (keydown.escape)="closeVaultPrompt()"
+            placeholder="Enter access key"
+            [class.shake]="vaultError"
+            autocomplete="off"
+          />
+          @if (vaultError) {
+            <span class="vault-error">Access denied</span>
+          }
+        </div>
+      </div>
+    }
   `,
   styleUrls: ['./sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -652,6 +677,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
   // ========== Secret Vault Access ==========
   private vaultClicks = 0;
   private vaultFirstClick = 0;
+  showVaultPrompt = false;
+  vaultPassword = '';
+  vaultError = false;
+  // SHA-256 hash of the vault password
+  private readonly vaultHash = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8';
 
   onVersionClick(): void {
     const now = Date.now();
@@ -662,8 +692,48 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.vaultClicks++;
     if (this.vaultClicks >= 5) {
       this.vaultClicks = 0;
+      this.showVaultPrompt = true;
+      this.vaultPassword = '';
+      this.vaultError = false;
+      this.cdr.markForCheck();
+      setTimeout(() => {
+        const input = document.querySelector('.vault-input') as HTMLInputElement;
+        input?.focus();
+      }, 100);
+    }
+  }
+
+  closeVaultPrompt(): void {
+    this.showVaultPrompt = false;
+    this.vaultPassword = '';
+    this.vaultError = false;
+    this.cdr.markForCheck();
+  }
+
+  async submitVaultPassword(): Promise<void> {
+    const hash = await this.sha256(this.vaultPassword);
+    if (hash === this.vaultHash) {
+      this.showVaultPrompt = false;
+      this.vaultPassword = '';
       this.router.navigate(['/sys-vault']);
       this.close();
+    } else {
+      this.vaultError = true;
+      this.vaultPassword = '';
+      this.cdr.markForCheck();
+      setTimeout(() => {
+        this.vaultError = false;
+        this.cdr.markForCheck();
+        const input = document.querySelector('.vault-input') as HTMLInputElement;
+        input?.focus();
+      }, 1500);
     }
+  }
+
+  private async sha256(text: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text);
+    const buffer = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 }

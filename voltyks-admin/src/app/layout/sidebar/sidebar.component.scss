@@ -839,7 +839,107 @@
     padding: 4px 12px;
     background: rgba(0, 200, 83, 0.08);
     border-radius: 20px;
+    cursor: default;
+    user-select: none;
   }
+}
+
+// ========================================
+// Vault Password Modal
+// ========================================
+.vault-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: vaultFadeIn 0.3s ease-out;
+
+  .vault-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    animation: vaultScaleIn 0.3s ease-out;
+
+    .vault-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(255, 109, 0, 0.15);
+      border: 2px solid rgba(255, 109, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .material-icons {
+        font-size: 32px;
+        color: #FF6D00;
+      }
+    }
+
+    .vault-input {
+      width: 260px;
+      padding: 14px 20px;
+      background: #1a1a1a;
+      border: 2px solid #333;
+      border-radius: 12px;
+      color: white;
+      font-size: 16px;
+      text-align: center;
+      letter-spacing: 4px;
+      outline: none;
+      transition: all 0.3s ease;
+      font-family: monospace;
+
+      &::placeholder {
+        color: #555;
+        letter-spacing: 1px;
+        font-family: 'Cairo', sans-serif;
+      }
+
+      &:focus {
+        border-color: #FF6D00;
+        box-shadow: 0 0 0 4px rgba(255, 109, 0, 0.15);
+      }
+
+      &.shake {
+        animation: vaultShake 0.5s ease-in-out;
+        border-color: #F44336;
+        box-shadow: 0 0 0 4px rgba(244, 67, 54, 0.2);
+      }
+    }
+
+    .vault-error {
+      color: #F44336;
+      font-size: 13px;
+      font-weight: 600;
+      animation: vaultFadeIn 0.2s ease-out;
+    }
+  }
+}
+
+@keyframes vaultFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes vaultScaleIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes vaultShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-12px); }
+  40% { transform: translateX(12px); }
+  60% { transform: translateX(-8px); }
+  80% { transform: translateX(8px); }
 }
 
 // ========================================
