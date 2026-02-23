@@ -67,40 +67,32 @@
     </div>
 
     <!-- Date Filter -->
-    <div class="filter-section">
-      <div class="filter-presets">
-        <button class="preset-btn" [class.active]="activePreset === 'today'" (click)="setPreset('today')">
-          <span class="material-icons">today</span>
-          اليوم
-        </button>
-        <button class="preset-btn" [class.active]="activePreset === 'week'" (click)="setPreset('week')">
-          <span class="material-icons">date_range</span>
-          آخر أسبوع
-        </button>
-        <button class="preset-btn" [class.active]="activePreset === 'month'" (click)="setPreset('month')">
-          <span class="material-icons">calendar_month</span>
-          آخر شهر
-        </button>
-        <button class="preset-btn" [class.active]="activePreset === 'year'" (click)="setPreset('year')">
-          <span class="material-icons">calendar_today</span>
-          آخر سنة
-        </button>
-      </div>
-      <div class="filter-dates">
-        <div class="date-field">
-          <label>من</label>
-          <input type="date" [(ngModel)]="dateFrom" (ngModelChange)="onDateChange()" />
+    <div class="filter-bar">
+      <div class="filter-row">
+        <div class="filter-label">
+          <span class="material-icons">filter_list</span>
+          فلترة
         </div>
-        <span class="date-separator">
-          <span class="material-icons">arrow_back</span>
-        </span>
-        <div class="date-field">
-          <label>إلى</label>
-          <input type="date" [(ngModel)]="dateTo" (ngModelChange)="onDateChange()" />
+        <div class="preset-group">
+          <button class="preset-chip" [class.active]="activePreset === 'today'" (click)="setPreset('today')">اليوم</button>
+          <button class="preset-chip" [class.active]="activePreset === 'week'" (click)="setPreset('week')">أسبوع</button>
+          <button class="preset-chip" [class.active]="activePreset === 'month'" (click)="setPreset('month')">شهر</button>
+          <button class="preset-chip" [class.active]="activePreset === 'year'" (click)="setPreset('year')">سنة</button>
+        </div>
+        <div class="date-range">
+          <div class="date-input-wrap">
+            <span class="material-icons input-icon">event</span>
+            <input type="date" [(ngModel)]="dateFrom" (ngModelChange)="onDateChange()" />
+          </div>
+          <span class="range-dash">—</span>
+          <div class="date-input-wrap">
+            <span class="material-icons input-icon">event</span>
+            <input type="date" [(ngModel)]="dateTo" (ngModelChange)="onDateChange()" />
+          </div>
         </div>
         @if (hasFilter) {
-          <button class="clear-filter-btn" (click)="clearFilter()" title="مسح الفلتر">
-            <span class="material-icons">filter_alt_off</span>
+          <button class="clear-btn" (click)="clearFilter()" title="مسح الفلتر">
+            <span class="material-icons">close</span>
           </button>
         }
       </div>
