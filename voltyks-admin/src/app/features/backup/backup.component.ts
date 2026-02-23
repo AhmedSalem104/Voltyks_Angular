@@ -24,7 +24,7 @@ export class BackupComponent implements OnInit {
   // Date filter
   dateFrom = '';
   dateTo = '';
-  activePreset: string | null = null;
+  activePreset: string | null = 'today';
 
   constructor(
     private backupService: AdminBackupService,
@@ -33,7 +33,15 @@ export class BackupComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.setToday();
     this.loadBackups();
+  }
+
+  private setToday(): void {
+    const today = new Date().toISOString().split('T')[0];
+    this.dateFrom = today;
+    this.dateTo = today;
+    this.activePreset = 'today';
   }
 
   loadBackups(): void {
@@ -145,14 +153,16 @@ export class BackupComponent implements OnInit {
         this.dateFrom = fmt(d);
         break;
       }
+      case 'all':
+        this.dateFrom = '';
+        this.dateTo = '';
+        break;
     }
     this.cdr.markForCheck();
   }
 
   clearFilter(): void {
-    this.dateFrom = '';
-    this.dateTo = '';
-    this.activePreset = null;
+    this.setToday();
     this.cdr.markForCheck();
   }
 
@@ -162,7 +172,7 @@ export class BackupComponent implements OnInit {
   }
 
   get hasFilter(): boolean {
-    return !!this.dateFrom || !!this.dateTo;
+    return this.activePreset !== 'all' && (!!this.dateFrom || !!this.dateTo);
   }
 
   formatSize(mb: number): string {

@@ -68,31 +68,33 @@
 
     <!-- Date Filter -->
     <div class="filter-bar">
-      <div class="filter-row">
-        <div class="filter-label">
-          <span class="material-icons">filter_list</span>
-          فلترة
+      <div class="filter-top">
+        <div class="filter-icon-label">
+          <span class="material-icons">tune</span>
         </div>
         <div class="preset-group">
           <button class="preset-chip" [class.active]="activePreset === 'today'" (click)="setPreset('today')">اليوم</button>
           <button class="preset-chip" [class.active]="activePreset === 'week'" (click)="setPreset('week')">أسبوع</button>
           <button class="preset-chip" [class.active]="activePreset === 'month'" (click)="setPreset('month')">شهر</button>
           <button class="preset-chip" [class.active]="activePreset === 'year'" (click)="setPreset('year')">سنة</button>
+          <button class="preset-chip" [class.active]="activePreset === 'all'" (click)="setPreset('all')">الكل</button>
         </div>
         <div class="date-range">
-          <div class="date-input-wrap">
-            <span class="material-icons input-icon">event</span>
+          <div class="date-group">
+            <span class="date-label">من</span>
             <input type="date" [(ngModel)]="dateFrom" (ngModelChange)="onDateChange()" />
           </div>
-          <span class="range-dash">—</span>
-          <div class="date-input-wrap">
-            <span class="material-icons input-icon">event</span>
+          <span class="range-arrow">
+            <span class="material-icons">east</span>
+          </span>
+          <div class="date-group">
+            <span class="date-label">إلى</span>
             <input type="date" [(ngModel)]="dateTo" (ngModelChange)="onDateChange()" />
           </div>
         </div>
-        @if (hasFilter) {
-          <button class="clear-btn" (click)="clearFilter()" title="مسح الفلتر">
-            <span class="material-icons">close</span>
+        @if (activePreset !== 'today') {
+          <button class="reset-btn" (click)="clearFilter()" title="إعادة تعيين">
+            <span class="material-icons">restart_alt</span>
           </button>
         }
       </div>
