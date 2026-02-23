@@ -63,10 +63,50 @@
   <div class="voltyks-card">
     <div class="table-header">
       <h3>النسخ الاحتياطية المتاحة</h3>
-      <span class="total-count">{{ backups.length }} ملف</span>
+      <span class="total-count">{{ filteredBackups.length }} ملف</span>
     </div>
 
-    @if (backups.length > 0) {
+    <!-- Date Filter -->
+    <div class="filter-section">
+      <div class="filter-presets">
+        <button class="preset-btn" [class.active]="activePreset === 'today'" (click)="setPreset('today')">
+          <span class="material-icons">today</span>
+          اليوم
+        </button>
+        <button class="preset-btn" [class.active]="activePreset === 'week'" (click)="setPreset('week')">
+          <span class="material-icons">date_range</span>
+          آخر أسبوع
+        </button>
+        <button class="preset-btn" [class.active]="activePreset === 'month'" (click)="setPreset('month')">
+          <span class="material-icons">calendar_month</span>
+          آخر شهر
+        </button>
+        <button class="preset-btn" [class.active]="activePreset === 'year'" (click)="setPreset('year')">
+          <span class="material-icons">calendar_today</span>
+          آخر سنة
+        </button>
+      </div>
+      <div class="filter-dates">
+        <div class="date-field">
+          <label>من</label>
+          <input type="date" [(ngModel)]="dateFrom" (ngModelChange)="onDateChange()" />
+        </div>
+        <span class="date-separator">
+          <span class="material-icons">arrow_back</span>
+        </span>
+        <div class="date-field">
+          <label>إلى</label>
+          <input type="date" [(ngModel)]="dateTo" (ngModelChange)="onDateChange()" />
+        </div>
+        @if (hasFilter) {
+          <button class="clear-filter-btn" (click)="clearFilter()" title="مسح الفلتر">
+            <span class="material-icons">filter_alt_off</span>
+          </button>
+        }
+      </div>
+    </div>
+
+    @if (filteredBackups.length > 0) {
       <div class="table-wrapper">
         <table class="voltyks-table">
           <thead>
@@ -79,7 +119,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (backup of backups; track backup.fileName; let i = $index) {
+            @for (backup of filteredBackups; track backup.fileName; let i = $index) {
               <tr>
                 <td>{{ i + 1 }}</td>
                 <td class="file-name">
@@ -106,6 +146,15 @@
             }
           </tbody>
         </table>
+      </div>
+    } @else if (!isLoading && hasFilter) {
+      <div class="empty-state">
+        <span class="material-icons empty-icon">event_busy</span>
+        <p>لا توجد نسخ احتياطية في هذه الفترة</p>
+        <button class="voltyks-btn btn-outline-orange clear-empty-btn" (click)="clearFilter()">
+          <span class="material-icons">filter_alt_off</span>
+          مسح الفلتر
+        </button>
       </div>
     } @else if (!isLoading) {
       <div class="empty-state">
