@@ -2,7 +2,7 @@
 export const environment = {
   production: true,
   // API Base URL - Direct connection to Azure backend
-  apiBaseUrl: 'https://voltyks-dqh6fzgwdndrdng7.canadacentral-01.azurewebsites.net',
+  apiBaseUrl: 'https://voltyks.runasp.net',
   // Disable SignalR in production - Vercel doesn't support WebSockets
   // Uses polling fallback instead for real-time notifications
   enableSignalR: false,
