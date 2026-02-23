@@ -281,84 +281,84 @@ export class SidebarComponent implements OnInit, OnDestroy {
     {
       id: 'main',
       label: 'الرئيسية',
-      icon: 'dashboard',
+      icon: 'space_dashboard',
       expanded: true,
       items: [
-        { label: 'لوحة التحكم', icon: 'dashboard', route: '/dashboard' }
+        { label: 'لوحة التحكم', icon: 'space_dashboard', route: '/dashboard' }
       ]
     },
     {
       id: 'users',
       label: 'إدارة المستخدمين',
-      icon: 'people',
+      icon: 'group',
       expanded: false,
       items: [
-        { label: 'المستخدمون', icon: 'people', route: '/users' },
-        { label: 'إنشاء أدمن', icon: 'admin_panel_settings', route: '/create-admin' }
+        { label: 'المستخدمون', icon: 'group', route: '/users' },
+        { label: 'إنشاء أدمن', icon: 'person_add', route: '/create-admin' }
       ]
     },
     {
       id: 'operations',
       label: 'العمليات',
-      icon: 'electric_bolt',
+      icon: 'flash_on',
       expanded: false,
       items: [
-        { label: 'عمليات الشحن', icon: 'electric_bolt', route: '/processes' },
+        { label: 'عمليات الشحن', icon: 'flash_on', route: '/processes' },
         { label: 'الشواحن', icon: 'ev_station', route: '/chargers' },
-        { label: 'المركبات', icon: 'directions_car_filled', route: '/vehicles' }
+        { label: 'المركبات', icon: 'electric_car', route: '/vehicles' }
       ]
     },
     {
       id: 'catalog',
       label: 'الكتالوج',
-      icon: 'category',
+      icon: 'auto_awesome',
       expanded: false,
       items: [
-        { label: 'العلامات التجارية', icon: 'category', route: '/brands' },
+        { label: 'العلامات التجارية', icon: 'loyalty', route: '/brands' },
         { label: 'الموديلات', icon: 'directions_car', route: '/models' }
       ]
     },
     {
       id: 'settings',
       label: 'إعدادات النظام',
-      icon: 'settings',
+      icon: 'tune',
       expanded: false,
       items: [
-        { label: 'بروتوكولات الشحن', icon: 'electrical_services', route: '/charging-protocols' },
-        { label: 'سعات الشواحن', icon: 'bolt', route: '/capacities' },
-        { label: 'الرسوم', icon: 'payments', route: '/fees' },
-        { label: 'الشروط والأحكام', icon: 'description', route: '/terms' },
-        { label: 'البروتوكول', icon: 'policy', route: '/protocol' },
-        { label: 'إعدادات التطبيق', icon: 'phone_android', route: '/app-config' }
+        { label: 'بروتوكولات الشحن', icon: 'cable', route: '/charging-protocols' },
+        { label: 'سعات الشواحن', icon: 'battery_charging_full', route: '/capacities' },
+        { label: 'الرسوم', icon: 'receipt_long', route: '/fees' },
+        { label: 'الشروط والأحكام', icon: 'gavel', route: '/terms' },
+        { label: 'البروتوكول', icon: 'verified_user', route: '/protocol' },
+        { label: 'إعدادات التطبيق', icon: 'smartphone', route: '/app-config' }
       ]
     },
     {
       id: 'analytics',
       label: 'التقارير والدعم',
-      icon: 'analytics',
+      icon: 'insights',
       expanded: false,
       items: [
-        { label: 'التقارير', icon: 'report', route: '/reports' },
-        { label: 'الشكاوى', icon: 'feedback', route: '/complaints' },
-        { label: 'أنواع الشكاوى', icon: 'category', route: '/complaint-categories' }
+        { label: 'التقارير', icon: 'assessment', route: '/reports' },
+        { label: 'الشكاوى', icon: 'support_agent', route: '/complaints' },
+        { label: 'أنواع الشكاوى', icon: 'label', route: '/complaint-categories' }
       ]
     },
     {
       id: 'store',
       label: 'التجارة الإلكترونية',
-      icon: 'storefront',
+      icon: 'shopping_bag',
       expanded: false,
       items: [
-        { label: 'المتجر', icon: 'storefront', route: '/store' }
+        { label: 'المتجر', icon: 'shopping_bag', route: '/store' }
       ]
     },
     {
       id: 'info',
       label: 'معلومات',
-      icon: 'info',
+      icon: 'info_outline',
       expanded: false,
       items: [
-        { label: 'عن Voltyks', icon: 'info', route: '/about' }
+        { label: 'عن Voltyks', icon: 'info_outline', route: '/about' }
       ]
     }
   ];
