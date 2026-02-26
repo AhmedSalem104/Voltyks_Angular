@@ -18,38 +18,142 @@
   display: flex;
   flex-direction: column;
 
-  // Collapsed state polish - SAFE: only transforms, opacity, colors (no layout changes)
+  // Desktop/Tablet only - collapsed/expanded states
+  // Mobile uses slide-in (.is-expanded) instead
+  @media (min-width: 769px) {
+
+  // ========================================
+  // Collapsed State - Icon-only centered view
+  // ========================================
   &:not(:hover):not(.is-pinned) {
-    .group-header {
-      .icon {
-        transform: translateX(-4px);
+    // Logo: center image only
+    .logo-section {
+      gap: 0;
+
+      .logo-text {
+        max-width: 0;
+        overflow: hidden;
       }
     }
 
+    // Toolbar: show only search button
+    .sidebar-toolbar {
+      gap: 0;
+
+      .toolbar-btn:not(.search-btn) {
+        max-width: 0;
+        overflow: hidden;
+        opacity: 0;
+      }
+    }
+
+    // Group headers: icon only
+    .group-header {
+      gap: 0;
+
+      .text {
+        max-width: 0;
+        overflow: hidden;
+      }
+
+      .chevron {
+        max-width: 0;
+        overflow: hidden;
+      }
+
+      &.has-active .icon {
+        box-shadow: 0 4px 16px rgba(0, 200, 83, 0.4);
+      }
+    }
+
+    // Nav links: icon only
     .nav-link {
-      .icon {
-        transform: translateX(-1px);
+      gap: 0;
+
+      .text {
+        max-width: 0;
+        overflow: hidden;
+      }
+
+      .pin-indicator {
+        max-width: 0;
+        overflow: hidden;
       }
 
       &:hover .icon {
-        transform: translateX(-1px) scale(1.08);
-        box-shadow: 0 2px 8px rgba(0, 200, 83, 0.2);
+        transform: scale(1.08);
+        box-shadow: 0 2px 8px rgba(0, 200, 83, 0.15);
       }
 
       &.active .icon {
-        transform: translateX(-1px);
+        box-shadow: 0 4px 14px rgba(0, 200, 83, 0.4);
       }
     }
 
+    // Section headers: icon only
+    .section-header {
+      gap: 0;
+
+      .section-title,
+      .section-count,
+      .clear-recent-btn {
+        max-width: 0;
+        overflow: hidden;
+      }
+    }
+
+    // Footer: hide version
+    .footer-section .version-text {
+      max-width: 0;
+      overflow: hidden;
+    }
+
+    // Group separators
     .menu-group + .menu-group {
-      border-top: 1px solid rgba(255, 255, 255, 0.03);
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
     }
   }
 
+  // ========================================
+  // Expanded State - Full sidebar view
+  // ========================================
   &:hover,
   &.is-pinned {
     width: 280px;
 
+    // Restore gaps
+    .logo-section {
+      gap: 12px;
+    }
+
+    .sidebar-toolbar {
+      gap: 8px;
+
+      .toolbar-btn:not(.search-btn) {
+        max-width: 44px;
+        overflow: visible;
+        opacity: 1;
+      }
+    }
+
+    .group-header {
+      gap: 12px;
+    }
+
+    .nav-link {
+      gap: 12px;
+
+      .pin-indicator {
+        max-width: 20px;
+        overflow: visible;
+      }
+    }
+
+    .section-header {
+      gap: 10px;
+    }
+
+    // Reveal text elements
     .logo-text,
     .text,
     .version-text,
@@ -59,29 +163,34 @@
     .clear-recent-btn {
       opacity: 1;
       transform: translateX(0);
+      max-width: 220px;
+      overflow: visible;
     }
 
     .chevron {
       opacity: 1;
       transform: translateX(0);
+      max-width: 24px;
+      overflow: visible;
 
       &.rotated {
         transform: translateX(0) rotate(180deg);
       }
     }
 
-    .group-header .icon {
-      transform: none;
+    // Restore footer
+    .footer-section .version-text {
+      max-width: 220px;
+      overflow: visible;
     }
 
-    .nav-link .icon {
-      transform: none;
-    }
-
+    // Remove separator
     .menu-group + .menu-group {
       border-top: none;
     }
   }
+
+  } // end @media (min-width: 769px)
 }
 
 // ========================================
@@ -96,6 +205,7 @@
   justify-content: center;
   gap: 12px;
   position: relative;
+  transition: gap 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
   background: linear-gradient(160deg, rgba(0, 200, 83, 0.06) 0%, transparent 50%);
 
   &::after {
@@ -206,6 +316,7 @@
   border-bottom: none;
   background: var(--bg-secondary);
   position: relative;
+  transition: gap 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
 
   &::after {
     content: '';
@@ -522,9 +633,11 @@
   .section-header {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     padding: 8px 18px;
     color: var(--text-disabled);
+    transition: gap 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
 
     .section-icon {
       width: 28px;
@@ -682,6 +795,7 @@
 .group-header {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   width: 100%;
   padding: 10px 12px;
@@ -724,7 +838,7 @@
     font-size: 20px;
     opacity: 0;
     transform: translateX(10px);
-    transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), max-width 0.3s ease;
 
     &.rotated {
       transform: translateX(10px) rotate(180deg);
@@ -804,6 +918,7 @@
 .nav-link {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   padding: 10px 12px;
   margin: 2px 8px;
@@ -814,7 +929,7 @@
   border-radius: 10px;
   position: relative;
   white-space: nowrap;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, gap 0.3s ease;
   cursor: pointer;
 
   .icon {
@@ -832,6 +947,8 @@
   }
 
   .text {
+    flex: 1;
+    min-width: 0;
     font-weight: 500;
     opacity: 0;
     transform: translateX(10px);
@@ -843,7 +960,7 @@
     color: #00C853;
     opacity: 0;
     margin-right: auto;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, max-width 0.3s ease;
 
     .sidebar-wrapper:hover &,
     .sidebar-wrapper.is-pinned & {
@@ -1273,15 +1390,29 @@
     .clear-recent-btn {
       opacity: 1;
       transform: translateX(0);
+      max-width: none;
+      overflow: visible;
     }
 
     .chevron {
       opacity: 1;
       transform: translateX(0);
+      max-width: none;
+      overflow: visible;
 
       &.rotated {
         transform: translateX(0) rotate(180deg);
       }
+    }
+
+    .nav-link .pin-indicator {
+      max-width: none;
+      overflow: visible;
+    }
+
+    .footer-section .version-text {
+      max-width: none;
+      overflow: visible;
     }
   }
 
