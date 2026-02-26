@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { authGuard } from './core/guards/auth.guard';
+import { vaultGuard } from './core/guards/vault.guard';
 
 export const routes: Routes = [
   // Public routes (no authentication required)
@@ -106,6 +107,7 @@ export const routes: Routes = [
       },
       {
         path: 'sys-vault',
+        canActivate: [vaultGuard],
         loadComponent: () => import('./features/backup/backup.component').then(m => m.BackupComponent)
       }
     ]

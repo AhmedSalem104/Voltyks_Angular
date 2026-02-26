@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SidebarService } from '../../core/services/sidebar.service';
+import { VaultService } from '../../core/services/vault.service';
 import { Subscription, filter } from 'rxjs';
 
 interface MenuItem {
@@ -265,6 +266,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   @ViewChild('sidebarElement') sidebarElement!: ElementRef<HTMLElement>;
 
   private sidebarService = inject(SidebarService);
+  private vaultService = inject(VaultService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
   private subscriptions: Subscription[] = [];
@@ -724,6 +726,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     if (hash === this.vaultHash) {
       this.showVaultPrompt = false;
       this.vaultPassword = '';
+      this.vaultService.unlock();
       this.router.navigate(['/sys-vault']);
       this.close();
     } else {

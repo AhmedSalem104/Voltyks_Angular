@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminBackupService } from '../../core/services/admin/admin-backup.service';
@@ -6,6 +6,7 @@ import { BackupResultDto, BackupFileDto } from '../../core/models/backup.model';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
+import { VaultService } from '../../core/services/vault.service';
 
 @Component({
   selector: 'app-backup',
@@ -15,7 +16,7 @@ import { ToasterService } from '../../shared/components/toaster/toaster.service'
   styleUrls: ['./backup.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BackupComponent implements OnInit {
+export class BackupComponent implements OnInit, OnDestroy {
   backups: BackupFileDto[] = [];
   lastResult: BackupResultDto | null = null;
   isLoading = false;
@@ -34,12 +35,17 @@ export class BackupComponent implements OnInit {
   constructor(
     private backupService: AdminBackupService,
     private toaster: ToasterService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private vaultService: VaultService
   ) {}
 
   ngOnInit(): void {
     this.setToday();
     this.loadBackups();
+  }
+
+  ngOnDestroy(): void {
+    this.vaultService.lock();
   }
 
   private setToday(): void {
