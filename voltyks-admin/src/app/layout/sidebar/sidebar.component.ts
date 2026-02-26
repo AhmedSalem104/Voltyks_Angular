@@ -366,10 +366,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     {
       id: 'info',
       label: 'معلومات',
-      icon: 'info_outline',
+      icon: 'info',
       expanded: false,
       items: [
-        { label: 'عن Voltyks', icon: 'info_outline', route: '/about' }
+        { label: 'عن Voltyks', icon: 'info', route: '/about' }
       ]
     }
   ];

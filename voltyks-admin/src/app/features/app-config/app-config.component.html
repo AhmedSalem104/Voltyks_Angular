@@ -19,7 +19,7 @@
     </div>
   } @else if (chargingModeLoadError) {
     <div class="charging-mode-card error">
-      <span class="material-symbols-rounded">error_outline</span>
+      <span class="material-symbols-rounded">error</span>
       <span>فشل تحميل حالة الشحن</span>
       <button class="retry-btn" (click)="loadChargingModeConfig()">
         <span class="material-symbols-rounded">refresh</span>
@@ -267,7 +267,7 @@
   } @else if (loadError) {
     <div class="voltyks-card error-card">
       <div class="error-content">
-        <span class="material-symbols-rounded">error_outline</span>
+        <span class="material-symbols-rounded">error</span>
         <p class="error-title">فشل تحميل البيانات</p>
         <p class="error-message">تأكد من اتصال الخادم وحاول مرة أخرى</p>
         <button class="voltyks-btn btn-primary" (click)="loadConfig()">

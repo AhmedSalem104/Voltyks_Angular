@@ -22,7 +22,7 @@
   <!-- Error State -->
   @if (loadError && !isLoading) {
     <div class="error-state">
-      <span class="material-symbols-rounded">error_outline</span>
+      <span class="material-symbols-rounded">error</span>
       <h3>فشل تحميل البيانات</h3>
       <p>لم نتمكن من تحميل تفاصيل الإشعار. قد يكون تم حذفه أو غير موجود.</p>
       <button class="retry-btn" (click)="loadData()">
