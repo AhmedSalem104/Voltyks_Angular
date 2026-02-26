@@ -18,6 +18,34 @@
   display: flex;
   flex-direction: column;
 
+  // Collapsed state polish - SAFE: only transforms, opacity, colors (no layout changes)
+  &:not(:hover):not(.is-pinned) {
+    .group-header {
+      .icon {
+        transform: translateX(-4px);
+      }
+    }
+
+    .nav-link {
+      .icon {
+        transform: translateX(-1px);
+      }
+
+      &:hover .icon {
+        transform: translateX(-1px) scale(1.08);
+        box-shadow: 0 2px 8px rgba(0, 200, 83, 0.2);
+      }
+
+      &.active .icon {
+        transform: translateX(-1px);
+      }
+    }
+
+    .menu-group + .menu-group {
+      border-top: 1px solid rgba(255, 255, 255, 0.03);
+    }
+  }
+
   &:hover,
   &.is-pinned {
     width: 280px;
@@ -40,6 +68,18 @@
       &.rotated {
         transform: translateX(0) rotate(180deg);
       }
+    }
+
+    .group-header .icon {
+      transform: none;
+    }
+
+    .nav-link .icon {
+      transform: none;
+    }
+
+    .menu-group + .menu-group {
+      border-top: none;
     }
   }
 }
@@ -120,6 +160,7 @@
     justify-content: center;
     opacity: 0;
     transition: all 0.3s ease;
+    animation: pinFloat 2.5s ease-in-out infinite;
 
     .material-symbols-rounded {
       font-size: 18px;
@@ -127,17 +168,27 @@
     }
 
     &:hover {
-      background: rgba(0, 200, 83, 0.15);
+      background: rgba(0, 200, 83, 0.2);
       color: #00C853;
-      transform: translateY(-50%) scale(1.05);
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 0 12px rgba(0, 200, 83, 0.3);
+      animation: none;
     }
 
     &.is-pinned {
       color: #00C853;
       background: rgba(0, 200, 83, 0.2);
+      box-shadow: 0 0 8px rgba(0, 200, 83, 0.2);
+      animation: pinPulse 2s ease-in-out infinite;
 
       .material-symbols-rounded {
         transform: rotate(45deg);
+        font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      }
+
+      &:hover {
+        animation: none;
+        box-shadow: 0 0 16px rgba(0, 200, 83, 0.4);
       }
     }
   }
@@ -1034,6 +1085,24 @@
     box-shadow:
       0 3px 14px rgba(0, 200, 83, 0.3),
       0 0 0 3px rgba(0, 200, 83, 0.1);
+  }
+}
+
+@keyframes pinFloat {
+  0%, 100% {
+    transform: translateY(-50%);
+  }
+  50% {
+    transform: translateY(calc(-50% - 3px));
+  }
+}
+
+@keyframes pinPulse {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(0, 200, 83, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(0, 200, 83, 0.35);
   }
 }
 
