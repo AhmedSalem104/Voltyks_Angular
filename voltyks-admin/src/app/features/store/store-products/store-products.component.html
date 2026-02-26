@@ -7,12 +7,12 @@
   <!-- Back Navigation -->
   <nav class="breadcrumb-nav">
     <a routerLink="/store" class="back-link">
-      <span class="material-icons">arrow_forward</span>
+      <span class="material-symbols-rounded">arrow_forward</span>
       <span>العودة للمتجر</span>
     </a>
     <div class="breadcrumb-path">
       <a routerLink="/store" class="path-item">المتجر</a>
-      <span class="material-icons separator">chevron_left</span>
+      <span class="material-symbols-rounded separator">chevron_left</span>
       <span class="path-item current">المنتجات</span>
     </div>
   </nav>
@@ -21,7 +21,7 @@
   <div class="page-header">
     <div class="header-content">
       <div class="header-icon">
-        <span class="material-icons">inventory_2</span>
+        <span class="material-symbols-rounded">inventory_2</span>
       </div>
       <div class="header-text">
         <h2>منتجات المتجر</h2>
@@ -36,7 +36,7 @@
       <!-- Search -->
       <div class="filter-item search-filter">
         <div class="search-box">
-          <span class="material-icons search-icon">search</span>
+          <span class="material-symbols-rounded search-icon">search</span>
           <input
             type="text"
             class="voltyks-input"
@@ -91,11 +91,11 @@
       <div class="header-actions">
         <span class="total-count">إجمالي: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()">
-          <span class="material-icons">print</span>
+          <span class="material-symbols-rounded">print</span>
           <span>طباعة PDF</span>
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
-          <span class="material-icons">add</span>
+          <span class="material-symbols-rounded">add</span>
           إضافة منتج
         </button>
       </div>
@@ -128,7 +128,7 @@
                     @if (product.images && product.images.length > 0) {
                       <img [src]="getFullImageUrl(product.images[0])" alt="thumbnail" class="product-thumbnail" (error)="onImageError($event)" />
                     } @else {
-                      <span class="material-icons no-thumbnail">inventory_2</span>
+                      <span class="material-symbols-rounded no-thumbnail">inventory_2</span>
                     }
                   }
                 </td>
@@ -161,24 +161,24 @@
                 <td>
                   <div class="action-buttons">
                     <button class="voltyks-btn btn-icon btn-view" title="عرض التفاصيل" (click)="openDetailsDialog(product)">
-                      <span class="material-icons">visibility</span>
+                      <span class="material-symbols-rounded">visibility</span>
                     </button>
                     @if (!product.isDeleted) {
                       <button class="voltyks-btn btn-icon btn-images" title="إدارة الصور" (click)="openImageManager(product)">
-                        <span class="material-icons">collections</span>
+                        <span class="material-symbols-rounded">collections</span>
                       </button>
                       <button class="voltyks-btn btn-icon btn-edit" title="تعديل" (click)="openEditDialog(product)">
-                        <span class="material-icons">edit</span>
+                        <span class="material-symbols-rounded">edit</span>
                       </button>
                       <button class="voltyks-btn btn-icon btn-danger" title="حذف" (click)="openDeleteConfirm(product)">
-                        <span class="material-icons">delete</span>
+                        <span class="material-symbols-rounded">delete</span>
                       </button>
                     } @else {
                       <button class="voltyks-btn btn-icon btn-restore" title="استرجاع" (click)="restoreProduct(product)">
-                        <span class="material-icons">restore</span>
+                        <span class="material-symbols-rounded">restore</span>
                       </button>
                       <button class="voltyks-btn btn-icon btn-danger" title="حذف نهائي" (click)="openForceDeleteConfirm(product)">
-                        <span class="material-icons">delete_forever</span>
+                        <span class="material-symbols-rounded">delete_forever</span>
                       </button>
                     }
                   </div>
@@ -198,7 +198,7 @@
       ></app-pagination>
     } @else {
       <div class="no-data">
-        <span class="material-icons">inventory_2</span>
+        <span class="material-symbols-rounded">inventory_2</span>
         <p>لا توجد منتجات</p>
       </div>
     }
@@ -211,7 +211,7 @@
         <div class="modal-header">
           <h3>إضافة منتج جديد</h3>
           <button type="button" class="close-btn" (click)="closeCreateDialog()">
-            <span class="material-icons">close</span>
+            <span class="material-symbols-rounded">close</span>
           </button>
         </div>
         <div class="modal-body">
@@ -284,7 +284,7 @@
             <div class="section-header">
               <label>المواصفات</label>
               <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="addSpecification(true)">
-                <span class="material-icons">add</span>
+                <span class="material-symbols-rounded">add</span>
                 إضافة
               </button>
             </div>
@@ -293,7 +293,7 @@
                 <input type="text" class="voltyks-input" [(ngModel)]="spec.key" placeholder="المفتاح" />
                 <input type="text" class="voltyks-input" [(ngModel)]="spec.value" placeholder="القيمة" />
                 <button type="button" class="voltyks-btn btn-icon btn-danger" (click)="removeSpecification(i, true)">
-                  <span class="material-icons">close</span>
+                  <span class="material-symbols-rounded">close</span>
                 </button>
               </div>
             }
@@ -302,7 +302,7 @@
           <!-- Images Note -->
           <div class="form-section images-note">
             <div class="note-content">
-              <span class="material-icons">info</span>
+              <span class="material-symbols-rounded">info</span>
               <span>سيتم فتح نافذة إدارة الصور تلقائياً بعد إنشاء المنتج لرفع الصور</span>
             </div>
           </div>
@@ -324,7 +324,7 @@
         <div class="modal-header">
           <h3>تعديل المنتج</h3>
           <button type="button" class="close-btn" (click)="closeEditDialog()">
-            <span class="material-icons">close</span>
+            <span class="material-symbols-rounded">close</span>
           </button>
         </div>
         <div class="modal-body">
@@ -396,7 +396,7 @@
             <div class="section-header">
               <label>المواصفات</label>
               <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="addSpecification(false)">
-                <span class="material-icons">add</span>
+                <span class="material-symbols-rounded">add</span>
                 إضافة
               </button>
             </div>
@@ -405,7 +405,7 @@
                 <input type="text" class="voltyks-input" [(ngModel)]="spec.key" placeholder="المفتاح" />
                 <input type="text" class="voltyks-input" [(ngModel)]="spec.value" placeholder="القيمة" />
                 <button type="button" class="voltyks-btn btn-icon btn-danger" (click)="removeSpecification(i, false)">
-                  <span class="material-icons">close</span>
+                  <span class="material-symbols-rounded">close</span>
                 </button>
               </div>
             }
@@ -416,7 +416,7 @@
             <div class="section-header">
               <label>صور المنتج</label>
               <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="closeEditDialog(); openImageManager(currentProduct!)">
-                <span class="material-icons">collections</span>
+                <span class="material-symbols-rounded">collections</span>
                 إدارة الصور
               </button>
             </div>
@@ -456,7 +456,7 @@
           <div class="modal-header">
             <h3>تفاصيل المنتج</h3>
           <button type="button" class="close-btn" (click)="closeDetailsDialog()">
-            <span class="material-icons">close</span>
+            <span class="material-symbols-rounded">close</span>
           </button>
         </div>
         <div class="modal-body details-body">
@@ -536,7 +536,7 @@
                   <div class="gallery-image-wrapper" (click)="openLightbox(img)">
                     <img [src]="getFullImageUrl(img)" alt="product image" class="gallery-image" (error)="onImageError($event)" />
                     <div class="image-overlay">
-                      <span class="material-icons">zoom_in</span>
+                      <span class="material-symbols-rounded">zoom_in</span>
                     </div>
                   </div>
                 }
@@ -548,7 +548,7 @@
           <button class="voltyks-btn btn-secondary" (click)="closeDetailsDialog()">إغلاق</button>
           @if (!currentProduct.isDeleted) {
             <button class="voltyks-btn btn-primary" (click)="closeDetailsDialog(); openEditDialog(currentProduct)">
-              <span class="material-icons">edit</span>
+              <span class="material-symbols-rounded">edit</span>
               تعديل
             </button>
           }
@@ -591,11 +591,11 @@
         <div class="modal-dialog modal-lg image-manager-dialog" (click)="$event.stopPropagation()">
           <div class="modal-header">
             <h3>
-              <span class="material-icons">collections</span>
+              <span class="material-symbols-rounded">collections</span>
               إدارة صور المنتج: {{ currentProduct.name }}
             </h3>
           <button type="button" class="close-btn" (click)="closeImageManager()">
-            <span class="material-icons">close</span>
+            <span class="material-symbols-rounded">close</span>
           </button>
         </div>
         <div class="modal-body">
@@ -625,7 +625,7 @@
                 style="display: none"
               />
               <div class="upload-placeholder">
-                <span class="material-icons">cloud_upload</span>
+                <span class="material-symbols-rounded">cloud_upload</span>
                 <p>اضغط لاختيار الصور أو اسحبها هنا</p>
                 <span class="upload-hint">الأنواع المسموحة: JPG, PNG, WEBP | الحد الأقصى: 5MB لكل صورة</span>
               </div>
@@ -648,13 +648,13 @@
                         </div>
                       </div>
                       <button type="button" class="remove-file-btn" (click)="removeSelectedFile(i)">
-                        <span class="material-icons">close</span>
+                        <span class="material-symbols-rounded">close</span>
                       </button>
                     </div>
                   }
                 </div>
                 <button class="voltyks-btn btn-primary upload-btn" (click)="uploadImages()" [disabled]="isUploading">
-                  <span class="material-icons">upload</span>
+                  <span class="material-symbols-rounded">upload</span>
                   رفع {{ selectedFiles.length }} صورة
                 </button>
               </div>
@@ -671,12 +671,12 @@
                     <div class="image-wrapper" (click)="openLightbox(img)">
                       <img [src]="getFullImageUrl(img)" alt="product image" (error)="onImageError($event)" />
                       <div class="image-hover-overlay">
-                        <span class="material-icons">zoom_in</span>
+                        <span class="material-symbols-rounded">zoom_in</span>
                       </div>
                     </div>
                     <div class="image-actions">
                       <button class="voltyks-btn btn-icon btn-danger btn-small" title="حذف الصورة" (click)="openDeleteImageConfirm(img)">
-                        <span class="material-icons">delete</span>
+                        <span class="material-symbols-rounded">delete</span>
                       </button>
                     </div>
                   </div>
@@ -684,7 +684,7 @@
               </div>
             } @else {
               <div class="no-images">
-                <span class="material-icons">image_not_supported</span>
+                <span class="material-symbols-rounded">image_not_supported</span>
                 <p>لا توجد صور للمنتج</p>
               </div>
             }
@@ -702,7 +702,7 @@
   @defer (when showLightbox) {
     <div class="lightbox-overlay" (click)="closeLightbox()">
       <button class="lightbox-close" (click)="closeLightbox()">
-        <span class="material-icons">close</span>
+        <span class="material-symbols-rounded">close</span>
       </button>
       <div class="lightbox-content" (click)="$event.stopPropagation()">
         <img [src]="lightboxImageUrl" alt="full size image" />

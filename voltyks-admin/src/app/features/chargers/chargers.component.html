@@ -10,7 +10,7 @@
       <!-- Search Box -->
       <div class="filter-item search-filter">
         <div class="search-box">
-          <span class="material-icons search-icon">search</span>
+          <span class="material-symbols-rounded search-icon">search</span>
           <input
             type="text"
             class="voltyks-input"
@@ -27,23 +27,23 @@
           <div class="dropdown-selected" (click)="toggleFilterDropdown()">
             @if (selectedUser) {
               <div class="selected-user-info">
-                <span class="material-icons user-icon">account_circle</span>
+                <span class="material-symbols-rounded user-icon">account_circle</span>
                 <span class="user-name">{{ selectedUser.fullName }}</span>
                 <button type="button" class="clear-btn" (click)="clearUserFilter(); $event.stopPropagation()">
-                  <span class="material-icons">close</span>
+                  <span class="material-symbols-rounded">close</span>
                 </button>
               </div>
             } @else {
-              <span class="material-icons filter-icon">person</span>
+              <span class="material-symbols-rounded filter-icon">person</span>
               <span class="placeholder">جميع المستخدمين</span>
-              <span class="material-icons dropdown-arrow">arrow_drop_down</span>
+              <span class="material-symbols-rounded dropdown-arrow">arrow_drop_down</span>
             }
           </div>
 
           @if (isFilterDropdownOpen) {
             <div class="dropdown-menu">
               <div class="dropdown-search">
-                <span class="material-icons search-icon">search</span>
+                <span class="material-symbols-rounded search-icon">search</span>
                 <input
                   type="text"
                   class="search-input"
@@ -62,19 +62,19 @@
                       [class.selected]="selectedUser?.id === user.id"
                       (click)="selectUserForFilter(user)"
                     >
-                      <span class="material-icons user-icon">account_circle</span>
+                      <span class="material-symbols-rounded user-icon">account_circle</span>
                       <div class="user-info">
                         <span class="user-name">{{ user.fullName }}</span>
                         <span class="user-email">{{ user.email }}</span>
                       </div>
                       @if (selectedUser?.id === user.id) {
-                        <span class="material-icons check-icon">check_circle</span>
+                        <span class="material-symbols-rounded check-icon">check_circle</span>
                       }
                     </div>
                   }
                 } @else {
                   <div class="no-results">
-                    <span class="material-icons">search_off</span>
+                    <span class="material-symbols-rounded">search_off</span>
                     <p>لا توجد نتائج</p>
                   </div>
                 }
@@ -93,11 +93,11 @@
       <div class="header-actions">
         <span class="total-count">إجمالي: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredChargers.length === 0">
-          <span class="material-icons">print</span>
+          <span class="material-symbols-rounded">print</span>
           <span>طباعة PDF</span>
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
-          <span class="material-icons">add</span>
+          <span class="material-symbols-rounded">add</span>
           إضافة شاحن
         </button>
       </div>
@@ -163,7 +163,7 @@
                       (click)="openEditDialog(charger)"
                       title="تعديل"
                     >
-                      <span class="material-icons">edit</span>
+                      <span class="material-symbols-rounded">edit</span>
                     </button>
                     <button
                       class="voltyks-btn btn-icon"
@@ -171,14 +171,14 @@
                       (click)="toggleStatus(charger)"
                       [title]="charger.isActive ? 'إيقاف' : 'تفعيل'"
                     >
-                      <span class="material-icons">{{ charger.isActive ? 'toggle_on' : 'toggle_off' }}</span>
+                      <span class="material-symbols-rounded">{{ charger.isActive ? 'toggle_on' : 'toggle_off' }}</span>
                     </button>
                     <button
                       class="voltyks-btn btn-icon btn-danger"
                       (click)="openDeleteConfirm(charger)"
                       title="حذف"
                     >
-                      <span class="material-icons">delete</span>
+                      <span class="material-symbols-rounded">delete</span>
                     </button>
                   </div>
                 </td>
@@ -198,7 +198,7 @@
       ></app-pagination>
     } @else {
       <div class="empty-state">
-        <span class="material-icons empty-icon">ev_station</span>
+        <span class="material-symbols-rounded empty-icon">ev_station</span>
         <p>لا يوجد شواحن</p>
       </div>
     }
@@ -213,7 +213,7 @@
         <div class="modal-header">
           <h3>إضافة شاحن جديد</h3>
           <button class="close-btn" (click)="closeCreateDialog()">
-            <span class="material-icons">close</span>
+            <span class="material-symbols-rounded">close</span>
           </button>
         </div>
       <div class="modal-body">
@@ -327,19 +327,19 @@
               <div class="dropdown-selected" (click)="toggleCreateUserDropdown()">
                 @if (createDto.userId) {
                   <div class="selected-user-info">
-                    <span class="material-icons user-icon">account_circle</span>
+                    <span class="material-symbols-rounded user-icon">account_circle</span>
                     <span class="user-name">{{ getUserName(createDto.userId) }}</span>
                   </div>
                 } @else {
                   <span class="placeholder">اختر المستخدم</span>
-                  <span class="material-icons dropdown-arrow">arrow_drop_down</span>
+                  <span class="material-symbols-rounded dropdown-arrow">arrow_drop_down</span>
                 }
               </div>
 
               @if (isCreateUserDropdownOpen) {
                 <div class="dropdown-menu">
                   <div class="dropdown-search">
-                    <span class="material-icons search-icon">search</span>
+                    <span class="material-symbols-rounded search-icon">search</span>
                     <input
                       type="text"
                       class="search-input"
@@ -359,19 +359,19 @@
                           [class.selected]="createDto.userId === user.id"
                           (click)="selectUserForCreate(user)"
                         >
-                          <span class="material-icons user-icon">account_circle</span>
+                          <span class="material-symbols-rounded user-icon">account_circle</span>
                           <div class="user-info">
                             <span class="user-name">{{ user.fullName }}</span>
                             <span class="user-email">{{ user.email }}</span>
                           </div>
                           @if (createDto.userId === user.id) {
-                            <span class="material-icons check-icon">check_circle</span>
+                            <span class="material-symbols-rounded check-icon">check_circle</span>
                           }
                         </div>
                       }
                     } @else {
                       <div class="no-results">
-                        <span class="material-icons">search_off</span>
+                        <span class="material-symbols-rounded">search_off</span>
                         <p>لا توجد نتائج</p>
                       </div>
                     }
@@ -387,7 +387,7 @@
           إلغاء
         </button>
         <button class="voltyks-btn btn-primary" (click)="createCharger()">
-          <span class="material-icons">save</span>
+          <span class="material-symbols-rounded">save</span>
           حفظ
         </button>
       </div>
@@ -404,7 +404,7 @@
       <div class="modal-header">
         <h3>تعديل الشاحن</h3>
         <button class="close-btn" (click)="closeEditDialog()">
-          <span class="material-icons">close</span>
+          <span class="material-symbols-rounded">close</span>
         </button>
       </div>
       <div class="modal-body">
@@ -524,7 +524,7 @@
           إلغاء
         </button>
         <button class="voltyks-btn btn-primary" (click)="updateCharger()">
-          <span class="material-icons">save</span>
+          <span class="material-symbols-rounded">save</span>
           حفظ التغييرات
         </button>
       </div>

@@ -70,7 +70,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
       align-items: center;
       justify-content: center;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 30px;
         color: #000;
       }
@@ -183,7 +183,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
     justify-content: center;
     flex-shrink: 0;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 26px;
     }
   }
@@ -268,7 +268,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
   font-weight: 600;
   color: $text-primary;
 
-  .material-icons {
+  .material-symbols-rounded {
     font-size: 22px;
     color: $primary;
   }
@@ -336,7 +336,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
     justify-content: center;
     flex-shrink: 0;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 24px;
     }
 
@@ -398,7 +398,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
     justify-content: center;
     animation: pulse 2s ease-in-out infinite;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 16px;
       color: #000;
     }
@@ -406,7 +406,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
     &.danger {
       background: $danger;
 
-      .material-icons {
+      .material-symbols-rounded {
         color: #fff;
       }
     }
@@ -448,7 +448,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
   cursor: pointer;
   transition: all 0.2s;
 
-  .material-icons {
+  .material-symbols-rounded {
     font-size: 20px;
   }
 
@@ -612,7 +612,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
   .section-title {
     color: var(--text-primary);
 
-    .material-icons {
+    .material-symbols-rounded {
       color: #00A844;
     }
   }
@@ -677,7 +677,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
     }
 
     .alert-badge.danger {
-      .material-icons {
+      .material-symbols-rounded {
         color: white;
       }
     }

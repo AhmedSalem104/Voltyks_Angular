@@ -4,7 +4,7 @@
     <div class="hero-content">
       <div class="logo-container">
         <div class="logo-icon">
-          <span class="material-icons">bolt</span>
+          <span class="material-symbols-rounded">bolt</span>
         </div>
         <h1 class="logo-text">Voltyks</h1>
       </div>
@@ -35,7 +35,7 @@
     } @else {
       <div class="revenue-card total-revenue fade-in" title="مجموع قيمة كل الحجوزات (غير الملغية) = سعر المنتج × الكمية">
         <div class="revenue-icon">
-          <span class="material-icons">account_balance_wallet</span>
+          <span class="material-symbols-rounded">account_balance_wallet</span>
         </div>
         <div class="revenue-content">
           <span class="revenue-label">إجمالي الإيرادات</span>
@@ -58,7 +58,7 @@
     } @else {
       <div class="revenue-card paid-revenue fade-in" title="قيمة الحجوزات التي تم دفعها فعلياً">
         <div class="revenue-icon">
-          <span class="material-icons">paid</span>
+          <span class="material-symbols-rounded">paid</span>
         </div>
         <div class="revenue-content">
           <span class="revenue-label">الإيرادات المحصلة</span>
@@ -81,7 +81,7 @@
     } @else {
       <div class="revenue-card products-card fade-in" title="عدد المنتجات المسجلة في المتجر">
         <div class="revenue-icon">
-          <span class="material-icons">inventory_2</span>
+          <span class="material-symbols-rounded">inventory_2</span>
         </div>
         <div class="revenue-content">
           <span class="revenue-label">منتجات المتجر</span>
@@ -107,7 +107,7 @@
     } @else {
       <div class="revenue-card reservations-card fade-in" title="عدد طلبات حجز المنتجات من العملاء">
         <div class="revenue-icon">
-          <span class="material-icons">shopping_cart</span>
+          <span class="material-symbols-rounded">shopping_cart</span>
         </div>
         <div class="revenue-content">
           <span class="revenue-label">الحجوزات</span>
@@ -126,7 +126,7 @@
     <!-- App Config Status Card -->
     <div class="status-card app-status" [class.enabled]="mobileAppEnabled === true" [class.disabled]="mobileAppEnabled === false">
       <div class="status-icon">
-        <span class="material-icons">{{ mobileAppEnabled ? 'smartphone' : 'phonelink_off' }}</span>
+        <span class="material-symbols-rounded">{{ mobileAppEnabled ? 'smartphone' : 'phonelink_off' }}</span>
       </div>
       <div class="status-content">
         <h4>تطبيق الجوال</h4>
@@ -144,14 +144,14 @@
         <span class="indicator-dot"></span>
       </div>
       <a routerLink="/app-config" class="status-link">
-        <span class="material-icons">settings</span>
+        <span class="material-symbols-rounded">settings</span>
       </a>
     </div>
 
     <!-- Charging Mode Status Card -->
     <div class="status-card charging-status" [class.enabled]="chargingModeEnabled === true" [class.disabled]="chargingModeEnabled === false">
       <div class="status-icon">
-        <span class="material-icons">{{ chargingModeEnabled ? 'electric_bolt' : 'power_off' }}</span>
+        <span class="material-symbols-rounded">{{ chargingModeEnabled ? 'electric_bolt' : 'power_off' }}</span>
       </div>
       <div class="status-content">
         <h4>وضع الشحن</h4>
@@ -169,14 +169,14 @@
         <span class="indicator-dot"></span>
       </div>
       <a routerLink="/app-config" class="status-link">
-        <span class="material-icons">settings</span>
+        <span class="material-symbols-rounded">settings</span>
       </a>
     </div>
 
     <!-- Notifications Status Card -->
     <div class="status-card notifications-status" [class.has-unread]="unreadNotificationsCount > 0">
       <div class="status-icon">
-        <span class="material-icons">{{ unreadNotificationsCount > 0 ? 'notifications_active' : 'notifications_none' }}</span>
+        <span class="material-symbols-rounded">{{ unreadNotificationsCount > 0 ? 'notifications_active' : 'notifications_none' }}</span>
       </div>
       <div class="status-content">
         <h4>الإشعارات</h4>
@@ -199,12 +199,12 @@
     <section class="notifications-section fade-in">
       <div class="section-header">
         <h3>
-          <span class="material-icons">notifications</span>
+          <span class="material-symbols-rounded">notifications</span>
           آخر الإشعارات
         </h3>
         <a routerLink="/reports" class="view-all-link">
           عرض الكل
-          <span class="material-icons">arrow_back</span>
+          <span class="material-symbols-rounded">arrow_back</span>
         </a>
       </div>
       <div class="notifications-grid">
@@ -218,7 +218,7 @@
             (click)="onNotificationClick(notification)"
           >
             <div class="notification-icon">
-              <span class="material-icons">{{ getNotificationIcon(notification.type) }}</span>
+              <span class="material-symbols-rounded">{{ getNotificationIcon(notification.type) }}</span>
             </div>
             <div class="notification-body">
               <div class="notification-header">
@@ -230,11 +230,11 @@
               <p class="notification-message">{{ notification.message }}</p>
               <div class="notification-footer">
                 <span class="notification-user">
-                  <span class="material-icons">person</span>
+                  <span class="material-symbols-rounded">person</span>
                   {{ notification.userName }}
                 </span>
                 <span class="notification-time">
-                  <span class="material-icons">schedule</span>
+                  <span class="material-symbols-rounded">schedule</span>
                   {{ getRelativeTime(notification.timestamp) }}
                 </span>
               </div>
@@ -321,7 +321,7 @@
         <!-- Reservations Chart -->
         <div class="chart-card reservations-chart">
           <h3>
-            <span class="material-icons">shopping_cart</span>
+            <span class="material-symbols-rounded">shopping_cart</span>
             حالة الحجوزات
           </h3>
           @if (sectionLoading.store) {
@@ -375,7 +375,7 @@
       <div class="stats-chips">
         <!-- Users Chip -->
         <a routerLink="/users" class="stat-chip" [class.loading]="sectionLoading.users">
-          <span class="material-icons">group</span>
+          <span class="material-symbols-rounded">group</span>
           <div class="chip-data">
             @if (sectionLoading.users) {
               <span class="chip-value skeleton-text">--</span>
@@ -391,7 +391,7 @@
 
         <!-- Chargers Chip -->
         <a routerLink="/chargers" class="stat-chip" [class.loading]="sectionLoading.chargers">
-          <span class="material-icons">ev_station</span>
+          <span class="material-symbols-rounded">ev_station</span>
           <div class="chip-data">
             @if (sectionLoading.chargers) {
               <span class="chip-value skeleton-text">--</span>
@@ -404,7 +404,7 @@
 
         <!-- Vehicles Chip -->
         <a routerLink="/vehicles" class="stat-chip" [class.loading]="sectionLoading.vehicles">
-          <span class="material-icons">electric_car</span>
+          <span class="material-symbols-rounded">electric_car</span>
           <div class="chip-data">
             @if (sectionLoading.vehicles) {
               <span class="chip-value skeleton-text">--</span>
@@ -417,7 +417,7 @@
 
         <!-- Reports Chip -->
         <a routerLink="/reports" class="stat-chip" [class.loading]="sectionLoading.reports">
-          <span class="material-icons">flag</span>
+          <span class="material-symbols-rounded">flag</span>
           <div class="chip-data">
             @if (sectionLoading.reports) {
               <span class="chip-value skeleton-text">--</span>
@@ -433,7 +433,7 @@
 
         <!-- Brands Chip -->
         <a routerLink="/brands" class="stat-chip" [class.loading]="sectionLoading.brands">
-          <span class="material-icons">business</span>
+          <span class="material-symbols-rounded">business</span>
           <div class="chip-data">
             @if (sectionLoading.brands) {
               <span class="chip-value skeleton-text">--</span>
@@ -446,7 +446,7 @@
 
         <!-- Fees Chip -->
         <a routerLink="/fees" class="stat-chip" [class.loading]="sectionLoading.fees">
-          <span class="material-icons">percent</span>
+          <span class="material-symbols-rounded">percent</span>
           <div class="chip-data">
             @if (sectionLoading.fees) {
               <span class="chip-value skeleton-text">--</span>
@@ -459,7 +459,7 @@
 
         <!-- Processes Chip -->
         <a routerLink="/processes" class="stat-chip" [class.loading]="sectionLoading.processes">
-          <span class="material-icons">electric_bolt</span>
+          <span class="material-symbols-rounded">electric_bolt</span>
           <div class="chip-data">
             @if (sectionLoading.processes) {
               <span class="chip-value skeleton-text">--</span>
@@ -472,7 +472,7 @@
 
         <!-- Complaints Chip -->
         <a routerLink="/complaints" class="stat-chip" [class.loading]="sectionLoading.complaints">
-          <span class="material-icons">feedback</span>
+          <span class="material-symbols-rounded">feedback</span>
           <div class="chip-data">
             @if (sectionLoading.complaints) {
               <span class="chip-value skeleton-text">--</span>
@@ -488,7 +488,7 @@
 
         <!-- Complaint Categories Chip -->
         <a routerLink="/complaint-categories" class="stat-chip" [class.loading]="sectionLoading.complaints">
-          <span class="material-icons">category</span>
+          <span class="material-symbols-rounded">category</span>
           <div class="chip-data">
             @if (sectionLoading.complaints) {
               <span class="chip-value skeleton-text">--</span>
@@ -501,7 +501,7 @@
 
         <!-- Store Categories Chip -->
         <a routerLink="/store/categories" class="stat-chip store-chip" [class.loading]="sectionLoading.store">
-          <span class="material-icons">storefront</span>
+          <span class="material-symbols-rounded">storefront</span>
           <div class="chip-data">
             @if (sectionLoading.store) {
               <span class="chip-value skeleton-text">--</span>
@@ -514,7 +514,7 @@
 
         <!-- Store Products Chip -->
         <a routerLink="/store/products" class="stat-chip store-chip" [class.loading]="sectionLoading.store">
-          <span class="material-icons">inventory_2</span>
+          <span class="material-symbols-rounded">inventory_2</span>
           <div class="chip-data">
             @if (sectionLoading.store) {
               <span class="chip-value skeleton-text">--</span>
@@ -530,7 +530,7 @@
 
         <!-- Store Reservations Chip -->
         <a routerLink="/store/reservations" class="stat-chip store-chip" [class.loading]="sectionLoading.store">
-          <span class="material-icons">shopping_cart</span>
+          <span class="material-symbols-rounded">shopping_cart</span>
           <div class="chip-data">
             @if (sectionLoading.store) {
               <span class="chip-value skeleton-text">--</span>
@@ -562,63 +562,63 @@
       <h3>الوصول السريع</h3>
       <div class="actions-grid">
         <a routerLink="/users" class="action-item">
-          <span class="material-icons">people</span>
+          <span class="material-symbols-rounded">people</span>
           <span>المستخدمين</span>
         </a>
         <a routerLink="/processes" class="action-item">
-          <span class="material-icons">electric_bolt</span>
+          <span class="material-symbols-rounded">electric_bolt</span>
           <span>عمليات الشحن</span>
         </a>
         <a routerLink="/chargers" class="action-item">
-          <span class="material-icons">ev_station</span>
+          <span class="material-symbols-rounded">ev_station</span>
           <span>الشواحن</span>
         </a>
         <a routerLink="/vehicles" class="action-item">
-          <span class="material-icons">electric_car</span>
+          <span class="material-symbols-rounded">electric_car</span>
           <span>المركبات</span>
         </a>
         <a routerLink="/brands" class="action-item">
-          <span class="material-icons">category</span>
+          <span class="material-symbols-rounded">category</span>
           <span>العلامات</span>
         </a>
         <a routerLink="/reports" class="action-item">
-          <span class="material-icons">flag</span>
+          <span class="material-symbols-rounded">flag</span>
           <span>البلاغات</span>
         </a>
         <a routerLink="/complaints" class="action-item">
-          <span class="material-icons">feedback</span>
+          <span class="material-symbols-rounded">feedback</span>
           <span>الشكاوى</span>
         </a>
         <a routerLink="/complaint-categories" class="action-item">
-          <span class="material-icons">category</span>
+          <span class="material-symbols-rounded">category</span>
           <span>أنواع الشكاوى</span>
         </a>
         <a routerLink="/fees" class="action-item">
-          <span class="material-icons">payments</span>
+          <span class="material-symbols-rounded">payments</span>
           <span>الرسوم</span>
         </a>
         <a routerLink="/terms" class="action-item">
-          <span class="material-icons">article</span>
+          <span class="material-symbols-rounded">article</span>
           <span>الشروط</span>
         </a>
         <a routerLink="/protocol" class="action-item">
-          <span class="material-icons">policy</span>
+          <span class="material-symbols-rounded">policy</span>
           <span>البروتوكول</span>
         </a>
         <a routerLink="/app-config" class="action-item">
-          <span class="material-icons">smartphone</span>
+          <span class="material-symbols-rounded">smartphone</span>
           <span>تطبيق الجوال</span>
         </a>
         <a routerLink="/store" class="action-item store-action">
-          <span class="material-icons">storefront</span>
+          <span class="material-symbols-rounded">storefront</span>
           <span>المتجر</span>
         </a>
         <a routerLink="/store/products" class="action-item store-action">
-          <span class="material-icons">inventory_2</span>
+          <span class="material-symbols-rounded">inventory_2</span>
           <span>المنتجات</span>
         </a>
         <a routerLink="/store/reservations" class="action-item store-action">
-          <span class="material-icons">shopping_cart</span>
+          <span class="material-symbols-rounded">shopping_cart</span>
           <span>الحجوزات</span>
         </a>
       </div>
@@ -633,12 +633,12 @@
       <section class="recent-reservations-section fade-in">
         <div class="section-header">
           <h3>
-            <span class="material-icons">shopping_cart</span>
+            <span class="material-symbols-rounded">shopping_cart</span>
             آخر الحجوزات
           </h3>
           <a routerLink="/store/reservations" class="view-all-link">
             عرض الكل
-            <span class="material-icons">arrow_back</span>
+            <span class="material-symbols-rounded">arrow_back</span>
           </a>
         </div>
         <div class="reservations-grid">
@@ -650,7 +650,7 @@
               </div>
               <div class="reservation-info">
                 <span class="user-name">
-                  <span class="material-icons">person</span>
+                  <span class="material-symbols-rounded">person</span>
                   {{ reservation.userName }}
                 </span>
                 <span class="reservation-price">{{ formatCurrency(reservation.unitPrice * reservation.quantity) }}</span>
@@ -667,7 +667,7 @@
       <section class="recent-reservations-section">
         <div class="section-header">
           <h3>
-            <span class="material-icons">shopping_cart</span>
+            <span class="material-symbols-rounded">shopping_cart</span>
             آخر الحجوزات
           </h3>
         </div>

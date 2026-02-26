@@ -187,7 +187,7 @@
             font-size: 13px;
             min-height: 36px;
 
-            .material-icons {
+            .material-symbols-rounded {
               font-size: 18px;
             }
 
@@ -360,7 +360,7 @@
       justify-content: center;
       transition: all 0.3s ease;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 18px;
       }
 
@@ -468,7 +468,7 @@
       align-items: center;
       justify-content: center;
 
-      .material-icons {
+      .material-symbols-rounded {
         color: #B0B0B0;
         font-size: 24px;
       }
@@ -476,7 +476,7 @@
       &:hover {
         background: rgba(255, 59, 48, 0.1);
 
-        .material-icons {
+        .material-symbols-rounded {
           color: #ff3b30;
         }
       }
@@ -522,7 +522,7 @@
         .section-header {
           background: rgba(0, 200, 83, 0.1);
 
-          .material-icons,
+          .material-symbols-rounded,
           h4 {
             color: #00C853;
           }
@@ -537,7 +537,7 @@
         background: #2A2A2A;
         border-bottom: 1px solid #333;
 
-        .material-icons {
+        .material-symbols-rounded {
           color: #00C853;
           font-size: 22px;
         }
@@ -908,14 +908,14 @@
       }
 
       .close-btn {
-        .material-icons {
+        .material-symbols-rounded {
           color: var(--text-secondary);
         }
 
         &:hover {
           background: rgba(239, 83, 80, 0.1);
 
-          .material-icons {
+          .material-symbols-rounded {
             color: #D32F2F;
           }
         }
@@ -951,7 +951,7 @@
           background: var(--table-header-bg);
           border-bottom-color: var(--border-color);
 
-          .material-icons {
+          .material-symbols-rounded {
             color: var(--primary-green);
           }
 

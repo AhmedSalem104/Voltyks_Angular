@@ -41,6 +41,8 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
     <aside class="sidebar-wrapper"
            [class.is-expanded]="isOpen"
            [class.is-pinned]="isSidebarPinned"
+           role="navigation"
+           aria-label="القائمة الرئيسية"
            #sidebarElement>
 
       <!-- Logo Section -->
@@ -52,7 +54,7 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
                 (click)="toggleSidebarPin()"
                 [class.is-pinned]="isSidebarPinned"
                 [title]="isSidebarPinned ? 'إلغاء التثبيت' : 'تثبيت القائمة'">
-          <span class="material-icons">{{ isSidebarPinned ? 'push_pin' : 'push_pin' }}</span>
+          <span class="material-symbols-rounded">{{ isSidebarPinned ? 'push_pin' : 'push_pin' }}</span>
         </button>
       </div>
 
@@ -62,32 +64,35 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
         <button class="toolbar-btn search-btn"
                 (click)="toggleSearch()"
                 [class.active]="isSearchOpen"
-                title="البحث (Ctrl+K)">
-          <span class="material-icons">search</span>
+                title="البحث (Ctrl+K)"
+                aria-label="البحث في القائمة">
+          <span class="material-symbols-rounded">search</span>
         </button>
         <!-- Collapse All -->
         <button class="toolbar-btn"
                 (click)="collapseAll()"
                 [class.disabled]="!hasExpandedGroups"
                 [disabled]="!hasExpandedGroups"
-                title="طي الكل">
-          <span class="material-icons">unfold_less</span>
+                title="طي الكل"
+                aria-label="طي جميع المجموعات">
+          <span class="material-symbols-rounded">unfold_less</span>
         </button>
         <!-- Expand All -->
         <button class="toolbar-btn"
                 (click)="expandAll()"
                 [class.disabled]="allGroupsExpanded"
                 [disabled]="allGroupsExpanded"
-                title="فتح الكل">
-          <span class="material-icons">unfold_more</span>
+                title="فتح الكل"
+                aria-label="فتح جميع المجموعات">
+          <span class="material-symbols-rounded">unfold_more</span>
         </button>
       </div>
 
       <!-- Search Container -->
       @if (isSearchOpen) {
-        <div class="search-container" [class.active]="isSearchOpen">
+        <div class="search-container" [class.active]="isSearchOpen" role="search">
           <div class="search-input-wrapper">
-            <span class="material-icons search-icon">search</span>
+            <span class="material-symbols-rounded search-icon">search</span>
             <input #searchInput
                    type="text"
                    [(ngModel)]="searchQuery"
@@ -108,7 +113,7 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
                    [class.focused]="focusedSearchIndex === i"
                    (click)="onSearchResultClick()"
                    (mouseenter)="focusedSearchIndex = i">
-                  <span class="material-icons result-icon">{{ result.item.icon }}</span>
+                  <span class="material-symbols-rounded result-icon">{{ result.item.icon }}</span>
                   <div class="result-text">
                     <span class="result-label">{{ result.item.label }}</span>
                     <span class="result-group">{{ result.group.label }}</span>
@@ -119,7 +124,7 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
           }
           @if (searchQuery && filteredItems.length === 0) {
             <div class="search-no-results">
-              <span class="material-icons">search_off</span>
+              <span class="material-symbols-rounded">search_off</span>
               <span>لا توجد نتائج</span>
             </div>
           }
@@ -130,7 +135,7 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
       @if (pinnedItems.length > 0) {
         <div class="pinned-section">
           <div class="section-header">
-            <span class="material-icons section-icon">push_pin</span>
+            <span class="material-symbols-rounded section-icon">push_pin</span>
             <span class="section-title">المثبتة</span>
             <span class="section-count">{{ pinnedItems.length }}</span>
           </div>
@@ -141,12 +146,13 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
                  class="nav-link pinned-item"
                  [title]="item.label"
                  (click)="onItemClick()">
-                <span class="icon material-icons">{{ item.icon }}</span>
+                <span class="icon material-symbols-rounded">{{ item.icon }}</span>
                 <span class="text">{{ item.label }}</span>
                 <button class="unpin-btn"
                         (click)="unpinItem(item, $event)"
+                        [attr.aria-label]="'إلغاء تثبيت ' + item.label"
                         title="إلغاء التثبيت">
-                  <span class="material-icons">close</span>
+                  <span class="material-symbols-rounded">close</span>
                 </button>
               </a>
             }
@@ -163,31 +169,34 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
               class="group-header"
               [class.expanded]="group.expanded"
               [class.has-active]="isGroupActive(group)"
+              [attr.aria-expanded]="group.expanded"
+              [attr.aria-controls]="'group-items-' + group.id"
               (click)="toggleGroup(group)"
               [title]="group.label"
             >
-              <span class="icon material-icons">{{ group.icon }}</span>
+              <span class="icon material-symbols-rounded">{{ group.icon }}</span>
               <span class="text">{{ group.label }}</span>
-              <span class="chevron material-icons">
-                {{ group.expanded ? 'expand_less' : 'expand_more' }}
+              <span class="chevron material-symbols-rounded" [class.rotated]="group.expanded">
+                expand_more
               </span>
             </button>
 
             <!-- Group Items -->
-            <div class="group-items" [class.expanded]="group.expanded">
+            <div class="group-items" [class.expanded]="group.expanded" [id]="'group-items-' + group.id" role="list">
               @for (item of group.items; track item.route) {
                 <a
                   [routerLink]="item.route"
                   routerLinkActive="active"
                   class="nav-link"
                   [title]="item.label"
+                  role="listitem"
                   (click)="onItemClick()"
                   (contextmenu)="onItemRightClick(item, $event)"
                 >
-                  <span class="icon material-icons">{{ item.icon }}</span>
+                  <span class="icon material-symbols-rounded">{{ item.icon }}</span>
                   <span class="text">{{ item.label }}</span>
                   @if (isPinned(item.route)) {
-                    <span class="pin-indicator material-icons">push_pin</span>
+                    <span class="pin-indicator material-symbols-rounded">push_pin</span>
                   }
                 </a>
               }
@@ -210,13 +219,13 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
            (mouseleave)="closeContextMenu()">
         @if (contextMenuItem && !isPinned(contextMenuItem.route)) {
           <button class="context-menu-item" (click)="pinItem(contextMenuItem)">
-            <span class="material-icons">push_pin</span>
+            <span class="material-symbols-rounded">push_pin</span>
             <span>تثبيت</span>
           </button>
         }
         @if (contextMenuItem && isPinned(contextMenuItem.route)) {
           <button class="context-menu-item" (click)="unpinItemByRoute(contextMenuItem.route)">
-            <span class="material-icons">push_pin</span>
+            <span class="material-symbols-rounded">push_pin</span>
             <span>إلغاء التثبيت</span>
           </button>
         }
@@ -228,7 +237,7 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
       <div class="vault-overlay" (click)="closeVaultPrompt()">
         <div class="vault-modal" (click)="$event.stopPropagation()">
           <div class="vault-icon">
-            <span class="material-icons">lock</span>
+            <span class="material-symbols-rounded">lock</span>
           </div>
           <input
             #vaultInput

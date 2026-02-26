@@ -10,7 +10,7 @@
       <!-- Search Box -->
       <div class="filter-item search-filter">
         <div class="search-box">
-          <span class="material-icons search-icon">search</span>
+          <span class="material-symbols-rounded search-icon">search</span>
           <input
             type="text"
             class="voltyks-input"
@@ -30,11 +30,11 @@
       <div class="header-actions">
         <span class="total-count">إجمالي: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredBrands.length === 0">
-          <span class="material-icons">print</span>
+          <span class="material-symbols-rounded">print</span>
           <span>طباعة PDF</span>
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
-          <span class="material-icons">add</span>
+          <span class="material-symbols-rounded">add</span>
           إضافة علامة تجارية
         </button>
       </div>
@@ -61,7 +61,7 @@
                     @if (brand.logoUrl) {
                       <img [src]="brand.logoUrl" [alt]="brand.name" />
                     } @else {
-                      <span class="material-icons no-logo">directions_car</span>
+                      <span class="material-symbols-rounded no-logo">directions_car</span>
                     }
                   </div>
                 </td>
@@ -76,21 +76,21 @@
                       (click)="viewModels(brand)"
                       title="عرض الموديلات"
                     >
-                      <span class="material-icons">visibility</span>
+                      <span class="material-symbols-rounded">visibility</span>
                     </button>
                     <button
                       class="voltyks-btn btn-icon btn-edit"
                       (click)="openEditDialog(brand)"
                       title="تعديل"
                     >
-                      <span class="material-icons">edit</span>
+                      <span class="material-symbols-rounded">edit</span>
                     </button>
                     <button
                       class="voltyks-btn btn-icon btn-danger"
                       (click)="openDeleteConfirm(brand)"
                       title="حذف"
                     >
-                      <span class="material-icons">delete</span>
+                      <span class="material-symbols-rounded">delete</span>
                     </button>
                   </div>
                 </td>
@@ -110,7 +110,7 @@
       ></app-pagination>
     } @else {
       <div class="empty-state">
-        <span class="material-icons empty-icon">category</span>
+        <span class="material-symbols-rounded empty-icon">category</span>
         <p>لا توجد علامات تجارية</p>
       </div>
     }
@@ -125,7 +125,7 @@
         <div class="modal-header">
           <h3>إضافة علامة تجارية جديدة</h3>
           <button class="close-btn" (click)="closeCreateDialog()">
-            <span class="material-icons">close</span>
+            <span class="material-symbols-rounded">close</span>
           </button>
         </div>
         <div class="modal-body">
@@ -147,7 +147,7 @@
             إلغاء
           </button>
           <button class="voltyks-btn btn-primary" (click)="createBrand()">
-            <span class="material-icons">save</span>
+            <span class="material-symbols-rounded">save</span>
             حفظ
           </button>
         </div>
@@ -164,7 +164,7 @@
         <div class="modal-header">
           <h3>تعديل العلامة التجارية</h3>
           <button class="close-btn" (click)="closeEditDialog()">
-            <span class="material-icons">close</span>
+            <span class="material-symbols-rounded">close</span>
           </button>
         </div>
         <div class="modal-body">
@@ -185,7 +185,7 @@
             إلغاء
           </button>
           <button class="voltyks-btn btn-primary" (click)="updateBrand()">
-            <span class="material-icons">save</span>
+            <span class="material-symbols-rounded">save</span>
             حفظ التغييرات
           </button>
         </div>

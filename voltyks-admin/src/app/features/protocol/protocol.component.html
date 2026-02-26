@@ -7,7 +7,7 @@
 
     <div class="protocol-toggle">
       <button class="voltyks-btn print-btn" (click)="printToPdf()">
-        <span class="material-icons">print</span>
+        <span class="material-symbols-rounded">print</span>
         <span>طباعة PDF</span>
       </button>
       <button
@@ -18,7 +18,7 @@
         [title]="'التبديل إلى ' + otherProtocolTypeLabel"
       >
         <span class="protocol-label current">{{ protocolTypeLabel }}</span>
-        <span class="toggle-icon material-icons">swap_horiz</span>
+        <span class="toggle-icon material-symbols-rounded">swap_horiz</span>
         <span class="protocol-label other">{{ otherProtocolTypeLabel }}</span>
       </button>
     </div>
@@ -28,7 +28,7 @@
     <!-- Protocol Info Header -->
     <div class="protocol-info-header">
       <div class="info-item">
-        <span class="material-icons">inventory</span>
+        <span class="material-symbols-rounded">inventory</span>
         <div class="info-content">
           <span class="info-label">نوع البروتوكول</span>
           <span class="info-value">{{ protocolTypeLabel }}</span>
@@ -36,7 +36,7 @@
       </div>
 
       <div class="info-item">
-        <span class="material-icons">language</span>
+        <span class="material-symbols-rounded">language</span>
         <div class="info-content">
           <span class="info-label">المعيار</span>
           <span class="info-value">{{ selectedType === 'chinese' ? 'GB/T' : 'CCS2' }}</span>
@@ -44,7 +44,7 @@
       </div>
 
       <div class="info-item">
-        <span class="material-icons">electric_bolt</span>
+        <span class="material-symbols-rounded">electric_bolt</span>
         <div class="info-content">
           <span class="info-label">نوع الشحن</span>
           <span class="info-value">{{ selectedType === 'chinese' ? 'AC/DC' : 'AC + DC مدمج' }}</span>
@@ -55,7 +55,7 @@
     <!-- Protocol Content Section -->
     <div class="protocol-content-section">
       <div class="section-header">
-        <span class="material-icons">description</span>
+        <span class="material-symbols-rounded">description</span>
         <h3>الشرح التفصيلي</h3>
       </div>
 

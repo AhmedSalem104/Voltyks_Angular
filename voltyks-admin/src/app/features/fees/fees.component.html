@@ -5,7 +5,7 @@
       <p class="subtitle">إعدادات الرسوم وتحويل الأموال المحصلة</p>
     </div>
     <button class="voltyks-btn print-btn" (click)="printToPdf()" *ngIf="fees">
-      <span class="material-icons">print</span>
+      <span class="material-symbols-rounded">print</span>
       <span>طباعة PDF</span>
     </button>
   </div>
@@ -64,7 +64,7 @@
           />
         </div>
         <button type="button" class="voltyks-btn btn-primary" (click)="openUpdateDialog()">
-          <span class="material-icons" style="font-size: 18px; margin-left: 8px;">save</span>
+          <span class="material-symbols-rounded" style="font-size: 18px; margin-left: 8px;">save</span>
           حفظ التغييرات
         </button>
       </form>
@@ -83,18 +83,18 @@
             <div class="dropdown-selected" (click)="toggleDropdown()">
               @if (selectedUser) {
                 <div class="selected-user-info">
-                  <span class="material-icons user-icon">account_circle</span>
+                  <span class="material-symbols-rounded user-icon">account_circle</span>
                   <div class="user-details">
                     <span class="user-name">{{ selectedUser.fullName }}</span>
                     <span class="user-email">{{ selectedUser.email }}</span>
                   </div>
                   <button type="button" class="clear-btn" (click)="clearSelection(); $event.stopPropagation()">
-                    <span class="material-icons">close</span>
+                    <span class="material-symbols-rounded">close</span>
                   </button>
                 </div>
               } @else {
                 <span class="placeholder">اختر مستخدم من القائمة</span>
-                <span class="material-icons dropdown-arrow">arrow_drop_down</span>
+                <span class="material-symbols-rounded dropdown-arrow">arrow_drop_down</span>
               }
             </div>
 
@@ -103,7 +103,7 @@
               <div class="dropdown-menu">
                 <!-- Search Input -->
                 <div class="dropdown-search">
-                  <span class="material-icons search-icon">search</span>
+                  <span class="material-symbols-rounded search-icon">search</span>
                   <input
                     type="text"
                     class="search-input"
@@ -124,19 +124,19 @@
                         [class.selected]="selectedUser?.id === user.id"
                         (click)="selectUser(user)"
                       >
-                        <span class="material-icons user-icon">account_circle</span>
+                        <span class="material-symbols-rounded user-icon">account_circle</span>
                         <div class="user-info">
                           <span class="user-name">{{ user.fullName }}</span>
                           <span class="user-email">{{ user.email }}</span>
                         </div>
                         @if (selectedUser?.id === user.id) {
-                          <span class="material-icons check-icon">check_circle</span>
+                          <span class="material-symbols-rounded check-icon">check_circle</span>
                         }
                       </div>
                     }
                   } @else {
                     <div class="no-results">
-                      <span class="material-icons">search_off</span>
+                      <span class="material-symbols-rounded">search_off</span>
                       <p>لا توجد نتائج</p>
                     </div>
                   }
@@ -168,7 +168,7 @@
           ></textarea>
         </div>
         <button type="button" class="voltyks-btn btn-primary" (click)="openTransferDialog()">
-          <span class="material-icons" style="font-size: 18px; margin-left: 8px;">send</span>
+          <span class="material-symbols-rounded" style="font-size: 18px; margin-left: 8px;">send</span>
           تحويل الآن
         </button>
       </form>
@@ -176,11 +176,11 @@
   } @else if (loadError) {
     <div class="voltyks-card">
       <div style="text-align: center; padding: 40px;">
-        <span class="material-icons" style="font-size: 48px; color: #F44336; display: block; margin-bottom: 16px;">error_outline</span>
+        <span class="material-symbols-rounded" style="font-size: 48px; color: #F44336; display: block; margin-bottom: 16px;">error_outline</span>
         <p style="color: #F44336; margin-bottom: 16px;">فشل تحميل بيانات الرسوم</p>
         <p style="color: #B0B0B0; margin-bottom: 24px; font-size: 14px;">تأكد من اتصال الخادم وحاول مرة أخرى</p>
         <button class="voltyks-btn btn-primary" (click)="loadFees(); loadUsers()">
-          <span class="material-icons" style="font-size: 18px; margin-left: 8px;">refresh</span>
+          <span class="material-symbols-rounded" style="font-size: 18px; margin-left: 8px;">refresh</span>
           إعادة المحاولة
         </button>
       </div>

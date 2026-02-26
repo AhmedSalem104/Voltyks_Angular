@@ -8,7 +8,7 @@
 
   <!-- Charging Mode Section -->
   <div class="section-header">
-    <span class="material-icons">bolt</span>
+    <span class="material-symbols-rounded">bolt</span>
     <h3>وضع الشحن</h3>
   </div>
 
@@ -19,10 +19,10 @@
     </div>
   } @else if (chargingModeLoadError) {
     <div class="charging-mode-card error">
-      <span class="material-icons">error_outline</span>
+      <span class="material-symbols-rounded">error_outline</span>
       <span>فشل تحميل حالة الشحن</span>
       <button class="retry-btn" (click)="loadChargingModeConfig()">
-        <span class="material-icons">refresh</span>
+        <span class="material-symbols-rounded">refresh</span>
         إعادة المحاولة
       </button>
     </div>
@@ -30,7 +30,7 @@
     <div class="charging-mode-card" [class.enabled]="chargingModeEnabled" [class.disabled]="!chargingModeEnabled">
       <div class="charging-mode-header">
         <div class="charging-mode-icon" [class.active]="chargingModeEnabled">
-          <span class="material-icons">{{ chargingModeEnabled ? 'electric_bolt' : 'power_off' }}</span>
+          <span class="material-symbols-rounded">{{ chargingModeEnabled ? 'electric_bolt' : 'power_off' }}</span>
         </div>
         <div class="charging-mode-info">
           <h4>حالة الشحن</h4>
@@ -46,9 +46,9 @@
             (click)="toggleChargingMode()"
           >
             @if (isChargingModeSaving) {
-              <span class="material-icons spin">sync</span>
+              <span class="material-symbols-rounded spin">sync</span>
             } @else {
-              <span class="material-icons">{{ chargingModeEnabled ? 'toggle_on' : 'toggle_off' }}</span>
+              <span class="material-symbols-rounded">{{ chargingModeEnabled ? 'toggle_on' : 'toggle_off' }}</span>
             }
             <span>{{ chargingModeEnabled ? 'تعطيل' : 'تفعيل' }}</span>
           </button>
@@ -58,7 +58,7 @@
       <div class="charging-mode-description">
         @if (chargingModeEnabled) {
           <div class="status-message success">
-            <span class="material-icons">check_circle</span>
+            <span class="material-symbols-rounded">check_circle</span>
             <div>
               <strong>الشحن مفعّل</strong>
               <p>يمكن للمستخدمين استخدام الشواحن وإجراء عمليات الشحن بشكل طبيعي.</p>
@@ -66,7 +66,7 @@
           </div>
         } @else {
           <div class="status-message warning">
-            <span class="material-icons">warning</span>
+            <span class="material-symbols-rounded">warning</span>
             <div>
               <strong>الشحن معطّل - وضع الإعداد</strong>
               <p>التطبيق في وضع التسجيل فقط. لن يتمكن المستخدمون من:</p>
@@ -85,7 +85,7 @@
 
   <!-- Mobile App Section -->
   <div class="section-header">
-    <span class="material-icons">smartphone</span>
+    <span class="material-symbols-rounded">smartphone</span>
     <h3>إعدادات تطبيق الموبايل</h3>
   </div>
 
@@ -96,7 +96,7 @@
       <div class="platform-card" [class.enabled]="formConfig.android_enabled" [class.disabled]="!formConfig.android_enabled">
         <div class="platform-header android">
           <div class="platform-icon">
-            <span class="material-icons">android</span>
+            <span class="material-symbols-rounded">android</span>
           </div>
           <div class="platform-info">
             <h3>Android</h3>
@@ -115,7 +115,7 @@
                 [disabled]="formConfig.android_enabled"
                 (click)="togglePlatform('android')"
               >
-                <span class="material-icons">power_settings_new</span>
+                <span class="material-symbols-rounded">power_settings_new</span>
                 <span>تفعيل</span>
               </button>
 
@@ -125,7 +125,7 @@
                 [disabled]="!formConfig.android_enabled"
                 (click)="togglePlatform('android')"
               >
-                <span class="material-icons">block</span>
+                <span class="material-symbols-rounded">block</span>
                 <span>تعطيل</span>
               </button>
             </div>
@@ -133,7 +133,7 @@
 
           <div class="version-section">
             <label class="version-label">
-              <span class="material-icons">update</span>
+              <span class="material-symbols-rounded">update</span>
               الحد الأدنى للإصدار
             </label>
             <input
@@ -156,7 +156,7 @@
       <div class="platform-card" [class.enabled]="formConfig.ios_enabled" [class.disabled]="!formConfig.ios_enabled">
         <div class="platform-header ios">
           <div class="platform-icon">
-            <span class="material-icons">phone_iphone</span>
+            <span class="material-symbols-rounded">phone_iphone</span>
           </div>
           <div class="platform-info">
             <h3>iOS</h3>
@@ -175,7 +175,7 @@
                 [disabled]="formConfig.ios_enabled"
                 (click)="togglePlatform('ios')"
               >
-                <span class="material-icons">power_settings_new</span>
+                <span class="material-symbols-rounded">power_settings_new</span>
                 <span>تفعيل</span>
               </button>
 
@@ -185,7 +185,7 @@
                 [disabled]="!formConfig.ios_enabled"
                 (click)="togglePlatform('ios')"
               >
-                <span class="material-icons">block</span>
+                <span class="material-symbols-rounded">block</span>
                 <span>تعطيل</span>
               </button>
             </div>
@@ -193,7 +193,7 @@
 
           <div class="version-section">
             <label class="version-label">
-              <span class="material-icons">update</span>
+              <span class="material-symbols-rounded">update</span>
               الحد الأدنى للإصدار
             </label>
             <input
@@ -216,7 +216,7 @@
     <!-- Warning Section -->
     @if (!formConfig.android_enabled || !formConfig.ios_enabled) {
       <div class="warning-card">
-        <span class="material-icons">warning</span>
+        <span class="material-symbols-rounded">warning</span>
         <div class="warning-content">
           <strong>تنبيه:</strong>
           @if (!formConfig.android_enabled && !formConfig.ios_enabled) {
@@ -234,20 +234,20 @@
     @if (hasChanges) {
       <div class="actions-bar">
         <div class="changes-indicator">
-          <span class="material-icons">edit</span>
+          <span class="material-symbols-rounded">edit</span>
           يوجد تغييرات غير محفوظة
         </div>
         <div class="action-buttons">
           <button class="voltyks-btn btn-secondary" (click)="discardChanges()" [disabled]="isSaving">
-            <span class="material-icons">undo</span>
+            <span class="material-symbols-rounded">undo</span>
             تراجع
           </button>
           <button class="voltyks-btn btn-primary" (click)="saveChanges()" [disabled]="isSaving">
             @if (isSaving) {
-              <span class="material-icons spin">sync</span>
+              <span class="material-symbols-rounded spin">sync</span>
               جاري الحفظ...
             } @else {
-              <span class="material-icons">save</span>
+              <span class="material-symbols-rounded">save</span>
               حفظ التغييرات
             }
           </button>
@@ -257,7 +257,7 @@
 
     <!-- Info Section -->
     <div class="info-card">
-      <span class="material-icons">info</span>
+      <span class="material-symbols-rounded">info</span>
       <div class="info-content">
         <p>عند تعطيل منصة معينة، سيظهر للمستخدمين رسالة "التطبيق غير متاح حالياً" عند محاولة فتح التطبيق.</p>
         <p>الحد الأدنى للإصدار يمنع المستخدمين الذين لديهم إصدار أقدم من الوصول ويطلب منهم التحديث.</p>
@@ -267,11 +267,11 @@
   } @else if (loadError) {
     <div class="voltyks-card error-card">
       <div class="error-content">
-        <span class="material-icons">error_outline</span>
+        <span class="material-symbols-rounded">error_outline</span>
         <p class="error-title">فشل تحميل البيانات</p>
         <p class="error-message">تأكد من اتصال الخادم وحاول مرة أخرى</p>
         <button class="voltyks-btn btn-primary" (click)="loadConfig()">
-          <span class="material-icons">refresh</span>
+          <span class="material-symbols-rounded">refresh</span>
           إعادة المحاولة
         </button>
       </div>

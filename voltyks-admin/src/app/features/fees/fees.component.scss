@@ -259,7 +259,7 @@
               transition: all 0.2s ease;
               border-radius: 4px;
 
-              .material-icons {
+              .material-symbols-rounded {
                 color: #B0B0B0;
                 font-size: 20px;
               }
@@ -267,7 +267,7 @@
               &:hover {
                 background: rgba(255, 59, 48, 0.1);
 
-                .material-icons {
+                .material-symbols-rounded {
                   color: #ff3b30;
                 }
               }
@@ -407,7 +407,7 @@
               text-align: center;
               color: #6C6C6C;
 
-              .material-icons {
+              .material-symbols-rounded {
                 font-size: 48px;
                 margin-bottom: 12px;
                 opacity: 0.5;

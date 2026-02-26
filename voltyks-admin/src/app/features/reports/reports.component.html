@@ -10,7 +10,7 @@
       <!-- Search Box -->
       <div class="filter-item search-filter">
         <div class="search-box">
-          <span class="material-icons search-icon">search</span>
+          <span class="material-symbols-rounded search-icon">search</span>
           <input
             type="text"
             class="voltyks-input"
@@ -24,7 +24,7 @@
       <!-- Start Date -->
       <div class="filter-item date-filter">
         <div class="date-input-wrapper">
-          <span class="material-icons date-icon">calendar_today</span>
+          <span class="material-symbols-rounded date-icon">calendar_today</span>
           <input
             type="date"
             class="voltyks-input"
@@ -39,7 +39,7 @@
       <!-- End Date -->
       <div class="filter-item date-filter">
         <div class="date-input-wrapper">
-          <span class="material-icons date-icon">calendar_today</span>
+          <span class="material-symbols-rounded date-icon">calendar_today</span>
           <input
             type="date"
             class="voltyks-input"
@@ -55,7 +55,7 @@
       <!-- Status Filter -->
       <div class="filter-item status-filter">
         <div class="select-wrapper">
-          <span class="material-icons select-icon">info</span>
+          <span class="material-symbols-rounded select-icon">info</span>
           <select
             class="voltyks-input"
             [(ngModel)]="filters.status"
@@ -71,7 +71,7 @@
       <!-- Action Buttons -->
       <div class="filter-item filter-actions">
         <button class="voltyks-btn btn-secondary" (click)="clearFilters()" title="إعادة تعيين">
-          <span class="material-icons">refresh</span>
+          <span class="material-symbols-rounded">refresh</span>
         </button>
       </div>
     </div>
@@ -84,7 +84,7 @@
       <div class="header-actions">
         <span class="total-count">إجمالي: {{ totalReports }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredReports.length === 0">
-          <span class="material-icons">print</span>
+          <span class="material-symbols-rounded">print</span>
           <span>طباعة PDF</span>
         </button>
       </div>
@@ -108,16 +108,16 @@
                 <td>
                   <div class="user-cell" [title]="'معرف المستخدم: ' + report.userId">
                     <div class="user-avatar">
-                      <span class="material-icons">account_circle</span>
+                      <span class="material-symbols-rounded">account_circle</span>
                     </div>
                     <div class="user-info">
                       <span class="user-name">{{ report.userFullName }}</span>
                       <span class="user-contact">
                         @if (report.userEmail) {
-                          <span class="material-icons contact-icon">email</span>
+                          <span class="material-symbols-rounded contact-icon">email</span>
                           {{ report.userEmail }}
                         } @else if (report.userPhone) {
-                          <span class="material-icons contact-icon">phone</span>
+                          <span class="material-symbols-rounded contact-icon">phone</span>
                           {{ report.userPhone }}
                         } @else {
                           <span class="loading-contact">جاري التحميل...</span>
@@ -145,10 +145,10 @@
                       [title]="report.isResolved ? 'اضغط لإرجاع إلى معلق' : 'اضغط لتحديد كمحلول'"
                     >
                       @if (isReportUpdating(report.id)) {
-                        <span class="material-icons spinning">sync</span>
+                        <span class="material-symbols-rounded spinning">sync</span>
                         <span class="status-text">جاري التحديث</span>
                       } @else {
-                        <span class="material-icons">{{ report.isResolved ? 'check_circle' : 'schedule' }}</span>
+                        <span class="material-symbols-rounded">{{ report.isResolved ? 'check_circle' : 'schedule' }}</span>
                         <span class="status-text">{{ report.isResolved ? 'تم الحل' : 'معلق' }}</span>
                       }
                     </button>
@@ -161,7 +161,7 @@
                       (click)="openSidePanel(report); $event.stopPropagation()"
                       title="عرض التفاصيل"
                     >
-                      <span class="material-icons">visibility</span>
+                      <span class="material-symbols-rounded">visibility</span>
                     </button>
                   </div>
                 </td>
@@ -179,7 +179,7 @@
       ></app-pagination>
     } @else {
       <div class="empty-state">
-        <span class="material-icons empty-icon">report_off</span>
+        <span class="material-symbols-rounded empty-icon">report_off</span>
         <p>لا توجد تقارير</p>
         @if (hasActiveFilters()) {
           <button class="voltyks-btn btn-secondary" (click)="clearFilters()">
@@ -199,7 +199,7 @@
     <div class="side-panel-header">
       <h3>تفاصيل البلاغ #{{ selectedReport.id }}</h3>
       <button class="close-btn" (click)="closeSidePanel()">
-        <span class="material-icons">close</span>
+        <span class="material-symbols-rounded">close</span>
       </button>
     </div>
 
@@ -207,7 +207,7 @@
       <!-- Report Info Section -->
       <div class="detail-section">
         <div class="section-header">
-          <span class="material-icons">report</span>
+          <span class="material-symbols-rounded">report</span>
           <h4>معلومات البلاغ</h4>
         </div>
         <div class="section-content">
@@ -223,7 +223,7 @@
             <span class="detail-label">الحالة</span>
             <div class="status-action">
               <span class="status-badge" [class.resolved]="selectedReport.isResolved">
-                <span class="material-icons">{{ selectedReport.isResolved ? 'check_circle' : 'schedule' }}</span>
+                <span class="material-symbols-rounded">{{ selectedReport.isResolved ? 'check_circle' : 'schedule' }}</span>
                 {{ selectedReport.isResolved ? 'تم الحل' : 'معلق' }}
               </span>
               <button
@@ -234,9 +234,9 @@
                 [disabled]="isUpdatingStatus"
               >
                 @if (isUpdatingStatus) {
-                  <span class="material-icons spinning">sync</span>
+                  <span class="material-symbols-rounded spinning">sync</span>
                 } @else {
-                  <span class="material-icons">{{ selectedReport.isResolved ? 'undo' : 'check' }}</span>
+                  <span class="material-symbols-rounded">{{ selectedReport.isResolved ? 'undo' : 'check' }}</span>
                 }
                 {{ selectedReport.isResolved ? 'إرجاع للمعلق' : 'تحديد كمحلول' }}
               </button>
@@ -248,7 +248,7 @@
       <!-- User Info Section -->
       <div class="detail-section">
         <div class="section-header">
-          <span class="material-icons">person</span>
+          <span class="material-symbols-rounded">person</span>
           <h4>بيانات صاحب البلاغ</h4>
         </div>
         <div class="section-content">
@@ -289,14 +289,14 @@
       <!-- Process Details -->
       @if (isLoadingProcess) {
         <div class="loading-section">
-          <span class="material-icons spinning">sync</span>
+          <span class="material-symbols-rounded spinning">sync</span>
           <p>جاري تحميل بيانات العملية...</p>
         </div>
       } @else if (selectedProcess) {
         <!-- Process Info Section -->
         <div class="detail-section">
           <div class="section-header">
-            <span class="material-icons">electric_bolt</span>
+            <span class="material-symbols-rounded">electric_bolt</span>
             <h4>معلومات العملية</h4>
           </div>
           <div class="section-content">
@@ -320,7 +320,7 @@
         <!-- Request Details Section -->
         <div class="detail-section">
           <div class="section-header">
-            <span class="material-icons">info</span>
+            <span class="material-symbols-rounded">info</span>
             <h4>تفاصيل الطلب</h4>
           </div>
           <div class="section-content">
@@ -352,7 +352,7 @@
         <!-- Pricing Section -->
         <div class="detail-section">
           <div class="section-header">
-            <span class="material-icons">payments</span>
+            <span class="material-symbols-rounded">payments</span>
             <h4>الأسعار</h4>
           </div>
           <div class="section-content">
@@ -382,7 +382,7 @@
         <!-- Charger Info Section -->
         <div class="detail-section">
           <div class="section-header">
-            <span class="material-icons">ev_station</span>
+            <span class="material-symbols-rounded">ev_station</span>
             <h4>معلومات الشاحن</h4>
           </div>
           <div class="section-content">
@@ -430,7 +430,7 @@
         <!-- Vehicle Info Section -->
         <div class="detail-section">
           <div class="section-header">
-            <span class="material-icons">directions_car</span>
+            <span class="material-symbols-rounded">directions_car</span>
             <h4>معلومات المركبة</h4>
           </div>
           <div class="section-content">
@@ -464,7 +464,7 @@
         <!-- Vehicle Owner Section -->
         <div class="detail-section">
           <div class="section-header">
-            <span class="material-icons">person</span>
+            <span class="material-symbols-rounded">person</span>
             <h4>مالك المركبة</h4>
           </div>
           <div class="section-content">
@@ -504,7 +504,7 @@
         <!-- Charger Owner Section -->
         <div class="detail-section">
           <div class="section-header">
-            <span class="material-icons">engineering</span>
+            <span class="material-symbols-rounded">engineering</span>
             <h4>مالك الشاحن</h4>
           </div>
           <div class="section-content">
@@ -542,7 +542,7 @@
         </div>
       } @else {
         <div class="no-process">
-          <span class="material-icons">info</span>
+          <span class="material-symbols-rounded">info</span>
           <p>لا توجد بيانات عملية مرتبطة بهذا البلاغ</p>
         </div>
       }

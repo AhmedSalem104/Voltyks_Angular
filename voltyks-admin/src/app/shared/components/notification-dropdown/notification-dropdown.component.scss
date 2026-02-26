@@ -63,7 +63,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
       align-items: center;
       justify-content: center;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 26px;
         color: #000;
       }
@@ -187,7 +187,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
       cursor: not-allowed;
     }
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 20px;
 
       &.spinning {
@@ -253,7 +253,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
       align-items: center;
       gap: 12px;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 22px;
         color: $text-muted;
 
@@ -371,7 +371,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
   cursor: pointer;
   transition: all 0.2s;
 
-  .material-icons {
+  .material-symbols-rounded {
     font-size: 20px;
   }
 
@@ -411,7 +411,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
     cursor: pointer;
     transition: all 0.2s;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 18px;
     }
 
@@ -490,7 +490,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
     cursor: pointer;
     transition: all 0.2s;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 16px;
     }
 
@@ -534,7 +534,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
   padding: 48px 24px;
   text-align: center;
 
-  .material-icons {
+  .material-symbols-rounded {
     font-size: 48px;
     color: #ef4444;
     margin-bottom: 16px;
@@ -560,7 +560,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
     cursor: pointer;
     transition: all 0.2s;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 18px;
       color: $primary;
       margin-bottom: 0;
@@ -690,7 +690,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
     justify-content: center;
     flex-shrink: 0;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 22px;
     }
 
@@ -767,7 +767,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
         font-size: 12px;
         color: $text-secondary;
 
-        .material-icons {
+        .material-symbols-rounded {
           font-size: 14px;
           color: $text-muted;
         }
@@ -776,7 +776,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
       .notification-product {
         color: $reservation-color;
 
-        .material-icons {
+        .material-symbols-rounded {
           color: $reservation-color;
         }
       }
@@ -808,7 +808,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
     cursor: pointer;
     transition: all 0.2s;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 16px;
     }
 
@@ -870,7 +870,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
     justify-content: center;
     margin-bottom: 20px;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 40px;
       color: $primary;
       opacity: 0.6;
@@ -927,7 +927,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
       cursor: pointer;
       transition: all 0.2s;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 20px;
       }
 
@@ -1013,7 +1013,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
         width: 42px;
         height: 42px;
 
-        .material-icons {
+        .material-symbols-rounded {
           font-size: 22px;
         }
       }
@@ -1038,7 +1038,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
       width: 32px;
       height: 32px;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 18px;
       }
     }
@@ -1101,7 +1101,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
       width: 40px;
       height: 40px;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 20px;
       }
     }
@@ -1131,7 +1131,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
         padding: 10px 6px;
         font-size: 10px;
 
-        .material-icons {
+        .material-symbols-rounded {
           font-size: 18px;
         }
 
@@ -1287,7 +1287,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
       border-top-color: var(--primary-green);
     }
 
-    .material-icons {
+    .material-symbols-rounded {
       color: var(--text-disabled);
     }
 

@@ -10,7 +10,7 @@
   <div class="stats-grid">
     <div class="stat-card pending">
       <div class="stat-icon">
-        <span class="material-icons">hourglass_empty</span>
+        <span class="material-symbols-rounded">hourglass_empty</span>
       </div>
       <div class="stat-content">
         <span class="stat-value">{{ totalPending }}</span>
@@ -19,7 +19,7 @@
     </div>
     <div class="stat-card resolved">
       <div class="stat-icon">
-        <span class="material-icons">check_circle</span>
+        <span class="material-symbols-rounded">check_circle</span>
       </div>
       <div class="stat-content">
         <span class="stat-value">{{ totalResolved }}</span>
@@ -34,7 +34,7 @@
       <!-- Search Box -->
       <div class="filter-item search-filter">
         <div class="search-box">
-          <span class="material-icons search-icon">search</span>
+          <span class="material-symbols-rounded search-icon">search</span>
           <input
             type="text"
             class="voltyks-input"
@@ -81,7 +81,7 @@
       <div class="header-actions">
         <span class="total-count">إجمالي: {{ totalComplaints }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredComplaints.length === 0">
-          <span class="material-icons">print</span>
+          <span class="material-symbols-rounded">print</span>
           <span>طباعة PDF</span>
         </button>
       </div>
@@ -107,7 +107,7 @@
                 <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
                 <td>
                   <div class="category-badge">
-                    <span class="material-icons">category</span>
+                    <span class="material-symbols-rounded">category</span>
                     {{ complaint.categoryName }}
                   </div>
                 </td>
@@ -136,9 +136,9 @@
                     (click)="toggleStatus(complaint)"
                   >
                     @if (updatingComplaintId === complaint.id) {
-                      <span class="material-icons spinning">sync</span>
+                      <span class="material-symbols-rounded spinning">sync</span>
                     } @else {
-                      <span class="material-icons">{{ complaint.isResolved ? 'check_circle' : 'hourglass_empty' }}</span>
+                      <span class="material-symbols-rounded">{{ complaint.isResolved ? 'check_circle' : 'hourglass_empty' }}</span>
                     }
                     {{ complaint.isResolved ? 'محلولة' : 'غير محلولة' }}
                   </button>
@@ -155,7 +155,7 @@
                       (click)="openDetailsModal(complaint)"
                       title="عرض التفاصيل"
                     >
-                      <span class="material-icons">visibility</span>
+                      <span class="material-symbols-rounded">visibility</span>
                     </button>
                   </div>
                 </td>
@@ -173,7 +173,7 @@
       ></app-pagination>
     } @else {
       <div class="empty-state">
-        <span class="material-icons empty-icon">inbox</span>
+        <span class="material-symbols-rounded empty-icon">inbox</span>
         <p>لا توجد شكاوى</p>
       </div>
     }
@@ -187,35 +187,35 @@
     <div class="modal details-modal">
       <div class="modal-header">
         <h3>
-          <span class="material-icons">info</span>
+          <span class="material-symbols-rounded">info</span>
           تفاصيل الشكوى
         </h3>
         <button class="close-btn" (click)="closeDetailsModal()">
-          <span class="material-icons">close</span>
+          <span class="material-symbols-rounded">close</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="detail-section">
           <div class="detail-row">
             <span class="detail-label">
-              <span class="material-icons">category</span>
+              <span class="material-symbols-rounded">category</span>
               نوع الشكوى
             </span>
             <span class="detail-value">{{ selectedComplaint.categoryName }}</span>
           </div>
           <div class="detail-row">
             <span class="detail-label">
-              <span class="material-icons">schedule</span>
+              <span class="material-symbols-rounded">schedule</span>
               الحالة
             </span>
             <span class="status-badge" [class.resolved]="selectedComplaint.isResolved" [class.pending]="!selectedComplaint.isResolved">
-              <span class="material-icons">{{ selectedComplaint.isResolved ? 'check_circle' : 'hourglass_empty' }}</span>
+              <span class="material-symbols-rounded">{{ selectedComplaint.isResolved ? 'check_circle' : 'hourglass_empty' }}</span>
               {{ selectedComplaint.isResolved ? 'محلولة' : 'غير محلولة' }}
             </span>
           </div>
           <div class="detail-row">
             <span class="detail-label">
-              <span class="material-icons">calendar_today</span>
+              <span class="material-symbols-rounded">calendar_today</span>
               تاريخ الإنشاء
             </span>
             <span class="detail-value">{{ formatDateLong(selectedComplaint.createdAt) }}</span>
@@ -226,21 +226,21 @@
           <h4>معلومات المستخدم</h4>
           <div class="detail-row">
             <span class="detail-label">
-              <span class="material-icons">person</span>
+              <span class="material-symbols-rounded">person</span>
               الاسم
             </span>
             <span class="detail-value">{{ selectedComplaint.userName || '-' }}</span>
           </div>
           <div class="detail-row">
             <span class="detail-label">
-              <span class="material-icons">email</span>
+              <span class="material-symbols-rounded">email</span>
               البريد الإلكتروني
             </span>
             <span class="detail-value">{{ selectedComplaint.userEmail || '-' }}</span>
           </div>
           <div class="detail-row">
             <span class="detail-label">
-              <span class="material-icons">phone</span>
+              <span class="material-symbols-rounded">phone</span>
               رقم الهاتف
             </span>
             <span class="detail-value">{{ selectedComplaint.userPhone || '-' }}</span>
@@ -264,9 +264,9 @@
           (click)="toggleStatus(selectedComplaint)"
         >
           @if (updatingComplaintId === selectedComplaint.id) {
-            <span class="material-icons spinning">sync</span>
+            <span class="material-symbols-rounded spinning">sync</span>
           } @else {
-            <span class="material-icons">{{ selectedComplaint.isResolved ? 'undo' : 'check_circle' }}</span>
+            <span class="material-symbols-rounded">{{ selectedComplaint.isResolved ? 'undo' : 'check_circle' }}</span>
           }
           {{ selectedComplaint.isResolved ? 'إلغاء الحل' : 'تحديد كمحلولة' }}
         </button>

@@ -59,7 +59,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
       color: $primary;
     }
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 20px;
     }
   }
@@ -136,7 +136,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
   padding: 80px 20px;
   text-align: center;
 
-  .material-icons {
+  .material-symbols-rounded {
     font-size: 64px;
     color: $danger;
     margin-bottom: 16px;
@@ -189,7 +189,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
   font-weight: 600;
   width: fit-content;
 
-  .material-icons {
+  .material-symbols-rounded {
     font-size: 20px;
   }
 
@@ -258,7 +258,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
     background: rgba(255, 255, 255, 0.02);
     border-bottom: 1px solid $glass-border;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 20px;
       color: $primary;
     }
@@ -366,7 +366,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
       color: $text-secondary;
       font-size: 13px;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 16px;
       }
     }
@@ -428,7 +428,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
         align-items: center;
         justify-content: center;
 
-        .material-icons {
+        .material-symbols-rounded {
           font-size: 40px;
           color: $text-muted;
         }
@@ -503,7 +503,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
   cursor: pointer;
   transition: all 0.3s ease;
 
-  .material-icons {
+  .material-symbols-rounded {
     font-size: 20px;
   }
 

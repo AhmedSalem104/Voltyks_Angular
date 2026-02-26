@@ -10,7 +10,7 @@
       <!-- Search Box -->
       <div class="filter-item search-filter">
         <div class="search-box">
-          <span class="material-icons search-icon">search</span>
+          <span class="material-symbols-rounded search-icon">search</span>
           <input
             type="text"
             class="voltyks-input"
@@ -28,7 +28,7 @@
           [class.active]="userFilter === 'active'"
           (click)="onFilterChange('active')"
         >
-          <span class="material-icons">person</span>
+          <span class="material-symbols-rounded">person</span>
           النشطين
         </button>
         <button
@@ -36,7 +36,7 @@
           [class.active]="userFilter === 'deleted'"
           (click)="onFilterChange('deleted')"
         >
-          <span class="material-icons">person_off</span>
+          <span class="material-symbols-rounded">person_off</span>
           المحذوفين
         </button>
         <button
@@ -44,7 +44,7 @@
           [class.active]="userFilter === 'all'"
           (click)="onFilterChange('all')"
         >
-          <span class="material-icons">people</span>
+          <span class="material-symbols-rounded">people</span>
           الكل
         </button>
       </div>
@@ -64,7 +64,7 @@
       <div class="table-header-actions">
         <span class="total-count">إجمالي: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredUsers.length === 0">
-          <span class="material-icons">print</span>
+          <span class="material-symbols-rounded">print</span>
           <span>طباعة PDF</span>
         </button>
       </div>
@@ -122,7 +122,7 @@
                       class="voltyks-btn btn-primary btn-sm"
                       title="عرض التفاصيل"
                     >
-                      <span class="material-icons">visibility</span>
+                      <span class="material-symbols-rounded">visibility</span>
                     </a>
 
                     @if (!user.isDeleted) {
@@ -132,7 +132,7 @@
                         (click)="onDeleteUser(user)"
                         title="حذف المستخدم"
                       >
-                        <span class="material-icons">delete</span>
+                        <span class="material-symbols-rounded">delete</span>
                       </button>
                     } @else {
                       <!-- Restore Button -->
@@ -141,7 +141,7 @@
                         (click)="onRestoreUser(user)"
                         title="استعادة المستخدم"
                       >
-                        <span class="material-icons">restore</span>
+                        <span class="material-symbols-rounded">restore</span>
                       </button>
 
                       <!-- Permanent Delete Button -->
@@ -150,7 +150,7 @@
                         (click)="onPermanentDeleteUser(user)"
                         title="حذف نهائي"
                       >
-                        <span class="material-icons">delete_forever</span>
+                        <span class="material-symbols-rounded">delete_forever</span>
                       </button>
                     }
                   </div>
@@ -171,7 +171,7 @@
       ></app-pagination>
     } @else {
       <div class="empty-state">
-        <span class="material-icons empty-icon">
+        <span class="material-symbols-rounded empty-icon">
           @switch (userFilter) {
             @case ('deleted') { person_off }
             @default { people_outline }

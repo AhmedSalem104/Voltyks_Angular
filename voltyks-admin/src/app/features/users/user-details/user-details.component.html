@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="page-header">
       <button class="back-btn voltyks-btn btn-secondary" (click)="goBack()">
-        <span class="material-icons">arrow_forward</span>
+        <span class="material-symbols-rounded">arrow_forward</span>
         رجوع
       </button>
       <h2>تفاصيل المستخدم</h2>
@@ -13,7 +13,7 @@
     <div class="voltyks-card user-overview">
       <div class="user-avatar-section">
         <div class="user-avatar">
-          <span class="material-icons">account_circle</span>
+          <span class="material-symbols-rounded">account_circle</span>
         </div>
         <div class="user-basic-info">
           <h3>{{ user.fullName }}</h3>
@@ -26,21 +26,21 @@
 
       <div class="user-stats">
         <div class="stat-item">
-          <span class="material-icons">phone</span>
+          <span class="material-symbols-rounded">phone</span>
           <div>
             <p class="stat-label">رقم الهاتف</p>
             <p class="stat-value">{{ user.phoneNumber }}</p>
           </div>
         </div>
         <div class="stat-item">
-          <span class="material-icons">event</span>
+          <span class="material-symbols-rounded">event</span>
           <div>
             <p class="stat-label">تاريخ التسجيل</p>
             <p class="stat-value">{{ formatDate(user.dateCreated) }}</p>
           </div>
         </div>
         <div class="stat-item">
-          <span class="material-icons">star</span>
+          <span class="material-symbols-rounded">star</span>
           <div>
             <p class="stat-label">التقييم</p>
             <p class="stat-value">{{ user.rating }}/5 ({{ user.ratingCount }})</p>
@@ -68,7 +68,7 @@
           [class.active]="activeTab === 'overview'"
           (click)="switchTab('overview')"
         >
-          <span class="material-icons">info</span>
+          <span class="material-symbols-rounded">info</span>
           نظرة عامة
         </button>
         <button
@@ -76,7 +76,7 @@
           [class.active]="activeTab === 'wallet'"
           (click)="switchTab('wallet')"
         >
-          <span class="material-icons">account_balance_wallet</span>
+          <span class="material-symbols-rounded">account_balance_wallet</span>
           المحفظة
         </button>
         <button
@@ -84,7 +84,7 @@
           [class.active]="activeTab === 'vehicles'"
           (click)="switchTab('vehicles')"
         >
-          <span class="material-icons">directions_car</span>
+          <span class="material-symbols-rounded">directions_car</span>
           المركبات
         </button>
         <button
@@ -92,7 +92,7 @@
           [class.active]="activeTab === 'reports'"
           (click)="switchTab('reports')"
         >
-          <span class="material-icons">report</span>
+          <span class="material-symbols-rounded">report</span>
           التقارير
         </button>
         <button
@@ -100,7 +100,7 @@
           [class.active]="activeTab === 'manageBalance'"
           (click)="switchTab('manageBalance')"
         >
-          <span class="material-icons">account_balance_wallet</span>
+          <span class="material-symbols-rounded">account_balance_wallet</span>
           إدارة الرصيد
         </button>
       </div>
@@ -239,7 +239,7 @@
               <!-- Add Balance Section -->
               <div class="balance-card add-balance-card">
                 <div class="card-header add-header">
-                  <span class="material-icons">add_circle</span>
+                  <span class="material-symbols-rounded">add_circle</span>
                   <h5>إضافة رصيد</h5>
                 </div>
                 <div class="card-body">
@@ -266,7 +266,7 @@
                   </div>
 
                   <button class="voltyks-btn btn-success" (click)="openAddBalanceDialog()">
-                    <span class="material-icons">add</span>
+                    <span class="material-symbols-rounded">add</span>
                     إضافة الرصيد
                   </button>
                 </div>
@@ -275,7 +275,7 @@
               <!-- Deduct Balance Section -->
               <div class="balance-card deduct-balance-card">
                 <div class="card-header deduct-header">
-                  <span class="material-icons">remove_circle</span>
+                  <span class="material-symbols-rounded">remove_circle</span>
                   <h5>خصم رصيد</h5>
                 </div>
                 <div class="card-body">
@@ -302,7 +302,7 @@
                   </div>
 
                   <button class="voltyks-btn btn-danger" (click)="openDeductBalanceDialog()">
-                    <span class="material-icons">remove</span>
+                    <span class="material-symbols-rounded">remove</span>
                     خصم الرصيد
                   </button>
                 </div>
@@ -317,7 +317,7 @@
                 <div class="transactions-actions">
                   <span class="total-count">إجمالي: {{ filteredTransactions.length }}</span>
                   <button class="voltyks-btn print-btn" (click)="printTransactionsToPdf()" [disabled]="filteredTransactions.length === 0">
-                    <span class="material-icons">print</span>
+                    <span class="material-symbols-rounded">print</span>
                     <span>طباعة PDF</span>
                   </button>
                 </div>
@@ -344,11 +344,11 @@
                   />
                 </div>
                 <button class="voltyks-btn btn-secondary clear-btn" (click)="clearTransactionsFilter()">
-                  <span class="material-icons">today</span>
+                  <span class="material-symbols-rounded">today</span>
                   اليوم
                 </button>
                 <button class="voltyks-btn btn-secondary show-all-btn" (click)="showAllTransactions()">
-                  <span class="material-icons">list</span>
+                  <span class="material-symbols-rounded">list</span>
                   عرض الكل
                 </button>
               </div>
@@ -398,7 +398,7 @@
                 ></app-pagination>
               } @else {
                 <div class="empty-state">
-                  <span class="material-icons empty-icon">receipt_long</span>
+                  <span class="material-symbols-rounded empty-icon">receipt_long</span>
                   <p>لا توجد معاملات</p>
                 </div>
               }

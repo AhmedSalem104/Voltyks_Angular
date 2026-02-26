@@ -5,7 +5,7 @@
       <p class="page-description">عرض وإدارة موديلات السيارات الكهربائية</p>
     </div>
     <button class="voltyks-btn btn-secondary back-btn" (click)="goToBrands()">
-      <span class="material-icons">arrow_forward</span>
+      <span class="material-symbols-rounded">arrow_forward</span>
       العلامات التجارية
     </button>
   </div>
@@ -16,7 +16,7 @@
       <!-- Search Box -->
       <div class="filter-item search-filter">
         <div class="search-box">
-          <span class="material-icons search-icon">search</span>
+          <span class="material-symbols-rounded search-icon">search</span>
           <input
             type="text"
             class="voltyks-input"
@@ -30,7 +30,7 @@
       <!-- Brand Filter -->
       <div class="filter-item brand-filter">
         <div class="select-wrapper">
-          <span class="material-icons select-icon">directions_car</span>
+          <span class="material-symbols-rounded select-icon">directions_car</span>
           <select
             class="voltyks-input"
             [ngModel]="selectedBrandFilter"
@@ -48,7 +48,7 @@
       @if (selectedBrandFilter) {
         <div class="filter-item filter-actions">
           <button class="voltyks-btn btn-secondary" (click)="clearBrandFilter()" title="مسح الفلتر">
-            <span class="material-icons">refresh</span>
+            <span class="material-symbols-rounded">refresh</span>
           </button>
         </div>
       }
@@ -62,11 +62,11 @@
       <div class="header-actions">
         <span class="total-count">إجمالي: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredModels.length === 0">
-          <span class="material-icons">print</span>
+          <span class="material-symbols-rounded">print</span>
           <span>طباعة PDF</span>
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
-          <span class="material-icons">add</span>
+          <span class="material-symbols-rounded">add</span>
           إضافة موديل
         </button>
       </div>
@@ -102,14 +102,14 @@
                       (click)="openEditDialog(model)"
                       title="تعديل"
                     >
-                      <span class="material-icons">edit</span>
+                      <span class="material-symbols-rounded">edit</span>
                     </button>
                     <button
                       class="voltyks-btn btn-icon btn-danger"
                       (click)="openDeleteConfirm(model)"
                       title="حذف"
                     >
-                      <span class="material-icons">delete</span>
+                      <span class="material-symbols-rounded">delete</span>
                     </button>
                   </div>
                 </td>
@@ -129,7 +129,7 @@
       ></app-pagination>
     } @else {
       <div class="empty-state">
-        <span class="material-icons empty-icon">directions_car</span>
+        <span class="material-symbols-rounded empty-icon">directions_car</span>
         <p>لا توجد موديلات</p>
         @if (selectedBrandFilter) {
           <button class="voltyks-btn btn-secondary" (click)="clearBrandFilter()">
@@ -149,7 +149,7 @@
         <div class="modal-header">
           <h3>إضافة موديل جديد</h3>
           <button class="close-btn" (click)="closeCreateDialog()">
-            <span class="material-icons">close</span>
+            <span class="material-symbols-rounded">close</span>
           </button>
         </div>
         <div class="modal-body">
@@ -197,7 +197,7 @@
             إلغاء
           </button>
           <button class="voltyks-btn btn-primary" (click)="createModel()">
-            <span class="material-icons">save</span>
+            <span class="material-symbols-rounded">save</span>
             حفظ
           </button>
         </div>
@@ -214,7 +214,7 @@
         <div class="modal-header">
           <h3>تعديل الموديل</h3>
           <button class="close-btn" (click)="closeEditDialog()">
-            <span class="material-icons">close</span>
+            <span class="material-symbols-rounded">close</span>
           </button>
         </div>
         <div class="modal-body">
@@ -260,7 +260,7 @@
             إلغاء
           </button>
           <button class="voltyks-btn btn-primary" (click)="updateModel()">
-            <span class="material-icons">save</span>
+            <span class="material-symbols-rounded">save</span>
             حفظ التغييرات
           </button>
         </div>

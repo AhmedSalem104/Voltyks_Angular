@@ -41,7 +41,7 @@ $ios-color: #007AFF;
   margin-bottom: 20px;
   margin-top: 8px;
 
-  .material-icons {
+  .material-symbols-rounded {
     font-size: 24px;
     color: $voltyks-primary;
   }
@@ -87,7 +87,7 @@ $ios-color: #007AFF;
       border-width: 3px;
     }
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 28px;
       color: $danger-color;
     }
@@ -110,7 +110,7 @@ $ios-color: #007AFF;
         background: rgba($voltyks-primary, 0.2);
       }
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 18px;
         color: $voltyks-primary;
       }
@@ -143,12 +143,12 @@ $ios-color: #007AFF;
       border-color: rgba($voltyks-primary, 0.4);
       box-shadow: 0 4px 20px rgba($voltyks-primary, 0.2);
 
-      .material-icons {
+      .material-symbols-rounded {
         color: $voltyks-primary;
       }
     }
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 36px;
       color: $warning-color;
     }
@@ -203,7 +203,7 @@ $ios-color: #007AFF;
       color: var(--text-secondary);
       border-color: var(--border-color);
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 28px;
 
         &.spin {
@@ -248,7 +248,7 @@ $ios-color: #007AFF;
       padding: 20px;
       border-radius: 14px;
 
-      > .material-icons {
+      > .material-symbols-rounded {
         font-size: 28px;
         flex-shrink: 0;
         margin-top: 2px;
@@ -258,7 +258,7 @@ $ios-color: #007AFF;
         background: rgba($voltyks-primary, 0.08);
         border: 1px solid rgba($voltyks-primary, 0.2);
 
-        > .material-icons {
+        > .material-symbols-rounded {
           color: $voltyks-primary;
         }
 
@@ -271,7 +271,7 @@ $ios-color: #007AFF;
         background: rgba($warning-color, 0.08);
         border: 1px solid rgba($warning-color, 0.2);
 
-        > .material-icons {
+        > .material-symbols-rounded {
           color: $warning-color;
         }
 
@@ -366,7 +366,7 @@ $ios-color: #007AFF;
         background: linear-gradient(135deg, rgba($android-color, 0.3) 0%, rgba($android-color, 0.1) 100%);
         border-color: rgba($android-color, 0.4);
 
-        .material-icons {
+        .material-symbols-rounded {
           color: $android-color;
         }
       }
@@ -379,7 +379,7 @@ $ios-color: #007AFF;
         background: linear-gradient(135deg, rgba($ios-color, 0.3) 0%, rgba($ios-color, 0.1) 100%);
         border-color: rgba($ios-color, 0.4);
 
-        .material-icons {
+        .material-symbols-rounded {
           color: $ios-color;
         }
       }
@@ -394,7 +394,7 @@ $ios-color: #007AFF;
       justify-content: center;
       border: 1px solid;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 32px;
       }
     }
@@ -460,7 +460,7 @@ $ios-color: #007AFF;
       transition: all 0.3s ease;
       border: 2px solid transparent;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 20px;
       }
 
@@ -526,7 +526,7 @@ $ios-color: #007AFF;
     color: var(--text-primary);
     margin-bottom: 10px;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 18px;
       color: var(--text-secondary);
     }
@@ -589,7 +589,7 @@ $ios-color: #007AFF;
   border: 1px solid rgba($warning-color, 0.3);
   border-radius: 16px;
 
-  > .material-icons {
+  > .material-symbols-rounded {
     font-size: 28px;
     color: $warning-color;
     flex-shrink: 0;
@@ -620,7 +620,7 @@ $ios-color: #007AFF;
   border: 1px solid rgba($voltyks-primary, 0.2);
   border-radius: 16px;
 
-  > .material-icons {
+  > .material-symbols-rounded {
     font-size: 24px;
     color: $voltyks-primary;
     flex-shrink: 0;
@@ -660,7 +660,7 @@ $ios-color: #007AFF;
     font-weight: 600;
     font-size: 15px;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 22px;
     }
   }
@@ -716,7 +716,7 @@ $ios-color: #007AFF;
     }
   }
 
-  .material-icons {
+  .material-symbols-rounded {
     font-size: 18px;
 
     &.spin {
@@ -748,7 +748,7 @@ $ios-color: #007AFF;
     text-align: center;
     padding: 40px;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 64px;
       color: $danger-color;
       display: block;
@@ -818,7 +818,7 @@ $ios-color: #007AFF;
         width: 48px;
         height: 48px;
 
-        .material-icons {
+        .material-symbols-rounded {
           font-size: 28px;
         }
       }
@@ -838,7 +838,7 @@ $ios-color: #007AFF;
       padding: 10px 12px;
       font-size: 13px;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 18px;
       }
     }

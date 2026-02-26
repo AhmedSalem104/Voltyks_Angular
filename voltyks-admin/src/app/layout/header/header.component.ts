@@ -16,7 +16,7 @@ import { NotificationDropdownComponent } from '../../shared/components/notificat
     <header class="header">
       <div class="header-left">
         <button class="menu-toggle" (click)="toggleMenu()">
-          <span class="material-icons">menu</span>
+          <span class="material-symbols-rounded">menu</span>
         </button>
         <h2 class="page-title">{{ pageTitle }}</h2>
       </div>
@@ -25,7 +25,7 @@ import { NotificationDropdownComponent } from '../../shared/components/notificat
         <!-- User Info -->
         <div class="user-section">
           <div class="user-avatar">
-            <span class="material-icons">account_circle</span>
+            <span class="material-symbols-rounded">account_circle</span>
           </div>
           <span class="user-name">{{ currentUser?.firstName || 'المسؤول' }}</span>
         </div>
@@ -38,7 +38,7 @@ import { NotificationDropdownComponent } from '../../shared/components/notificat
             [class.active]="showNotifications"
             title="الإشعارات"
           >
-            <span class="material-icons">notifications</span>
+            <span class="material-symbols-rounded">notifications</span>
             @if (unreadCount > 0) {
               <span class="badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
             }
@@ -51,12 +51,12 @@ import { NotificationDropdownComponent } from '../../shared/components/notificat
 
         <!-- Theme Toggle -->
         <button class="theme-toggle" (click)="toggleTheme()" [title]="(currentTheme === 'dark' ? 'التبديل للوضع الفاتح' : 'التبديل للوضع الداكن')">
-          <span class="material-icons">{{ currentTheme === 'dark' ? 'light_mode' : 'dark_mode' }}</span>
+          <span class="material-symbols-rounded">{{ currentTheme === 'dark' ? 'light_mode' : 'dark_mode' }}</span>
         </button>
 
         <!-- Logout Button -->
         <button class="logout-btn" (click)="logout()" title="تسجيل الخروج">
-          <span class="material-icons">logout</span>
+          <span class="material-symbols-rounded">logout</span>
         </button>
       </div>
     </header>

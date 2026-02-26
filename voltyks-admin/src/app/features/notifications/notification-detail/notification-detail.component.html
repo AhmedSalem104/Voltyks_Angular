@@ -2,11 +2,11 @@
   <!-- Header -->
   <div class="detail-header">
     <button class="back-btn" (click)="goBack()">
-      <span class="material-icons">arrow_forward</span>
+      <span class="material-symbols-rounded">arrow_forward</span>
       رجوع
     </button>
     <div class="header-title">
-      <span class="material-icons type-icon" [class]="type">{{ getTypeIcon() }}</span>
+      <span class="material-symbols-rounded type-icon" [class]="type">{{ getTypeIcon() }}</span>
       <h1>تفاصيل {{ getTypeLabel() }}</h1>
     </div>
   </div>
@@ -22,11 +22,11 @@
   <!-- Error State -->
   @if (loadError && !isLoading) {
     <div class="error-state">
-      <span class="material-icons">error_outline</span>
+      <span class="material-symbols-rounded">error_outline</span>
       <h3>فشل تحميل البيانات</h3>
       <p>لم نتمكن من تحميل تفاصيل الإشعار. قد يكون تم حذفه أو غير موجود.</p>
       <button class="retry-btn" (click)="loadData()">
-        <span class="material-icons">refresh</span>
+        <span class="material-symbols-rounded">refresh</span>
         إعادة المحاولة
       </button>
     </div>
@@ -37,14 +37,14 @@
     <div class="detail-content report-detail fade-in">
       <!-- Status Badge -->
       <div class="status-banner" [class.resolved]="report.isResolved" [class.pending]="!report.isResolved">
-        <span class="material-icons">{{ report.isResolved ? 'check_circle' : 'pending' }}</span>
+        <span class="material-symbols-rounded">{{ report.isResolved ? 'check_circle' : 'pending' }}</span>
         <span>{{ report.isResolved ? 'تم الحل' : 'معلق' }}</span>
       </div>
 
       <!-- Main Info Card -->
       <div class="info-card">
         <div class="card-header">
-          <span class="material-icons">description</span>
+          <span class="material-symbols-rounded">description</span>
           <h3>محتوى البلاغ</h3>
         </div>
         <div class="card-body">
@@ -55,7 +55,7 @@
       <!-- User Info Card -->
       <div class="info-card">
         <div class="card-header">
-          <span class="material-icons">person</span>
+          <span class="material-symbols-rounded">person</span>
           <h3>معلومات المُبلِّغ</h3>
         </div>
         <div class="card-body">
@@ -81,7 +81,7 @@
       <!-- Meta Info -->
       <div class="info-card">
         <div class="card-header">
-          <span class="material-icons">info</span>
+          <span class="material-symbols-rounded">info</span>
           <h3>معلومات إضافية</h3>
         </div>
         <div class="card-body">
@@ -100,12 +100,12 @@
       <div class="actions-card">
         @if (!report.isResolved) {
           <button class="action-btn success" (click)="resolveReport()" [disabled]="isSaving">
-            <span class="material-icons">check_circle</span>
+            <span class="material-symbols-rounded">check_circle</span>
             حل البلاغ
           </button>
         }
         <button class="action-btn danger" (click)="deleteReport()" [disabled]="isSaving">
-          <span class="material-icons">delete</span>
+          <span class="material-symbols-rounded">delete</span>
           حذف البلاغ
         </button>
       </div>
@@ -117,14 +117,14 @@
     <div class="detail-content complaint-detail fade-in">
       <!-- Status Badge -->
       <div class="status-banner" [class.resolved]="complaint.isResolved" [class.pending]="!complaint.isResolved">
-        <span class="material-icons">{{ complaint.isResolved ? 'check_circle' : 'pending' }}</span>
+        <span class="material-symbols-rounded">{{ complaint.isResolved ? 'check_circle' : 'pending' }}</span>
         <span>{{ complaint.isResolved ? 'تم الحل' : 'معلقة' }}</span>
       </div>
 
       <!-- Main Info Card -->
       <div class="info-card">
         <div class="card-header">
-          <span class="material-icons">feedback</span>
+          <span class="material-symbols-rounded">feedback</span>
           <h3>محتوى الشكوى</h3>
         </div>
         <div class="card-body">
@@ -136,7 +136,7 @@
       @if (complaint.categoryName) {
         <div class="info-card category-card">
           <div class="card-header">
-            <span class="material-icons">category</span>
+            <span class="material-symbols-rounded">category</span>
             <h3>التصنيف</h3>
           </div>
           <div class="card-body">
@@ -148,7 +148,7 @@
       <!-- User Info Card -->
       <div class="info-card">
         <div class="card-header">
-          <span class="material-icons">person</span>
+          <span class="material-symbols-rounded">person</span>
           <h3>معلومات المشتكي</h3>
         </div>
         <div class="card-body">
@@ -174,7 +174,7 @@
       <!-- Meta Info -->
       <div class="info-card">
         <div class="card-header">
-          <span class="material-icons">info</span>
+          <span class="material-symbols-rounded">info</span>
           <h3>معلومات إضافية</h3>
         </div>
         <div class="card-body">
@@ -193,7 +193,7 @@
       @if (complaint.replies && complaint.replies.length > 0) {
         <div class="info-card replies-card">
           <div class="card-header">
-            <span class="material-icons">chat</span>
+            <span class="material-symbols-rounded">chat</span>
             <h3>الردود ({{ complaint.replies.length }})</h3>
           </div>
           <div class="card-body">
@@ -202,7 +202,7 @@
                 <div class="reply-item" [class.admin]="reply.isAdmin">
                   <div class="reply-header">
                     <span class="reply-author">
-                      <span class="material-icons">{{ reply.isAdmin ? 'admin_panel_settings' : 'person' }}</span>
+                      <span class="material-symbols-rounded">{{ reply.isAdmin ? 'admin_panel_settings' : 'person' }}</span>
                       {{ reply.isAdmin ? 'الإدارة' : complaint.userName }}
                     </span>
                     <span class="reply-date">{{ formatDate(reply.createdAt) }}</span>
@@ -219,7 +219,7 @@
       @if (!complaint.isResolved) {
         <div class="info-card reply-form-card">
           <div class="card-header">
-            <span class="material-icons">reply</span>
+            <span class="material-symbols-rounded">reply</span>
             <h3>إضافة رد</h3>
           </div>
           <div class="card-body">
@@ -230,7 +230,7 @@
               rows="4"
             ></textarea>
             <button class="action-btn primary" (click)="addReply()" [disabled]="isSaving || !replyContent.trim()">
-              <span class="material-icons">send</span>
+              <span class="material-symbols-rounded">send</span>
               إرسال الرد
             </button>
           </div>
@@ -241,7 +241,7 @@
       <div class="actions-card">
         @if (!complaint.isResolved) {
           <button class="action-btn success" (click)="resolveComplaint()" [disabled]="isSaving">
-            <span class="material-icons">check_circle</span>
+            <span class="material-symbols-rounded">check_circle</span>
             حل الشكوى
           </button>
         }
@@ -255,11 +255,11 @@
       <!-- Status Badges -->
       <div class="status-badges">
         <div class="status-banner" [class]="'status-' + reservation.status">
-          <span class="material-icons">local_shipping</span>
+          <span class="material-symbols-rounded">local_shipping</span>
           <span>{{ getReservationStatusLabel(reservation.status) }}</span>
         </div>
         <div class="status-banner payment" [class]="'payment-' + reservation.paymentStatus">
-          <span class="material-icons">payment</span>
+          <span class="material-symbols-rounded">payment</span>
           <span>{{ getPaymentStatusLabel(reservation.paymentStatus) }}</span>
         </div>
       </div>
@@ -267,7 +267,7 @@
       <!-- Product Info Card -->
       <div class="info-card product-card">
         <div class="card-header">
-          <span class="material-icons">inventory_2</span>
+          <span class="material-symbols-rounded">inventory_2</span>
           <h3>تفاصيل المنتج</h3>
         </div>
         <div class="card-body">
@@ -276,7 +276,7 @@
               <img [src]="reservation.productThumbnail" alt="{{ reservation.productName }}" class="product-image">
             } @else {
               <div class="product-image placeholder">
-                <span class="material-icons">image</span>
+                <span class="material-symbols-rounded">image</span>
               </div>
             }
             <div class="product-details">
@@ -297,7 +297,7 @@
       <!-- Customer Info Card -->
       <div class="info-card">
         <div class="card-header">
-          <span class="material-icons">person</span>
+          <span class="material-symbols-rounded">person</span>
           <h3>معلومات العميل</h3>
         </div>
         <div class="card-body">
@@ -330,7 +330,7 @@
       @if (reservation.notes) {
         <div class="info-card">
           <div class="card-header">
-            <span class="material-icons">notes</span>
+            <span class="material-symbols-rounded">notes</span>
             <h3>ملاحظات العميل</h3>
           </div>
           <div class="card-body">
@@ -342,7 +342,7 @@
       <!-- Meta Info -->
       <div class="info-card">
         <div class="card-header">
-          <span class="material-icons">info</span>
+          <span class="material-symbols-rounded">info</span>
           <h3>معلومات إضافية</h3>
         </div>
         <div class="card-body">
@@ -360,7 +360,7 @@
       <!-- Status Actions -->
       <div class="info-card actions-section">
         <div class="card-header">
-          <span class="material-icons">edit</span>
+          <span class="material-symbols-rounded">edit</span>
           <h3>تغيير الحالة</h3>
         </div>
         <div class="card-body">

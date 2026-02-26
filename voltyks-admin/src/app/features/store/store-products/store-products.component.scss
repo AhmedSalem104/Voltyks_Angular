@@ -56,7 +56,7 @@ $info-color: #2196F3;
     font-weight: 500;
     transition: all 0.2s ease;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 20px;
     }
 
@@ -114,7 +114,7 @@ $info-color: #2196F3;
     align-items: center;
     justify-content: center;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 28px;
       color: #9C27B0;
     }
@@ -540,7 +540,7 @@ textarea.voltyks-input {
   padding: 60px 20px;
   color: $text-muted;
 
-  .material-icons {
+  .material-symbols-rounded {
     font-size: 48px;
     margin-bottom: 16px;
     opacity: 0.5;
@@ -747,7 +747,7 @@ textarea.voltyks-input {
             align-items: center;
             justify-content: center;
 
-            .material-icons {
+            .material-symbols-rounded {
               font-size: 16px;
             }
 
@@ -883,7 +883,7 @@ textarea.voltyks-input {
     border-radius: 8px;
     border: 1px solid rgba($info-color, 0.2);
 
-    .material-icons {
+    .material-symbols-rounded {
       color: $info-color;
       font-size: 20px;
     }
@@ -945,7 +945,7 @@ textarea.voltyks-input {
     align-items: center;
     gap: 8px;
 
-    .material-icons {
+    .material-symbols-rounded {
       color: $primary-green;
     }
   }
@@ -1003,14 +1003,14 @@ textarea.voltyks-input {
         border-style: solid;
         background-color: rgba($primary-green, 0.1);
 
-        .upload-placeholder .material-icons {
+        .upload-placeholder .material-symbols-rounded {
           color: $primary-green;
           transform: scale(1.1);
         }
       }
 
       .upload-placeholder {
-        .material-icons {
+        .material-symbols-rounded {
           font-size: 48px;
           color: $text-muted;
           margin-bottom: 12px;
@@ -1085,7 +1085,7 @@ textarea.voltyks-input {
           flex: 1;
           min-width: 0;
 
-          .material-icons {
+          .material-symbols-rounded {
             color: $primary-green;
             font-size: 20px;
           }
@@ -1123,7 +1123,7 @@ textarea.voltyks-input {
             background-color: rgba($danger-color, 0.1);
           }
 
-          .material-icons {
+          .material-symbols-rounded {
             font-size: 18px;
           }
         }
@@ -1183,7 +1183,7 @@ textarea.voltyks-input {
             opacity: 0;
             transition: opacity 0.3s ease;
 
-            .material-icons {
+            .material-symbols-rounded {
               color: white;
               font-size: 32px;
             }
@@ -1216,7 +1216,7 @@ textarea.voltyks-input {
       padding: 40px 20px;
       color: $text-muted;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 48px;
         margin-bottom: 12px;
         opacity: 0.5;
@@ -1262,7 +1262,7 @@ textarea.voltyks-input {
     opacity: 0;
     transition: opacity 0.3s ease;
 
-    .material-icons {
+    .material-symbols-rounded {
       color: white;
       font-size: 28px;
     }
@@ -1310,7 +1310,7 @@ textarea.voltyks-input {
     transition: all 0.3s ease;
     z-index: 1;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 24px;
     }
 
@@ -1403,7 +1403,7 @@ textarea.voltyks-input {
     .upload-area {
       padding: 20px;
 
-      .upload-placeholder .material-icons {
+      .upload-placeholder .material-symbols-rounded {
         font-size: 36px;
       }
     }
@@ -1759,7 +1759,7 @@ textarea.voltyks-input {
       background-color: rgba(25, 118, 210, 0.08);
       border-color: rgba(25, 118, 210, 0.15);
 
-      .material-icons {
+      .material-symbols-rounded {
         color: #1976D2;
       }
 
@@ -1801,7 +1801,7 @@ textarea.voltyks-input {
           }
 
           .upload-placeholder {
-            .material-icons {
+            .material-symbols-rounded {
               color: var(--text-disabled);
             }
 
@@ -1833,7 +1833,7 @@ textarea.voltyks-input {
           }
 
           .file-info {
-            .material-icons {
+            .material-symbols-rounded {
               color: #00A844;
             }
 

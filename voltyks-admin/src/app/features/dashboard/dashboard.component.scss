@@ -187,7 +187,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
           border-radius: inherit;
         }
 
-        .material-icons {
+        .material-symbols-rounded {
           font-size: 32px;
           color: #000;
           animation: boltPulse 2s ease-in-out infinite;
@@ -417,7 +417,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
       filter: blur(8px);
     }
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 34px;
       color: $primary;
       filter: drop-shadow(0 2px 4px rgba($primary, 0.3));
@@ -486,7 +486,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
       background: linear-gradient(135deg, rgba(#10b981, 0.25) 0%, rgba(#10b981, 0.08) 100%);
       border-color: rgba(#10b981, 0.4);
 
-      .material-icons {
+      .material-symbols-rounded {
         color: #10b981;
       }
     }
@@ -515,7 +515,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
       background: linear-gradient(135deg, rgba($accent-purple, 0.25) 0%, rgba($accent-purple, 0.08) 100%);
       border-color: rgba($accent-purple, 0.4);
 
-      .material-icons {
+      .material-symbols-rounded {
         color: $accent-purple;
       }
     }
@@ -526,7 +526,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
       background: linear-gradient(135deg, rgba($accent-orange, 0.25) 0%, rgba($accent-orange, 0.08) 100%);
       border-color: rgba($accent-orange, 0.4);
 
-      .material-icons {
+      .material-symbols-rounded {
         color: $accent-orange;
       }
     }
@@ -595,7 +595,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
     flex-shrink: 0;
     transition: all 0.4s ease;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 28px;
       color: $primary;
     }
@@ -650,7 +650,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
       box-shadow: 0 0 20px rgba($primary, 0.3);
     }
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 20px;
     }
   }
@@ -679,7 +679,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
       .status-icon {
         background: linear-gradient(135deg, rgba(#ef4444, 0.3) 0%, rgba(#ef4444, 0.1) 100%);
 
-        .material-icons {
+        .material-symbols-rounded {
           color: #ef4444;
         }
       }
@@ -704,7 +704,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
         background: linear-gradient(135deg, rgba($primary, 0.3) 0%, rgba($primary, 0.1) 100%);
         box-shadow: 0 0 30px rgba($primary, 0.2);
 
-        .material-icons {
+        .material-symbols-rounded {
           color: $primary;
           animation: boltPulse 2s ease-in-out infinite;
         }
@@ -727,7 +727,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
       .status-icon {
         background: linear-gradient(135deg, rgba($accent-orange, 0.3) 0%, rgba($accent-orange, 0.1) 100%);
 
-        .material-icons {
+        .material-symbols-rounded {
           color: $accent-orange;
         }
       }
@@ -753,7 +753,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
         background: linear-gradient(135deg, rgba($accent-orange, 0.3) 0%, rgba($accent-orange, 0.1) 100%);
         animation: bellRing 2s ease-in-out infinite;
 
-        .material-icons {
+        .material-symbols-rounded {
           color: $accent-orange;
         }
       }
@@ -827,7 +827,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
       color: $text-primary;
       margin: 0;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 24px;
         color: $primary;
         animation: iconFloat 3s ease-in-out infinite;
@@ -853,12 +853,12 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
         box-shadow: 0 0 20px rgba($primary, 0.2);
       }
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 18px;
         transition: transform 0.3s ease;
       }
 
-      &:hover .material-icons {
+      &:hover .material-symbols-rounded {
         transform: translateX(-4px);
       }
     }
@@ -922,7 +922,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
     background: linear-gradient(135deg, rgba(#FFA726, 0.25) 0%, rgba(#FFA726, 0.08) 100%);
     border-color: rgba(#FFA726, 0.35);
 
-    .material-icons {
+    .material-symbols-rounded {
       color: #FFA726;
     }
   }
@@ -931,7 +931,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
     background: linear-gradient(135deg, rgba($accent-blue, 0.25) 0%, rgba($accent-blue, 0.08) 100%);
     border-color: rgba($accent-blue, 0.35);
 
-    .material-icons {
+    .material-symbols-rounded {
       color: $accent-blue;
     }
   }
@@ -940,7 +940,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
     background: linear-gradient(135deg, rgba($accent-orange, 0.25) 0%, rgba($accent-orange, 0.08) 100%);
     border-color: rgba($accent-orange, 0.35);
 
-    .material-icons {
+    .material-symbols-rounded {
       color: $accent-orange;
     }
   }
@@ -957,7 +957,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
     flex-shrink: 0;
     transition: all 0.3s ease;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 24px;
       color: $primary;
     }
@@ -1017,7 +1017,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
         font-size: 12px;
         color: $text-muted;
 
-        .material-icons {
+        .material-symbols-rounded {
           font-size: 14px;
         }
       }
@@ -1029,7 +1029,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
         padding: 4px 12px;
         border-radius: 14px;
 
-        .material-icons {
+        .material-symbols-rounded {
           color: $primary;
         }
       }
@@ -1106,7 +1106,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
     align-items: center;
     gap: 10px;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 22px;
     }
   }
@@ -1200,7 +1200,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
 
 .reports-chart {
   h3 {
-    .material-icons {
+    .material-symbols-rounded {
       color: $accent-orange;
     }
   }
@@ -1216,7 +1216,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
 
 .reservations-chart {
   h3 {
-    .material-icons {
+    .material-symbols-rounded {
       color: $accent-orange;
     }
   }
@@ -1363,7 +1363,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
       left: 100%;
     }
 
-    .material-icons {
+    .material-symbols-rounded {
       color: $primary;
       transform: scale(1.2);
     }
@@ -1373,7 +1373,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
     }
   }
 
-  .material-icons {
+  .material-symbols-rounded {
     font-size: 26px;
     color: $text-secondary;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1435,7 +1435,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
       border-color: rgba($accent-purple, 0.4);
       box-shadow: $shadow-md, 0 0 30px rgba($accent-purple, 0.15);
 
-      .material-icons {
+      .material-symbols-rounded {
         color: $accent-purple;
       }
 
@@ -1535,7 +1535,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
         opacity: 1;
       }
 
-      .material-icons {
+      .material-symbols-rounded {
         color: $primary;
         transform: scale(1.2) rotateY(180deg);
       }
@@ -1545,7 +1545,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
       }
     }
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 28px;
       color: $text-secondary;
       transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1572,7 +1572,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
         border-color: rgba($accent-purple, 0.4);
         box-shadow: $shadow-md, 0 0 40px rgba($accent-purple, 0.2);
 
-        .material-icons {
+        .material-symbols-rounded {
           color: $accent-purple;
         }
       }
@@ -1608,7 +1608,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
       color: $text-primary;
       margin: 0;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 24px;
         color: $accent-orange;
       }
@@ -1632,7 +1632,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
         transform: translateX(-4px);
       }
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 18px;
       }
     }
@@ -1745,7 +1745,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
       font-size: 13px;
       color: $text-secondary;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 16px;
         color: $primary;
       }
@@ -2081,7 +2081,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
       background: var(--primary-green-soft) !important;
       box-shadow: none !important;
 
-      .material-icons {
+      .material-symbols-rounded {
         color: var(--primary-green) !important;
       }
     }
@@ -2125,7 +2125,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
     .status-icon {
       background: var(--primary-green-soft) !important;
 
-      .material-icons {
+      .material-symbols-rounded {
         color: var(--primary-green) !important;
       }
     }
@@ -2225,7 +2225,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
     .notification-icon {
       background: var(--primary-green-soft) !important;
 
-      .material-icons {
+      .material-symbols-rounded {
         color: var(--primary-green) !important;
       }
     }
@@ -2267,7 +2267,7 @@ $shadow-glow-strong: 0 0 60px rgba($primary, 0.25);
 
   // Empty States
   .empty-state {
-    .material-icons {
+    .material-symbols-rounded {
       color: var(--text-disabled) !important;
     }
 

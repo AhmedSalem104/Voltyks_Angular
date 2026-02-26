@@ -10,7 +10,7 @@
       <!-- Search Box -->
       <div class="filter-item search-filter">
         <div class="search-box">
-          <span class="material-icons search-icon">search</span>
+          <span class="material-symbols-rounded search-icon">search</span>
           <input
             type="text"
             class="voltyks-input"
@@ -30,11 +30,11 @@
       <div class="header-actions">
         <span class="total-count">إجمالي: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredCapacities.length === 0">
-          <span class="material-icons">print</span>
+          <span class="material-symbols-rounded">print</span>
           <span>طباعة PDF</span>
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
-          <span class="material-icons">add</span>
+          <span class="material-symbols-rounded">add</span>
           إضافة سعة
         </button>
       </div>
@@ -55,7 +55,7 @@
               <tr>
                 <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
                 <td class="capacity-value">
-                  <span class="material-icons capacity-icon">bolt</span>
+                  <span class="material-symbols-rounded capacity-icon">bolt</span>
                   {{ capacity.kw }} kW
                 </td>
                 <td>
@@ -65,14 +65,14 @@
                       (click)="openEditDialog(capacity)"
                       title="تعديل"
                     >
-                      <span class="material-icons">edit</span>
+                      <span class="material-symbols-rounded">edit</span>
                     </button>
                     <button
                       class="voltyks-btn btn-icon btn-danger"
                       (click)="openDeleteConfirm(capacity)"
                       title="حذف"
                     >
-                      <span class="material-icons">delete</span>
+                      <span class="material-symbols-rounded">delete</span>
                     </button>
                   </div>
                 </td>
@@ -92,7 +92,7 @@
       ></app-pagination>
     } @else {
       <div class="empty-state">
-        <span class="material-icons empty-icon">bolt</span>
+        <span class="material-symbols-rounded empty-icon">bolt</span>
         <p>لا توجد سعات شواحن</p>
       </div>
     }
@@ -107,7 +107,7 @@
         <div class="modal-header">
           <h3>إضافة سعة شاحن جديدة</h3>
           <button class="close-btn" (click)="closeCreateDialog()">
-            <span class="material-icons">close</span>
+            <span class="material-symbols-rounded">close</span>
           </button>
         </div>
         <div class="modal-body">
@@ -130,7 +130,7 @@
             إلغاء
           </button>
           <button class="voltyks-btn btn-primary" (click)="createCapacity()">
-            <span class="material-icons">save</span>
+            <span class="material-symbols-rounded">save</span>
             حفظ
           </button>
         </div>
@@ -147,7 +147,7 @@
         <div class="modal-header">
           <h3>تعديل السعة</h3>
           <button class="close-btn" (click)="closeEditDialog()">
-            <span class="material-icons">close</span>
+            <span class="material-symbols-rounded">close</span>
           </button>
         </div>
         <div class="modal-body">
@@ -169,7 +169,7 @@
             إلغاء
           </button>
           <button class="voltyks-btn btn-primary" (click)="updateCapacity()">
-            <span class="material-icons">save</span>
+            <span class="material-symbols-rounded">save</span>
             حفظ التغييرات
           </button>
         </div>

@@ -10,7 +10,7 @@
       <!-- Search Box -->
       <div class="filter-item search-filter">
         <div class="search-box">
-          <span class="material-icons search-icon">search</span>
+          <span class="material-symbols-rounded search-icon">search</span>
           <input
             type="text"
             class="voltyks-input"
@@ -26,7 +26,7 @@
         <div class="date-field">
           <label>من</label>
           <div class="date-input-wrapper">
-            <span class="material-icons date-icon">calendar_today</span>
+            <span class="material-symbols-rounded date-icon">calendar_today</span>
             <input
               type="date"
               [(ngModel)]="filters.startDate"
@@ -39,7 +39,7 @@
         <div class="date-field">
           <label>إلى</label>
           <div class="date-input-wrapper">
-            <span class="material-icons date-icon">calendar_today</span>
+            <span class="material-symbols-rounded date-icon">calendar_today</span>
             <input
               type="date"
               [(ngModel)]="filters.endDate"
@@ -51,7 +51,7 @@
         </div>
         @if (filters.startDate || filters.endDate) {
           <button class="clear-dates-btn" (click)="clearDateFilters()" title="مسح التواريخ">
-            <span class="material-icons">close</span>
+            <span class="material-symbols-rounded">close</span>
           </button>
         }
       </div>
@@ -59,7 +59,7 @@
       <!-- Status Filter -->
       <div class="filter-item status-filter">
         <div class="select-wrapper">
-          <span class="material-icons select-icon">info</span>
+          <span class="material-symbols-rounded select-icon">info</span>
           <select
             class="voltyks-input"
             [(ngModel)]="filters.status"
@@ -75,7 +75,7 @@
       <!-- Action Buttons -->
       <div class="filter-item filter-actions">
         <button class="voltyks-btn btn-secondary" (click)="clearFilters()" title="إعادة تعيين">
-          <span class="material-icons">refresh</span>
+          <span class="material-symbols-rounded">refresh</span>
         </button>
       </div>
     </div>
@@ -88,7 +88,7 @@
       <div class="header-actions">
         <span class="total-count">إجمالي: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredProcesses.length === 0">
-          <span class="material-icons">print</span>
+          <span class="material-symbols-rounded">print</span>
           <span>طباعة PDF</span>
         </button>
       </div>
@@ -137,7 +137,7 @@
                     (click)="openSidePanel(process); $event.stopPropagation()"
                     title="عرض التفاصيل"
                   >
-                    <span class="material-icons">visibility</span>
+                    <span class="material-symbols-rounded">visibility</span>
                   </button>
                 </td>
               </tr>
@@ -156,7 +156,7 @@
       ></app-pagination>
     } @else {
       <div class="empty-state">
-        <span class="material-icons empty-icon">electric_bolt</span>
+        <span class="material-symbols-rounded empty-icon">electric_bolt</span>
         <p>لا توجد عمليات شحن</p>
         @if (hasActiveFilters()) {
           <button class="voltyks-btn btn-secondary" (click)="clearFilters()">
@@ -182,7 +182,7 @@
         </span>
       </div>
       <button class="close-btn" (click)="closeSidePanel()">
-        <span class="material-icons">close</span>
+        <span class="material-symbols-rounded">close</span>
       </button>
     </div>
 
@@ -190,7 +190,7 @@
       <!-- Process Info Section -->
       <div class="detail-section">
         <div class="section-header">
-          <span class="material-icons">info</span>
+          <span class="material-symbols-rounded">info</span>
           <h4>معلومات العملية</h4>
         </div>
         <div class="section-content">
@@ -212,7 +212,7 @@
       <!-- Request Details Section -->
       <div class="detail-section">
         <div class="section-header">
-          <span class="material-icons">bolt</span>
+          <span class="material-symbols-rounded">bolt</span>
           <h4>تفاصيل الطلب</h4>
         </div>
         <div class="section-content">
@@ -244,7 +244,7 @@
       <!-- Pricing Section -->
       <div class="detail-section pricing-section">
         <div class="section-header">
-          <span class="material-icons">payments</span>
+          <span class="material-symbols-rounded">payments</span>
           <h4>تفاصيل السعر</h4>
         </div>
         <div class="section-content">
@@ -274,7 +274,7 @@
       <!-- Charger Info Section -->
       <div class="detail-section">
         <div class="section-header">
-          <span class="material-icons">ev_station</span>
+          <span class="material-symbols-rounded">ev_station</span>
           <h4>معلومات الشاحن</h4>
         </div>
         <div class="section-content">
@@ -316,7 +316,7 @@
       <!-- Vehicle Info Section -->
       <div class="detail-section">
         <div class="section-header">
-          <span class="material-icons">directions_car</span>
+          <span class="material-symbols-rounded">directions_car</span>
           <h4>معلومات المركبة</h4>
         </div>
         <div class="section-content">
@@ -350,7 +350,7 @@
       <!-- Vehicle Owner Section -->
       <div class="detail-section">
         <div class="section-header">
-          <span class="material-icons">person</span>
+          <span class="material-symbols-rounded">person</span>
           <h4>مالك المركبة</h4>
         </div>
         <div class="section-content">
@@ -404,7 +404,7 @@
       <!-- Charger Owner Section -->
       <div class="detail-section">
         <div class="section-header">
-          <span class="material-icons">business</span>
+          <span class="material-symbols-rounded">business</span>
           <h4>مالك الشاحن</h4>
         </div>
         <div class="section-content">

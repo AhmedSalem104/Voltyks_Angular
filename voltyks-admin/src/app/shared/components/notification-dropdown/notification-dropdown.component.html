@@ -3,7 +3,7 @@
   <div class="dropdown-header">
     <div class="header-title">
       <div class="header-icon-wrapper">
-        <span class="material-icons">notifications</span>
+        <span class="material-symbols-rounded">notifications</span>
         @if (hasUnread) {
           <span class="pulse-dot"></span>
         }
@@ -23,13 +23,13 @@
     </div>
     <div class="header-actions">
       <button class="icon-btn" (click)="refresh()" title="تحديث" [disabled]="isLoading">
-        <span class="material-icons" [class.spinning]="isLoading">refresh</span>
+        <span class="material-symbols-rounded" [class.spinning]="isLoading">refresh</span>
       </button>
       <button class="icon-btn" (click)="toggleView(currentView === 'list' ? 'settings' : 'list')" title="الإعدادات">
-        <span class="material-icons">{{ currentView === 'list' ? 'settings' : 'arrow_back' }}</span>
+        <span class="material-symbols-rounded">{{ currentView === 'list' ? 'settings' : 'arrow_back' }}</span>
       </button>
       <button class="icon-btn close-btn" (click)="close()" title="إغلاق">
-        <span class="material-icons">close</span>
+        <span class="material-symbols-rounded">close</span>
       </button>
     </div>
   </div>
@@ -41,7 +41,7 @@
 
       <div class="setting-item">
         <div class="setting-info">
-          <span class="material-icons">volume_up</span>
+          <span class="material-symbols-rounded">volume_up</span>
           <div>
             <span class="setting-label">صوت الإشعارات</span>
             <span class="setting-desc">تشغيل صوت عند وصول إشعار جديد</span>
@@ -59,7 +59,7 @@
 
       <div class="setting-item">
         <div class="setting-info">
-          <span class="material-icons text-warning">report_problem</span>
+          <span class="material-symbols-rounded text-warning">report_problem</span>
           <div>
             <span class="setting-label">البلاغات</span>
             <span class="setting-desc">إشعارات البلاغات الجديدة</span>
@@ -73,7 +73,7 @@
 
       <div class="setting-item">
         <div class="setting-info">
-          <span class="material-icons text-info">feedback</span>
+          <span class="material-symbols-rounded text-info">feedback</span>
           <div>
             <span class="setting-label">الشكاوى</span>
             <span class="setting-desc">إشعارات الشكاوى الجديدة</span>
@@ -87,7 +87,7 @@
 
       <div class="setting-item">
         <div class="setting-info">
-          <span class="material-icons text-purple">shopping_cart</span>
+          <span class="material-symbols-rounded text-purple">shopping_cart</span>
           <div>
             <span class="setting-label">الحجوزات</span>
             <span class="setting-desc">إشعارات حجوزات المتجر</span>
@@ -104,7 +104,7 @@
       </div>
 
       <button class="danger-btn" (click)="clearAll()">
-        <span class="material-icons">delete_sweep</span>
+        <span class="material-symbols-rounded">delete_sweep</span>
         مسح جميع الإشعارات
       </button>
     </div>
@@ -136,7 +136,7 @@
           (click)="setFilter('reports')"
           title="البلاغات"
         >
-          <span class="material-icons">report_problem</span>
+          <span class="material-symbols-rounded">report_problem</span>
         </button>
         <button
           class="tab-btn type-complaint"
@@ -144,7 +144,7 @@
           (click)="setFilter('complaints')"
           title="الشكاوى"
         >
-          <span class="material-icons">feedback</span>
+          <span class="material-symbols-rounded">feedback</span>
         </button>
         <button
           class="tab-btn type-reservation"
@@ -152,12 +152,12 @@
           (click)="setFilter('reservations')"
           title="الحجوزات"
         >
-          <span class="material-icons">shopping_cart</span>
+          <span class="material-symbols-rounded">shopping_cart</span>
         </button>
       </div>
       @if (hasUnread) {
         <button class="mark-all-read-btn" (click)="markAllAsRead()">
-          <span class="material-icons">done_all</span>
+          <span class="material-symbols-rounded">done_all</span>
           تحديد الكل كمقروء
         </button>
       }
@@ -174,10 +174,10 @@
     <!-- Error State -->
     @if (error && !isLoading) {
       <div class="error-state">
-        <span class="material-icons">error_outline</span>
+        <span class="material-symbols-rounded">error_outline</span>
         <p>{{ error }}</p>
         <button class="retry-btn" (click)="refresh()">
-          <span class="material-icons">refresh</span>
+          <span class="material-symbols-rounded">refresh</span>
           إعادة المحاولة
         </button>
       </div>
@@ -206,7 +206,7 @@
                 >
                   <!-- Type Icon -->
                   <div class="notification-icon" [class]="notification.type">
-                    <span class="material-icons">{{ getIcon(notification.type) }}</span>
+                    <span class="material-symbols-rounded">{{ getIcon(notification.type) }}</span>
                   </div>
 
                   <!-- Content -->
@@ -218,12 +218,12 @@
                     <p class="notification-message">{{ notification.message }}</p>
                     <div class="notification-footer">
                       <span class="notification-user">
-                        <span class="material-icons">person</span>
+                        <span class="material-symbols-rounded">person</span>
                         {{ notification.userName }}
                       </span>
                       @if (notification.type === 'reservation' && notification.productName) {
                         <span class="notification-product">
-                          <span class="material-icons">inventory_2</span>
+                          <span class="material-symbols-rounded">inventory_2</span>
                           {{ notification.productName }}
                           @if (notification.quantity) {
                             ({{ notification.quantity }})
@@ -236,7 +236,7 @@
                   <!-- Actions -->
                   <div class="notification-actions">
                     <button class="delete-btn" (click)="deleteNotification(notification, $event)" title="حذف">
-                      <span class="material-icons">close</span>
+                      <span class="material-symbols-rounded">close</span>
                     </button>
                   </div>
 
@@ -253,7 +253,7 @@
         <!-- Empty State -->
         <div class="empty-state">
           <div class="empty-icon">
-            <span class="material-icons">{{ activeFilter === 'unread' ? 'mark_email_read' : 'notifications_none' }}</span>
+            <span class="material-symbols-rounded">{{ activeFilter === 'unread' ? 'mark_email_read' : 'notifications_none' }}</span>
           </div>
           <h4>
             @switch (activeFilter) {
@@ -281,17 +281,17 @@
       <span class="nav-title">الوصول السريع</span>
       <div class="nav-links">
         <button class="nav-link reports" (click)="goToReports()">
-          <span class="material-icons">report_problem</span>
+          <span class="material-symbols-rounded">report_problem</span>
           <span>البلاغات</span>
           <span class="nav-count">{{ getFilterCount('reports') }}</span>
         </button>
         <button class="nav-link complaints" (click)="goToComplaints()">
-          <span class="material-icons">feedback</span>
+          <span class="material-symbols-rounded">feedback</span>
           <span>الشكاوى</span>
           <span class="nav-count">{{ getFilterCount('complaints') }}</span>
         </button>
         <button class="nav-link reservations" (click)="goToReservations()">
-          <span class="material-icons">shopping_cart</span>
+          <span class="material-symbols-rounded">shopping_cart</span>
           <span>الحجوزات</span>
           <span class="nav-count">{{ getFilterCount('reservations') }}</span>
         </button>

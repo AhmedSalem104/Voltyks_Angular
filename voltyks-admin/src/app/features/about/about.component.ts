@@ -13,7 +13,7 @@ import { PrintService } from '../../core/services/print.service';
         <div class="hero-header">
           <h1>Voltyks</h1>
           <button class="voltyks-btn print-btn hero-print-btn" (click)="printToPdf()">
-            <span class="material-icons">print</span>
+            <span class="material-symbols-rounded">print</span>
             <span>طباعة PDF</span>
           </button>
         </div>
@@ -22,7 +22,7 @@ import { PrintService } from '../../core/services/print.service';
 
       <div class="content-grid">
         <div class="content-card voltyks-card">
-          <span class="material-icons card-icon">electric_bolt</span>
+          <span class="material-symbols-rounded card-icon">electric_bolt</span>
           <h3>رؤيتنا</h3>
           <p>
             At its core, Voltyks stands for freedom, transparency, and empowerment.
@@ -32,7 +32,7 @@ import { PrintService } from '../../core/services/print.service';
         </div>
 
         <div class="content-card voltyks-card">
-          <span class="material-icons card-icon">group</span>
+          <span class="material-symbols-rounded card-icon">group</span>
           <h3>المجتمع</h3>
           <p>
             Voltyks fosters a vibrant community where drivers and riders connect directly.
@@ -41,7 +41,7 @@ import { PrintService } from '../../core/services/print.service';
         </div>
 
         <div class="content-card voltyks-card">
-          <span class="material-icons card-icon">verified</span>
+          <span class="material-symbols-rounded card-icon">verified</span>
           <h3>الشفافية</h3>
           <p>
             Every transaction on Voltyks is transparent. We don't hide fees or manipulate prices.
@@ -50,7 +50,7 @@ import { PrintService } from '../../core/services/print.service';
         </div>
 
         <div class="content-card voltyks-card">
-          <span class="material-icons card-icon">security</span>
+          <span class="material-symbols-rounded card-icon">security</span>
           <h3>الأمان</h3>
           <p>
             Safety is our top priority. With verified profiles, ratings, and secure payment systems,
@@ -59,7 +59,7 @@ import { PrintService } from '../../core/services/print.service';
         </div>
 
         <div class="content-card voltyks-card">
-          <span class="material-icons card-icon">trending_up</span>
+          <span class="material-symbols-rounded card-icon">trending_up</span>
           <h3>النمو</h3>
           <p>
             We're constantly evolving and improving our platform based on community feedback.
@@ -68,7 +68,7 @@ import { PrintService } from '../../core/services/print.service';
         </div>
 
         <div class="content-card voltyks-card">
-          <span class="material-icons card-icon">public</span>
+          <span class="material-symbols-rounded card-icon">public</span>
           <h3>التأثير العالمي</h3>
           <p>
             Starting locally, thinking globally. Voltyks aims to revolutionize transportation
@@ -92,22 +92,22 @@ import { PrintService } from '../../core/services/print.service';
 
       <div class="stats-section">
         <div class="stat-item voltyks-card">
-          <span class="material-icons stat-icon">people</span>
+          <span class="material-symbols-rounded stat-icon">people</span>
           <h4>1000+</h4>
           <p>مستخدم نشط</p>
         </div>
         <div class="stat-item voltyks-card">
-          <span class="material-icons stat-icon">route</span>
+          <span class="material-symbols-rounded stat-icon">route</span>
           <h4>5000+</h4>
           <p>رحلة مكتملة</p>
         </div>
         <div class="stat-item voltyks-card">
-          <span class="material-icons stat-icon">star</span>
+          <span class="material-symbols-rounded stat-icon">star</span>
           <h4>4.8/5</h4>
           <p>متوسط التقييم</p>
         </div>
         <div class="stat-item voltyks-card">
-          <span class="material-icons stat-icon">location_city</span>
+          <span class="material-symbols-rounded stat-icon">location_city</span>
           <h4>10+</h4>
           <p>مدن مغطاة</p>
         </div>

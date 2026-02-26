@@ -156,7 +156,7 @@
         box-shadow: 0 4px 12px rgba(66, 165, 245, 0.15);
       }
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 28px;
         color: #42A5F5;
         background: linear-gradient(135deg, rgba(66, 165, 245, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%);
@@ -201,7 +201,7 @@
       padding-bottom: 12px;
       border-bottom: 2px solid var(--border-color);
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 28px;
         color: #42A5F5;
       }
@@ -267,7 +267,7 @@
     color: var(--text-secondary);
     animation: fadeIn 0.5s ease-out;
 
-    .material-icons {
+    .material-symbols-rounded {
       font-size: 80px;
       color: var(--text-disabled);
       margin-bottom: 20px;
@@ -285,7 +285,7 @@
       align-items: center;
       gap: 8px;
 
-      .material-icons {
+      .material-symbols-rounded {
         font-size: 20px;
         margin: 0;
         opacity: 1;

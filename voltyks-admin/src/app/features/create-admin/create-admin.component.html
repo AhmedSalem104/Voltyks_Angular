@@ -9,7 +9,7 @@
     <div class="step" [class.active]="step === 'send-otp'" [class.completed]="step === 'create-form' || step === 'success'">
       <div class="step-number">
         @if (step === 'create-form' || step === 'success') {
-          <span class="material-icons">check</span>
+          <span class="material-symbols-rounded">check</span>
         } @else {
           1
         }
@@ -20,7 +20,7 @@
     <div class="step" [class.active]="step === 'create-form'" [class.completed]="step === 'success'">
       <div class="step-number">
         @if (step === 'success') {
-          <span class="material-icons">check</span>
+          <span class="material-symbols-rounded">check</span>
         } @else {
           2
         }
@@ -38,11 +38,11 @@
   @if (step === 'send-otp') {
     <div class="voltyks-card otp-card">
       <div class="otp-card-content">
-        <span class="material-icons otp-icon">verified_user</span>
+        <span class="material-symbols-rounded otp-icon">verified_user</span>
         <h3>التحقق من الهوية</h3>
         <p>سيتم إرسال كود تحقق OTP إلى رقم هاتفك المسجل للتأكد من هويتك قبل إنشاء حساب أدمن جديد.</p>
         <button class="voltyks-btn btn-primary send-otp-btn" (click)="sendOtp()" [disabled]="isLoading">
-          <span class="material-icons">send</span>
+          <span class="material-symbols-rounded">send</span>
           إرسال كود التحقق
         </button>
       </div>
@@ -55,7 +55,7 @@
       <!-- OTP Timer Bar -->
       <div class="otp-timer-bar">
         <div class="timer-info">
-          <span class="material-icons">timer</span>
+          <span class="material-symbols-rounded">timer</span>
           @if (otpExpirySeconds > 0) {
             <span>صلاحية الكود: <strong>{{ formatTime(otpExpirySeconds) }}</strong></span>
           } @else {
@@ -63,7 +63,7 @@
           }
         </div>
         <div class="phone-hint">
-          <span class="material-icons">phone_android</span>
+          <span class="material-symbols-rounded">phone_android</span>
           <span>تم الإرسال إلى: <strong>{{ phoneHint }}</strong></span>
         </div>
         <button
@@ -71,7 +71,7 @@
           (click)="resendOtp()"
           [disabled]="resendCooldown > 0 || isLoading"
         >
-          <span class="material-icons">refresh</span>
+          <span class="material-symbols-rounded">refresh</span>
           @if (resendCooldown > 0) {
             إعادة الإرسال ({{ resendCooldown }}ث)
           } @else {
@@ -157,7 +157,7 @@
         <!-- Actions -->
         <div class="form-actions">
           <button class="voltyks-btn btn-secondary" (click)="resetToStart()" [disabled]="isLoading">
-            <span class="material-icons">arrow_back</span>
+            <span class="material-symbols-rounded">arrow_back</span>
             رجوع
           </button>
           <button
@@ -165,7 +165,7 @@
             (click)="submitCreateAdmin()"
             [disabled]="isLoading || otpExpirySeconds <= 0"
           >
-            <span class="material-icons">person_add</span>
+            <span class="material-symbols-rounded">person_add</span>
             إنشاء الأدمن
           </button>
         </div>
@@ -177,26 +177,26 @@
   @if (step === 'success' && createdAdmin) {
     <div class="voltyks-card success-card">
       <div class="success-content">
-        <span class="material-icons success-icon">check_circle</span>
+        <span class="material-symbols-rounded success-icon">check_circle</span>
         <h3>تم إنشاء الأدمن بنجاح!</h3>
 
         <div class="admin-details">
           <div class="detail-row">
-            <span class="material-icons">person</span>
+            <span class="material-symbols-rounded">person</span>
             <div>
               <span class="detail-label">الاسم</span>
               <span class="detail-value">{{ createdAdmin.fullName }}</span>
             </div>
           </div>
           <div class="detail-row">
-            <span class="material-icons">email</span>
+            <span class="material-symbols-rounded">email</span>
             <div>
               <span class="detail-label">البريد الإلكتروني</span>
               <span class="detail-value">{{ createdAdmin.email }}</span>
             </div>
           </div>
           <div class="detail-row">
-            <span class="material-icons">phone</span>
+            <span class="material-symbols-rounded">phone</span>
             <div>
               <span class="detail-label">رقم الهاتف</span>
               <span class="detail-value">{{ createdAdmin.phoneNumber }}</span>
@@ -205,7 +205,7 @@
         </div>
 
         <button class="voltyks-btn btn-primary" (click)="resetToStart()">
-          <span class="material-icons">add</span>
+          <span class="material-symbols-rounded">add</span>
           إنشاء أدمن آخر
         </button>
       </div>

@@ -638,7 +638,7 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
     img.style.display = 'none';
     // Insert a placeholder icon after the broken image
     const placeholder = document.createElement('span');
-    placeholder.className = 'material-icons no-thumbnail';
+    placeholder.className = 'material-symbols-rounded no-thumbnail';
     placeholder.textContent = 'broken_image';
     placeholder.style.cssText = 'width:64px;height:64px;display:flex;align-items:center;justify-content:center;color:#6C6C6C;font-size:28px;';
     img.parentElement?.appendChild(placeholder);

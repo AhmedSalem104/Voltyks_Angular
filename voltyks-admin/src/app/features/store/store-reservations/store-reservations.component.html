@@ -7,12 +7,12 @@
   <!-- Back Navigation -->
   <nav class="breadcrumb-nav">
     <a routerLink="/store" class="back-link">
-      <span class="material-icons">arrow_forward</span>
+      <span class="material-symbols-rounded">arrow_forward</span>
       <span>العودة للمتجر</span>
     </a>
     <div class="breadcrumb-path">
       <a routerLink="/store" class="path-item">المتجر</a>
-      <span class="material-icons separator">chevron_left</span>
+      <span class="material-symbols-rounded separator">chevron_left</span>
       <span class="path-item current">الحجوزات</span>
     </div>
   </nav>
@@ -21,7 +21,7 @@
   <div class="page-header">
     <div class="header-content">
       <div class="header-icon">
-        <span class="material-icons">shopping_cart</span>
+        <span class="material-symbols-rounded">shopping_cart</span>
       </div>
       <div class="header-text">
         <h2>حجوزات المتجر</h2>
@@ -36,7 +36,7 @@
       <!-- Search -->
       <div class="filter-item search-filter">
         <div class="search-box">
-          <span class="material-icons search-icon">search</span>
+          <span class="material-symbols-rounded search-icon">search</span>
           <input
             type="text"
             class="voltyks-input"
@@ -93,7 +93,7 @@
 
       <!-- Clear Filters -->
       <button class="voltyks-btn btn-secondary btn-small" (click)="clearFilters()">
-        <span class="material-icons">clear_all</span>
+        <span class="material-symbols-rounded">clear_all</span>
         مسح الفلاتر
       </button>
     </div>
@@ -106,7 +106,7 @@
       <div class="header-actions">
         <span class="total-count">إجمالي: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()">
-          <span class="material-icons">print</span>
+          <span class="material-symbols-rounded">print</span>
           <span>طباعة PDF</span>
         </button>
       </div>
@@ -136,7 +136,7 @@
                     @if (reservation.productThumbnail) {
                       <img [src]="getFullImageUrl(reservation.productThumbnail)" alt="product" class="product-thumb" />
                     } @else {
-                      <span class="material-icons no-thumb">inventory_2</span>
+                      <span class="material-symbols-rounded no-thumb">inventory_2</span>
                     }
                     <div class="product-info">
                       <span class="product-name">{{ reservation.productName }}</span>
@@ -171,36 +171,36 @@
                 <td>
                   <div class="action-buttons">
                     <button class="voltyks-btn btn-icon btn-view" title="عرض التفاصيل" (click)="openDetailsDialog(reservation)">
-                      <span class="material-icons">visibility</span>
+                      <span class="material-symbols-rounded">visibility</span>
                     </button>
 
                     @if (canContact(reservation)) {
                       <button class="voltyks-btn btn-icon btn-contact" title="تسجيل تواصل" (click)="openContactDialog(reservation)">
-                        <span class="material-icons">phone</span>
+                        <span class="material-symbols-rounded">phone</span>
                       </button>
                     }
 
                     @if (canRecordPayment(reservation)) {
                       <button class="voltyks-btn btn-icon btn-payment" title="تسجيل دفع" (click)="openPaymentDialog(reservation)">
-                        <span class="material-icons">payments</span>
+                        <span class="material-symbols-rounded">payments</span>
                       </button>
                     }
 
                     @if (canRecordDelivery(reservation)) {
                       <button class="voltyks-btn btn-icon btn-delivery" title="تسجيل تسليم" (click)="openDeliveryDialog(reservation)">
-                        <span class="material-icons">local_shipping</span>
+                        <span class="material-symbols-rounded">local_shipping</span>
                       </button>
                     }
 
                     @if (canComplete(reservation)) {
                       <button class="voltyks-btn btn-icon btn-complete" title="إكمال الحجز" (click)="openCompleteConfirm(reservation)">
-                        <span class="material-icons">check_circle</span>
+                        <span class="material-symbols-rounded">check_circle</span>
                       </button>
                     }
 
                     @if (canCancel(reservation)) {
                       <button class="voltyks-btn btn-icon btn-danger" title="إلغاء الحجز" (click)="openCancelConfirm(reservation)">
-                        <span class="material-icons">cancel</span>
+                        <span class="material-symbols-rounded">cancel</span>
                       </button>
                     }
                   </div>
@@ -220,7 +220,7 @@
       ></app-pagination>
     } @else {
       <div class="no-data">
-        <span class="material-icons">shopping_cart</span>
+        <span class="material-symbols-rounded">shopping_cart</span>
         <p>لا توجد حجوزات</p>
       </div>
     }
@@ -233,41 +233,41 @@
           <div class="modal-header">
             <h3>تفاصيل الحجز #{{ currentReservation.id }}</h3>
           <button type="button" class="close-btn" (click)="closeDetailsDialog()">
-            <span class="material-icons">close</span>
+            <span class="material-symbols-rounded">close</span>
           </button>
         </div>
         <div class="modal-body details-body">
           <!-- Status Timeline -->
           <div class="status-timeline">
             <div class="timeline-step" [class.active]="true" [class.completed]="currentReservation.status !== 'pending'">
-              <span class="step-icon material-icons">pending</span>
+              <span class="step-icon material-symbols-rounded">pending</span>
               <span class="step-label">قيد الانتظار</span>
             </div>
             <div class="timeline-connector" [class.active]="currentReservation.status !== 'pending'"></div>
             <div class="timeline-step" [class.active]="currentReservation.contactedAt" [class.completed]="currentReservation.paymentStatus === 'paid'">
-              <span class="step-icon material-icons">phone</span>
+              <span class="step-icon material-symbols-rounded">phone</span>
               <span class="step-label">تم التواصل</span>
             </div>
             <div class="timeline-connector" [class.active]="currentReservation.paymentStatus === 'paid'"></div>
             <div class="timeline-step" [class.active]="currentReservation.paymentStatus === 'paid'" [class.completed]="currentReservation.deliveryStatus === 'delivered'">
-              <span class="step-icon material-icons">payments</span>
+              <span class="step-icon material-symbols-rounded">payments</span>
               <span class="step-label">تم الدفع</span>
             </div>
             <div class="timeline-connector" [class.active]="currentReservation.deliveryStatus === 'delivered'"></div>
             <div class="timeline-step" [class.active]="currentReservation.deliveryStatus === 'delivered'" [class.completed]="currentReservation.status === 'completed'">
-              <span class="step-icon material-icons">local_shipping</span>
+              <span class="step-icon material-symbols-rounded">local_shipping</span>
               <span class="step-label">تم التسليم</span>
             </div>
             <div class="timeline-connector" [class.active]="currentReservation.status === 'completed'"></div>
             <div class="timeline-step" [class.active]="currentReservation.status === 'completed'">
-              <span class="step-icon material-icons">check_circle</span>
+              <span class="step-icon material-symbols-rounded">check_circle</span>
               <span class="step-label">مكتمل</span>
             </div>
           </div>
 
           @if (currentReservation.status === 'cancelled') {
             <div class="cancelled-notice">
-              <span class="material-icons">cancel</span>
+              <span class="material-symbols-rounded">cancel</span>
               <span>تم إلغاء هذا الحجز</span>
             </div>
           }
@@ -276,7 +276,7 @@
             <!-- Product Info -->
             <div class="detail-section">
               <h4>
-                <span class="material-icons">inventory_2</span>
+                <span class="material-symbols-rounded">inventory_2</span>
                 معلومات المنتج
               </h4>
               <div class="detail-content product-detail">
@@ -293,7 +293,7 @@
             <!-- User Info -->
             <div class="detail-section">
               <h4>
-                <span class="material-icons">person</span>
+                <span class="material-symbols-rounded">person</span>
                 معلومات العميل
               </h4>
               <div class="detail-content">
@@ -317,7 +317,7 @@
             <!-- Status Info -->
             <div class="detail-section">
               <h4>
-                <span class="material-icons">info</span>
+                <span class="material-symbols-rounded">info</span>
                 معلومات الحالة
               </h4>
               <div class="detail-content">
@@ -351,7 +351,7 @@
             <!-- Timeline Dates -->
             <div class="detail-section">
               <h4>
-                <span class="material-icons">schedule</span>
+                <span class="material-symbols-rounded">schedule</span>
                 التواريخ
               </h4>
               <div class="detail-content">
@@ -384,7 +384,7 @@
             @if (currentReservation.adminNotes) {
               <div class="detail-section full-width">
                 <h4>
-                  <span class="material-icons">notes</span>
+                  <span class="material-symbols-rounded">notes</span>
                   ملاحظات
                 </h4>
                 <div class="detail-content">
@@ -408,7 +408,7 @@
           <div class="modal-header">
             <h3>تسجيل تواصل</h3>
             <button type="button" class="close-btn" (click)="closeContactDialog()">
-              <span class="material-icons">close</span>
+              <span class="material-symbols-rounded">close</span>
             </button>
           </div>
           <div class="modal-body">
@@ -442,7 +442,7 @@
           <div class="modal-header">
             <h3>تسجيل الدفع</h3>
             <button type="button" class="close-btn" (click)="closePaymentDialog()">
-              <span class="material-icons">close</span>
+              <span class="material-symbols-rounded">close</span>
             </button>
           </div>
           <div class="modal-body">
@@ -483,7 +483,7 @@
           <div class="modal-header">
             <h3>تسجيل التسليم</h3>
             <button type="button" class="close-btn" (click)="closeDeliveryDialog()">
-              <span class="material-icons">close</span>
+              <span class="material-symbols-rounded">close</span>
             </button>
           </div>
           <div class="modal-body">
