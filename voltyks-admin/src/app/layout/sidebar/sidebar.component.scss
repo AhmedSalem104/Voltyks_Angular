@@ -14,7 +14,7 @@
   box-shadow: -2px 0 16px rgba(0, 0, 0, 0.06), -1px 0 4px rgba(0, 0, 0, 0.03);
   z-index: 1000;
   overflow: hidden;
-  transition: width 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
 
@@ -55,7 +55,10 @@
       gap: 0;
 
       .logo-text {
-        display: none;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        white-space: nowrap;
       }
     }
 
@@ -65,7 +68,10 @@
 
       .text,
       .chevron {
-        display: none;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        white-space: nowrap;
       }
 
       &.has-active .icon {
@@ -79,7 +85,10 @@
 
       .text,
       .pin-indicator {
-        display: none;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        white-space: nowrap;
       }
 
       &:hover .icon {
@@ -108,14 +117,19 @@
       .section-title,
       .section-count,
       .clear-recent-btn {
-        display: none;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        white-space: nowrap;
       }
     }
 
     // -- Pinned section: hide unpin button --
     .pinned-section .nav-link .unpin-btn,
     .recent-section .nav-link .unpin-btn {
-      display: none;
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
     }
 
     // -- Group separators --
@@ -145,6 +159,7 @@
       overflow: visible;
       opacity: 1;
       pointer-events: auto;
+      transition: max-height 0.4s ease 0.1s, padding 0.4s ease 0.1s, opacity 0.35s ease 0.15s;
 
       &::after { opacity: 1; }
     }
@@ -156,6 +171,7 @@
       padding: 16px;
       overflow: visible;
       opacity: 1;
+      transition: max-height 0.4s ease 0.1s, padding 0.4s ease 0.1s, opacity 0.35s ease 0.15s;
 
       &::before { opacity: 1; }
     }
@@ -183,7 +199,7 @@
       gap: 10px;
     }
 
-    // Reveal text elements
+    // Reveal text elements with smooth slide-in
     .logo-text,
     .text,
     .version-text,
@@ -191,17 +207,38 @@
     .section-count,
     .pin-sidebar-btn,
     .clear-recent-btn {
+      max-width: 200px;
       opacity: 1;
       transform: translateX(0);
+      transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
+                  opacity 0.35s ease 0.15s,
+                  transform 0.35s ease 0.15s;
     }
 
     .chevron {
+      max-width: 40px;
       opacity: 1;
       transform: translateX(0);
+      transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
+                  opacity 0.35s ease 0.15s,
+                  transform 0.35s ease 0.15s;
 
       &.rotated {
         transform: translateX(0) rotate(180deg);
       }
+    }
+
+    .pin-indicator {
+      max-width: 40px;
+      opacity: 1;
+      transition: max-width 0.4s ease 0.1s, opacity 0.35s ease 0.15s;
+    }
+
+    .unpin-btn {
+      max-width: 40px;
+      opacity: 1;
+      overflow: visible;
+      transition: max-width 0.3s ease 0.15s, opacity 0.3s ease 0.2s;
     }
 
     // Remove separator
@@ -225,7 +262,7 @@
   justify-content: center;
   gap: 12px;
   position: relative;
-  transition: gap 0.3s ease;
+  transition: gap 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   background: linear-gradient(160deg, rgba(0, 200, 83, 0.06) 0%, transparent 50%);
 
   &::after {
@@ -268,7 +305,9 @@
     white-space: nowrap;
     opacity: 0;
     transform: translateX(15px);
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease,
+                transform 0.3s ease;
     animation: textShimmer 3s linear infinite;
     letter-spacing: -0.5px;
   }
@@ -336,7 +375,9 @@
   border-bottom: none;
   background: var(--bg-secondary);
   position: relative;
-  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s ease;
 
   &::after {
     content: '';
@@ -828,7 +869,7 @@
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.3s ease, color 0.3s ease, gap 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: right;
   position: relative;
 
@@ -842,23 +883,28 @@
     border-radius: 12px;
     font-size: 22px;
     flex-shrink: 0;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
     color: var(--text-secondary);
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
 
   .text {
     flex: 1;
+    min-width: 0;
     opacity: 0;
     transform: translateX(10px);
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease,
+                transform 0.3s ease;
   }
 
   .chevron {
     font-size: 20px;
     opacity: 0;
     transform: translateX(10px);
-    transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), max-width 0.3s ease;
+    transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease,
+                transform 0.3s ease;
 
     &.rotated {
       transform: translateX(10px) rotate(180deg);
@@ -949,7 +995,7 @@
   border-radius: 10px;
   position: relative;
   white-space: nowrap;
-  transition: background-color 0.2s ease, color 0.2s ease, gap 0.3s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, gap 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 
   .icon {
@@ -962,7 +1008,7 @@
     border-radius: 10px;
     font-size: 18px;
     flex-shrink: 0;
-    transition: all 0.25s ease;
+    transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
     font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
   }
 
@@ -972,7 +1018,9 @@
     font-weight: 500;
     opacity: 0;
     transform: translateX(10px);
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease,
+                transform 0.3s ease;
   }
 
   .pin-indicator {
@@ -1080,7 +1128,10 @@
   justify-content: center;
   background: var(--bg-secondary);
   position: relative;
-  transition: all 0.3s ease;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              min-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s ease;
 
   &::before {
     content: '';
