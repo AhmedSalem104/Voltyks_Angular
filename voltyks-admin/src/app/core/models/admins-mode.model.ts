@@ -15,10 +15,12 @@ export interface AdminsModeStatusResponse {
 // Admin settings (GET/PATCH /api/admin/settings/admins-mode)
 export interface AdminAdminsModeDto {
   adminsModeActivated: boolean;
+  registrationEnabled: boolean;
+  message: string;
 }
 
 export interface UpdateAdminsModeDto {
-  adminsModeActivated: boolean;
+  activated: boolean;
 }
 
 export interface AdminAdminsModeResponse {

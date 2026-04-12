@@ -93,7 +93,7 @@ export class AdminsModeComponent implements OnInit {
     this.isSaving = true;
     this.cdr.markForCheck();
 
-    this.adminsModeService.updateAdminsMode({ adminsModeActivated: newStatus }).subscribe({
+    this.adminsModeService.updateAdminsMode({ activated: newStatus }).subscribe({
       next: (res: any) => {
         if (res.status && res.data) {
           this.adminsModeActivated = res.data.adminsModeActivated ?? res.data.admins_mode_activated ?? newStatus;
