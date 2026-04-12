@@ -17,3 +17,4 @@ export * from './capacity.model';
 export * from './notification.model';
 export * from './app-config.model';
 export * from './store.model';
+export * from './admins-mode.model';

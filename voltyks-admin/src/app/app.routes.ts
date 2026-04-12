@@ -94,6 +94,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/app-config/app-config.component').then(m => m.AppConfigComponent)
       },
       {
+        path: 'admins-mode',
+        loadComponent: () => import('./features/admins-mode/admins-mode.component').then(m => m.AdminsModeComponent)
+      },
+      {
         path: 'store',
         loadChildren: () => import('./features/store/store.routes').then(m => m.storeRoutes)
       },

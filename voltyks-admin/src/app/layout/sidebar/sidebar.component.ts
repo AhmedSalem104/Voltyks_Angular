@@ -340,7 +340,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
         { label: 'الرسوم', icon: 'receipt_long', route: '/fees' },
         { label: 'الشروط والأحكام', icon: 'gavel', route: '/terms' },
         { label: 'البروتوكول', icon: 'verified_user', route: '/protocol' },
-        { label: 'إعدادات التطبيق', icon: 'smartphone', route: '/app-config' }
+        { label: 'إعدادات التطبيق', icon: 'smartphone', route: '/app-config' },
+        { label: 'وضع المسؤولين', icon: 'admin_panel_settings', route: '/admins-mode' }
       ]
     },
     {

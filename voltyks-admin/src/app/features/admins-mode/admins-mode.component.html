@@ -1,0 +1,108 @@
+<div class="admins-mode-container">
+  <div class="page-header-row">
+    <div>
+      <h2>وضع المسؤولين</h2>
+      <p class="subtitle">التحكم في تسجيل المستخدمين الجدد</p>
+    </div>
+  </div>
+
+  <!-- Section Header -->
+  <div class="section-header">
+    <span class="material-symbols-rounded">admin_panel_settings</span>
+    <h3>حالة التسجيل</h3>
+  </div>
+
+  @if (isLoading) {
+    <div class="admins-mode-card loading">
+      <div class="loading-spinner small"></div>
+      <span>جاري تحميل حالة وضع المسؤولين...</span>
+    </div>
+  } @else if (loadError) {
+    <div class="admins-mode-card error">
+      <span class="material-symbols-rounded">error</span>
+      <span>فشل تحميل حالة وضع المسؤولين</span>
+      <button class="retry-btn" (click)="loadAdminsModeConfig()">
+        <span class="material-symbols-rounded">refresh</span>
+        إعادة المحاولة
+      </button>
+    </div>
+  } @else {
+    <div class="admins-mode-card" [class.activated]="adminsModeActivated" [class.deactivated]="!adminsModeActivated">
+      <div class="admins-mode-header">
+        <div class="admins-mode-icon" [class.active]="adminsModeActivated">
+          <span class="material-symbols-rounded">{{ adminsModeActivated ? 'shield' : 'person_add' }}</span>
+        </div>
+        <div class="admins-mode-info">
+          <h4>وضع المسؤولين</h4>
+          <span class="status-badge" [class]="adminsModeActivated ? 'status-danger' : 'status-active'">
+            {{ adminsModeActivated ? 'مفعّل — التسجيل مغلق' : 'معطّل — التسجيل مفتوح' }}
+          </span>
+        </div>
+        <div class="admins-mode-toggle">
+          <button
+            class="toggle-btn-large"
+            [class.active]="adminsModeActivated"
+            [disabled]="isSaving"
+            (click)="toggleAdminsMode()"
+          >
+            @if (isSaving) {
+              <span class="material-symbols-rounded spin">sync</span>
+            } @else {
+              <span class="material-symbols-rounded">{{ adminsModeActivated ? 'toggle_on' : 'toggle_off' }}</span>
+            }
+            <span>{{ adminsModeActivated ? 'تعطيل' : 'تفعيل' }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="admins-mode-description">
+        @if (adminsModeActivated) {
+          <div class="status-message danger">
+            <span class="material-symbols-rounded">lock</span>
+            <div>
+              <strong>وضع المسؤولين مفعّل — التسجيل مغلق</strong>
+              <p>النظام في وضع المسؤولين فقط. لن يتمكن أي شخص من:</p>
+              <ul>
+                <li>إنشاء حساب جديد</li>
+                <li>التسجيل في النظام</li>
+                <li>الوصول إلا كمسؤول موجود</li>
+              </ul>
+              <p class="user-message">رسالة للمستخدمين: "التسجيل معطّل حالياً. النظام في وضع المسؤولين فقط."</p>
+            </div>
+          </div>
+        } @else {
+          <div class="status-message success">
+            <span class="material-symbols-rounded">check_circle</span>
+            <div>
+              <strong>التسجيل مفتوح</strong>
+              <p>يمكن للمستخدمين الجدد إنشاء حسابات والتسجيل في النظام بشكل طبيعي.</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Info Card -->
+  <div class="info-card">
+    <span class="material-symbols-rounded">info</span>
+    <div class="info-content">
+      <p>عند تفعيل وضع المسؤولين، يتم إغلاق التسجيل بالكامل. لن يتمكن أي مستخدم جديد من إنشاء حساب.</p>
+      <p>المستخدمون الحاليون لن يتأثروا — يمكنهم الاستمرار في استخدام النظام بشكل طبيعي.</p>
+      <p>يمكنك إعادة فتح التسجيل في أي وقت بتعطيل وضع المسؤولين.</p>
+    </div>
+  </div>
+</div>
+
+<app-confirm-dialog
+  [isOpen]="showConfirmDialog"
+  [title]="confirmDialogTitle"
+  [message]="confirmDialogMessage"
+  [type]="'primary'"
+  (confirm)="confirmAction()"
+  (cancel)="cancelAction()"
+></app-confirm-dialog>
+
+@if (isSaving) {
+  <app-loading-overlay></app-loading-overlay>
+}

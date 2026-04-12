@@ -10,3 +10,4 @@ export * from './admin-vehicles.service';
 export * from './admin-processes.service';
 export * from './charging-protocol.service';
 export * from './capacity.service';
+export * from './admins-mode.service';
