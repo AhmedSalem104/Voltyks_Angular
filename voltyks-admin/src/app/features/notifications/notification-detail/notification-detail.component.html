@@ -435,6 +435,126 @@
       </div>
     </div>
   }
+
+  <!-- Vehicle Request Detail -->
+  @if (type === 'vehicle-request' && vehicleRequest && !isLoading && !loadError) {
+    <div class="detail-content reservation-detail fade-in">
+      <!-- Status Banner -->
+      <div
+        class="status-banner"
+        [class.resolved]="vehicleRequest.status === 'accepted'"
+        [class.pending]="vehicleRequest.status === 'pending'"
+        [class.cancelled]="vehicleRequest.status === 'declined'"
+      >
+        <span class="material-symbols-rounded">
+          {{ vehicleRequest.status === 'accepted' ? 'check_circle'
+            : vehicleRequest.status === 'declined' ? 'cancel'
+            : 'pending' }}
+        </span>
+        <span>{{ getVehicleRequestStatusLabel(vehicleRequest.status) }}</span>
+      </div>
+
+      <!-- Vehicle Info Card -->
+      <div class="info-card">
+        <div class="card-header">
+          <span class="material-symbols-rounded">electric_car</span>
+          <h3>بيانات السيارة المطلوبة</h3>
+        </div>
+        <div class="card-body">
+          <div class="info-row">
+            <span class="label">الماركة:</span>
+            <span class="value">{{ vehicleRequest.brandName }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">الموديل:</span>
+            <span class="value">{{ vehicleRequest.modelName }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">السعة:</span>
+            <span class="value">{{ vehicleRequest.capacity }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Info Card -->
+      <div class="info-card">
+        <div class="card-header">
+          <span class="material-symbols-rounded">person</span>
+          <h3>بيانات المستخدم</h3>
+        </div>
+        <div class="card-body">
+          <div class="info-row">
+            <span class="label">الاسم:</span>
+            <span class="value">{{ vehicleRequest.userFullName }}</span>
+          </div>
+          @if (vehicleRequest.userEmail) {
+            <div class="info-row">
+              <span class="label">البريد الإلكتروني:</span>
+              <a class="value link" href="mailto:{{ vehicleRequest.userEmail }}">{{ vehicleRequest.userEmail }}</a>
+            </div>
+          }
+          @if (vehicleRequest.userPhone) {
+            <div class="info-row">
+              <span class="label">رقم الهاتف:</span>
+              <a class="value link" href="tel:{{ vehicleRequest.userPhone }}">{{ vehicleRequest.userPhone }}</a>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Meta Info -->
+      <div class="info-card">
+        <div class="card-header">
+          <span class="material-symbols-rounded">info</span>
+          <h3>معلومات إضافية</h3>
+        </div>
+        <div class="card-body">
+          <div class="info-row">
+            <span class="label">رقم الطلب:</span>
+            <span class="value">#{{ vehicleRequest.id }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">تاريخ الطلب:</span>
+            <span class="value">{{ formatDate(vehicleRequest.createdAt) }}</span>
+          </div>
+          @if (vehicleRequest.updatedAt) {
+            <div class="info-row">
+              <span class="label">تاريخ المعالجة:</span>
+              <span class="value">{{ formatDate(vehicleRequest.updatedAt) }}</span>
+            </div>
+          }
+          @if (vehicleRequest.processedBy) {
+            <div class="info-row">
+              <span class="label">تمت المعالجة بواسطة:</span>
+              <span class="value">{{ vehicleRequest.processedBy }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Actions -->
+      @if (vehicleRequest.status === 'pending') {
+        <div class="actions-card">
+          <button
+            class="action-btn success"
+            [disabled]="isSaving"
+            (click)="acceptVehicleRequest()"
+          >
+            <span class="material-symbols-rounded">check</span>
+            قبول وإضافة للنظام
+          </button>
+          <button
+            class="action-btn danger"
+            [disabled]="isSaving"
+            (click)="declineVehicleRequest()"
+          >
+            <span class="material-symbols-rounded">close</span>
+            رفض الطلب
+          </button>
+        </div>
+      }
+    </div>
+  }
 </div>
 
 <!-- Confirm Dialog - Deferred for performance -->

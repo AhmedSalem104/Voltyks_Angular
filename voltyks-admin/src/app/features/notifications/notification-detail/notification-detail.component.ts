@@ -6,6 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { AdminReportsService } from '../../../core/services/admin/admin-reports.service';
 import { AdminComplaintsService } from '../../../core/services/admin/admin-complaints.service';
 import { AdminStoreService } from '../../../core/services/admin/admin-store.service';
+import { VehicleAdditionRequestsService } from '../../../core/services/admin/vehicle-addition-requests.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { ToasterService } from '../../../shared/components/toaster/toaster.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -34,6 +35,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   report: any = null;
   complaint: any = null;
   reservation: any = null;
+  vehicleRequest: any = null;
 
   // Complaint reply
   replyContent = '';
@@ -50,6 +52,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     private reportsService: AdminReportsService,
     private complaintsService: AdminComplaintsService,
     private storeService: AdminStoreService,
+    private vehicleRequestsService: VehicleAdditionRequestsService,
     private notificationService: NotificationService,
     private toaster: ToasterService,
     private cdr: ChangeDetectorRef
@@ -85,11 +88,103 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
       case 'reservation':
         this.loadReservation();
         break;
+      case 'vehicle-request':
+        this.loadVehicleRequest();
+        break;
       default:
         this.loadError = true;
         this.isLoading = false;
         this.cdr.markForCheck();
     }
+  }
+
+  private loadVehicleRequest(): void {
+    this.vehicleRequestsService.getById(this.id).subscribe({
+      next: (response) => {
+        if (response?.status && response.data) {
+          this.vehicleRequest = response.data;
+        } else {
+          this.loadError = true;
+        }
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.loadError = true;
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  // ========== Vehicle Request Actions ==========
+
+  acceptVehicleRequest(): void {
+    if (!this.vehicleRequest) return;
+    this.confirmDialogTitle = 'قبول الطلب';
+    this.confirmDialogMessage =
+      `هل أنت متأكد من قبول طلب إضافة السيارة "${this.vehicleRequest.brandName} ${this.vehicleRequest.modelName}"؟ سيتم إضافتها إلى قاعدة البيانات.`;
+    this.pendingAction = () => this.confirmAcceptVehicleRequest();
+    this.showConfirmDialog = true;
+    this.cdr.markForCheck();
+  }
+
+  private confirmAcceptVehicleRequest(): void {
+    this.isSaving = true;
+    this.cdr.markForCheck();
+
+    this.vehicleRequestsService.accept(this.id).subscribe({
+      next: (response) => {
+        if (response?.status) {
+          this.toaster.success(response.message || 'تم قبول الطلب وإضافة السيارة بنجاح');
+          this.loadVehicleRequest();
+          this.notificationService.loadVehicleRequestNotifications();
+        } else {
+          this.toaster.error(response?.message || 'فشل قبول الطلب');
+        }
+        this.isSaving = false;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.toaster.error(err?.error?.message || 'فشل قبول الطلب');
+        this.isSaving = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  declineVehicleRequest(): void {
+    if (!this.vehicleRequest) return;
+    this.confirmDialogTitle = 'رفض الطلب';
+    this.confirmDialogMessage =
+      `هل أنت متأكد من رفض طلب إضافة السيارة "${this.vehicleRequest.brandName} ${this.vehicleRequest.modelName}"؟`;
+    this.pendingAction = () => this.confirmDeclineVehicleRequest();
+    this.showConfirmDialog = true;
+    this.cdr.markForCheck();
+  }
+
+  private confirmDeclineVehicleRequest(): void {
+    this.isSaving = true;
+    this.cdr.markForCheck();
+
+    this.vehicleRequestsService.decline(this.id).subscribe({
+      next: (response) => {
+        if (response?.status) {
+          this.toaster.success(response.message || 'تم رفض الطلب');
+          this.loadVehicleRequest();
+          this.notificationService.loadVehicleRequestNotifications();
+        } else {
+          this.toaster.error(response?.message || 'فشل رفض الطلب');
+        }
+        this.isSaving = false;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.toaster.error(err?.error?.message || 'فشل رفض الطلب');
+        this.isSaving = false;
+        this.cdr.markForCheck();
+      }
+    });
   }
 
   private loadReport(): void {
@@ -379,6 +474,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
       case 'report': return 'بلاغ';
       case 'complaint': return 'شكوى';
       case 'reservation': return 'حجز منتج';
+      case 'vehicle-request': return 'طلب إضافة سيارة';
       default: return 'إشعار';
     }
   }
@@ -388,7 +484,17 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
       case 'report': return 'report_problem';
       case 'complaint': return 'feedback';
       case 'reservation': return 'shopping_cart';
+      case 'vehicle-request': return 'directions_car';
       default: return 'notifications';
+    }
+  }
+
+  getVehicleRequestStatusLabel(status: string): string {
+    switch (status) {
+      case 'pending': return 'قيد الانتظار';
+      case 'accepted': return 'مقبولة';
+      case 'declined': return 'مرفوضة';
+      default: return status;
     }
   }
 

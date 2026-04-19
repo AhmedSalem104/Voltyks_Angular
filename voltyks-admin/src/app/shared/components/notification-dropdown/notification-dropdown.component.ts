@@ -206,12 +206,8 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
       this.notificationService.markAsReadOptimistic(notification.id);
     }
 
-    // Vehicle-request notifications open the requests list directly
-    if (notification.type === 'vehicle-request') {
-      this.router.navigate(['/vehicle-addition-requests']);
-    } else {
-      this.router.navigate(['/notifications', notification.type, notification.originalId]);
-    }
+    // Navigate to notification detail page
+    this.router.navigate(['/notifications', notification.type, notification.originalId]);
 
     this.close();
   }
