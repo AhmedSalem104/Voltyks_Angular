@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { NotificationService, NotificationSettings } from '../../../core/services/notification.service';
 import { AppNotification, NotificationType } from '../../../core/models';
 
-type FilterType = 'all' | 'unread' | 'reports' | 'complaints' | 'reservations';
+type FilterType = 'all' | 'unread' | 'reports' | 'complaints' | 'reservations' | 'vehicle-requests';
 type ViewType = 'list' | 'settings';
 
 @Component({
@@ -32,7 +32,8 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
     soundEnabled: true,
     showReports: true,
     showComplaints: true,
-    showReservations: true
+    showReservations: true,
+    showVehicleRequests: true
   };
 
   // For grouped notifications
@@ -130,6 +131,9 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
       case 'reservations':
         filtered = this.notifications.filter(n => n.type === 'reservation');
         break;
+      case 'vehicle-requests':
+        filtered = this.notifications.filter(n => n.type === 'vehicle-request');
+        break;
     }
 
     // Deduplicate by ID to prevent NG0955 errors
@@ -180,6 +184,8 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
         return this.notifications.filter(n => n.type === 'complaint').length;
       case 'reservations':
         return this.notifications.filter(n => n.type === 'reservation').length;
+      case 'vehicle-requests':
+        return this.notifications.filter(n => n.type === 'vehicle-request').length;
       default:
         return this.notifications.length;
     }
@@ -200,8 +206,12 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
       this.notificationService.markAsReadOptimistic(notification.id);
     }
 
-    // Navigate to notification detail page
-    this.router.navigate(['/notifications', notification.type, notification.originalId]);
+    // Vehicle-request notifications open the requests list directly
+    if (notification.type === 'vehicle-request') {
+      this.router.navigate(['/vehicle-addition-requests']);
+    } else {
+      this.router.navigate(['/notifications', notification.type, notification.originalId]);
+    }
 
     this.close();
   }
@@ -233,6 +243,8 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
         return 'feedback';
       case 'reservation':
         return 'shopping_cart';
+      case 'vehicle-request':
+        return 'directions_car';
       default:
         return 'notifications';
     }
@@ -249,6 +261,8 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
         return 'شكوى';
       case 'reservation':
         return 'حجز منتج';
+      case 'vehicle-request':
+        return 'طلب سيارة';
       default:
         return 'إشعار';
     }

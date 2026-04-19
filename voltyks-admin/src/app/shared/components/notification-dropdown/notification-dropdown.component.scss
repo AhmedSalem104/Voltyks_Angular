@@ -4,6 +4,7 @@ $primary-dark: #00A843;
 $report-color: #FF9800;
 $complaint-color: #2196F3;
 $reservation-color: #9C27B0;
+$vehicle-request-color: #10B981;
 
 $bg-dark: #1a1a1a;
 $bg-card: #242424;
@@ -260,6 +261,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
         &.text-warning { color: $report-color; }
         &.text-info { color: $complaint-color; }
         &.text-purple { color: $reservation-color; }
+        &.text-success { color: $vehicle-request-color; }
       }
 
       .setting-label {
@@ -471,6 +473,14 @@ $text-muted: rgba(255, 255, 255, 0.4);
         background: rgba($reservation-color, 0.15);
         border-color: rgba($reservation-color, 0.3);
         color: $reservation-color;
+      }
+    }
+
+    &.type-vehicle-request {
+      &.active {
+        background: rgba($vehicle-request-color, 0.15);
+        border-color: rgba($vehicle-request-color, 0.3);
+        color: $vehicle-request-color;
       }
     }
   }
@@ -707,6 +717,11 @@ $text-muted: rgba(255, 255, 255, 0.4);
     &.reservation {
       background: linear-gradient(135deg, rgba($reservation-color, 0.2) 0%, rgba($reservation-color, 0.1) 100%);
       color: $reservation-color;
+    }
+
+    &.vehicle-request {
+      background: linear-gradient(135deg, rgba($vehicle-request-color, 0.2) 0%, rgba($vehicle-request-color, 0.1) 100%);
+      color: $vehicle-request-color;
     }
   }
 

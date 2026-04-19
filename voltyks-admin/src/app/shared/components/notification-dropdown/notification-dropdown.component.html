@@ -99,6 +99,20 @@
         </label>
       </div>
 
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="material-symbols-rounded text-success">directions_car</span>
+          <div>
+            <span class="setting-label">طلبات إضافة السيارات</span>
+            <span class="setting-desc">إشعارات طلبات المستخدمين لإضافة سيارات جديدة</span>
+          </div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" [checked]="settings.showVehicleRequests" (change)="updateSetting('showVehicleRequests', !settings.showVehicleRequests)">
+          <span class="slider"></span>
+        </label>
+      </div>
+
       <div class="settings-divider">
         <span>إجراءات</span>
       </div>
@@ -153,6 +167,14 @@
           title="الحجوزات"
         >
           <span class="material-symbols-rounded">shopping_cart</span>
+        </button>
+        <button
+          class="tab-btn type-vehicle-request"
+          [class.active]="activeFilter === 'vehicle-requests'"
+          (click)="setFilter('vehicle-requests')"
+          title="طلبات إضافة السيارات"
+        >
+          <span class="material-symbols-rounded">directions_car</span>
         </button>
       </div>
       @if (hasUnread) {
@@ -228,6 +250,12 @@
                           @if (notification.quantity) {
                             ({{ notification.quantity }})
                           }
+                        </span>
+                      }
+                      @if (notification.type === 'vehicle-request' && notification.brandName) {
+                        <span class="notification-product">
+                          <span class="material-symbols-rounded">electric_car</span>
+                          {{ notification.brandName }} {{ notification.modelName }}
                         </span>
                       }
                     </div>

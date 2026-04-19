@@ -24,13 +24,15 @@ export interface NotificationSettings {
   showReports: boolean;
   showComplaints: boolean;
   showReservations: boolean;
+  showVehicleRequests: boolean;
 }
 
 const DEFAULT_SETTINGS: NotificationSettings = {
   soundEnabled: true,
   showReports: true,
   showComplaints: true,
-  showReservations: true
+  showReservations: true,
+  showVehicleRequests: true
 };
 
 @Injectable({
@@ -664,6 +666,7 @@ export class NotificationService implements OnDestroy {
       this.hubConnection.off('NewComplaint');
       this.hubConnection.off('ReceiveBroadcast');
       this.hubConnection.off('NewReservation');
+      this.hubConnection.off('NewVehicleAdditionRequest');
       this.hubConnection.off('ReceiveNotification');
       this.hubConnection.off('SendNotification');
       this.hubConnection.stop().catch(() => {});
@@ -731,7 +734,8 @@ export class NotificationService implements OnDestroy {
       // Check if we should show this notification type
       const shouldShow = (detectedType === 'complaint' && this.settings.showComplaints) ||
                          (detectedType === 'report' && this.settings.showReports) ||
-                         (detectedType === 'reservation' && this.settings.showReservations);
+                         (detectedType === 'reservation' && this.settings.showReservations) ||
+                         (detectedType === 'vehicle-request' && this.settings.showVehicleRequests);
 
       if (shouldShow) {
         const notification: AppNotification = {
@@ -747,7 +751,11 @@ export class NotificationService implements OnDestroy {
           productName: detectedType === 'reservation' ? data?.productName : undefined,
           quantity: detectedType === 'reservation' ? data?.quantity : undefined,
           totalPrice: detectedType === 'reservation' ? data?.totalPrice : undefined,
-          currency: detectedType === 'reservation' ? data?.currency : undefined
+          currency: detectedType === 'reservation' ? data?.currency : undefined,
+          // Only include vehicle data for vehicle-requests
+          brandName: detectedType === 'vehicle-request' ? data?.brandName : undefined,
+          modelName: detectedType === 'vehicle-request' ? data?.modelName : undefined,
+          capacity: detectedType === 'vehicle-request' ? data?.capacity : undefined
         };
         // Queue the notification for sequential processing
         this.notificationQueue.next(notification);
@@ -764,6 +772,34 @@ export class NotificationService implements OnDestroy {
           type: 'reservation',
           isRead: false,
           timestamp: notification.timestamp || new Date().toISOString()
+        };
+        this.notificationQueue.next(enrichedNotification);
+      }
+    });
+
+    // Listen for new vehicle addition request event
+    this.hubConnection.on('NewVehicleAdditionRequest', (notification: any) => {
+      console.log('[SignalR] NewVehicleAdditionRequest received:', notification);
+      if (this.settings.showVehicleRequests) {
+        const brandName = notification.brandName || notification.BrandName;
+        const modelName = notification.modelName || notification.ModelName;
+        const capacity = notification.capacity || notification.Capacity;
+        const userName = notification.userName || notification.userFullName || 'مستخدم';
+        const enrichedNotification: AppNotification = {
+          ...notification,
+          id: notification.id || `vehicle-request_${notification.originalId || Date.now()}`,
+          type: 'vehicle-request',
+          title: notification.title || 'طلب إضافة سيارة',
+          message: notification.message
+            || (brandName && modelName
+                ? `طلب إضافة السيارة "${brandName} ${modelName}" من ${userName}`
+                : `طلب إضافة سيارة جديد من ${userName}`),
+          userName,
+          brandName,
+          modelName,
+          capacity,
+          isRead: false,
+          timestamp: notification.timestamp || notification.createdAt || new Date().toISOString()
         };
         this.notificationQueue.next(enrichedNotification);
       }
@@ -793,13 +829,18 @@ export class NotificationService implements OnDestroy {
         // Only include product data for reservations
         productName: type === 'reservation' ? notification.productName : undefined,
         quantity: type === 'reservation' ? notification.quantity : undefined,
-        totalPrice: type === 'reservation' ? notification.totalPrice : undefined
+        totalPrice: type === 'reservation' ? notification.totalPrice : undefined,
+        // Only include vehicle data for vehicle-requests
+        brandName: type === 'vehicle-request' ? notification.brandName : undefined,
+        modelName: type === 'vehicle-request' ? notification.modelName : undefined,
+        capacity: type === 'vehicle-request' ? notification.capacity : undefined
       };
 
       // Check if we should show this type
       if ((type === 'report' && this.settings.showReports) ||
           (type === 'complaint' && this.settings.showComplaints) ||
-          (type === 'reservation' && this.settings.showReservations)) {
+          (type === 'reservation' && this.settings.showReservations) ||
+          (type === 'vehicle-request' && this.settings.showVehicleRequests)) {
         this.notificationQueue.next(enrichedNotification);
       }
     });
@@ -827,17 +868,21 @@ export class NotificationService implements OnDestroy {
         timestamp: notification.timestamp || new Date().toISOString(),
         productName: type === 'reservation' ? notification.productName : undefined,
         quantity: type === 'reservation' ? notification.quantity : undefined,
-        totalPrice: type === 'reservation' ? notification.totalPrice : undefined
+        totalPrice: type === 'reservation' ? notification.totalPrice : undefined,
+        brandName: type === 'vehicle-request' ? notification.brandName : undefined,
+        modelName: type === 'vehicle-request' ? notification.modelName : undefined,
+        capacity: type === 'vehicle-request' ? notification.capacity : undefined
       };
 
       if ((type === 'report' && this.settings.showReports) ||
           (type === 'complaint' && this.settings.showComplaints) ||
-          (type === 'reservation' && this.settings.showReservations)) {
+          (type === 'reservation' && this.settings.showReservations) ||
+          (type === 'vehicle-request' && this.settings.showVehicleRequests)) {
         this.notificationQueue.next(enrichedNotification);
       }
     });
 
-    console.log('[SignalR] Event listeners registered for: NewReport, NewComplaint, ReceiveBroadcast, NewReservation, ReceiveNotification, SendNotification');
+    console.log('[SignalR] Event listeners registered for: NewReport, NewComplaint, ReceiveBroadcast, NewReservation, NewVehicleAdditionRequest, ReceiveNotification, SendNotification');
   }
 
   /**
@@ -1097,6 +1142,9 @@ export class NotificationService implements OnDestroy {
     if (dataType === 'complaint' || dataType === 'complaints') return 'complaint';
     if (dataType === 'report' || dataType === 'reports') return 'report';
     if (dataType === 'reservation' || dataType === 'reservations') return 'reservation';
+    if (dataType === 'vehicle-request' || dataType === 'vehicle_request' ||
+        dataType === 'vehiclerequest' || dataType === 'vehicle-addition-request' ||
+        dataType === 'vehicleadditionrequest') return 'vehicle-request';
 
     // PRIORITY 2: Check TITLE for type keywords (most reliable indicator)
     // Title usually contains the notification type explicitly
@@ -1108,6 +1156,10 @@ export class NotificationService implements OnDestroy {
     }
     if (titleLower.includes('حجز') || titleLower.includes('reservation')) {
       return 'reservation';
+    }
+    if (titleLower.includes('سيارة') || titleLower.includes('مركبة') ||
+        titleLower.includes('vehicle')) {
+      return 'vehicle-request';
     }
 
     // PRIORITY 3: Check data fields that indicate type
@@ -1122,6 +1174,10 @@ export class NotificationService implements OnDestroy {
     // Reservations have product-related data
     if (data?.productName || data?.productId || (data?.quantity !== undefined && data?.totalPrice !== undefined)) {
       return 'reservation';
+    }
+    // Vehicle-requests have brand/model/capacity combo
+    if (data?.brandName && data?.modelName) {
+      return 'vehicle-request';
     }
 
     // PRIORITY 4: Check body keywords as last resort
@@ -1175,6 +1231,16 @@ export class NotificationService implements OnDestroy {
       const productName = data?.productName || 'منتج';
       const quantity = data?.quantity || 1;
       return `قام ${userName} بحجز ${productName} (الكمية: ${quantity})`;
+    }
+
+    // Vehicle-request: generate a clear message if missing
+    if (type === 'vehicle-request' && (!originalBody || originalBody.trim().length === 0)) {
+      const brandName = data?.brandName;
+      const modelName = data?.modelName;
+      if (brandName && modelName) {
+        return `طلب إضافة السيارة "${brandName} ${modelName}" من ${userName}`;
+      }
+      return `طلب إضافة سيارة جديد من ${userName}`;
     }
 
     // Original body is fine

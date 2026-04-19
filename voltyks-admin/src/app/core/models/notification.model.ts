@@ -1,12 +1,12 @@
 // Notification Related DTOs
 
-export type NotificationType = 'report' | 'complaint' | 'reservation';
+export type NotificationType = 'report' | 'complaint' | 'reservation' | 'vehicle-request';
 
 export interface AppNotification {
-  id: string;              // "report_123" or "complaint_456" or "reservation_789"
+  id: string;              // "report_123" or "complaint_456" or "reservation_789" or "vehicle-request_42"
   type: NotificationType;
   originalId: number;
-  title: string;           // "بلاغ جديد" or "شكوى جديدة" or "حجز منتج جديد"
+  title: string;           // "بلاغ جديد" or "شكوى جديدة" or "حجز منتج جديد" or "طلب إضافة سيارة"
   message: string;
   userName: string;
   timestamp: string;       // ISO UTC
@@ -16,6 +16,10 @@ export interface AppNotification {
   quantity?: number;
   totalPrice?: number;
   currency?: string;
+  // Vehicle-request specific data
+  brandName?: string;
+  modelName?: string;
+  capacity?: string;
 }
 
 export interface NotificationsResponse {
