@@ -5,13 +5,15 @@ import { debounceTime } from 'rxjs/operators';
 import * as signalR from '@microsoft/signalr';
 import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
+import { VehicleAdditionRequestsService } from './admin/vehicle-addition-requests.service';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
 import {
   AppNotification,
   NotificationType,
   NotificationsResponse,
   UnreadCountResponse,
-  ApiResponse
+  ApiResponse,
+  VehicleAdditionRequestDto
 } from '../models';
 
 // Storage key for localStorage persistence
@@ -69,6 +71,10 @@ export class NotificationService implements OnDestroy {
   private isRateLimited = false; // Flag to track rate limit status
   private rateLimitResetTimeout: any = null;
 
+  // Dedicated polling for vehicle-addition requests (backend has no SignalR event for them)
+  private vehiclePollingInterval: any = null;
+  private readonly VEHICLE_POLLING_DELAY = 45000; // 45 seconds
+
   // Notifications state
   private notificationsSubject = new BehaviorSubject<AppNotification[]>([]);
   public notifications$ = this.notificationsSubject.asObservable();
@@ -96,6 +102,7 @@ export class NotificationService implements OnDestroy {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
+    private vehicleRequestsService: VehicleAdditionRequestsService,
     private toasterService: ToasterService,
     private ngZone: NgZone
   ) {
@@ -474,6 +481,8 @@ export class NotificationService implements OnDestroy {
         this.joinBroadcastGroup();
         // Load initial notifications after connection (this recalculates unread count)
         this.loadNotifications();
+        // Always poll vehicle requests — backend has no SignalR event for them yet
+        this.startVehiclePolling();
         console.log('SignalR connected - polling stopped to reduce server load');
       })
       .catch((err) => {
@@ -485,6 +494,8 @@ export class NotificationService implements OnDestroy {
         });
         // Start polling as fallback
         this.startPolling();
+        // Also start dedicated vehicle-request polling
+        this.startVehiclePolling();
         // Load notifications via REST API (this recalculates unread count)
         this.loadNotifications();
         // Schedule reconnect attempt
@@ -625,6 +636,28 @@ export class NotificationService implements OnDestroy {
   }
 
   /**
+   * Start dedicated polling for vehicle-addition requests.
+   * Runs even when SignalR is connected, because the backend doesn't
+   * emit a SignalR event for this type yet.
+   */
+  private startVehiclePolling(): void {
+    if (this.vehiclePollingInterval) return;
+    this.vehiclePollingInterval = setInterval(() => {
+      this.loadVehicleRequestNotifications();
+    }, this.VEHICLE_POLLING_DELAY);
+  }
+
+  /**
+   * Stop vehicle-request polling.
+   */
+  private stopVehiclePolling(): void {
+    if (this.vehiclePollingInterval) {
+      clearInterval(this.vehiclePollingInterval);
+      this.vehiclePollingInterval = null;
+    }
+  }
+
+  /**
    * Schedule a reconnect attempt
    */
   private scheduleReconnect(): void {
@@ -654,6 +687,7 @@ export class NotificationService implements OnDestroy {
    */
   private clearIntervals(): void {
     this.stopPolling();
+    this.stopVehiclePolling();
     this.clearReconnectInterval();
   }
 
@@ -1063,8 +1097,74 @@ export class NotificationService implements OnDestroy {
           this.updateUnreadCount();
         }
         this.loadingSubject.next(false);
+
+        // Also fetch vehicle-addition requests and merge them as notifications,
+        // since the backend's notifications table doesn't include this type yet.
+        this.loadVehicleRequestNotifications();
       }
     });
+  }
+
+  /**
+   * Fetch recent vehicle-addition requests and merge them as notifications.
+   * Called after loadNotifications() so they appear alongside reports/complaints/reservations.
+   * Pending requests show as unread; processed ones show as read.
+   */
+  loadVehicleRequestNotifications(): void {
+    if (!this.authService.isAuthenticated() || !this.authService.isAdmin()) return;
+
+    this.vehicleRequestsService.getAll(null, 1, 50).subscribe({
+      next: (res) => {
+        if (!res?.status || !res.data?.items) return;
+
+        const vehicleNotifications: AppNotification[] = res.data.items.map(req =>
+          this.vehicleRequestToNotification(req)
+        );
+
+        // Merge: keep all non-vehicle-request notifications, replace vehicle-request ones
+        const current = this.notificationsSubject.value;
+        const others = current.filter(n => n.type !== 'vehicle-request');
+        const combined = [...others, ...vehicleNotifications]
+          .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+        this.notificationsSubject.next(combined);
+        this.saveToStorage();
+        this.updateUnreadCount();
+      },
+      error: () => {
+        // Silent fail — existing notifications remain
+      }
+    });
+  }
+
+  /**
+   * Convert a vehicle-addition-request DTO into an AppNotification.
+   */
+  private vehicleRequestToNotification(req: VehicleAdditionRequestDto): AppNotification {
+    const id = `vehicle-request_${req.id}`;
+    const message = `طلب إضافة السيارة "${req.brandName} ${req.modelName}" من ${req.userFullName}`;
+
+    const notification: AppNotification = {
+      id,
+      type: 'vehicle-request',
+      originalId: req.id,
+      title: 'طلب إضافة سيارة',
+      message,
+      userName: req.userFullName,
+      timestamp: req.createdAt,
+      // Processed requests are treated as read; pending ones are unread
+      isRead: req.status !== 'pending',
+      brandName: req.brandName,
+      modelName: req.modelName,
+      capacity: req.capacity
+    };
+
+    // Honor localStorage read status (user may have manually marked a pending one as read)
+    if (!notification.isRead && this.isMarkedAsRead(notification)) {
+      notification.isRead = true;
+    }
+
+    return notification;
   }
 
   /**
@@ -1087,12 +1187,18 @@ export class NotificationService implements OnDestroy {
     if (type === 'reservation' || type === 'reservations' || type === 'product_reservation') {
       return 'reservation';
     }
+    if (type === 'vehicle-request' || type === 'vehicle_request' ||
+        type === 'vehiclerequest' || type === 'vehicle-addition-request' ||
+        type === 'vehicleadditionrequest') {
+      return 'vehicle-request';
+    }
 
     // PRIORITY 2: Check notification ID format
     const id = (notification?.id || '').toString().toLowerCase();
     if (id.startsWith('complaint_') || id.includes('complaint')) return 'complaint';
     if (id.startsWith('report_') || id.includes('report')) return 'report';
     if (id.startsWith('reservation_') || id.includes('reservation')) return 'reservation';
+    if (id.startsWith('vehicle-request_') || id.includes('vehicle-request')) return 'vehicle-request';
 
     // PRIORITY 3: Check message/title content
     // Complaint keywords (Arabic) - check FIRST
@@ -1295,6 +1401,11 @@ export class NotificationService implements OnDestroy {
       this.persistReadStatus(notification);
     }
 
+    // Vehicle-request notifications are synthetic (no backend row) — skip API call
+    if (notification?.type === 'vehicle-request') {
+      return of({ status: true, message: 'Marked locally', data: undefined as any });
+    }
+
     return this.http.patch<ApiResponse<void>>(`${this.baseUrl}/${apiId}/read`, {}).pipe(
       tap(response => {
         // Local state already updated
@@ -1326,6 +1437,11 @@ export class NotificationService implements OnDestroy {
 
       // Persist read status to localStorage (this survives even if API fails)
       this.persistReadStatus(notification);
+
+      // Vehicle-request notifications are synthetic — don't hit the backend
+      if (notification.type === 'vehicle-request') {
+        return;
+      }
 
       // Call API (fire and forget - local state is already persisted)
       const apiId = this.extractApiId(notification);

@@ -182,6 +182,7 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
           this.closeDetails();
           this.loadData();
           this.badgeService.refresh();
+          this.notificationService.loadVehicleRequestNotifications();
         } else {
           this.toaster.error(res?.message || 'فشل قبول الطلب');
         }
@@ -207,6 +208,7 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
           this.closeDetails();
           this.loadData();
           this.badgeService.refresh();
+          this.notificationService.loadVehicleRequestNotifications();
         } else {
           this.toaster.error(res?.message || 'فشل رفض الطلب');
         }
