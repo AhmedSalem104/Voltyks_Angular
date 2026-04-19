@@ -329,7 +329,14 @@ export class NotificationService implements OnDestroy {
       if (stored) {
         const ids = JSON.parse(stored);
         if (Array.isArray(ids)) {
-          this.readNotificationIds = new Set(ids);
+          // Strip legacy un-namespaced "original_<id>" entries — they used to cause
+          // cross-type id collisions (e.g. complaint_12 marking vehicle-request_12 as read).
+          // Full-id entries like "complaint_12" stay, so read status is preserved where it matters.
+          const migrated = ids.filter(id => typeof id === 'string' && !/^original_\d+$/.test(id));
+          this.readNotificationIds = new Set(migrated);
+          if (migrated.length !== ids.length) {
+            this.saveReadIds();
+          }
         }
       }
     } catch (e) {
@@ -351,25 +358,29 @@ export class NotificationService implements OnDestroy {
   }
 
   /**
-   * Mark notification ID as read in persistent storage
+   * Mark notification ID as read in persistent storage.
+   * The `original_<id>` fallback is type-namespaced to avoid collisions
+   * between different notification types that happen to share the same numeric id
+   * (e.g. complaint_12 and vehicle-request_12).
    */
   private persistReadStatus(notification: AppNotification): void {
     this.readNotificationIds.add(notification.id);
     if (notification.originalId !== undefined && notification.originalId !== null) {
-      this.readNotificationIds.add(`original_${notification.originalId}`);
+      this.readNotificationIds.add(`${notification.type}_original_${notification.originalId}`);
     }
     this.saveReadIds();
   }
 
   /**
-   * Check if notification is marked as read in persistent storage
+   * Check if notification is marked as read in persistent storage.
+   * Looks up both the full id and the type-namespaced originalId fallback.
    */
   private isMarkedAsRead(notification: AppNotification): boolean {
     if (this.readNotificationIds.has(notification.id)) {
       return true;
     }
     if (notification.originalId !== undefined && notification.originalId !== null) {
-      return this.readNotificationIds.has(`original_${notification.originalId}`);
+      return this.readNotificationIds.has(`${notification.type}_original_${notification.originalId}`);
     }
     return false;
   }
