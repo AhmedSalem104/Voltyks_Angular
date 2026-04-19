@@ -71,9 +71,11 @@ export class NotificationService implements OnDestroy {
   private isRateLimited = false; // Flag to track rate limit status
   private rateLimitResetTimeout: any = null;
 
-  // Dedicated polling for vehicle-addition requests (backend has no SignalR event for them)
+  // Dedicated polling for vehicle-addition requests (backend has no SignalR event for them).
+  // Cheap 10s poll of totalCount; full fetch only fires when the count changes.
   private vehiclePollingInterval: any = null;
-  private readonly VEHICLE_POLLING_DELAY = 45000; // 45 seconds
+  private readonly VEHICLE_POLLING_DELAY = 10000; // 10 seconds
+  private lastVehicleRequestsTotal: number | null = null;
 
   // Notifications state
   private notificationsSubject = new BehaviorSubject<AppNotification[]>([]);
@@ -638,13 +640,36 @@ export class NotificationService implements OnDestroy {
   /**
    * Start dedicated polling for vehicle-addition requests.
    * Runs even when SignalR is connected, because the backend doesn't
-   * emit a SignalR event for this type yet.
+   * emit a SignalR event for this type yet. Uses a cheap count-only
+   * request and only triggers a full refresh when the count actually changes.
    */
   private startVehiclePolling(): void {
     if (this.vehiclePollingInterval) return;
     this.vehiclePollingInterval = setInterval(() => {
-      this.loadVehicleRequestNotifications();
+      this.checkVehicleRequestsForChanges();
     }, this.VEHICLE_POLLING_DELAY);
+  }
+
+  /**
+   * Fetch only the totalCount (pageSize=1) and trigger a full refresh
+   * if it has changed since the last check.
+   */
+  private checkVehicleRequestsForChanges(): void {
+    if (!this.authService.isAuthenticated() || !this.authService.isAdmin()) return;
+
+    this.vehicleRequestsService.getAll(null, 1, 1).subscribe({
+      next: (res) => {
+        const count = res?.data?.totalCount;
+        if (typeof count !== 'number') return;
+        if (this.lastVehicleRequestsTotal === null || count !== this.lastVehicleRequestsTotal) {
+          this.lastVehicleRequestsTotal = count;
+          this.loadVehicleRequestNotifications();
+        }
+      },
+      error: () => {
+        // Silent fail — previous state remains
+      }
+    });
   }
 
   /**
@@ -1130,6 +1155,7 @@ export class NotificationService implements OnDestroy {
         this.notificationsSubject.next(combined);
         this.saveToStorage();
         this.updateUnreadCount();
+        this.lastVehicleRequestsTotal = res.data.totalCount ?? vehicleNotifications.length;
       },
       error: () => {
         // Silent fail — existing notifications remain

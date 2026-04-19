@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { VehicleAdditionRequestsService } from '../../core/services/admin/vehicle-addition-requests.service';
-import { VehicleRequestsBadgeService } from '../../core/services/admin/vehicle-requests-badge.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -59,7 +58,6 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
 
   constructor(
     private requestsService: VehicleAdditionRequestsService,
-    private badgeService: VehicleRequestsBadgeService,
     private notificationService: NotificationService,
     private toaster: ToasterService,
     private cdr: ChangeDetectorRef
@@ -181,7 +179,6 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
           this.toaster.success(res.message || 'تم قبول الطلب وإضافة السيارة بنجاح');
           this.closeDetails();
           this.loadData();
-          this.badgeService.refresh();
           this.notificationService.loadVehicleRequestNotifications();
         } else {
           this.toaster.error(res?.message || 'فشل قبول الطلب');
@@ -207,7 +204,6 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
           this.toaster.success(res.message || 'تم رفض الطلب');
           this.closeDetails();
           this.loadData();
-          this.badgeService.refresh();
           this.notificationService.loadVehicleRequestNotifications();
         } else {
           this.toaster.error(res?.message || 'فشل رفض الطلب');
