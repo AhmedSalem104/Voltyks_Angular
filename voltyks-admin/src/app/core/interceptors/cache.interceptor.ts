@@ -22,9 +22,12 @@ export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
 
   // For non-GET requests (POST/PUT/PATCH/DELETE), invalidate related caches
   if (req.method !== 'GET') {
-    // Clear any cached GET for the same base URL path
+    // Strip query params, then strip any /{id}/{subpath} or /{id} so that
+    // an action like POST /vehicle-addition-requests/15/accept invalidates
+    // the cached list GET /vehicle-addition-requests?...
     const basePath = req.url.split('?')[0];
-    cacheService.invalidate(`http_cache_${basePath}`);
+    const resourceBase = basePath.replace(/\/\d+(\/.*)?$/, '');
+    cacheService.invalidate(`http_cache_${resourceBase}`);
     return next(req);
   }
 
