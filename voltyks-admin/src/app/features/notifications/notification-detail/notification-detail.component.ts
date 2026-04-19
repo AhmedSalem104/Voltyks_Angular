@@ -8,6 +8,7 @@ import { AdminComplaintsService } from '../../../core/services/admin/admin-compl
 import { AdminStoreService } from '../../../core/services/admin/admin-store.service';
 import { VehicleAdditionRequestsService } from '../../../core/services/admin/vehicle-addition-requests.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { DataRefreshService } from '../../../core/services/data-refresh.service';
 import { ToasterService } from '../../../shared/components/toaster/toaster.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { NotificationType } from '../../../core/models/notification.model';
@@ -54,6 +55,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     private storeService: AdminStoreService,
     private vehicleRequestsService: VehicleAdditionRequestsService,
     private notificationService: NotificationService,
+    private refreshService: DataRefreshService,
     private toaster: ToasterService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -137,13 +139,14 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
       next: (response) => {
         if (response?.status) {
           this.toaster.success(response.message || 'تم قبول الطلب وإضافة السيارة بنجاح');
-          this.loadVehicleRequest();
           this.notificationService.loadVehicleRequestNotifications();
+          this.refreshService.emit('vehicle-request');
+          this.closeDetail();
         } else {
           this.toaster.error(response?.message || 'فشل قبول الطلب');
+          this.isSaving = false;
+          this.cdr.markForCheck();
         }
-        this.isSaving = false;
-        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error(err?.error?.message || 'فشل قبول الطلب');
@@ -171,13 +174,14 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
       next: (response) => {
         if (response?.status) {
           this.toaster.success(response.message || 'تم رفض الطلب');
-          this.loadVehicleRequest();
           this.notificationService.loadVehicleRequestNotifications();
+          this.refreshService.emit('vehicle-request');
+          this.closeDetail();
         } else {
           this.toaster.error(response?.message || 'فشل رفض الطلب');
+          this.isSaving = false;
+          this.cdr.markForCheck();
         }
-        this.isSaving = false;
-        this.cdr.markForCheck();
       },
       error: (err) => {
         this.toaster.error(err?.error?.message || 'فشل رفض الطلب');
@@ -185,6 +189,24 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       }
     });
+  }
+
+  /**
+   * Close the detail page by going back to the previous screen.
+   * Falls back to the resource's list page if there's no history.
+   */
+  private closeDetail(): void {
+    if (window.history.length > 1) {
+      window.history.back();
+      return;
+    }
+    const fallback: Record<string, string> = {
+      'report': '/reports',
+      'complaint': '/complaints',
+      'reservation': '/store/reservations',
+      'vehicle-request': '/vehicle-addition-requests'
+    };
+    this.router.navigate([fallback[this.type] || '/dashboard']);
   }
 
   private loadReport(): void {
@@ -261,13 +283,14 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     this.reportsService.resolveReport(this.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.report.isResolved = true;
           this.toaster.success('تم حل البلاغ بنجاح');
+          this.refreshService.emit('report');
+          this.closeDetail();
         } else {
           this.toaster.error(response.message || 'فشل حل البلاغ');
+          this.isSaving = false;
+          this.cdr.markForCheck();
         }
-        this.isSaving = false;
-        this.cdr.markForCheck();
       },
       error: () => {
         this.toaster.error('فشل حل البلاغ');
@@ -293,12 +316,13 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
       next: (response) => {
         if (response.status) {
           this.toaster.success('تم حذف البلاغ بنجاح');
-          this.router.navigate(['/reports']);
+          this.refreshService.emit('report');
+          this.closeDetail();
         } else {
           this.toaster.error(response.message || 'فشل حذف البلاغ');
+          this.isSaving = false;
+          this.cdr.markForCheck();
         }
-        this.isSaving = false;
-        this.cdr.markForCheck();
       },
       error: () => {
         this.toaster.error('فشل حذف البلاغ');
@@ -325,13 +349,14 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     this.complaintsService.resolveComplaint(this.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.complaint.isResolved = true;
           this.toaster.success('تم حل الشكوى بنجاح');
+          this.refreshService.emit('complaint');
+          this.closeDetail();
         } else {
           this.toaster.error(response.message || 'فشل حل الشكوى');
+          this.isSaving = false;
+          this.cdr.markForCheck();
         }
-        this.isSaving = false;
-        this.cdr.markForCheck();
       },
       error: () => {
         this.toaster.error('فشل حل الشكوى');
@@ -355,7 +380,8 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
         if (response.status) {
           this.toaster.success('تم إضافة الرد بنجاح');
           this.replyContent = '';
-          this.loadComplaint(); // Reload to get updated replies
+          this.refreshService.emit('complaint');
+          this.loadComplaint(); // Reload to show the reply inline (stay on page for reply context)
         } else {
           this.toaster.error(response.message || 'فشل إضافة الرد');
         }
@@ -394,13 +420,14 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     this.storeService.updateReservationStatus(this.id, status).subscribe({
       next: (response) => {
         if (response.status) {
-          this.reservation.status = status;
           this.toaster.success('تم تحديث حالة الحجز بنجاح');
+          this.refreshService.emit('reservation');
+          this.closeDetail();
         } else {
           this.toaster.error(response.message || 'فشل تحديث حالة الحجز');
+          this.isSaving = false;
+          this.cdr.markForCheck();
         }
-        this.isSaving = false;
-        this.cdr.markForCheck();
       },
       error: () => {
         this.toaster.error('فشل تحديث حالة الحجز');
@@ -431,13 +458,14 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     this.storeService.updatePaymentStatus(this.id, status).subscribe({
       next: (response) => {
         if (response.status) {
-          this.reservation.paymentStatus = status;
           this.toaster.success('تم تحديث حالة الدفع بنجاح');
+          this.refreshService.emit('reservation');
+          this.closeDetail();
         } else {
           this.toaster.error(response.message || 'فشل تحديث حالة الدفع');
+          this.isSaving = false;
+          this.cdr.markForCheck();
         }
-        this.isSaving = false;
-        this.cdr.markForCheck();
       },
       error: () => {
         this.toaster.error('فشل تحديث حالة الدفع');

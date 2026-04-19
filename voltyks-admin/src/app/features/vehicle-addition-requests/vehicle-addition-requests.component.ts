@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { VehicleAdditionRequestsService } from '../../core/services/admin/vehicle-addition-requests.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { DataRefreshService } from '../../core/services/data-refresh.service';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
@@ -59,6 +60,7 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
   constructor(
     private requestsService: VehicleAdditionRequestsService,
     private notificationService: NotificationService,
+    private refreshService: DataRefreshService,
     private toaster: ToasterService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -69,6 +71,13 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
     // Real-time: refetch list whenever a new notification arrives
     this.subscriptions.push(
       this.notificationService.notifications$.subscribe(() => {
+        this.loadData(true);
+      })
+    );
+
+    // Auto-refresh when any vehicle-request action happens anywhere in the app
+    this.subscriptions.push(
+      this.refreshService.on('vehicle-request').subscribe(() => {
         this.loadData(true);
       })
     );
@@ -180,6 +189,7 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
           this.closeDetails();
           this.loadData();
           this.notificationService.loadVehicleRequestNotifications();
+          this.refreshService.emit('vehicle-request');
         } else {
           this.toaster.error(res?.message || 'فشل قبول الطلب');
         }
@@ -205,6 +215,7 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
           this.closeDetails();
           this.loadData();
           this.notificationService.loadVehicleRequestNotifications();
+          this.refreshService.emit('vehicle-request');
         } else {
           this.toaster.error(res?.message || 'فشل رفض الطلب');
         }
