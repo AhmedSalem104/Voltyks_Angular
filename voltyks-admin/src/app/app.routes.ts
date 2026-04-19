@@ -34,6 +34,10 @@ export const routes: Routes = [
         loadChildren: () => import('./features/users/users.routes').then(m => m.usersRoutes)
       },
       {
+        path: 'vehicle-addition-requests',
+        loadComponent: () => import('./features/vehicle-addition-requests/vehicle-addition-requests.component').then(m => m.VehicleAdditionRequestsComponent)
+      },
+      {
         path: 'fees',
         loadComponent: () => import('./features/fees/fees.component').then(m => m.FeesComponent)
       },

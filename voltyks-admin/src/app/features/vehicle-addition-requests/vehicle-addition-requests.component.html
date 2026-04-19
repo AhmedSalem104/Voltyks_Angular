@@ -1,0 +1,268 @@
+<div class="vehicle-requests-container">
+  <!-- Page Header -->
+  <div class="page-header-row">
+    <div>
+      <h2>طلبات إضافة السيارات</h2>
+      <p class="subtitle">مراجعة طلبات المستخدمين لإضافة سيارات جديدة إلى النظام</p>
+    </div>
+    <div class="header-meta">
+      <span class="total-chip">
+        <span class="material-symbols-rounded">inventory_2</span>
+        الإجمالي: {{ totalCount }}
+      </span>
+      <button class="refresh-btn" (click)="loadData()" [disabled]="isLoading" title="تحديث">
+        <span class="material-symbols-rounded" [class.spin]="isLoading">refresh</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs voltyks-card">
+    @for (opt of filterOptions; track opt.key) {
+      <button
+        class="filter-tab"
+        [class.active]="filter === opt.key"
+        (click)="setFilter(opt.key)"
+      >
+        <span class="material-symbols-rounded">{{ opt.icon }}</span>
+        <span>{{ opt.label }}</span>
+      </button>
+    }
+  </div>
+
+  <!-- Table Card -->
+  <div class="voltyks-card table-card">
+    @if (isLoading) {
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>جاري تحميل الطلبات...</p>
+      </div>
+    } @else if (loadError) {
+      <div class="error-state">
+        <span class="material-symbols-rounded">error</span>
+        <p>فشل تحميل الطلبات</p>
+        <button class="voltyks-btn btn-primary" (click)="loadData()">
+          <span class="material-symbols-rounded">refresh</span>
+          إعادة المحاولة
+        </button>
+      </div>
+    } @else if (items.length === 0) {
+      <div class="empty-state">
+        <span class="material-symbols-rounded">inbox</span>
+        <p>لا توجد طلبات في هذه الحالة</p>
+      </div>
+    } @else {
+      <div class="table-wrapper">
+        <table class="voltyks-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>المستخدم</th>
+              <th>الماركة</th>
+              <th>الموديل</th>
+              <th>السعة</th>
+              <th>الحالة</th>
+              <th>التاريخ</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (req of items; track trackById($index, req)) {
+              <tr [class.processing-row]="processingId === req.id">
+                <td class="id-cell">#{{ req.id }}</td>
+                <td class="user-cell">
+                  <div class="user-info">
+                    <div class="user-name">{{ req.userFullName }}</div>
+                    <div class="user-meta">{{ req.userEmail }}</div>
+                  </div>
+                </td>
+                <td>{{ req.brandName }}</td>
+                <td>{{ req.modelName }}</td>
+                <td>{{ req.capacity }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(req.status)">
+                    {{ getStatusLabel(req.status) }}
+                  </span>
+                </td>
+                <td class="date-cell">{{ req.createdAt | date:'yyyy/MM/dd HH:mm' }}</td>
+                <td class="actions-cell">
+                  @if (req.status === 'pending') {
+                    <button
+                      class="action-btn accept"
+                      [disabled]="processingId === req.id"
+                      (click)="requestAccept(req)"
+                      title="قبول"
+                    >
+                      @if (processingId === req.id) {
+                        <span class="material-symbols-rounded spin">sync</span>
+                      } @else {
+                        <span class="material-symbols-rounded">check</span>
+                      }
+                    </button>
+                    <button
+                      class="action-btn decline"
+                      [disabled]="processingId === req.id"
+                      (click)="requestDecline(req)"
+                      title="رفض"
+                    >
+                      <span class="material-symbols-rounded">close</span>
+                    </button>
+                  }
+                  <button
+                    class="action-btn view"
+                    (click)="openDetails(req)"
+                    title="عرض التفاصيل"
+                  >
+                    <span class="material-symbols-rounded">visibility</span>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      @if (totalCount > pageSize) {
+        <app-pagination
+          [totalItems]="totalCount"
+          [pageSize]="pageSize"
+          [currentPage]="currentPage"
+          (pageChange)="onPageChange($event)"
+        ></app-pagination>
+      }
+    }
+  </div>
+</div>
+
+<!-- Details Modal -->
+@if (showDetailsModal && selectedRequest) {
+  <div class="modal-overlay" (click)="closeDetails()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>
+          <span class="material-symbols-rounded">directions_car</span>
+          تفاصيل طلب #{{ selectedRequest.id }}
+        </h3>
+        <button class="close-btn" (click)="closeDetails()">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Status -->
+        <div class="modal-status">
+          <span class="status-badge" [ngClass]="getStatusClass(selectedRequest.status)">
+            {{ getStatusLabel(selectedRequest.status) }}
+          </span>
+        </div>
+
+        <!-- User Info -->
+        <div class="detail-section">
+          <h4>
+            <span class="material-symbols-rounded">person</span>
+            بيانات المستخدم
+          </h4>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <label>الاسم</label>
+              <span>{{ selectedRequest.userFullName }}</span>
+            </div>
+            <div class="detail-item">
+              <label>البريد الإلكتروني</label>
+              <span>{{ selectedRequest.userEmail }}</span>
+            </div>
+            <div class="detail-item">
+              <label>رقم الهاتف</label>
+              <span>{{ selectedRequest.userPhone }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vehicle Info -->
+        <div class="detail-section">
+          <h4>
+            <span class="material-symbols-rounded">electric_car</span>
+            بيانات السيارة المطلوبة
+          </h4>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <label>الماركة</label>
+              <span>{{ selectedRequest.brandName }}</span>
+            </div>
+            <div class="detail-item">
+              <label>الموديل</label>
+              <span>{{ selectedRequest.modelName }}</span>
+            </div>
+            <div class="detail-item">
+              <label>السعة</label>
+              <span>{{ selectedRequest.capacity }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timestamps -->
+        <div class="detail-section">
+          <h4>
+            <span class="material-symbols-rounded">schedule</span>
+            البيانات الزمنية
+          </h4>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <label>تاريخ الإنشاء</label>
+              <span>{{ selectedRequest.createdAt | date:'yyyy/MM/dd HH:mm' }}</span>
+            </div>
+            @if (selectedRequest.updatedAt) {
+              <div class="detail-item">
+                <label>تاريخ المعالجة</label>
+                <span>{{ selectedRequest.updatedAt | date:'yyyy/MM/dd HH:mm' }}</span>
+              </div>
+            }
+            @if (selectedRequest.processedBy) {
+              <div class="detail-item">
+                <label>تمت المعالجة بواسطة</label>
+                <span>{{ selectedRequest.processedBy }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        @if (selectedRequest.status === 'pending') {
+          <button
+            class="voltyks-btn btn-danger"
+            [disabled]="processingId === selectedRequest.id"
+            (click)="requestDecline(selectedRequest)"
+          >
+            <span class="material-symbols-rounded">close</span>
+            رفض
+          </button>
+          <button
+            class="voltyks-btn btn-primary"
+            [disabled]="processingId === selectedRequest.id"
+            (click)="requestAccept(selectedRequest)"
+          >
+            @if (processingId === selectedRequest.id) {
+              <span class="material-symbols-rounded spin">sync</span>
+              جاري المعالجة...
+            } @else {
+              <span class="material-symbols-rounded">check</span>
+              قبول وإضافة
+            }
+          </button>
+        } @else {
+          <button class="voltyks-btn btn-secondary" (click)="closeDetails()">إغلاق</button>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<app-confirm-dialog
+  [isOpen]="showConfirmDialog"
+  [title]="confirmDialogTitle"
+  [message]="confirmDialogMessage"
+  [type]="confirmDialogType"
+  (confirm)="confirmAction()"
+  (cancel)="cancelAction()"
+></app-confirm-dialog>

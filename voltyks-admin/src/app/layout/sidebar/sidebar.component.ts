@@ -4,12 +4,14 @@ import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { VaultService } from '../../core/services/vault.service';
+import { VehicleRequestsBadgeService } from '../../core/services/admin/vehicle-requests-badge.service';
 import { Subscription, filter } from 'rxjs';
 
 interface MenuItem {
   label: string;
   icon: string;
   route: string;
+  badgeKey?: 'vehicle-requests';
 }
 
 interface MenuGroup {
@@ -196,6 +198,9 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
                 >
                   <span class="icon material-symbols-rounded">{{ item.icon }}</span>
                   <span class="text">{{ item.label }}</span>
+                  @if (item.badgeKey && getBadgeCount(item.badgeKey) > 0) {
+                    <span class="nav-badge">{{ getBadgeCount(item.badgeKey) > 99 ? '99+' : getBadgeCount(item.badgeKey) }}</span>
+                  }
                   @if (isPinned(item.route)) {
                     <span class="pin-indicator material-symbols-rounded">push_pin</span>
                   }
@@ -267,9 +272,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   private sidebarService = inject(SidebarService);
   private vaultService = inject(VaultService);
+  private badgeService = inject(VehicleRequestsBadgeService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
   private subscriptions: Subscription[] = [];
+
+  vehicleRequestsBadge = 0;
 
   isOpen = false;
   isSidebarPinned = false;
@@ -305,6 +313,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       expanded: false,
       items: [
         { label: 'المستخدمون', icon: 'group', route: '/users' },
+        { label: 'طلبات إضافة السيارات', icon: 'directions_car', route: '/vehicle-addition-requests', badgeKey: 'vehicle-requests' },
         { label: 'إنشاء أدمن', icon: 'person_add', route: '/create-admin' }
       ]
     },
@@ -426,6 +435,20 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     // Initial expansion of active group
     this.expandActiveGroup();
+
+    // Start real-time badge updates for vehicle addition requests
+    this.badgeService.startRealtime();
+    this.subscriptions.push(
+      this.badgeService.pendingCount$.subscribe(count => {
+        this.vehicleRequestsBadge = count;
+        this.cdr.markForCheck();
+      })
+    );
+  }
+
+  getBadgeCount(key?: string): number {
+    if (key === 'vehicle-requests') return this.vehicleRequestsBadge;
+    return 0;
   }
 
   ngOnDestroy(): void {
