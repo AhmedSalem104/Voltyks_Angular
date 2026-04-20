@@ -1,16 +1,24 @@
 @if (isOpen && request) {
   <div class="modal-overlay" (click)="onCancel()">
     <div class="modal-content" (click)="$event.stopPropagation()">
+
+      <!-- ============ Header ============ -->
       <div class="modal-header">
-        <h3>
-          <span class="material-symbols-rounded">check_circle</span>
-          قبول طلب إضافة سيارة #{{ request.id }}
-        </h3>
+        <div class="header-content">
+          <div class="header-icon">
+            <span class="material-symbols-rounded">directions_car</span>
+          </div>
+          <div class="header-text">
+            <h3>قبول طلب إضافة سيارة</h3>
+            <span class="header-sub">رقم الطلب #{{ request.id }} · {{ request.userFullName }}</span>
+          </div>
+        </div>
         <button class="close-btn" (click)="onCancel()" [disabled]="isSaving">
           <span class="material-symbols-rounded">close</span>
         </button>
       </div>
 
+      <!-- ============ Body ============ -->
       <div class="modal-body">
         @if (isLoadingPreview) {
           <div class="state-block">
@@ -23,83 +31,143 @@
             <p>فشل تحميل المعاينة</p>
           </div>
         } @else if (preview) {
-          <!-- 1. Original User Data -->
-          <section class="section">
-            <div class="section-header">
-              <span class="material-symbols-rounded">person</span>
-              <h4>بيانات كتبها المستخدم</h4>
-            </div>
-            <div class="readonly-grid">
-              <div class="field">
-                <label>الماركة</label>
-                <span>{{ preview.original.brandName }}</span>
-              </div>
-              <div class="field">
-                <label>الموديل</label>
-                <span>{{ preview.original.modelName }}</span>
-              </div>
-              <div class="field">
-                <label>السعة</label>
-                <span>{{ preview.original.capacity }}</span>
-              </div>
-            </div>
-          </section>
 
-          <!-- 2. Warnings -->
+          <!-- ============ STEP 1: Original user data ============ -->
+          <div class="step-card">
+            <div class="step-head">
+              <span class="step-number">1</span>
+              <span class="material-symbols-rounded">person_pin</span>
+              <div class="step-title">
+                <h4>بيانات كتبها المستخدم</h4>
+                <span class="step-sub">للمراجعة فقط — غير قابلة للتعديل</span>
+              </div>
+            </div>
+            <div class="step-body">
+              <div class="data-grid">
+                <div class="data-item">
+                  <span class="material-symbols-rounded data-icon">loyalty</span>
+                  <div>
+                    <span class="data-label">الماركة</span>
+                    <span class="data-value">{{ preview.original.brandName }}</span>
+                  </div>
+                </div>
+                <div class="data-item">
+                  <span class="material-symbols-rounded data-icon">directions_car</span>
+                  <div>
+                    <span class="data-label">الموديل</span>
+                    <span class="data-value">{{ preview.original.modelName }}</span>
+                  </div>
+                </div>
+                <div class="data-item">
+                  <span class="material-symbols-rounded data-icon">battery_charging_full</span>
+                  <div>
+                    <span class="data-label">السعة</span>
+                    <span class="data-value">{{ preview.original.capacity }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ STEP 2: Warnings (if any) ============ -->
           @if (preview.warnings.length > 0 || isDuplicateModel || !preview.capacityParseSuccess) {
-            <section class="section warnings-section">
-              @if (isDuplicateModel) {
-                <div class="alert danger">
-                  <span class="material-symbols-rounded">block</span>
-                  <div>
-                    <strong>موديل مكرر</strong>
-                    <p>
-                      الموديل "{{ preview.exactModelMatch?.modelName }}" موجود فعلاً تحت العلامة
-                      "{{ preview.exactModelMatch?.brandName }}". يفضل رفض الطلب.
-                    </p>
+            <div class="step-card warnings-card">
+              <div class="step-head">
+                <span class="step-number warning">!</span>
+                <span class="material-symbols-rounded">warning</span>
+                <div class="step-title">
+                  <h4>تنبيهات النظام</h4>
+                  <span class="step-sub">اقرأها قبل القبول</span>
+                </div>
+              </div>
+              <div class="step-body">
+                @if (isDuplicateModel) {
+                  <div class="alert danger">
+                    <span class="material-symbols-rounded">block</span>
+                    <div>
+                      <strong>موديل مكرر — لا يمكن القبول</strong>
+                      <p>
+                        الموديل "<b>{{ preview.exactModelMatch?.modelName }}</b>" موجود فعلاً تحت العلامة
+                        "<b>{{ preview.exactModelMatch?.brandName }}</b>". يفضل رفض الطلب أو تغيير اسم الموديل بالأسفل.
+                      </p>
+                    </div>
                   </div>
-                </div>
-              }
-              @if (!preview.capacityParseSuccess) {
-                <div class="alert warning">
-                  <span class="material-symbols-rounded">warning</span>
-                  <div>
-                    <strong>تعذّر قراءة السعة</strong>
-                    <p>لم نتمكن من استخراج رقم من نص السعة. الرجاء إدخال القيمة يدويًا أدناه.</p>
+                }
+                @if (!preview.capacityParseSuccess) {
+                  <div class="alert warning">
+                    <span class="material-symbols-rounded">warning</span>
+                    <div>
+                      <strong>تعذّر قراءة السعة تلقائيًا</strong>
+                      <p>لم نتمكن من استخراج رقم من نص المستخدم. الرجاء إدخال قيمة السعة يدويًا في الخطوة 5.</p>
+                    </div>
                   </div>
-                </div>
-              }
-              @for (w of preview.warnings; track w) {
-                <div class="alert warning">
-                  <span class="material-symbols-rounded">warning</span>
-                  <p>{{ w }}</p>
-                </div>
-              }
-            </section>
+                }
+                @for (w of preview.warnings; track w) {
+                  <div class="alert warning">
+                    <span class="material-symbols-rounded">info</span>
+                    <p>{{ w }}</p>
+                  </div>
+                }
+              </div>
+            </div>
           }
 
-          <!-- 3. Brand Picker -->
-          <section class="section">
-            <div class="section-header">
+          <!-- ============ STEP 3: Brand Selection ============ -->
+          <div class="step-card">
+            <div class="step-head">
+              <span class="step-number">2</span>
               <span class="material-symbols-rounded">loyalty</span>
-              <h4>العلامة التجارية</h4>
+              <div class="step-title">
+                <h4>اختيار العلامة التجارية</h4>
+                <span class="step-sub">استخدم علامة موجودة لمنع التكرار، أو أنشئ واحدة جديدة</span>
+              </div>
             </div>
 
-            <div class="radio-group">
-              <label class="radio-row" [class.active]="brandMode === 'existing'">
-                <input
-                  type="radio"
-                  name="brandMode"
-                  value="existing"
-                  [checked]="brandMode === 'existing'"
-                  (change)="onBrandModeChange('existing')"
+            <div class="step-body">
+              <div class="option-cards">
+                <!-- Option: Existing brand -->
+                <button
+                  type="button"
+                  class="option-card"
+                  [class.active]="brandMode === 'existing'"
+                  (click)="onBrandModeChange('existing')"
                   [disabled]="isSaving"
-                />
-                <span>استخدام علامة موجودة</span>
-              </label>
+                >
+                  <div class="option-radio">
+                    <span class="radio-dot"></span>
+                  </div>
+                  <div class="option-text">
+                    <span class="option-title">استخدام علامة موجودة</span>
+                    <span class="option-sub">اختر من قائمة العلامات في النظام</span>
+                  </div>
+                  <span class="material-symbols-rounded option-icon">playlist_add_check</span>
+                </button>
+
+                <!-- Option: New brand -->
+                <button
+                  type="button"
+                  class="option-card"
+                  [class.active]="brandMode === 'new'"
+                  (click)="onBrandModeChange('new')"
+                  [disabled]="isSaving"
+                >
+                  <div class="option-radio">
+                    <span class="radio-dot"></span>
+                  </div>
+                  <div class="option-text">
+                    <span class="option-title">إنشاء علامة جديدة</span>
+                    <span class="option-sub">لو فعلاً مش موجودة في النظام</span>
+                  </div>
+                  <span class="material-symbols-rounded option-icon">add_circle</span>
+                </button>
+              </div>
 
               @if (brandMode === 'existing') {
-                <div class="radio-content">
+                <div class="sub-block">
+                  <label class="field-label">
+                    <span class="material-symbols-rounded">list</span>
+                    اختر العلامة:
+                  </label>
                   @if (isLoadingBrands) {
                     <span class="hint">جاري تحميل العلامات...</span>
                   } @else {
@@ -108,119 +176,169 @@
                       [(ngModel)]="selectedBrandId"
                       [disabled]="isSaving"
                     >
-                      <option [ngValue]="null" disabled>-- اختر علامة --</option>
+                      <option [ngValue]="null" disabled>-- اختر علامة من القائمة --</option>
                       @for (b of allBrands; track b.id) {
                         <option [ngValue]="b.id">{{ b.name }} ({{ b.totalModels }} موديل)</option>
                       }
                     </select>
                   }
+
+                  @if (preview.exactBrandMatch) {
+                    <div class="match-banner success">
+                      <span class="material-symbols-rounded">check_circle</span>
+                      <span>
+                        تطابق تام: <b>{{ preview.exactBrandMatch.name }}</b>
+                        ({{ preview.exactBrandMatch.modelsCount }} موديل) — تم تحديدها تلقائيًا
+                      </span>
+                    </div>
+                  }
+
                   @if (preview.similarBrands.length > 0) {
-                    <div class="suggestion-chips">
-                      <span class="chips-label">اقتراحات قريبة:</span>
-                      @for (s of preview.similarBrands; track s.id) {
-                        <button
-                          type="button"
-                          class="chip"
-                          [class.active]="selectedBrandId === s.id"
-                          (click)="selectedBrandId = s.id"
-                          [disabled]="isSaving"
-                        >
-                          {{ s.name }}
-                          <span class="sim">{{ getSimilarityPercent(s.similarity) }}%</span>
-                        </button>
-                      }
+                    <div class="chips-block">
+                      <span class="chips-label">
+                        <span class="material-symbols-rounded">lightbulb</span>
+                        اقتراحات قريبة من "{{ preview.original.brandName }}":
+                      </span>
+                      <div class="chips-row">
+                        @for (s of preview.similarBrands; track s.id) {
+                          <button
+                            type="button"
+                            class="chip"
+                            [class.active]="selectedBrandId === s.id"
+                            (click)="selectedBrandId = s.id"
+                            [disabled]="isSaving"
+                          >
+                            {{ s.name }}
+                            <span class="sim">{{ getSimilarityPercent(s.similarity) }}%</span>
+                          </button>
+                        }
+                      </div>
                     </div>
                   }
                 </div>
-              }
-
-              <label class="radio-row" [class.active]="brandMode === 'new'">
-                <input
-                  type="radio"
-                  name="brandMode"
-                  value="new"
-                  [checked]="brandMode === 'new'"
-                  (change)="onBrandModeChange('new')"
-                  [disabled]="isSaving"
-                />
-                <span>إنشاء علامة جديدة</span>
-              </label>
-
-              @if (brandMode === 'new') {
-                <div class="radio-content">
+              } @else {
+                <div class="sub-block">
+                  <label class="field-label">
+                    <span class="material-symbols-rounded">edit</span>
+                    اسم العلامة الجديدة:
+                  </label>
                   <input
                     type="text"
                     class="input"
                     [(ngModel)]="newBrandName"
-                    placeholder="اسم العلامة الجديدة"
+                    placeholder="مثال: Tesla"
                     [disabled]="isSaving"
                   />
                 </div>
               }
             </div>
-          </section>
+          </div>
 
-          <!-- 4. Model Name -->
-          <section class="section">
-            <div class="section-header">
+          <!-- ============ STEP 4: Model Name ============ -->
+          <div class="step-card">
+            <div class="step-head">
+              <span class="step-number">3</span>
               <span class="material-symbols-rounded">directions_car</span>
-              <h4>اسم الموديل</h4>
-            </div>
-            <input
-              type="text"
-              class="input"
-              [(ngModel)]="modelName"
-              placeholder="مثال: Model 3"
-              [disabled]="isSaving"
-            />
-            @if (preview.similarModels.length > 0) {
-              <div class="suggestion-chips">
-                <span class="chips-label">موديلات مشابهة موجودة:</span>
-                @for (m of preview.similarModels; track m.modelId) {
-                  <span class="chip info">
-                    {{ m.brandName }} / {{ m.modelName }}
-                    <span class="sim">{{ getSimilarityPercent(m.similarity) }}%</span>
-                  </span>
-                }
+              <div class="step-title">
+                <h4>اسم الموديل</h4>
+                <span class="step-sub">يمكنك تصحيحه لو المستخدم كتبه بشكل غير صحيح</span>
               </div>
-            }
-          </section>
-
-          <!-- 5. Capacity -->
-          <section class="section">
-            <div class="section-header">
-              <span class="material-symbols-rounded">battery_charging_full</span>
-              <h4>السعة (kWh)</h4>
             </div>
-            <input
-              type="number"
-              class="input"
-              [(ngModel)]="capacity"
-              min="0"
-              step="0.1"
-              placeholder="مثال: 75"
-              [disabled]="isSaving"
-            />
-            @if (preview.parsedCapacity !== null && preview.capacityParseSuccess) {
-              <p class="hint success">
-                <span class="material-symbols-rounded">check</span>
-                تم استخراج القيمة {{ preview.parsedCapacity }} kWh تلقائيًا من نص المستخدم
-              </p>
-            }
-          </section>
+            <div class="step-body">
+              <label class="field-label">
+                <span class="material-symbols-rounded">edit</span>
+                اسم الموديل:
+              </label>
+              <input
+                type="text"
+                class="input"
+                [(ngModel)]="modelName"
+                placeholder="مثال: Model 3"
+                [disabled]="isSaving"
+              />
+              <span class="hint">
+                كتبه المستخدم: <b>{{ preview.original.modelName }}</b>
+              </span>
 
-          <!-- 6. Live Preview -->
+              @if (preview.similarModels.length > 0) {
+                <div class="chips-block">
+                  <span class="chips-label">
+                    <span class="material-symbols-rounded">info</span>
+                    موديلات مشابهة موجودة في النظام:
+                  </span>
+                  <div class="chips-row">
+                    @for (m of preview.similarModels; track m.modelId) {
+                      <span class="chip info">
+                        {{ m.brandName }} / {{ m.modelName }}
+                        <span class="sim">{{ getSimilarityPercent(m.similarity) }}%</span>
+                      </span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- ============ STEP 5: Capacity ============ -->
+          <div class="step-card">
+            <div class="step-head">
+              <span class="step-number">4</span>
+              <span class="material-symbols-rounded">battery_charging_full</span>
+              <div class="step-title">
+                <h4>السعة (kWh)</h4>
+                <span class="step-sub">القيمة الرقمية الدقيقة للسعة</span>
+              </div>
+            </div>
+            <div class="step-body">
+              <label class="field-label">
+                <span class="material-symbols-rounded">edit</span>
+                السعة بالكيلوواط/ساعة:
+              </label>
+              <div class="input-with-suffix">
+                <input
+                  type="number"
+                  class="input"
+                  [(ngModel)]="capacity"
+                  min="0"
+                  step="0.1"
+                  placeholder="مثال: 75"
+                  [disabled]="isSaving"
+                />
+                <span class="input-suffix">kWh</span>
+              </div>
+              @if (preview.parsedCapacity !== null && preview.capacityParseSuccess) {
+                <div class="match-banner success">
+                  <span class="material-symbols-rounded">check_circle</span>
+                  <span>
+                    تم استخراج <b>{{ preview.parsedCapacity }}</b> kWh تلقائيًا من نص المستخدم
+                    "<i>{{ preview.original.capacity }}</i>"
+                  </span>
+                </div>
+              } @else {
+                <span class="hint">
+                  كتبه المستخدم: <b>{{ preview.original.capacity }}</b>
+                </span>
+              }
+            </div>
+          </div>
+
+          <!-- ============ Summary Preview ============ -->
           @if (previewText) {
-            <div class="live-preview">
-              <span class="material-symbols-rounded">preview</span>
-              <p>{{ previewText }}</p>
+            <div class="summary-card">
+              <div class="summary-header">
+                <span class="material-symbols-rounded">preview</span>
+                <span>ملخص العملية قبل التنفيذ</span>
+              </div>
+              <p class="summary-text">{{ previewText }}</p>
             </div>
           }
         }
       </div>
 
+      <!-- ============ Footer ============ -->
       <div class="modal-footer">
         <button class="btn btn-secondary" (click)="onCancel()" [disabled]="isSaving">
+          <span class="material-symbols-rounded">close</span>
           إلغاء
         </button>
         <button
@@ -233,8 +351,8 @@
             <span class="material-symbols-rounded spin">sync</span>
             جاري المعالجة...
           } @else {
-            <span class="material-symbols-rounded">check</span>
-            قبول وإضافة
+            <span class="material-symbols-rounded">check_circle</span>
+            تأكيد القبول
           }
         </button>
       </div>
