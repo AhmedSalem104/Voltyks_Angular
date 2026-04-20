@@ -84,7 +84,18 @@
                     {{ getStatusLabel(req.status) }}
                   </span>
                 </td>
-                <td class="date-cell">{{ req.createdAt | date:'yyyy/MM/dd HH:mm' }}</td>
+                <td class="date-cell">
+                  <div class="date-stack">
+                    <span class="date-date">
+                      <span class="material-symbols-rounded">event</span>
+                      {{ req.createdAt | date:'yyyy/MM/dd' }}
+                    </span>
+                    <span class="date-time">
+                      <span class="material-symbols-rounded">schedule</span>
+                      {{ req.createdAt | date:'hh:mm a' }}
+                    </span>
+                  </div>
+                </td>
                 <td class="actions-cell">
                   @if (req.status === 'pending') {
                     <button
@@ -209,12 +220,12 @@
           <div class="detail-grid">
             <div class="detail-item">
               <label>تاريخ الإنشاء</label>
-              <span>{{ selectedRequest.createdAt | date:'yyyy/MM/dd HH:mm' }}</span>
+              <span>{{ selectedRequest.createdAt | date:'yyyy/MM/dd' }} · {{ selectedRequest.createdAt | date:'hh:mm a' }}</span>
             </div>
             @if (selectedRequest.updatedAt) {
               <div class="detail-item">
                 <label>تاريخ المعالجة</label>
-                <span>{{ selectedRequest.updatedAt | date:'yyyy/MM/dd HH:mm' }}</span>
+                <span>{{ selectedRequest.updatedAt | date:'yyyy/MM/dd' }} · {{ selectedRequest.updatedAt | date:'hh:mm a' }}</span>
               </div>
             }
             @if (selectedRequest.processedBy) {
