@@ -1,271 +1,232 @@
 @use 'sass:color';
 
-$voltyks-primary: #00C853;
-$danger-color: #F44336;
-$warning-color: #FFA726;
-$info-color: #3b82f6;
+$primary: #00C853;
+$primary-dark: #00A843;
+$danger: #F44336;
+$warning: #FFA726;
+$info: #3b82f6;
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+@keyframes m-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes m-pop { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes m-spin { to { transform: rotate(360deg); } }
 
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95) translateY(10px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
+.spin { animation: m-spin 1s linear infinite; }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.spin {
-  animation: spin 1s linear infinite;
-}
-
-// ========== Overlay & Content ==========
+// ==================== Overlay + Content ====================
 .modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1100;
   padding: 20px;
-  animation: fadeIn 0.2s ease-out;
+  animation: m-fade 0.2s ease-out;
 }
 
 .modal-content {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 24px;
-  width: 100%;
-  max-width: 780px;
-  max-height: 94vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
-  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+  max-width: 720px;
+  max-height: 92vh;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
   overflow: hidden;
+  animation: m-pop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-// ========== Header ==========
-.modal-header {
+// ==================== Header ====================
+.m-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 20px 24px;
-  background: linear-gradient(135deg, rgba($voltyks-primary, 0.15) 0%, rgba($voltyks-primary, 0.05) 100%);
+  padding: 18px 22px;
+  background: linear-gradient(135deg, rgba($primary, 0.18) 0%, rgba($primary, 0.04) 100%);
   border-bottom: 1px solid var(--border-color);
-
-  .header-content {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    min-width: 0;
-  }
-
-  .header-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, $voltyks-primary 0%, color.adjust($voltyks-primary, $lightness: -12%) 100%);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba($voltyks-primary, 0.4);
-    flex-shrink: 0;
-
-    .material-symbols-rounded {
-      font-size: 28px;
-    }
-  }
-
-  .header-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-
-    h3 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    .header-sub {
-      font-size: 12px;
-      color: var(--text-secondary);
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-
-  .close-btn {
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    cursor: pointer;
-    color: var(--text-secondary);
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-
-    &:hover:not(:disabled) {
-      background: rgba($danger-color, 0.1);
-      border-color: rgba($danger-color, 0.3);
-      color: $danger-color;
-    }
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .material-symbols-rounded {
-      font-size: 20px;
-    }
-  }
+  flex-shrink: 0;
 }
 
-// ========== Body ==========
-.modal-body {
-  padding: 20px;
-  overflow-y: auto;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background: var(--bg-primary);
-}
-
-// ========== Step Card ==========
-.step-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  overflow: hidden;
-  transition: border-color 0.2s ease;
-
-  &:hover {
-    border-color: rgba($voltyks-primary, 0.25);
-  }
-
-  &.warnings-card {
-    border-color: rgba($warning-color, 0.35);
-    background: linear-gradient(180deg, rgba($warning-color, 0.04) 0%, var(--bg-secondary) 100%);
-  }
-}
-
-.step-head {
+.m-header-main {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 14px 18px;
-  background: var(--bg-elevated);
-  border-bottom: 1px solid var(--border-color);
+  min-width: 0;
+  flex: 1;
+}
 
-  .step-title {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 0;
-    flex: 1;
+.m-header-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba($primary, 0.4);
 
-    h4 {
-      margin: 0;
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
+  .material-symbols-rounded { font-size: 26px; }
+}
 
-    .step-sub {
-      font-size: 12px;
-      color: var(--text-disabled);
-      font-weight: 500;
-    }
+.m-header-text {
+  min-width: 0;
+
+  h3 {
+    margin: 0 0 2px;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  span {
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
-.step-number {
+.m-header-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+
+  &:hover:not(:disabled) {
+    background: rgba($danger, 0.12);
+    color: $danger;
+    border-color: rgba($danger, 0.3);
+  }
+
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .material-symbols-rounded { font-size: 20px; }
+}
+
+// ==================== Body ====================
+.m-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 0;
+  background: var(--bg-secondary);
+}
+
+// ==================== State blocks ====================
+.m-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+
+  p { margin: 0; font-size: 14px; }
+
+  .material-symbols-rounded { font-size: 44px; }
+
+  &.m-state--error .material-symbols-rounded { color: $danger; }
+}
+
+.m-spinner {
+  width: 42px;
+  height: 42px;
+  border: 3px solid var(--border-color);
+  border-top-color: $primary;
+  border-radius: 50%;
+  animation: m-spin 1s linear infinite;
+}
+
+// ==================== Section ====================
+.m-section {
+  padding: 18px 22px;
+
+  & + .m-section {
+    border-top: 1px solid var(--border-color);
+  }
+}
+
+.m-sec-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+
+  h4 {
+    margin: 0 0 2px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-disabled);
+  }
+}
+
+.m-sec-num {
   width: 28px;
   height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, $voltyks-primary 0%, color.adjust($voltyks-primary, $lightness: -10%) 100%);
-  color: white;
   border-radius: 50%;
+  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  color: white;
   font-size: 13px;
   font-weight: 700;
-  box-shadow: 0 2px 6px rgba($voltyks-primary, 0.35);
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba($primary, 0.35);
 
-  &.warning {
-    background: linear-gradient(135deg, $warning-color 0%, color.adjust($warning-color, $lightness: -10%) 100%);
-    box-shadow: 0 2px 6px rgba($warning-color, 0.35);
+  &.m-sec-num--warn {
+    background: linear-gradient(135deg, $warning 0%, color.adjust($warning, $lightness: -10%) 100%);
+    box-shadow: 0 2px 8px rgba($warning, 0.35);
   }
 }
 
-.step-body {
-  padding: 16px 18px;
+// ==================== Read-only data (section 1) ====================
+.m-readonly {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.m-readonly-item {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-}
-
-// ========== Step 1 data grid ==========
-.data-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.data-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 12px;
+  gap: 4px;
+  padding: 12px 14px;
   background: var(--bg-elevated);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 10px;
   min-width: 0;
 
-  .data-icon {
-    font-size: 20px;
-    color: var(--text-disabled);
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-
-  > div {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 0;
-    flex: 1;
-  }
-
-  .data-label {
+  .m-readonly-label {
     font-size: 11px;
     color: var(--text-disabled);
     font-weight: 600;
-    letter-spacing: 0.3px;
   }
 
-  .data-value {
+  .m-readonly-value {
     font-size: 14px;
     color: var(--text-primary);
     font-weight: 600;
@@ -273,13 +234,19 @@ $info-color: #3b82f6;
   }
 }
 
-// ========== Alerts ==========
-.alert {
+// ==================== Alerts ====================
+.m-alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.m-alert {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 14px 16px;
-  border-radius: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
 
   > .material-symbols-rounded {
     font-size: 22px;
@@ -289,205 +256,132 @@ $info-color: #3b82f6;
 
   strong {
     display: block;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
   }
 
   p {
     margin: 0;
-    font-size: 13px;
-    line-height: 1.6;
+    font-size: 12.5px;
+    line-height: 1.55;
     color: var(--text-secondary);
 
-    b {
-      color: var(--text-primary);
-    }
+    b { color: var(--text-primary); }
   }
 
-  &.danger {
-    background: rgba($danger-color, 0.1);
-    border: 1px solid rgba($danger-color, 0.3);
+  &.m-alert--danger {
+    background: rgba($danger, 0.1);
+    border: 1px solid rgba($danger, 0.3);
 
-    > .material-symbols-rounded,
-    strong {
-      color: $danger-color;
-    }
+    > .material-symbols-rounded, strong { color: $danger; }
   }
 
-  &.warning {
-    background: rgba($warning-color, 0.1);
-    border: 1px solid rgba($warning-color, 0.3);
+  &.m-alert--warn {
+    background: rgba($warning, 0.1);
+    border: 1px solid rgba($warning, 0.3);
 
-    > .material-symbols-rounded,
-    strong {
-      color: $warning-color;
-    }
+    > .material-symbols-rounded, strong { color: $warning; }
   }
 }
 
-// ========== Option Cards (Brand mode picker) ==========
-.option-cards {
+// ==================== Tabs (brand mode picker) ====================
+.m-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 14px;
 }
 
-.option-card {
-  display: flex;
+.m-tab {
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px;
-  background: var(--bg-elevated);
-  border: 2px solid var(--border-color);
-  border-radius: 14px;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: inherit;
-  text-align: start;
+
+  .material-symbols-rounded {
+    font-size: 18px;
+  }
 
   &:hover:not(:disabled) {
-    border-color: rgba($voltyks-primary, 0.45);
-    transform: translateY(-1px);
-  }
-
-  &.active {
-    border-color: $voltyks-primary;
-    background: rgba($voltyks-primary, 0.08);
-    box-shadow: 0 4px 12px rgba($voltyks-primary, 0.18);
-
-    .option-radio {
-      border-color: $voltyks-primary;
-
-      .radio-dot {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    .option-icon {
-      color: $voltyks-primary;
-    }
-  }
-
-  &:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-  }
-
-  .option-radio {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-
-    .radio-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: $voltyks-primary;
-      opacity: 0;
-      transform: scale(0);
-      transition: all 0.2s ease;
-    }
-  }
-
-  .option-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .option-title {
-    font-size: 14px;
-    font-weight: 700;
     color: var(--text-primary);
   }
 
-  .option-sub {
-    font-size: 11px;
-    color: var(--text-disabled);
-    font-weight: 500;
+  &.m-tab--active {
+    background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+    color: white;
+    box-shadow: 0 3px 10px rgba($primary, 0.35);
   }
 
-  .option-icon {
-    font-size: 22px;
-    color: var(--text-disabled);
-    transition: color 0.2s ease;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
-// ========== Sub block under an option (no nested card, just spacing) ==========
-.sub-block {
+// ==================== Field ====================
+.m-field {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding-top: 4px;
-}
+  gap: 8px;
 
-// ========== Field label ==========
-.field-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
+  & + .m-field,
+  & + .m-sugg {
+    margin-top: 14px;
+  }
 
-  .material-symbols-rounded {
-    font-size: 16px;
-    color: $voltyks-primary;
+  > label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-primary);
   }
 }
 
-// ========== Inputs ==========
-.input {
+.m-input {
   width: 100%;
   padding: 11px 14px;
   background: var(--bg-elevated);
   border: 1.5px solid var(--border-color);
   border-radius: 10px;
   color: var(--text-primary);
-  font-size: 14px;
   font-family: inherit;
-  transition: all 0.2s ease;
+  font-size: 14px;
   box-sizing: border-box;
+  transition: all 0.2s ease;
 
-  &::placeholder {
-    color: var(--text-disabled);
-  }
+  &::placeholder { color: var(--text-disabled); }
 
   &:focus {
     outline: none;
-    border-color: $voltyks-primary;
-    box-shadow: 0 0 0 3px rgba($voltyks-primary, 0.15);
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgba($primary, 0.15);
   }
 
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
-select.input {
-  cursor: pointer;
-}
+select.m-input { cursor: pointer; }
 
-.input-with-suffix {
+.m-input-wrap {
   position: relative;
 
-  .input {
-    padding-inline-end: 50px;
-  }
+  .m-input { padding-inline-end: 54px; }
 
-  .input-suffix {
+  .m-input-suffix {
     position: absolute;
     inset-inline-end: 14px;
     top: 50%;
@@ -499,125 +393,7 @@ select.input {
   }
 }
 
-// ========== Match banner (success / info) ==========
-.match-banner {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 12px;
-
-  .material-symbols-rounded {
-    font-size: 16px;
-  }
-
-  &.success {
-    background: rgba($voltyks-primary, 0.1);
-    border: 1px solid rgba($voltyks-primary, 0.3);
-    color: $voltyks-primary;
-
-    span {
-      color: $voltyks-primary;
-    }
-
-    b,
-    i {
-      color: var(--text-primary);
-      font-weight: 700;
-    }
-
-    i {
-      font-style: normal;
-    }
-  }
-}
-
-// ========== Chips ==========
-.chips-block {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  .chips-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: var(--text-secondary);
-    font-weight: 600;
-
-    .material-symbols-rounded {
-      font-size: 16px;
-      color: $warning-color;
-    }
-  }
-}
-
-.chips-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-color);
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: inherit;
-
-  .sim {
-    font-size: 10px;
-    opacity: 0.8;
-    padding: 2px 6px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-  }
-
-  &:hover:not(:disabled) {
-    border-color: $voltyks-primary;
-    color: $voltyks-primary;
-    transform: translateY(-1px);
-  }
-
-  &.active {
-    background: rgba($voltyks-primary, 0.15);
-    border-color: $voltyks-primary;
-    color: $voltyks-primary;
-
-    .sim {
-      background: rgba($voltyks-primary, 0.2);
-    }
-  }
-
-  &.info {
-    cursor: default;
-    background: rgba($info-color, 0.08);
-    border-color: rgba($info-color, 0.3);
-    color: $info-color;
-
-    .sim {
-      background: rgba($info-color, 0.15);
-    }
-  }
-
-  &:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-  }
-}
-
-// ========== Hint ==========
-.hint {
+.m-hint {
   font-size: 12px;
   color: var(--text-disabled);
 
@@ -627,110 +403,175 @@ select.input {
   }
 }
 
-// ========== Summary card ==========
-.summary-card {
-  margin-top: 4px;
-  padding: 16px 20px;
-  background: linear-gradient(135deg, rgba($voltyks-primary, 0.15) 0%, rgba($voltyks-primary, 0.05) 100%);
-  border: 1.5px solid rgba($voltyks-primary, 0.4);
-  border-radius: 14px;
-  box-shadow: 0 4px 16px rgba($voltyks-primary, 0.1);
+// ==================== Banner (inline success under a field) ====================
+.m-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  align-self: flex-start;
+  max-width: 100%;
 
-  .summary-header {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
+  .material-symbols-rounded { font-size: 16px; flex-shrink: 0; }
+
+  b { font-weight: 700; }
+  i { font-style: normal; }
+
+  &.m-banner--ok {
+    background: rgba($primary, 0.1);
+    border: 1px solid rgba($primary, 0.3);
+    color: $primary;
+
+    b, i { color: var(--text-primary); }
+  }
+}
+
+// ==================== Suggestions ====================
+.m-sugg {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.m-sugg-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+
+  .material-symbols-rounded {
+    font-size: 15px;
+    color: $warning;
+  }
+}
+
+.m-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.m-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  .m-chip-sim {
+    font-size: 10px;
+    padding: 2px 6px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
     font-weight: 700;
-    color: $voltyks-primary;
-    margin-bottom: 8px;
-
-    .material-symbols-rounded {
-      font-size: 20px;
-    }
   }
 
-  .summary-text {
+  &:hover:not(:disabled) {
+    border-color: $primary;
+    color: $primary;
+  }
+
+  &.m-chip--active {
+    background: rgba($primary, 0.15);
+    border-color: $primary;
+    color: $primary;
+
+    .m-chip-sim { background: rgba($primary, 0.2); }
+  }
+
+  &.m-chip--info {
+    cursor: default;
+    background: rgba($info, 0.08);
+    border-color: rgba($info, 0.3);
+    color: $info;
+
+    .m-chip-sim { background: rgba($info, 0.15); }
+  }
+
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
+}
+
+// ==================== Summary ====================
+.m-summary {
+  margin: 4px 22px 22px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, rgba($primary, 0.14) 0%, rgba($primary, 0.04) 100%);
+  border: 1.5px solid rgba($primary, 0.4);
+  border-radius: 12px;
+
+  p {
     margin: 0;
-    font-size: 14px;
+    font-size: 13.5px;
     line-height: 1.6;
     color: var(--text-primary);
     font-weight: 500;
   }
 }
 
-// ========== State block (loading / error) ==========
-.state-block {
-  display: flex;
-  flex-direction: column;
+.m-summary-head {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 60px 20px;
-  color: var(--text-secondary);
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: $primary;
 
-  .loading-spinner {
-    width: 48px;
-    height: 48px;
-    border: 3px solid var(--border-color);
-    border-top-color: $voltyks-primary;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-
-  .material-symbols-rounded {
-    font-size: 48px;
-  }
-
-  p {
-    margin: 0;
-    font-size: 14px;
-  }
-
-  &.error .material-symbols-rounded {
-    color: $danger-color;
-  }
+  .material-symbols-rounded { font-size: 20px; }
 }
 
-// ========== Footer ==========
-.modal-footer {
+// ==================== Footer ====================
+.m-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  padding: 16px 24px;
+  padding: 14px 22px;
+  background: var(--bg-elevated);
   border-top: 1px solid var(--border-color);
-  background: var(--bg-secondary);
+  flex-shrink: 0;
 }
 
-.btn {
+.m-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 11px 22px;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
+  font-family: inherit;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: inherit;
 
-  .material-symbols-rounded {
-    font-size: 18px;
-  }
+  .material-symbols-rounded { font-size: 18px; }
 
-  &.btn-primary {
-    background: linear-gradient(135deg, $voltyks-primary 0%, color.adjust($voltyks-primary, $lightness: -10%) 100%);
+  &.m-btn--primary {
+    background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
     color: white;
 
     &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba($voltyks-primary, 0.45);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba($primary, 0.45);
     }
   }
 
-  &.btn-secondary {
-    background: var(--bg-elevated);
+  &.m-btn--secondary {
+    background: var(--bg-secondary);
     color: var(--text-secondary);
     border: 1px solid var(--border-color);
 
@@ -747,50 +588,39 @@ select.input {
   }
 }
 
-// ========== Responsive ==========
-@media (max-width: 720px) {
+// ==================== Responsive ====================
+@media (max-width: 640px) {
+  .modal-overlay { padding: 12px; }
+
   .modal-content {
     max-height: 96vh;
-    border-radius: 18px;
+    border-radius: 16px;
   }
 
-  .data-grid {
-    grid-template-columns: 1fr;
-  }
+  .m-header {
+    padding: 14px 16px;
 
-  .option-cards {
-    grid-template-columns: 1fr;
-  }
-
-  .modal-header {
-    padding: 16px 18px;
-
-    .header-icon {
+    .m-header-icon {
       width: 40px;
       height: 40px;
 
-      .material-symbols-rounded {
-        font-size: 24px;
-      }
+      .material-symbols-rounded { font-size: 22px; }
     }
 
-    .header-text h3 {
-      font-size: 16px;
-    }
+    .m-header-text h3 { font-size: 16px; }
   }
 
-  .step-head {
-    padding: 12px 14px;
+  .m-section { padding: 16px; }
 
-    .step-title h4 {
-      font-size: 14px;
-    }
-  }
+  .m-readonly { grid-template-columns: 1fr; }
 
-  .modal-footer {
+  .m-summary { margin: 4px 16px 16px; }
+
+  .m-footer {
+    padding: 12px 16px;
     flex-direction: column-reverse;
 
-    .btn {
+    .m-btn {
       width: 100%;
       justify-content: center;
     }
