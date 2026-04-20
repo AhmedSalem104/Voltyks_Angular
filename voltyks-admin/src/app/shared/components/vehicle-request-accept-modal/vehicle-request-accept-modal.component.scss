@@ -172,20 +172,15 @@ $info-color: #3b82f6;
 .step-head {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   padding: 14px 18px;
   background: var(--bg-elevated);
   border-bottom: 1px solid var(--border-color);
 
-  > .material-symbols-rounded {
-    font-size: 22px;
-    color: $voltyks-primary;
-  }
-
   .step-title {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
     min-width: 0;
     flex: 1;
 
@@ -246,12 +241,13 @@ $info-color: #3b82f6;
   background: var(--bg-elevated);
   border: 1px solid var(--border-color);
   border-radius: 12px;
+  min-width: 0;
 
   .data-icon {
-    font-size: 22px;
-    color: $voltyks-primary;
+    font-size: 20px;
+    color: var(--text-disabled);
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 1px;
   }
 
   > div {
@@ -266,7 +262,6 @@ $info-color: #3b82f6;
     font-size: 11px;
     color: var(--text-disabled);
     font-weight: 600;
-    text-transform: uppercase;
     letter-spacing: 0.3px;
   }
 
@@ -336,7 +331,6 @@ $info-color: #3b82f6;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  margin-bottom: 4px;
 }
 
 .option-card {
@@ -430,15 +424,12 @@ $info-color: #3b82f6;
   }
 }
 
-// ========== Sub block under an option ==========
+// ========== Sub block under an option (no nested card, just spacing) ==========
 .sub-block {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 14px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  padding-top: 4px;
 }
 
 // ========== Field label ==========
