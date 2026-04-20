@@ -266,3 +266,11 @@
   (confirm)="confirmAction()"
   (cancel)="cancelAction()"
 ></app-confirm-dialog>
+
+<app-vehicle-request-accept-modal
+  [isOpen]="showAcceptModal"
+  [request]="acceptModalRequest"
+  [isSaving]="processingId === acceptModalRequest?.id"
+  (confirm)="onAcceptModalConfirm($event)"
+  (cancel)="onAcceptModalCancel()"
+></app-vehicle-request-accept-modal>

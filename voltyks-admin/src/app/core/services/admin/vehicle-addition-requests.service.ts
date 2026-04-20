@@ -7,6 +7,8 @@ import {
   VehicleAdditionRequestResponse,
   AcceptVehicleAdditionRequestResponse,
   DeclineVehicleAdditionRequestResponse,
+  AcceptPreviewResponse,
+  AcceptVehicleRequestBody,
   VehicleAdditionRequestStatus
 } from '../../models';
 
@@ -45,10 +47,21 @@ export class VehicleAdditionRequestsService {
   }
 
   /**
-   * POST /api/admin/vehicle-addition-requests/{id}/accept
+   * GET /api/admin/vehicle-addition-requests/{id}/accept-preview
+   * Returns suggestions (exact/similar brand/model matches), parsed capacity,
+   * and warnings. Call this before opening the accept modal.
    */
-  accept(id: number): Observable<AcceptVehicleAdditionRequestResponse> {
-    return this.http.post<AcceptVehicleAdditionRequestResponse>(`${this.baseUrl}/${id}/accept`, {});
+  getAcceptPreview(id: number): Observable<AcceptPreviewResponse> {
+    return this.http.get<AcceptPreviewResponse>(`${this.baseUrl}/${id}/accept-preview`);
+  }
+
+  /**
+   * POST /api/admin/vehicle-addition-requests/{id}/accept
+   * Body is optional — when null/empty the backend falls back to the raw
+   * values the user entered. Pass edited fields to override.
+   */
+  accept(id: number, body?: AcceptVehicleRequestBody | null): Observable<AcceptVehicleAdditionRequestResponse> {
+    return this.http.post<AcceptVehicleAdditionRequestResponse>(`${this.baseUrl}/${id}/accept`, body ?? {});
   }
 
   /**

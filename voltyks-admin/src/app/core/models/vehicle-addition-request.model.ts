@@ -39,6 +39,56 @@ export interface VehicleAdditionRequestResponse {
   errors: any;
 }
 
+// ---------- Accept Preview ----------
+
+export interface SimilarBrandMatch {
+  id: number;
+  name: string;
+  similarity: number;
+  modelsCount: number;
+}
+
+export interface SimilarModelMatch {
+  modelId: number;
+  modelName: string;
+  brandId: number;
+  brandName: string;
+  similarity: number;
+}
+
+export interface AcceptPreviewOriginal {
+  brandName: string;
+  modelName: string;
+  capacity: string;
+}
+
+export interface AcceptPreviewDto {
+  original: AcceptPreviewOriginal;
+  parsedCapacity: number | null;
+  capacityParseSuccess: boolean;
+  exactBrandMatch: SimilarBrandMatch | null;
+  similarBrands: SimilarBrandMatch[];
+  exactModelMatch: SimilarModelMatch | null;
+  similarModels: SimilarModelMatch[];
+  warnings: string[];
+}
+
+export interface AcceptPreviewResponse {
+  status: boolean;
+  message: string;
+  data: AcceptPreviewDto;
+  errors: any;
+}
+
+// ---------- Accept Body (all fields optional) ----------
+
+export interface AcceptVehicleRequestBody {
+  useExistingBrandId?: number | null;
+  brandName?: string | null;
+  modelName?: string | null;
+  capacity?: number | null;
+}
+
 export interface AcceptVehicleAdditionRequestResult {
   requestId: number;
   brandId: number;

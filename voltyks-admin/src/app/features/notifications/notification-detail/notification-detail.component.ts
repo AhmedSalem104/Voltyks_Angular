@@ -11,12 +11,14 @@ import { NotificationService } from '../../../core/services/notification.service
 import { DataRefreshService } from '../../../core/services/data-refresh.service';
 import { ToasterService } from '../../../shared/components/toaster/toaster.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { VehicleRequestAcceptModalComponent } from '../../../shared/components/vehicle-request-accept-modal/vehicle-request-accept-modal.component';
 import { NotificationType } from '../../../core/models/notification.model';
+import { AcceptVehicleRequestBody } from '../../../core/models';
 
 @Component({
   selector: 'app-notification-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, ConfirmDialogComponent],
+  imports: [CommonModule, RouterModule, FormsModule, ConfirmDialogComponent, VehicleRequestAcceptModalComponent],
   templateUrl: './notification-detail.component.html',
   styleUrls: ['./notification-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -46,6 +48,9 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   confirmDialogTitle = '';
   confirmDialogMessage = '';
   pendingAction: (() => void) | null = null;
+
+  // Vehicle accept modal
+  showVehicleAcceptModal = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -123,24 +128,23 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
 
   acceptVehicleRequest(): void {
     if (!this.vehicleRequest) return;
-    this.confirmDialogTitle = 'قبول الطلب';
-    this.confirmDialogMessage =
-      `هل أنت متأكد من قبول طلب إضافة السيارة "${this.vehicleRequest.brandName} ${this.vehicleRequest.modelName}"؟ سيتم إضافتها إلى قاعدة البيانات.`;
-    this.pendingAction = () => this.confirmAcceptVehicleRequest();
-    this.showConfirmDialog = true;
+    this.showVehicleAcceptModal = true;
     this.cdr.markForCheck();
   }
 
-  private confirmAcceptVehicleRequest(): void {
+  onVehicleAcceptModalConfirm(body: AcceptVehicleRequestBody): void {
     this.isSaving = true;
     this.cdr.markForCheck();
 
-    this.vehicleRequestsService.accept(this.id).subscribe({
+    this.vehicleRequestsService.accept(this.id, body).subscribe({
       next: (response) => {
         if (response?.status) {
           this.toaster.success(response.message || 'تم قبول الطلب وإضافة السيارة بنجاح');
+          this.showVehicleAcceptModal = false;
           this.notificationService.loadVehicleRequestNotifications();
           this.refreshService.emit('vehicle-request');
+          this.refreshService.emit('brand');
+          this.refreshService.emit('model');
           this.closeDetail();
         } else {
           this.toaster.error(response?.message || 'فشل قبول الطلب');
@@ -154,6 +158,12 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       }
     });
+  }
+
+  onVehicleAcceptModalCancel(): void {
+    if (this.isSaving) return;
+    this.showVehicleAcceptModal = false;
+    this.cdr.markForCheck();
   }
 
   declineVehicleRequest(): void {

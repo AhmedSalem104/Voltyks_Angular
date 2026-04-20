@@ -8,9 +8,11 @@ import { DataRefreshService } from '../../core/services/data-refresh.service';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { VehicleRequestAcceptModalComponent } from '../../shared/components/vehicle-request-accept-modal/vehicle-request-accept-modal.component';
 import {
   VehicleAdditionRequestDto,
-  VehicleAdditionRequestStatus
+  VehicleAdditionRequestStatus,
+  AcceptVehicleRequestBody
 } from '../../core/models';
 
 type StatusFilter = 'all' | VehicleAdditionRequestStatus;
@@ -18,7 +20,7 @@ type StatusFilter = 'all' | VehicleAdditionRequestStatus;
 @Component({
   selector: 'app-vehicle-addition-requests',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConfirmDialogComponent, PaginationComponent],
+  imports: [CommonModule, FormsModule, ConfirmDialogComponent, PaginationComponent, VehicleRequestAcceptModalComponent],
   templateUrl: './vehicle-addition-requests.component.html',
   styleUrls: ['./vehicle-addition-requests.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -40,6 +42,10 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
   // Details modal
   showDetailsModal = false;
   selectedRequest: VehicleAdditionRequestDto | null = null;
+
+  // Accept modal (new — with preview + editable fields)
+  showAcceptModal = false;
+  acceptModalRequest: VehicleAdditionRequestDto | null = null;
 
   // Confirm dialog
   showConfirmDialog = false;
@@ -144,12 +150,19 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
   }
 
   requestAccept(req: VehicleAdditionRequestDto): void {
-    this.confirmDialogTitle = 'قبول الطلب';
-    this.confirmDialogMessage =
-      `هل أنت متأكد من قبول طلب إضافة السيارة "${req.brandName} ${req.modelName}" للمستخدم "${req.userFullName}"؟ سيتم إضافتها إلى قاعدة البيانات.`;
-    this.confirmDialogType = 'primary';
-    this.pendingAction = () => this.doAccept(req.id);
-    this.showConfirmDialog = true;
+    this.acceptModalRequest = req;
+    this.showAcceptModal = true;
+    this.cdr.markForCheck();
+  }
+
+  onAcceptModalConfirm(body: AcceptVehicleRequestBody): void {
+    if (!this.acceptModalRequest) return;
+    this.doAccept(this.acceptModalRequest.id, body);
+  }
+
+  onAcceptModalCancel(): void {
+    this.showAcceptModal = false;
+    this.acceptModalRequest = null;
     this.cdr.markForCheck();
   }
 
@@ -178,18 +191,21 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  private doAccept(id: number): void {
+  private doAccept(id: number, body?: AcceptVehicleRequestBody): void {
     this.processingId = id;
     this.cdr.markForCheck();
 
-    this.requestsService.accept(id).subscribe({
+    this.requestsService.accept(id, body ?? null).subscribe({
       next: (res) => {
         if (res?.status) {
           this.toaster.success(res.message || 'تم قبول الطلب وإضافة السيارة بنجاح');
           this.closeDetails();
+          this.onAcceptModalCancel();
           this.loadData();
           this.notificationService.loadVehicleRequestNotifications();
           this.refreshService.emit('vehicle-request');
+          this.refreshService.emit('brand');
+          this.refreshService.emit('model');
         } else {
           this.toaster.error(res?.message || 'فشل قبول الطلب');
         }

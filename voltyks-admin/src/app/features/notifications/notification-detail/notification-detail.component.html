@@ -567,3 +567,12 @@
     (cancel)="cancelAction()"
   ></app-confirm-dialog>
 }
+
+<!-- Vehicle Accept Modal — editable with preview -->
+<app-vehicle-request-accept-modal
+  [isOpen]="showVehicleAcceptModal"
+  [request]="vehicleRequest"
+  [isSaving]="isSaving"
+  (confirm)="onVehicleAcceptModalConfirm($event)"
+  (cancel)="onVehicleAcceptModalCancel()"
+></app-vehicle-request-accept-modal>
