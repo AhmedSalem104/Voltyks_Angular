@@ -98,8 +98,8 @@
               <th>الوصف</th>
               <th>عدد الشكاوى</th>
               <th>تاريخ الإنشاء</th>
-              <th>الحالة</th>
-              <th>الإجراءات</th>
+              <th>{{ "common.status" | translate }}</th>
+              <th>{{ "common.actions" | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -229,7 +229,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="voltyks-btn btn-secondary" (click)="closeCategoryModal()">إلغاء</button>
+        <button class="voltyks-btn btn-secondary" (click)="closeCategoryModal()">{{ "common.cancel" | translate }}</button>
         <button class="voltyks-btn btn-primary" (click)="saveCategory()" [disabled]="isSaving">
           @if (isSaving) {
             <span class="material-symbols-rounded spinning">sync</span>
@@ -267,7 +267,7 @@
         <p class="note">يمكنك استعادة هذا النوع لاحقاً من خلال تفعيل خيار "عرض المحذوفة"</p>
       </div>
       <div class="modal-footer">
-        <button class="voltyks-btn btn-secondary" (click)="cancelDelete()">إلغاء</button>
+        <button class="voltyks-btn btn-secondary" (click)="cancelDelete()">{{ "common.cancel" | translate }}</button>
         <button class="voltyks-btn btn-danger" (click)="deleteCategory()" [disabled]="isSaving">
           @if (isSaving) {
             <span class="material-symbols-rounded spinning">sync</span>

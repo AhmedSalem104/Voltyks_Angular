@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
@@ -28,7 +29,7 @@ import { PrintService } from '../../../core/services/print.service';
     LoadingOverlayComponent,
     ConfirmDialogComponent,
     PaginationComponent
-  ],
+  , TranslatePipe],
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

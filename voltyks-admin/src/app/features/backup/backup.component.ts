@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AdminBackupService } from '../../core/services/admin/admin-backup.service';
 import { BackupResultDto, BackupFileDto } from '../../core/models/backup.model';
@@ -11,7 +12,7 @@ import { VaultService } from '../../core/services/vault.service';
 @Component({
   selector: 'app-backup',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingOverlayComponent, PaginationComponent],
+  imports: [CommonModule, FormsModule, LoadingOverlayComponent, PaginationComponent, TranslatePipe],
   templateUrl: './backup.component.html',
   styleUrls: ['./backup.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

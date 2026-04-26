@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -18,7 +19,7 @@ import { AcceptVehicleRequestBody } from '../../../core/models';
 @Component({
   selector: 'app-notification-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, ConfirmDialogComponent, VehicleRequestAcceptModalComponent],
+  imports: [CommonModule, RouterModule, FormsModule, ConfirmDialogComponent, VehicleRequestAcceptModalComponent, TranslatePipe],
   templateUrl: './notification-detail.component.html',
   styleUrls: ['./notification-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

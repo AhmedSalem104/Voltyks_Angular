@@ -97,12 +97,12 @@
             <tr>
               <th>#</th>
               <th>الأيقونة</th>
-              <th>الاسم</th>
-              <th>الحالة</th>
+              <th>{{ "common.name" | translate }}</th>
+              <th>{{ "common.status" | translate }}</th>
               <th>عدد المنتجات</th>
               <th>الترتيب</th>
               <th>تاريخ الإنشاء</th>
-              <th>الإجراءات</th>
+              <th>{{ "common.actions" | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -225,7 +225,7 @@
           }
         </div>
         <div class="modal-footer">
-          <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">إلغاء</button>
+          <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">{{ "common.cancel" | translate }}</button>
           <button class="voltyks-btn btn-primary" (click)="createCategory()" [disabled]="isSaving">
             {{ isSaving ? 'جاري الحفظ...' : 'حفظ' }}
           </button>
@@ -284,7 +284,7 @@
           }
         </div>
         <div class="modal-footer">
-          <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">إلغاء</button>
+          <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">{{ "common.cancel" | translate }}</button>
           <button class="voltyks-btn btn-primary" (click)="updateCategory()" [disabled]="isSaving">
             {{ isSaving ? 'جاري الحفظ...' : 'حفظ التعديلات' }}
           </button>

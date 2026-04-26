@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AdminBrandsService } from '../../core/services/admin/admin-brands.service';
 import { AdminBrandDto, AdminModelDto } from '../../core/models';
@@ -10,7 +11,7 @@ import { ToasterService } from '../../shared/components/toaster/toaster.service'
 @Component({
   selector: 'app-brands-models',
   standalone: true,
-  imports: [CommonModule, FormsModule, PaginationComponent, LoadingOverlayComponent],
+  imports: [CommonModule, FormsModule, PaginationComponent, LoadingOverlayComponent, TranslatePipe],
   template: `
     <div class="brands-models-container">
       <h2>إدارة العلامات التجارية والموديلات</h2>

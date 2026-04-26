@@ -1,11 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { PrintService } from '../../core/services/print.service';
 
 @Component({
   selector: 'app-protocol',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './protocol.component.html',
   styleUrls: ['./protocol.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

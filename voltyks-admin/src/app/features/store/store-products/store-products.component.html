@@ -108,13 +108,13 @@
             <tr>
               <th>#</th>
               <th>الصورة</th>
-              <th>الاسم</th>
+              <th>{{ "common.name" | translate }}</th>
               <th>الفئة</th>
               <th>السعر</th>
-              <th>الحالة</th>
+              <th>{{ "common.status" | translate }}</th>
               <th>قابل للحجز</th>
               <th>الحجوزات</th>
-              <th>الإجراءات</th>
+              <th>{{ "common.actions" | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -308,7 +308,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">إلغاء</button>
+          <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">{{ "common.cancel" | translate }}</button>
           <button class="voltyks-btn btn-primary" (click)="createProduct()" [disabled]="isSaving">
             {{ isSaving ? 'جاري الحفظ...' : 'حفظ' }}
           </button>
@@ -439,7 +439,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">إلغاء</button>
+          <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">{{ "common.cancel" | translate }}</button>
           <button class="voltyks-btn btn-primary" (click)="updateProduct()" [disabled]="isSaving">
             {{ isSaving ? 'جاري الحفظ...' : 'حفظ التعديلات' }}
           </button>
@@ -545,7 +545,7 @@
           }
         </div>
         <div class="modal-footer">
-          <button class="voltyks-btn btn-secondary" (click)="closeDetailsDialog()">إغلاق</button>
+          <button class="voltyks-btn btn-secondary" (click)="closeDetailsDialog()">{{ "common.close" | translate }}</button>
           @if (!currentProduct.isDeleted) {
             <button class="voltyks-btn btn-primary" (click)="closeDetailsDialog(); openEditDialog(currentProduct)">
               <span class="material-symbols-rounded">edit</span>
@@ -691,7 +691,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="voltyks-btn btn-secondary" (click)="closeImageManager()">إغلاق</button>
+          <button class="voltyks-btn btn-secondary" (click)="closeImageManager()">{{ "common.close" | translate }}</button>
         </div>
       </div>
     </div>

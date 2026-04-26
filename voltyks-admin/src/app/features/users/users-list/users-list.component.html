@@ -75,15 +75,15 @@
         <table class="voltyks-table">
           <thead>
             <tr>
-              <th>الاسم الكامل</th>
-              <th>البريد الإلكتروني</th>
-              <th>رقم الهاتف</th>
-              <th>تاريخ التسجيل</th>
-              <th>الحالة</th>
+              <th>{{ "users.table.name" | translate }}</th>
+              <th>{{ "users.table.email" | translate }}</th>
+              <th>{{ "users.table.phone" | translate }}</th>
+              <th>{{ "users.table.joinDate" | translate }}</th>
+              <th>{{ "common.status" | translate }}</th>
               @if (userFilter === 'deleted' || userFilter === 'all') {
                 <th>تاريخ الحذف</th>
               }
-              <th>الإجراءات</th>
+              <th>{{ "common.actions" | translate }}</th>
             </tr>
           </thead>
           <tbody>

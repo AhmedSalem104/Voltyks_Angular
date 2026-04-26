@@ -96,9 +96,9 @@
               <th>النوع</th>
               <th>المحتوى</th>
               <th>المستخدم</th>
-              <th>الحالة</th>
-              <th>التاريخ</th>
-              <th>الإجراءات</th>
+              <th>{{ "common.status" | translate }}</th>
+              <th>{{ "common.date" | translate }}</th>
+              <th>{{ "common.actions" | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -255,7 +255,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="voltyks-btn btn-secondary" (click)="closeDetailsModal()">إغلاق</button>
+        <button class="voltyks-btn btn-secondary" (click)="closeDetailsModal()">{{ "common.close" | translate }}</button>
         <button
           class="voltyks-btn"
           [class.btn-primary]="!selectedComplaint.isResolved"

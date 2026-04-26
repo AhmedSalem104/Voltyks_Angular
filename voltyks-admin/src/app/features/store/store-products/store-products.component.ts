@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
@@ -33,7 +34,7 @@ interface SpecificationItem {
     PaginationComponent,
     LoadingOverlayComponent,
     ConfirmDialogComponent
-  ],
+  , TranslatePipe],
   templateUrl: './store-products.component.html',
   styleUrls: ['./store-products.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

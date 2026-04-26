@@ -120,11 +120,11 @@
               <th>#</th>
               <th>المنتج</th>
               <th>العميل</th>
-              <th>الحالة</th>
+              <th>{{ "common.status" | translate }}</th>
               <th>الدفع</th>
               <th>التسليم</th>
-              <th>التاريخ</th>
-              <th>الإجراءات</th>
+              <th>{{ "common.date" | translate }}</th>
+              <th>{{ "common.actions" | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -395,7 +395,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="voltyks-btn btn-secondary" (click)="closeDetailsDialog()">إغلاق</button>
+          <button class="voltyks-btn btn-secondary" (click)="closeDetailsDialog()">{{ "common.close" | translate }}</button>
         </div>
       </div>
     </div>
@@ -426,7 +426,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="voltyks-btn btn-secondary" (click)="closeContactDialog()">إلغاء</button>
+            <button class="voltyks-btn btn-secondary" (click)="closeContactDialog()">{{ "common.cancel" | translate }}</button>
             <button class="voltyks-btn btn-primary" (click)="recordContact()" [disabled]="isSaving">
               {{ isSaving ? 'جاري الحفظ...' : 'تسجيل التواصل' }}
             </button>
@@ -467,7 +467,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="voltyks-btn btn-secondary" (click)="closePaymentDialog()">إلغاء</button>
+            <button class="voltyks-btn btn-secondary" (click)="closePaymentDialog()">{{ "common.cancel" | translate }}</button>
             <button class="voltyks-btn btn-primary" (click)="recordPayment()" [disabled]="isSaving">
               {{ isSaving ? 'جاري الحفظ...' : 'تسجيل الدفع' }}
             </button>
@@ -498,7 +498,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button class="voltyks-btn btn-secondary" (click)="closeDeliveryDialog()">إلغاء</button>
+            <button class="voltyks-btn btn-secondary" (click)="closeDeliveryDialog()">{{ "common.cancel" | translate }}</button>
             <button class="voltyks-btn btn-primary" (click)="recordDelivery()" [disabled]="isSaving">
               {{ isSaving ? 'جاري الحفظ...' : 'تسجيل التسليم' }}
             </button>
