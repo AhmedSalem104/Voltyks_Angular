@@ -2,11 +2,11 @@
   <div class="page-header">
     <div class="header-content">
       <h2>{{ "models.title" | translate }}</h2>
-      <p class="page-description">عرض وإدارة موديلات السيارات الكهربائية</p>
+      <p class="page-description">{{ "models.subtitle" | translate }}</p>
     </div>
     <button class="voltyks-btn btn-secondary back-btn" (click)="goToBrands()">
       <span class="material-symbols-rounded">arrow_forward</span>
-      العلامات التجارية
+      {{ "models.goToBrands" | translate }}
     </button>
   </div>
 
@@ -36,7 +36,7 @@
             [ngModel]="selectedBrandFilter"
             (ngModelChange)="onBrandFilterChange($event)"
           >
-            <option [ngValue]="null">جميع العلامات التجارية</option>
+            <option [ngValue]="null">{{ "models.allBrands" | translate }}</option>
             @for (brand of brands; track brand.id) {
               <option [ngValue]="brand.id">{{ brand.name }}</option>
             }
@@ -47,7 +47,7 @@
       <!-- Clear Filter Button -->
       @if (selectedBrandFilter) {
         <div class="filter-item filter-actions">
-          <button class="voltyks-btn btn-secondary" (click)="clearBrandFilter()" title="مسح الفلتر">
+          <button class="voltyks-btn btn-secondary" (click)="clearBrandFilter()" [title]="'models.clearFilter' | translate">
             <span class="material-symbols-rounded">refresh</span>
           </button>
         </div>
@@ -67,7 +67,7 @@
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
           <span class="material-symbols-rounded">add</span>
-          إضافة موديل
+          {{ "models.addModel" | translate }}
         </button>
       </div>
     </div>
@@ -78,9 +78,9 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>اسم الموديل</th>
+              <th>{{ "models.modelName" | translate }}</th>
               <th>{{ "common.brand" | translate }}</th>
-              <th>سعة البطارية (kWh)</th>
+              <th>{{ "models.batteryCapacityKwh" | translate }}</th>
               <th>{{ "common.actions" | translate }}</th>
             </tr>
           </thead>
@@ -133,7 +133,7 @@
         <p>{{ "models.empty" | translate }}</p>
         @if (selectedBrandFilter) {
           <button class="voltyks-btn btn-secondary" (click)="clearBrandFilter()">
-            عرض جميع الموديلات
+            {{ "models.showAll" | translate }}
           </button>
         }
       </div>
@@ -155,24 +155,24 @@
         <div class="modal-body">
           <form class="model-form">
             <div class="form-group">
-              <label>اسم الموديل <span class="required">*</span></label>
+              <label>{{ "models.modelName" | translate }} <span class="required">*</span></label>
               <input
                 type="text"
                 class="voltyks-input"
                 [(ngModel)]="createDto.name"
                 name="name"
-                placeholder="مثال: Model 3, iX3, EQS..."
+                [placeholder]="'models.modelNameExample' | translate"
               />
             </div>
 
             <div class="form-group">
-              <label>العلامة التجارية <span class="required">*</span></label>
+              <label>{{ "models.brandLabel" | translate }} <span class="required">*</span></label>
               <select
                 class="voltyks-input"
                 [(ngModel)]="createDto.brandId"
                 name="brandId"
               >
-                <option [value]="0">اختر العلامة التجارية</option>
+                <option [value]="0">{{ "models.selectBrand" | translate }}</option>
                 @for (brand of brands; track brand.id) {
                   <option [value]="brand.id">{{ brand.name }}</option>
                 }
@@ -180,13 +180,13 @@
             </div>
 
             <div class="form-group">
-              <label>سعة البطارية (kWh) <span class="required">*</span></label>
+              <label>{{ "models.batteryCapacityKwh" | translate }} <span class="required">*</span></label>
               <input
                 type="number"
                 class="voltyks-input"
                 [(ngModel)]="createDto.capacity"
                 name="capacity"
-                placeholder="مثال: 75"
+                [placeholder]="'models.capacityExample' | translate"
                 min="1"
               />
             </div>
@@ -194,11 +194,11 @@
         </div>
         <div class="modal-footer">
           <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">
-            إلغاء
+            {{ "common.cancel" | translate }}
           </button>
           <button class="voltyks-btn btn-primary" (click)="createModel()">
             <span class="material-symbols-rounded">save</span>
-            حفظ
+            {{ "common.save" | translate }}
           </button>
         </div>
       </div>
@@ -220,7 +220,7 @@
         <div class="modal-body">
           <form class="model-form">
             <div class="form-group">
-              <label>اسم الموديل <span class="required">*</span></label>
+              <label>{{ "models.modelName" | translate }} <span class="required">*</span></label>
               <input
                 type="text"
                 class="voltyks-input"
@@ -230,13 +230,13 @@
             </div>
 
             <div class="form-group">
-              <label>العلامة التجارية <span class="required">*</span></label>
+              <label>{{ "models.brandLabel" | translate }} <span class="required">*</span></label>
               <select
                 class="voltyks-input"
                 [(ngModel)]="updateDto.brandId"
                 name="brandId"
               >
-                <option [value]="0">اختر العلامة التجارية</option>
+                <option [value]="0">{{ "models.selectBrand" | translate }}</option>
                 @for (brand of brands; track brand.id) {
                   <option [value]="brand.id">{{ brand.name }}</option>
                 }
@@ -244,7 +244,7 @@
             </div>
 
             <div class="form-group">
-              <label>سعة البطارية (kWh) <span class="required">*</span></label>
+              <label>{{ "models.batteryCapacityKwh" | translate }} <span class="required">*</span></label>
               <input
                 type="number"
                 class="voltyks-input"
@@ -257,11 +257,11 @@
         </div>
         <div class="modal-footer">
           <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">
-            إلغاء
+            {{ "common.cancel" | translate }}
           </button>
           <button class="voltyks-btn btn-primary" (click)="updateModel()">
             <span class="material-symbols-rounded">save</span>
-            حفظ التغييرات
+            {{ "common.saveChanges" | translate }}
           </button>
         </div>
       </div>
@@ -272,8 +272,8 @@
 <!-- Delete Confirmation Dialog -->
 <app-confirm-dialog
   [isOpen]="showDeleteConfirm"
-  title="تأكيد حذف الموديل"
-  [message]="'هل أنت متأكد من حذف الموديل \'' + (currentModel?.name || '') + '\'؟ لا يمكن التراجع عن هذا الإجراء.'"
+  [title]="'models.deleteConfirmTitle' | translate"
+  [message]="'models.deleteConfirmMessage' | translate: { name: currentModel?.name || '' }"
   type="danger"
   (confirm)="confirmDelete()"
   (cancel)="closeDeleteConfirm()"

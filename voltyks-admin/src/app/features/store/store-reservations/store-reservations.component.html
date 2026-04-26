@@ -94,7 +94,7 @@
       <!-- Clear Filters -->
       <button class="voltyks-btn btn-secondary btn-small" (click)="clearFilters()">
         <span class="material-symbols-rounded">clear_all</span>
-        مسح الفلاتر
+        {{ "store.clearFilters" | translate }}
       </button>
     </div>
   </div>
@@ -199,7 +199,7 @@
                     }
 
                     @if (canCancel(reservation)) {
-                      <button class="voltyks-btn btn-icon btn-danger" title="إلغاء الحجز" (click)="openCancelConfirm(reservation)">
+                      <button class="voltyks-btn btn-icon btn-danger" [title]="'store.reservations.cancelTitle' | translate" (click)="openCancelConfirm(reservation)">
                         <span class="material-symbols-rounded">cancel</span>
                       </button>
                     }
@@ -221,7 +221,7 @@
     } @else {
       <div class="no-data">
         <span class="material-symbols-rounded">shopping_cart</span>
-        <p>لا توجد حجوزات</p>
+        <p>{{ "store.reservations.empty" | translate }}</p>
       </div>
     }
   </div>
@@ -231,7 +231,7 @@
       <div class="modal-overlay" (click)="closeDetailsDialog()">
         <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
           <div class="modal-header">
-            <h3>تفاصيل الحجز #{{ currentReservation.id }}</h3>
+            <h3>{{ "store.reservations.detailsTitle" | translate: { id: currentReservation.id } }}</h3>
           <button type="button" class="close-btn" (click)="closeDetailsDialog()">
             <span class="material-symbols-rounded">close</span>
           </button>
@@ -241,22 +241,22 @@
           <div class="status-timeline">
             <div class="timeline-step" [class.active]="true" [class.completed]="currentReservation.status !== 'pending'">
               <span class="step-icon material-symbols-rounded">pending</span>
-              <span class="step-label">قيد الانتظار</span>
+              <span class="step-label">{{ "store.reservations.steps.pending" | translate }}</span>
             </div>
             <div class="timeline-connector" [class.active]="currentReservation.status !== 'pending'"></div>
             <div class="timeline-step" [class.active]="currentReservation.contactedAt" [class.completed]="currentReservation.paymentStatus === 'paid'">
               <span class="step-icon material-symbols-rounded">phone</span>
-              <span class="step-label">تم التواصل</span>
+              <span class="step-label">{{ "store.reservations.steps.contacted" | translate }}</span>
             </div>
             <div class="timeline-connector" [class.active]="currentReservation.paymentStatus === 'paid'"></div>
             <div class="timeline-step" [class.active]="currentReservation.paymentStatus === 'paid'" [class.completed]="currentReservation.deliveryStatus === 'delivered'">
               <span class="step-icon material-symbols-rounded">payments</span>
-              <span class="step-label">تم الدفع</span>
+              <span class="step-label">{{ "store.reservations.steps.paid" | translate }}</span>
             </div>
             <div class="timeline-connector" [class.active]="currentReservation.deliveryStatus === 'delivered'"></div>
             <div class="timeline-step" [class.active]="currentReservation.deliveryStatus === 'delivered'" [class.completed]="currentReservation.status === 'completed'">
               <span class="step-icon material-symbols-rounded">local_shipping</span>
-              <span class="step-label">تم التسليم</span>
+              <span class="step-label">{{ "store.reservations.steps.delivered" | translate }}</span>
             </div>
             <div class="timeline-connector" [class.active]="currentReservation.status === 'completed'"></div>
             <div class="timeline-step" [class.active]="currentReservation.status === 'completed'">
@@ -268,7 +268,7 @@
           @if (currentReservation.status === 'cancelled') {
             <div class="cancelled-notice">
               <span class="material-symbols-rounded">cancel</span>
-              <span>تم إلغاء هذا الحجز</span>
+              <span>{{ "store.reservations.cancelledNotice" | translate }}</span>
             </div>
           }
 
@@ -277,7 +277,7 @@
             <div class="detail-section">
               <h4>
                 <span class="material-symbols-rounded">inventory_2</span>
-                معلومات المنتج
+                {{ "store.reservations.productInfo" | translate }}
               </h4>
               <div class="detail-content product-detail">
                 @if (currentReservation.productThumbnail) {
@@ -294,20 +294,20 @@
             <div class="detail-section">
               <h4>
                 <span class="material-symbols-rounded">person</span>
-                معلومات العميل
+                {{ "store.reservations.customerInfo" | translate }}
               </h4>
               <div class="detail-content">
                 <div class="info-row">
-                  <span class="label">الاسم:</span>
+                  <span class="label">{{ "store.reservations.field.name" | translate }}:</span>
                   <span class="value">{{ currentReservation.userName }}</span>
                 </div>
                 <div class="info-row">
-                  <span class="label">البريد الإلكتروني:</span>
+                  <span class="label">{{ "store.reservations.field.email" | translate }}:</span>
                   <span class="value">{{ currentReservation.userEmail }}</span>
                 </div>
                 @if (currentReservation.userPhone) {
                   <div class="info-row">
-                    <span class="label">الهاتف:</span>
+                    <span class="label">{{ "store.reservations.field.phone" | translate }}:</span>
                     <span class="value">{{ currentReservation.userPhone }}</span>
                   </div>
                 }
@@ -318,30 +318,30 @@
             <div class="detail-section">
               <h4>
                 <span class="material-symbols-rounded">info</span>
-                معلومات الحالة
+                {{ "store.reservations.statusInfo" | translate }}
               </h4>
               <div class="detail-content">
                 <div class="info-row">
-                  <span class="label">الحالة:</span>
+                  <span class="label">{{ "store.reservations.field.status" | translate }}:</span>
                   <span class="status-badge" [ngClass]="getStatusClass(currentReservation.status)">
                     {{ getStatusLabel(currentReservation.status) }}
                   </span>
                 </div>
                 <div class="info-row">
-                  <span class="label">حالة الدفع:</span>
+                  <span class="label">{{ "store.reservations.field.paymentStatus" | translate }}:</span>
                   <span class="payment-badge" [ngClass]="getPaymentStatusClass(currentReservation.paymentStatus)">
                     {{ getPaymentStatusLabel(currentReservation.paymentStatus) }}
                   </span>
                 </div>
                 <div class="info-row">
-                  <span class="label">حالة التسليم:</span>
+                  <span class="label">{{ "store.reservations.field.deliveryStatus" | translate }}:</span>
                   <span class="delivery-badge" [ngClass]="getDeliveryStatusClass(currentReservation.deliveryStatus)">
                     {{ getDeliveryStatusLabel(currentReservation.deliveryStatus) }}
                   </span>
                 </div>
                 @if (currentReservation.paymentMethod) {
                   <div class="info-row">
-                    <span class="label">طريقة الدفع:</span>
+                    <span class="label">{{ "store.reservations.field.paymentMethod" | translate }}:</span>
                     <span class="value">{{ getPaymentMethodLabel(currentReservation.paymentMethod) }}</span>
                   </div>
                 }
@@ -352,28 +352,28 @@
             <div class="detail-section">
               <h4>
                 <span class="material-symbols-rounded">schedule</span>
-                التواريخ
+                {{ "store.reservations.dates" | translate }}
               </h4>
               <div class="detail-content">
                 <div class="info-row">
-                  <span class="label">تاريخ الإنشاء:</span>
+                  <span class="label">{{ "store.reservations.field.createdAt" | translate }}:</span>
                   <span class="value">{{ formatDate(currentReservation.createdAt) }}</span>
                 </div>
                 @if (currentReservation.contactedAt) {
                   <div class="info-row">
-                    <span class="label">تاريخ التواصل:</span>
+                    <span class="label">{{ "store.reservations.field.contactedAt" | translate }}:</span>
                     <span class="value">{{ formatDate(currentReservation.contactedAt) }}</span>
                   </div>
                 }
                 @if (currentReservation.paidAt) {
                   <div class="info-row">
-                    <span class="label">تاريخ الدفع:</span>
+                    <span class="label">{{ "store.reservations.field.paidAt" | translate }}:</span>
                     <span class="value">{{ formatDate(currentReservation.paidAt) }}</span>
                   </div>
                 }
                 @if (currentReservation.deliveredAt) {
                   <div class="info-row">
-                    <span class="label">تاريخ التسليم:</span>
+                    <span class="label">{{ "store.reservations.field.deliveredAt" | translate }}:</span>
                     <span class="value">{{ formatDate(currentReservation.deliveredAt) }}</span>
                   </div>
                 }
@@ -385,7 +385,7 @@
               <div class="detail-section full-width">
                 <h4>
                   <span class="material-symbols-rounded">notes</span>
-                  ملاحظات
+                  {{ "store.reservations.notes" | translate }}
                 </h4>
                 <div class="detail-content">
                   <p class="notes-text">{{ currentReservation.adminNotes }}</p>
@@ -406,29 +406,29 @@
       <div class="modal-overlay" (click)="closeContactDialog()">
         <div class="modal-dialog" (click)="$event.stopPropagation()">
           <div class="modal-header">
-            <h3>تسجيل تواصل</h3>
+            <h3>{{ "store.reservations.contactDialogTitle" | translate }}</h3>
             <button type="button" class="close-btn" (click)="closeContactDialog()">
               <span class="material-symbols-rounded">close</span>
             </button>
           </div>
           <div class="modal-body">
             <div class="reservation-summary">
-              <p><strong>المنتج:</strong> {{ currentReservation.productName }}</p>
-              <p><strong>العميل:</strong> {{ currentReservation.userName }}</p>
+              <p><strong>{{ "store.reservations.summary.product" | translate }}:</strong> {{ currentReservation.productName }}</p>
+              <p><strong>{{ "store.reservations.summary.customer" | translate }}:</strong> {{ currentReservation.userName }}</p>
               @if (currentReservation.userPhone) {
-                <p><strong>الهاتف:</strong> {{ currentReservation.userPhone }}</p>
+                <p><strong>{{ "store.reservations.summary.phone" | translate }}:</strong> {{ currentReservation.userPhone }}</p>
               }
             </div>
 
             <div class="form-group">
-              <label>ملاحظات التواصل</label>
-              <textarea class="voltyks-input" [(ngModel)]="contactDto.notes" rows="4" placeholder="أدخل ملاحظات التواصل مع العميل..."></textarea>
+              <label>{{ "store.reservations.contactNotes" | translate }}</label>
+              <textarea class="voltyks-input" [(ngModel)]="contactDto.notes" rows="4" [placeholder]="'store.reservations.contactNotesPlaceholder' | translate"></textarea>
             </div>
           </div>
           <div class="modal-footer">
             <button class="voltyks-btn btn-secondary" (click)="closeContactDialog()">{{ "common.cancel" | translate }}</button>
             <button class="voltyks-btn btn-primary" (click)="recordContact()" [disabled]="isSaving">
-              {{ isSaving ? 'جاري الحفظ...' : 'تسجيل التواصل' }}
+              {{ (isSaving ? 'store.reservations.saving' : 'store.reservations.saveContact') | translate }}
             </button>
           </div>
         </div>
@@ -440,20 +440,20 @@
       <div class="modal-overlay" (click)="closePaymentDialog()">
         <div class="modal-dialog" (click)="$event.stopPropagation()">
           <div class="modal-header">
-            <h3>تسجيل الدفع</h3>
+            <h3>{{ "store.reservations.paymentDialogTitle" | translate }}</h3>
             <button type="button" class="close-btn" (click)="closePaymentDialog()">
               <span class="material-symbols-rounded">close</span>
             </button>
           </div>
           <div class="modal-body">
             <div class="reservation-summary">
-              <p><strong>المنتج:</strong> {{ currentReservation.productName }}</p>
-              <p><strong>السعر:</strong> {{ formatPrice(currentReservation.unitPrice) }}</p>
-              <p><strong>العميل:</strong> {{ currentReservation.userName }}</p>
+              <p><strong>{{ "store.reservations.summary.product" | translate }}:</strong> {{ currentReservation.productName }}</p>
+              <p><strong>{{ "store.reservations.summary.price" | translate }}:</strong> {{ formatPrice(currentReservation.unitPrice) }}</p>
+              <p><strong>{{ "store.reservations.summary.customer" | translate }}:</strong> {{ currentReservation.userName }}</p>
             </div>
 
             <div class="form-group">
-              <label>طريقة الدفع <span class="required">*</span></label>
+              <label>{{ "store.reservations.paymentMethodLabel" | translate }} <span class="required">*</span></label>
               <select class="voltyks-input" [(ngModel)]="paymentDto.paymentMethod">
                 @for (method of paymentMethods; track method.value) {
                   <option [value]="method.value">{{ method.label }}</option>
@@ -463,13 +463,13 @@
 
             <div class="form-group">
               <label>{{ "common.notes" | translate }}</label>
-              <textarea class="voltyks-input" [(ngModel)]="paymentDto.notes" rows="3" placeholder="ملاحظات إضافية..."></textarea>
+              <textarea class="voltyks-input" [(ngModel)]="paymentDto.notes" rows="3" [placeholder]="'store.reservations.notesPlaceholder' | translate"></textarea>
             </div>
           </div>
           <div class="modal-footer">
             <button class="voltyks-btn btn-secondary" (click)="closePaymentDialog()">{{ "common.cancel" | translate }}</button>
             <button class="voltyks-btn btn-primary" (click)="recordPayment()" [disabled]="isSaving">
-              {{ isSaving ? 'جاري الحفظ...' : 'تسجيل الدفع' }}
+              {{ (isSaving ? 'store.reservations.saving' : 'store.reservations.savePayment') | translate }}
             </button>
           </div>
         </div>
@@ -481,26 +481,26 @@
       <div class="modal-overlay" (click)="closeDeliveryDialog()">
         <div class="modal-dialog" (click)="$event.stopPropagation()">
           <div class="modal-header">
-            <h3>تسجيل التسليم</h3>
+            <h3>{{ "store.reservations.deliveryDialogTitle" | translate }}</h3>
             <button type="button" class="close-btn" (click)="closeDeliveryDialog()">
               <span class="material-symbols-rounded">close</span>
             </button>
           </div>
           <div class="modal-body">
             <div class="reservation-summary">
-              <p><strong>المنتج:</strong> {{ currentReservation.productName }}</p>
-              <p><strong>العميل:</strong> {{ currentReservation.userName }}</p>
+              <p><strong>{{ "store.reservations.summary.product" | translate }}:</strong> {{ currentReservation.productName }}</p>
+              <p><strong>{{ "store.reservations.summary.customer" | translate }}:</strong> {{ currentReservation.userName }}</p>
             </div>
 
             <div class="form-group">
-              <label>ملاحظات التسليم</label>
-              <textarea class="voltyks-input" [(ngModel)]="deliveryDto.notes" rows="4" placeholder="ملاحظات التسليم..."></textarea>
+              <label>{{ "store.reservations.deliveryNotes" | translate }}</label>
+              <textarea class="voltyks-input" [(ngModel)]="deliveryDto.notes" rows="4" [placeholder]="'store.reservations.deliveryNotesPlaceholder' | translate"></textarea>
             </div>
           </div>
           <div class="modal-footer">
             <button class="voltyks-btn btn-secondary" (click)="closeDeliveryDialog()">{{ "common.cancel" | translate }}</button>
             <button class="voltyks-btn btn-primary" (click)="recordDelivery()" [disabled]="isSaving">
-              {{ isSaving ? 'جاري الحفظ...' : 'تسجيل التسليم' }}
+              {{ (isSaving ? 'store.reservations.saving' : 'store.reservations.saveDelivery') | translate }}
             </button>
           </div>
         </div>
@@ -510,9 +510,9 @@
   <!-- Complete Confirm -->
   <app-confirm-dialog
       [isOpen]="showCompleteConfirm"
-      title="تأكيد إكمال الحجز"
-      [message]="'هل أنت متأكد من إكمال الحجز #' + (currentReservation?.id || '') + '؟'"
-      confirmText="إكمال"
+      [title]="'store.reservations.completeConfirmTitle' | translate"
+      [message]="'store.reservations.completeConfirmMessage' | translate: { id: currentReservation?.id || '' }"
+      [confirmText]="'store.reservations.completeAction' | translate"
       type="primary"
       (confirm)="confirmComplete()"
       (cancel)="closeCompleteConfirm()"
@@ -521,9 +521,9 @@
   <!-- Cancel Confirm -->
   <app-confirm-dialog
       [isOpen]="showCancelConfirm"
-      title="تأكيد إلغاء الحجز"
-      [message]="'هل أنت متأكد من إلغاء الحجز #' + (currentReservation?.id || '') + '؟ لا يمكن التراجع عن هذا الإجراء.'"
-      confirmText="إلغاء الحجز"
+      [title]="'store.reservations.cancelConfirmTitle' | translate"
+      [message]="'store.reservations.cancelConfirmMessage' | translate: { id: currentReservation?.id || '' }"
+      [confirmText]="'store.reservations.cancelConfirmAction' | translate"
       type="danger"
       (confirm)="confirmCancel()"
       (cancel)="closeCancelConfirm()"

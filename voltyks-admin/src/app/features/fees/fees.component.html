@@ -2,7 +2,7 @@
   <div class="page-header-row">
     <div>
       <h2>{{ "fees.title" | translate }}</h2>
-      <p class="subtitle">إعدادات الرسوم وتحويل الأموال المحصلة</p>
+      <p class="subtitle">{{ "fees.subtitle" | translate }}</p>
     </div>
     <button class="voltyks-btn print-btn" (click)="printToPdf()" *ngIf="fees">
       <span class="material-symbols-rounded">print</span>
@@ -13,14 +13,14 @@
   @if (fees) {
     <!-- Current Fees Display -->
     <div class="voltyks-card current-fees">
-      <h3>الرسوم الحالية</h3>
+      <h3>{{ "fees.currentTitle" | translate }}</h3>
       <div class="fees-info">
         <div class="info-item">
-          <p class="label">نسبة رسوم المنصة</p>
+          <p class="label">{{ "fees.percentageLabel" | translate }}</p>
           <p class="value">{{ fees.percentage }}%</p>
         </div>
         <div class="info-item">
-          <p class="label">الحد الأدنى للرسوم</p>
+          <p class="label">{{ "fees.minimumLabel" | translate }}</p>
           <p class="value">{{ fees.minimumFee }} <span style="font-size: 16px;">{{ "common.currency" | translate }}</span></p>
         </div>
         <div class="info-item">
@@ -28,18 +28,18 @@
           <p class="value" style="font-size: 16px;">{{ formatDate(fees.updatedAt) }}</p>
         </div>
         <div class="info-item highlight">
-          <p class="label">محدّث بواسطة</p>
-          <p class="value" style="font-size: 18px;">{{ fees.updatedBy || 'النظام' }}</p>
+          <p class="label">{{ "fees.updatedBy" | translate }}</p>
+          <p class="value" style="font-size: 18px;">{{ fees.updatedBy || ('fees.systemUser' | translate) }}</p>
         </div>
       </div>
     </div>
 
     <!-- Update Fees Form -->
     <div class="voltyks-card">
-      <h3>تحديث إعدادات الرسوم</h3>
+      <h3>{{ "fees.updateTitle" | translate }}</h3>
       <form class="fees-form">
         <div class="form-group">
-          <label>نسبة رسوم المنصة (%)</label>
+          <label>{{ "fees.percentageField" | translate }}</label>
           <input
             type="number"
             class="voltyks-input"
@@ -48,11 +48,11 @@
             min="0"
             max="100"
             step="0.1"
-            placeholder="مثال: 10"
+            [placeholder]="'fees.percentageExample' | translate"
           />
         </div>
         <div class="form-group">
-          <label>الحد الأدنى للرسوم (ج.م)</label>
+          <label>{{ "fees.minimumField" | translate }}</label>
           <input
             type="number"
             class="voltyks-input"
@@ -60,22 +60,22 @@
             name="min"
             min="0"
             step="0.01"
-            placeholder="مثال: 40"
+            [placeholder]="'fees.minimumExample' | translate"
           />
         </div>
         <button type="button" class="voltyks-btn btn-primary" (click)="openUpdateDialog()">
           <span class="material-symbols-rounded" style="font-size: 18px; margin-left: 8px;">save</span>
-          حفظ التغييرات
+          {{ "common.saveChanges" | translate }}
         </button>
       </form>
     </div>
 
     <!-- Transfer Fees Form -->
     <div class="voltyks-card">
-      <h3>تحويل الرسوم المحصلة</h3>
+      <h3>{{ "fees.transferTitle" | translate }}</h3>
       <form class="transfer-form">
         <div class="form-group">
-          <label>اختر المستخدم المستلم</label>
+          <label>{{ "fees.selectRecipient" | translate }}</label>
 
           <!-- Custom Dropdown -->
           <div class="custom-dropdown" [class.open]="isDropdownOpen">
@@ -93,7 +93,7 @@
                   </button>
                 </div>
               } @else {
-                <span class="placeholder">اختر مستخدم من القائمة</span>
+                <span class="placeholder">{{ "fees.selectFromList" | translate }}</span>
                 <span class="material-symbols-rounded dropdown-arrow">arrow_drop_down</span>
               }
             </div>
@@ -109,7 +109,7 @@
                     class="search-input"
                     [(ngModel)]="searchQuery"
                     (keyup)="filterUsers()"
-                    placeholder="ابحث بالاسم، البريد أو رقم الهاتف..."
+                    [placeholder]="'fees.searchByNameEmail' | translate"
                     name="userSearch"
                     (click)="$event.stopPropagation()"
                   />
@@ -146,7 +146,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label>المبلغ المراد تحويله (ج.م)</label>
+          <label>{{ "fees.amountField" | translate }}</label>
           <input
             type="number"
             class="voltyks-input"
@@ -154,22 +154,22 @@
             name="amount"
             min="0"
             step="0.01"
-            placeholder="مثال: 1500"
+            [placeholder]="'fees.amountExample' | translate"
           />
         </div>
         <div class="form-group">
-          <label>ملاحظات (اختياري)</label>
+          <label>{{ "fees.notesField" | translate }}</label>
           <textarea
             class="voltyks-textarea"
             [(ngModel)]="transferDto.notes"
             name="notes"
             rows="3"
-            placeholder="أضف ملاحظات إضافية..."
+            [placeholder]="'fees.notesPlaceholder' | translate"
           ></textarea>
         </div>
         <button type="button" class="voltyks-btn btn-primary" (click)="openTransferDialog()">
           <span class="material-symbols-rounded" style="font-size: 18px; margin-left: 8px;">send</span>
-          تحويل الآن
+          {{ "fees.transferNow" | translate }}
         </button>
       </form>
     </div>
@@ -177,33 +177,33 @@
     <div class="voltyks-card">
       <div style="text-align: center; padding: 40px;">
         <span class="material-symbols-rounded" style="font-size: 48px; color: #F44336; display: block; margin-bottom: 16px;">error</span>
-        <p style="color: #F44336; margin-bottom: 16px;">فشل تحميل بيانات الرسوم</p>
-        <p style="color: #B0B0B0; margin-bottom: 24px; font-size: 14px;">تأكد من اتصال الخادم وحاول مرة أخرى</p>
+        <p style="color: #F44336; margin-bottom: 16px;">{{ "fees.loadFailed" | translate }}</p>
+        <p style="color: #B0B0B0; margin-bottom: 24px; font-size: 14px;">{{ "fees.loadFailedHint" | translate }}</p>
         <button class="voltyks-btn btn-primary" (click)="loadFees(); loadUsers()">
           <span class="material-symbols-rounded" style="font-size: 18px; margin-left: 8px;">refresh</span>
-          إعادة المحاولة
+          {{ "fees.retry" | translate }}
         </button>
       </div>
     </div>
   } @else {
     <div class="voltyks-card">
-      <p style="text-align: center; color: #B0B0B0; padding: 40px;">جاري تحميل بيانات الرسوم...</p>
+      <p style="text-align: center; color: #B0B0B0; padding: 40px;">{{ "fees.loading" | translate }}</p>
     </div>
   }
 </div>
 
 <app-confirm-dialog
   [isOpen]="showUpdateDialog"
-  title="تأكيد تحديث الرسوم"
-  message="هل أنت متأكد من تحديث إعدادات الرسوم؟ سيتم تطبيق التغييرات فوراً."
+  [title]="'fees.updateConfirmTitle' | translate"
+  [message]="'fees.updateConfirmMessage' | translate"
   (confirm)="confirmUpdate()"
   (cancel)="showUpdateDialog = false"
 ></app-confirm-dialog>
 
 <app-confirm-dialog
   [isOpen]="showTransferDialog"
-  title="تأكيد تحويل الرسوم"
-  [message]="'هل أنت متأكد من تحويل ' + transferDto.amount + ' ج.م إلى المستخدم؟'"
+  [title]="'fees.transferConfirmTitle' | translate"
+  [message]="'fees.transferConfirmMessage' | translate: { amount: transferDto.amount }"
   type="danger"
   (confirm)="confirmTransfer()"
   (cancel)="showTransferDialog = false"

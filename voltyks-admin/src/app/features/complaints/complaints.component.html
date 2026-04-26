@@ -2,12 +2,12 @@
   <div class="page-header">
     <div class="header-content">
       <h2>{{ "complaints.title" | translate }}</h2>
-      <p class="page-description">إدارة أنواع الشكاوى وإضافة شكاوى جديدة</p>
+      <p class="page-description">{{ "complaints.subtitle" | translate }}</p>
     </div>
     <div class="header-actions">
       <button class="voltyks-btn btn-primary" (click)="openAddCategoryModal()">
         <span class="material-symbols-rounded">add</span>
-        إضافة نوع شكوى
+        {{ "complaints.addCategory" | translate }}
       </button>
     </div>
   </div>
@@ -20,7 +20,7 @@
       </div>
       <div class="stat-content">
         <span class="stat-value">{{ totalActiveCategories }}</span>
-        <span class="stat-label">أنواع نشطة</span>
+        <span class="stat-label">{{ "complaints.statActive" | translate }}</span>
       </div>
     </div>
     <div class="stat-card">
@@ -29,7 +29,7 @@
       </div>
       <div class="stat-content">
         <span class="stat-value">{{ totalComplaints }}</span>
-        <span class="stat-label">إجمالي الشكاوى</span>
+        <span class="stat-label">{{ "complaints.statTotal" | translate }}</span>
       </div>
     </div>
     <div class="stat-card">
@@ -38,7 +38,7 @@
       </div>
       <div class="stat-content">
         <span class="stat-value">{{ totalDeletedCategories }}</span>
-        <span class="stat-label">أنواع محذوفة</span>
+        <span class="stat-label">{{ "complaints.statDeleted" | translate }}</span>
       </div>
     </div>
   </div>
@@ -69,7 +69,7 @@
             (ngModelChange)="onShowDeletedChange()"
           />
           <span class="toggle-switch"></span>
-          <span class="toggle-text">عرض المحذوفة</span>
+          <span class="toggle-text">{{ "complaints.showDeleted" | translate }}</span>
         </label>
       </div>
     </div>
@@ -78,7 +78,7 @@
   <!-- Categories Table -->
   <div class="voltyks-card">
     <div class="table-header">
-      <h3>أنواع الشكاوى</h3>
+      <h3>{{ "complaints.categoriesTitle" | translate }}</h3>
       <div class="header-actions">
         <span class="total-count">{{ "common.total" | translate }}: {{ totalCategories }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredCategories.length === 0">
@@ -94,9 +94,9 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>اسم النوع</th>
-              <th>الوصف</th>
-              <th>عدد الشكاوى</th>
+              <th>{{ "complaints.typeName" | translate }}</th>
+              <th>{{ "complaints.description" | translate }}</th>
+              <th>{{ "complaints.complaintsCount" | translate }}</th>
               <th>{{ "common.createdAt" | translate }}</th>
               <th>{{ "common.status" | translate }}</th>
               <th>{{ "common.actions" | translate }}</th>
@@ -129,7 +129,7 @@
                 <td>
                   <span class="status-badge" [class.active]="!category.isDeleted" [class.deleted]="category.isDeleted">
                     <span class="material-symbols-rounded">{{ category.isDeleted ? 'block' : 'check_circle' }}</span>
-                    {{ category.isDeleted ? 'محذوف' : 'نشط' }}
+                    {{ (category.isDeleted ? 'complaints.deleted' : 'complaints.active') | translate }}
                   </span>
                 </td>
                 <td>
@@ -153,7 +153,7 @@
                       <button
                         class="action-btn restore"
                         (click)="restoreCategory(category)"
-                        title="استعادة"
+                        [title]="'complaints.restore' | translate"
                       >
                         <span class="material-symbols-rounded">restore</span>
                       </button>
@@ -175,10 +175,10 @@
     } @else {
       <div class="empty-state">
         <span class="material-symbols-rounded empty-icon">category</span>
-        <p>لا توجد أنواع شكاوى</p>
+        <p>{{ "complaints.emptyCategories" | translate }}</p>
         <button class="voltyks-btn btn-primary" (click)="openAddCategoryModal()">
           <span class="material-symbols-rounded">add</span>
-          إضافة نوع شكوى
+          {{ "complaints.addCategory" | translate }}
         </button>
       </div>
     }
@@ -191,7 +191,7 @@
     <div class="modal-overlay" (click)="closeCategoryModal()"></div>
     <div class="modal">
       <div class="modal-header">
-        <h3>{{ isEditMode ? 'تعديل نوع الشكوى' : 'إضافة نوع شكوى جديد' }}</h3>
+        <h3>{{ (isEditMode ? 'complaints.modalEditTitle' : 'complaints.modalAddTitle') | translate }}</h3>
         <button class="close-btn" (click)="closeCategoryModal()">
           <span class="material-symbols-rounded">close</span>
         </button>
@@ -200,14 +200,14 @@
         <div class="form-group">
           <label for="categoryName">
             <span class="material-symbols-rounded">label</span>
-            اسم النوع <span class="required">*</span>
+            {{ "complaints.typeLabel" | translate }} <span class="required">*</span>
           </label>
           <input
             type="text"
             id="categoryName"
             class="voltyks-input"
             [(ngModel)]="categoryForm.name"
-            placeholder="مثال: مشكلة في الشحن"
+            [placeholder]="'complaints.typeNameExample' | translate"
             maxlength="100"
           />
           <span class="char-count">{{ categoryForm.name?.length || 0 }}/100</span>
@@ -215,13 +215,13 @@
         <div class="form-group">
           <label for="categoryDescription">
             <span class="material-symbols-rounded">description</span>
-            الوصف
+            {{ "complaints.descriptionLabel" | translate }}
           </label>
           <textarea
             id="categoryDescription"
             class="voltyks-input"
             [(ngModel)]="categoryForm.description"
-            placeholder="وصف اختياري لنوع الشكوى..."
+            [placeholder]="'complaints.descriptionPlaceholder' | translate"
             rows="4"
             maxlength="500"
           ></textarea>
@@ -236,7 +236,7 @@
           } @else {
             <span class="material-symbols-rounded">{{ isEditMode ? 'save' : 'add' }}</span>
           }
-          {{ isEditMode ? 'حفظ التعديلات' : 'إضافة' }}
+          {{ (isEditMode ? 'complaints.saveEdits' : 'complaints.add') | translate }}
         </button>
       </div>
     </div>
@@ -254,17 +254,14 @@
         <h3>{{ "common.deleteConfirm" | translate }}</h3>
       </div>
       <div class="modal-body">
-        <p class="confirm-message">
-          هل أنت متأكد من حذف نوع الشكوى
-          <strong>"{{ deletingCategory.name }}"</strong>؟
-        </p>
+        <p class="confirm-message" [innerHTML]="'complaints.deleteConfirmMessageFull' | translate: { name: deletingCategory.name }"></p>
         @if (deletingCategory.complaintsCount > 0) {
           <div class="warning-box">
             <span class="material-symbols-rounded">info</span>
-            <span>يوجد {{ deletingCategory.complaintsCount }} شكوى مرتبطة بهذا النوع</span>
+            <span>{{ "complaints.warnHasComplaints" | translate: { count: deletingCategory.complaintsCount } }}</span>
           </div>
         }
-        <p class="note">يمكنك استعادة هذا النوع لاحقاً من خلال تفعيل خيار "عرض المحذوفة"</p>
+        <p class="note">{{ "complaints.restoreNote" | translate }}</p>
       </div>
       <div class="modal-footer">
         <button class="voltyks-btn btn-secondary" (click)="cancelDelete()">{{ "common.cancel" | translate }}</button>
@@ -274,7 +271,7 @@
           } @else {
             <span class="material-symbols-rounded">delete</span>
           }
-          تأكيد الحذف
+          {{ "complaints.confirmDelete" | translate }}
         </button>
       </div>
     </div>
