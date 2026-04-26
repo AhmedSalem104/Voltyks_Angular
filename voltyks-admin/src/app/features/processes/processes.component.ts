@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { AdminProcessesService } from '../../core/services/admin/admin-processes.service';
@@ -65,6 +65,7 @@ export class ProcessesComponent implements OnInit, OnDestroy {
     private processesService: AdminProcessesService,
     private toaster: ToasterService,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -101,7 +102,7 @@ export class ProcessesComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل عمليات الشحن');
+        this.toaster.error(error.message || this.translate.instant('processes.loadError'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -269,20 +270,23 @@ export class ProcessesComponent implements OnInit, OnDestroy {
 
   formatCurrency(value: number): string {
     if (value === null || value === undefined) return '-';
-    return `${value.toFixed(2)} ج.م`;
+    return `${value.toFixed(2)} ${this.translate.instant('common.currency')}`;
   }
 
   formatDistance(km: number): string {
     if (km === null || km === undefined) return '-';
-    return `${km.toFixed(1)} كم`;
+    return `${km.toFixed(1)} ${this.translate.instant('processes.kmUnit')}`;
   }
 
   formatTime(minutes: number): string {
     if (minutes === null || minutes === undefined) return '-';
-    if (minutes < 60) return `${minutes} دقيقة`;
+    if (minutes < 60) return `${minutes} ${this.translate.instant('processes.minuteUnit')}`;
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    return mins > 0 ? `${hours} ساعة و ${mins} دقيقة` : `${hours} ساعة`;
+    if (mins > 0) {
+      return this.translate.instant('processes.hoursAndMinutes', { hours, minutes: mins });
+    }
+    return `${hours} ${this.translate.instant('processes.hourUnit')}`;
   }
 
   hasActiveFilters(): boolean {
@@ -291,18 +295,18 @@ export class ProcessesComponent implements OnInit, OnDestroy {
 
   printToPdf(): void {
     this.printService.printTableToPdf({
-      title: 'تقرير عمليات الشحن',
+      title: this.translate.instant('processes.printTitle'),
       filename: 'processes_report',
       orientation: 'landscape',
       columns: [
         { header: '#', field: 'index' },
-        { header: 'رقم العملية', field: 'id' },
-        { header: 'صاحب المركبة', field: 'vehicleOwnerName' },
-        { header: 'رقم اللوحة', field: 'vehiclePlate' },
-        { header: 'نوع المركبة', field: 'vehicleBrand' },
-        { header: 'صاحب الشاحن', field: 'chargerOwnerName' },
-        { header: 'الحالة', field: 'statusText' },
-        { header: 'تاريخ الطلب', field: 'requestedAtFormatted' }
+        { header: this.translate.instant('processes.printColumns.id'), field: 'id' },
+        { header: this.translate.instant('processes.printColumns.vehicleOwner'), field: 'vehicleOwnerName' },
+        { header: this.translate.instant('processes.printColumns.plate'), field: 'vehiclePlate' },
+        { header: this.translate.instant('processes.printColumns.vehicleType'), field: 'vehicleBrand' },
+        { header: this.translate.instant('processes.printColumns.chargerOwner'), field: 'chargerOwnerName' },
+        { header: this.translate.instant('processes.printColumns.status'), field: 'statusText' },
+        { header: this.translate.instant('processes.printColumns.requestedAt'), field: 'requestedAtFormatted' }
       ],
       data: this.filteredProcesses.map((process, index) => ({
         ...process,

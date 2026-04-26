@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
@@ -82,22 +82,22 @@ export class StoreReservationsComponent implements OnInit, OnDestroy {
   paymentDto: RecordPaymentDto = { paymentMethod: 'cash', notes: '' };
   deliveryDto: RecordDeliveryDto = { notes: '' };
 
-  // Status options
+  // Status options — labels are translation keys, resolved via | translate in templates
   statusOptions: { value: ReservationStatus; label: string }[] = [
-    { value: 'pending', label: 'قيد الانتظار' },
-    { value: 'contacted', label: 'تم التواصل' },
-    { value: 'completed', label: 'مكتمل' },
-    { value: 'cancelled', label: 'ملغي' }
+    { value: 'pending', label: 'store.reservationStatus.pending' },
+    { value: 'contacted', label: 'store.reservationStatus.contacted' },
+    { value: 'completed', label: 'store.reservationStatus.completed' },
+    { value: 'cancelled', label: 'store.reservationStatus.cancelled' }
   ];
 
   paymentStatusOptions: { value: PaymentStatus; label: string }[] = [
-    { value: 'unpaid', label: 'غير مدفوع' },
-    { value: 'paid', label: 'مدفوع' }
+    { value: 'unpaid', label: 'store.paymentStatus.unpaid' },
+    { value: 'paid', label: 'store.paymentStatus.paid' }
   ];
 
   deliveryStatusOptions: { value: DeliveryStatus; label: string }[] = [
-    { value: 'pending', label: 'قيد الانتظار' },
-    { value: 'delivered', label: 'تم التسليم' }
+    { value: 'pending', label: 'store.deliveryStatus.pending' },
+    { value: 'delivered', label: 'store.deliveryStatus.delivered' }
   ];
 
   paymentMethods = PAYMENT_METHODS;
@@ -106,6 +106,7 @@ export class StoreReservationsComponent implements OnInit, OnDestroy {
     private storeService: AdminStoreService,
     private toaster: ToasterService,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -155,7 +156,7 @@ export class StoreReservationsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(this.getErrorMessage(error, 'فشل تحميل الحجوزات'));
+        this.toaster.error(this.getErrorMessage(error, this.translate.instant('store.reservations.msg.loadFail')));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -227,17 +228,17 @@ export class StoreReservationsComponent implements OnInit, OnDestroy {
     this.storeService.recordContact(this.currentReservation.id, this.contactDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم تسجيل التواصل بنجاح');
+          this.toaster.success(this.translate.instant('store.reservations.msg.contactSuccess'));
           this.closeContactDialog();
           this.loadReservations();
         } else {
-          this.toaster.error(this.extractMessage(response.message, 'فشل تسجيل التواصل'));
+          this.toaster.error(this.extractMessage(response.message, this.translate.instant('store.reservations.msg.contactFail')));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(this.getErrorMessage(error, 'فشل تسجيل التواصل'));
+        this.toaster.error(this.getErrorMessage(error, this.translate.instant('store.reservations.msg.contactFail')));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -266,17 +267,17 @@ export class StoreReservationsComponent implements OnInit, OnDestroy {
     this.storeService.recordPayment(this.currentReservation.id, this.paymentDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم تسجيل الدفع بنجاح');
+          this.toaster.success(this.translate.instant('store.reservations.msg.paymentSuccess'));
           this.closePaymentDialog();
           this.loadReservations();
         } else {
-          this.toaster.error(this.extractMessage(response.message, 'فشل تسجيل الدفع'));
+          this.toaster.error(this.extractMessage(response.message, this.translate.instant('store.reservations.msg.paymentFail')));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(this.getErrorMessage(error, 'فشل تسجيل الدفع'));
+        this.toaster.error(this.getErrorMessage(error, this.translate.instant('store.reservations.msg.paymentFail')));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -305,17 +306,17 @@ export class StoreReservationsComponent implements OnInit, OnDestroy {
     this.storeService.recordDelivery(this.currentReservation.id, this.deliveryDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم تسجيل التسليم بنجاح');
+          this.toaster.success(this.translate.instant('store.reservations.msg.deliverySuccess'));
           this.closeDeliveryDialog();
           this.loadReservations();
         } else {
-          this.toaster.error(this.extractMessage(response.message, 'فشل تسجيل التسليم'));
+          this.toaster.error(this.extractMessage(response.message, this.translate.instant('store.reservations.msg.deliveryFail')));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(this.getErrorMessage(error, 'فشل تسجيل التسليم'));
+        this.toaster.error(this.getErrorMessage(error, this.translate.instant('store.reservations.msg.deliveryFail')));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -342,17 +343,17 @@ export class StoreReservationsComponent implements OnInit, OnDestroy {
     this.storeService.completeReservation(this.currentReservation.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم إكمال الحجز بنجاح');
+          this.toaster.success(this.translate.instant('store.reservations.msg.completeSuccess'));
           this.closeCompleteConfirm();
           this.loadReservations();
         } else {
-          this.toaster.error(this.extractMessage(response.message, 'فشل إكمال الحجز'));
+          this.toaster.error(this.extractMessage(response.message, this.translate.instant('store.reservations.msg.completeFail')));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(this.getErrorMessage(error, 'فشل إكمال الحجز'));
+        this.toaster.error(this.getErrorMessage(error, this.translate.instant('store.reservations.msg.completeFail')));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -379,26 +380,27 @@ export class StoreReservationsComponent implements OnInit, OnDestroy {
     this.storeService.cancelReservation(this.currentReservation.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم إلغاء الحجز بنجاح');
+          this.toaster.success(this.translate.instant('store.reservations.msg.cancelSuccess'));
           this.closeCancelConfirm();
           this.loadReservations();
         } else {
-          this.toaster.error(this.extractMessage(response.message, 'فشل إلغاء الحجز'));
+          this.toaster.error(this.extractMessage(response.message, this.translate.instant('store.reservations.msg.cancelFail')));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(this.getErrorMessage(error, 'فشل إلغاء الحجز'));
+        this.toaster.error(this.getErrorMessage(error, this.translate.instant('store.reservations.msg.cancelFail')));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
     });
   }
 
-  // Helpers
+  // Helpers — labels are translation keys; resolve at runtime via TranslateService
   getStatusLabel(status: ReservationStatus): string {
-    return RESERVATION_STATUS_LABELS[status] || status;
+    const key = RESERVATION_STATUS_LABELS[status];
+    return key ? this.translate.instant(key) : status;
   }
 
   getStatusClass(status: ReservationStatus): string {
@@ -412,7 +414,8 @@ export class StoreReservationsComponent implements OnInit, OnDestroy {
   }
 
   getPaymentStatusLabel(status: PaymentStatus): string {
-    return PAYMENT_STATUS_LABELS[status] || status;
+    const key = PAYMENT_STATUS_LABELS[status];
+    return key ? this.translate.instant(key) : status;
   }
 
   getPaymentStatusClass(status: PaymentStatus): string {
@@ -424,7 +427,8 @@ export class StoreReservationsComponent implements OnInit, OnDestroy {
   }
 
   getDeliveryStatusLabel(status: DeliveryStatus): string {
-    return DELIVERY_STATUS_LABELS[status] || status;
+    const key = DELIVERY_STATUS_LABELS[status];
+    return key ? this.translate.instant(key) : status;
   }
 
   getDeliveryStatusClass(status: DeliveryStatus): string {
@@ -437,11 +441,11 @@ export class StoreReservationsComponent implements OnInit, OnDestroy {
 
   getPaymentMethodLabel(method: string): string {
     const found = PAYMENT_METHODS.find(m => m.value === method);
-    return found ? found.label : method;
+    return found ? this.translate.instant(found.label) : method;
   }
 
   formatPrice(price: number): string {
-    return price.toLocaleString('en-US') + ' ج.م';
+    return price.toLocaleString('en-US') + ' ' + this.translate.instant('common.currency');
   }
 
   getFullImageUrl(imagePath: string): string {
@@ -495,19 +499,19 @@ export class StoreReservationsComponent implements OnInit, OnDestroy {
 
   printToPdf(): void {
     this.printService.printTableToPdf({
-      title: 'تقرير حجوزات المتجر',
+      title: this.translate.instant('store.reservations.printTitle'),
       filename: 'store_reservations_report',
       orientation: 'landscape',
       columns: [
         { header: '#', field: 'id' },
-        { header: 'المنتج', field: 'productName' },
-        { header: 'العميل', field: 'userName' },
-        { header: 'الهاتف', field: 'userPhone' },
-        { header: 'الحالة', field: 'statusLabel' },
-        { header: 'الدفع', field: 'paymentLabel' },
-        { header: 'التسليم', field: 'deliveryLabel' },
-        { header: 'السعر', field: 'priceFormatted' },
-        { header: 'التاريخ', field: 'dateFormatted' }
+        { header: this.translate.instant('store.reservations.printColumns.product'), field: 'productName' },
+        { header: this.translate.instant('store.reservations.printColumns.customer'), field: 'userName' },
+        { header: this.translate.instant('store.reservations.printColumns.phone'), field: 'userPhone' },
+        { header: this.translate.instant('store.reservations.printColumns.status'), field: 'statusLabel' },
+        { header: this.translate.instant('store.reservations.printColumns.payment'), field: 'paymentLabel' },
+        { header: this.translate.instant('store.reservations.printColumns.delivery'), field: 'deliveryLabel' },
+        { header: this.translate.instant('store.reservations.printColumns.price'), field: 'priceFormatted' },
+        { header: this.translate.instant('store.reservations.printColumns.date'), field: 'dateFormatted' }
       ],
       data: this.reservations.map((res) => ({
         ...res,

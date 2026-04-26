@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { AdminChargersService } from '../../core/services/admin/admin-chargers.service';
@@ -91,8 +91,13 @@ export class ChargersComponent implements OnInit, OnDestroy {
     private usersService: AdminUsersService,
     private toaster: ToasterService,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.setupSearch();
@@ -130,7 +135,7 @@ export class ChargersComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل الشواحن');
+        this.toaster.error(error.message || this.t('chargers.msg.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -341,7 +346,7 @@ export class ChargersComponent implements OnInit, OnDestroy {
     this.chargersService.createCharger(this.createDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم إضافة الشاحن بنجاح');
+          this.toaster.success(this.t('chargers.msg.addSuccess'));
           this.closeCreateDialog();
           this.loadChargers();
         }
@@ -349,7 +354,7 @@ export class ChargersComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل إضافة الشاحن');
+        this.toaster.error(error.message || this.t('chargers.msg.addFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -387,7 +392,7 @@ export class ChargersComponent implements OnInit, OnDestroy {
     this.chargersService.updateCharger(this.currentCharger.id, this.updateDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم تحديث الشاحن بنجاح');
+          this.toaster.success(this.t('chargers.msg.updateSuccess'));
           this.closeEditDialog();
           this.loadChargers();
         }
@@ -395,7 +400,7 @@ export class ChargersComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحديث الشاحن');
+        this.toaster.error(error.message || this.t('chargers.msg.updateFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -419,7 +424,7 @@ export class ChargersComponent implements OnInit, OnDestroy {
     this.chargersService.deleteCharger(this.currentCharger.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حذف الشاحن بنجاح');
+          this.toaster.success(this.t('chargers.msg.deleteSuccess'));
           this.closeDeleteConfirm();
           this.loadChargers();
         }
@@ -427,7 +432,7 @@ export class ChargersComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل حذف الشاحن');
+        this.toaster.error(error.message || this.t('chargers.msg.deleteFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -445,7 +450,7 @@ export class ChargersComponent implements OnInit, OnDestroy {
     this.chargersService.toggleStatus(charger.id, newStatus).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success(`تم ${newStatus ? 'تفعيل' : 'إيقاف'} الشاحن بنجاح`);
+          this.toaster.success(this.t('chargers.msg.toggleSuccess', { action: this.t(newStatus ? 'chargers.msg.actionEnable' : 'chargers.msg.actionDisable') }));
         } else {
           // Revert on failure
           charger.isActive = originalStatus;
@@ -456,38 +461,38 @@ export class ChargersComponent implements OnInit, OnDestroy {
         // Revert - إرجاع الحالة الأصلية عند الفشل
         charger.isActive = originalStatus;
         this.cdr.markForCheck();
-        this.toaster.error(error.message || 'فشل تحديث حالة الشاحن');
+        this.toaster.error(error.message || this.t('chargers.msg.toggleFail'));
       }
     });
   }
 
   private validateCreateForm(): boolean {
     if (!this.createDto.userId?.trim()) {
-      this.toaster.error('يرجى اختيار المستخدم');
+      this.toaster.error(this.t('chargers.msg.selectUser'));
       return false;
     }
     if (!this.createDto.protocolId || this.createDto.protocolId === 0) {
-      this.toaster.error('يرجى اختيار البروتوكول');
+      this.toaster.error(this.t('chargers.msg.selectProtocol'));
       return false;
     }
     if (!this.createDto.capacityId || this.createDto.capacityId === 0) {
-      this.toaster.error('يرجى اختيار السعة');
+      this.toaster.error(this.t('chargers.msg.selectCapacity'));
       return false;
     }
     if (!this.createDto.priceOptionId || this.createDto.priceOptionId === 0) {
-      this.toaster.error('يرجى اختيار خيار السعر');
+      this.toaster.error(this.t('chargers.msg.selectPrice'));
       return false;
     }
     if (!this.createDto.area?.trim()) {
-      this.toaster.error('يرجى إدخال المنطقة');
+      this.toaster.error(this.t('chargers.msg.enterArea'));
       return false;
     }
     if (!this.createDto.street?.trim()) {
-      this.toaster.error('يرجى إدخال الشارع');
+      this.toaster.error(this.t('chargers.msg.enterStreet'));
       return false;
     }
     if (!this.createDto.buildingNumber?.trim()) {
-      this.toaster.error('يرجى إدخال رقم المبنى');
+      this.toaster.error(this.t('chargers.msg.enterBuilding'));
       return false;
     }
     return true;
@@ -513,11 +518,11 @@ export class ChargersComponent implements OnInit, OnDestroy {
   }
 
   getStatusText(charger: AdminChargerDto): string {
-    return charger.isActive ? 'نشط' : 'متوقف';
+    return this.t(charger.isActive ? 'chargers.msg.active' : 'chargers.msg.inactive');
   }
 
   getUserName(userId: string): string {
-    return this.users.find(u => u.id === userId)?.fullName || 'مستخدم محدد';
+    return this.users.find(u => u.id === userId)?.fullName || this.t('chargers.msg.selectedUser');
   }
 
   getProtocolName(protocolId: number): string {
@@ -531,7 +536,7 @@ export class ChargersComponent implements OnInit, OnDestroy {
 
   getPriceValue(priceOptionId: number): string {
     const price = this.priceOptions.find(p => p.id === priceOptionId);
-    return price ? `${price.value} ج.م` : '-';
+    return price ? `${price.value} ${this.t('common.currency')}` : '-';
   }
 
   formatDate(dateString: string): string {
@@ -554,21 +559,21 @@ export class ChargersComponent implements OnInit, OnDestroy {
 
   printToPdf(): void {
     this.printService.printTableToPdf({
-      title: 'تقرير الشواحن',
+      title: this.t('chargers.printTitle'),
       filename: 'chargers_report',
       orientation: 'landscape',
       columns: [
         { header: '#', field: 'index' },
-        { header: 'المستخدم', field: 'userName' },
-        { header: 'البروتوكول', field: 'protocolName' },
-        { header: 'المنطقة', field: 'area' },
-        { header: 'الشارع', field: 'street' },
-        { header: 'الحالة', field: 'statusText' }
+        { header: this.t('chargers.printColumns.user'), field: 'userName' },
+        { header: this.t('chargers.printColumns.protocol'), field: 'protocolName' },
+        { header: this.t('chargers.printColumns.area'), field: 'area' },
+        { header: this.t('chargers.printColumns.street'), field: 'street' },
+        { header: this.t('chargers.printColumns.status'), field: 'statusText' }
       ],
       data: this.filteredChargers.map((charger, index) => ({
         ...charger,
         index: index + 1,
-        statusText: charger.isActive ? 'نشط' : 'متوقف'
+        statusText: this.t(charger.isActive ? 'chargers.msg.active' : 'chargers.msg.inactive')
       }))
     });
   }

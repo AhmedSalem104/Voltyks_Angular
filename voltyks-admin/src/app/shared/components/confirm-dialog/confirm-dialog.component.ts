@@ -1,26 +1,27 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   template: `
     @if (isOpen) {
       <div class="dialog-overlay" (click)="onCancel()">
         <div class="dialog-container" (click)="$event.stopPropagation()">
           <div class="dialog-header">
-            <h3>{{ title }}</h3>
+            <h3>{{ title || ('confirmDialog.defaultTitle' | translate) }}</h3>
             <button class="close-btn" (click)="onCancel()">×</button>
           </div>
 
           <div class="dialog-body">
-            <p>{{ message }}</p>
+            <p>{{ message || ('confirmDialog.defaultMessage' | translate) }}</p>
           </div>
 
           <div class="dialog-footer">
             <button class="voltyks-btn btn-secondary" (click)="onCancel()">
-              {{ cancelText }}
+              {{ cancelText || ('common.cancel' | translate) }}
             </button>
             <button
               class="voltyks-btn"
@@ -28,7 +29,7 @@ import { CommonModule } from '@angular/common';
               [class.btn-primary]="type === 'primary'"
               (click)="onConfirm()"
             >
-              {{ confirmText }}
+              {{ confirmText || ('common.confirm' | translate) }}
             </button>
           </div>
         </div>
@@ -40,10 +41,10 @@ import { CommonModule } from '@angular/common';
 })
 export class ConfirmDialogComponent {
   @Input() isOpen: boolean = false;
-  @Input() title: string = 'تأكيد';
-  @Input() message: string = 'هل أنت متأكد؟';
-  @Input() confirmText: string = 'تأكيد';
-  @Input() cancelText: string = 'إلغاء';
+  @Input() title: string = '';
+  @Input() message: string = '';
+  @Input() confirmText: string = '';
+  @Input() cancelText: string = '';
   @Input() type: 'primary' | 'danger' = 'primary';
 
   @Output() confirm = new EventEmitter<void>();

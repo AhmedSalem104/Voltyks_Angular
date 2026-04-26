@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AdminComplaintsService } from '../../core/services/admin/admin-complaints.service';
 import { AdminComplaintCategoriesService } from '../../core/services/admin/admin-complaint-categories.service';
@@ -71,8 +71,13 @@ export class ComplaintsListComponent implements OnInit {
     private usersService: AdminUsersService,
     private toaster: ToasterService,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string): string {
+    return this.translate.instant(key);
+  }
 
   ngOnInit(): void {
     this.loadCategories();
@@ -110,7 +115,7 @@ export class ComplaintsListComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (err) => {
-        this.toaster.error(err.message || 'فشل تحميل الشكاوى');
+        this.toaster.error(err.message || this.t('complaintsList.msg.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -196,12 +201,12 @@ export class ComplaintsListComponent implements OnInit {
     this.complaintsService.updateComplaintStatus(complaint.id, newStatus).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success(newStatus ? 'تم تحديد الشكوى كمحلولة' : 'تم إلغاء حل الشكوى');
+          this.toaster.success(this.t(newStatus ? 'complaintsList.msg.markedResolved' : 'complaintsList.msg.unmarkResolved'));
         } else {
           // Revert on failure
           complaint.isResolved = originalStatus;
           this.calculateStats();
-          this.toaster.error(response.message || 'فشل تحديث حالة الشكوى');
+          this.toaster.error(response.message || this.t('complaintsList.msg.updateFail'));
         }
         this.updatingComplaintId = null;
         this.cdr.markForCheck();
@@ -210,7 +215,7 @@ export class ComplaintsListComponent implements OnInit {
         // Revert on error
         complaint.isResolved = originalStatus;
         this.calculateStats();
-        this.toaster.error(err.error?.message || 'فشل تحديث حالة الشكوى');
+        this.toaster.error(err.error?.message || this.t('complaintsList.msg.updateFail'));
         this.updatingComplaintId = null;
         this.cdr.markForCheck();
       }
@@ -269,15 +274,15 @@ export class ComplaintsListComponent implements OnInit {
 
   submitComplaint(): void {
     if (!this.complaintForm.userId) {
-      this.toaster.error('يرجى اختيار المستخدم');
+      this.toaster.error(this.t('complaintsList.msg.selectUser'));
       return;
     }
     if (!this.complaintForm.categoryId) {
-      this.toaster.error('يرجى اختيار نوع الشكوى');
+      this.toaster.error(this.t('complaintsList.msg.selectType'));
       return;
     }
     if (!this.complaintForm.content.trim()) {
-      this.toaster.error('محتوى الشكوى مطلوب');
+      this.toaster.error(this.t('complaintsList.msg.contentRequired'));
       return;
     }
 
@@ -285,17 +290,17 @@ export class ComplaintsListComponent implements OnInit {
     this.complaintsService.createComplaint(this.complaintForm).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم إرسال الشكوى بنجاح');
+          this.toaster.success(this.t('complaintsList.msg.submitSuccess'));
           this.closeAddComplaintModal();
           this.loadComplaints();
         } else {
-          this.toaster.error(response.message || 'فشل إرسال الشكوى');
+          this.toaster.error(response.message || this.t('complaintsList.msg.submitFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (err) => {
-        this.toaster.error(err.error?.message || 'فشل إرسال الشكوى');
+        this.toaster.error(err.error?.message || this.t('complaintsList.msg.submitFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -333,24 +338,24 @@ export class ComplaintsListComponent implements OnInit {
 
   printToPdf(): void {
     this.printService.printTableToPdf({
-      title: 'تقرير الشكاوى',
+      title: this.t('complaintsList.printTitle'),
       filename: 'complaints_report',
       orientation: 'landscape',
       columns: [
         { header: '#', field: 'index' },
-        { header: 'رقم الشكوى', field: 'id' },
-        { header: 'اسم المستخدم', field: 'userName' },
-        { header: 'البريد الإلكتروني', field: 'userEmail' },
-        { header: 'نوع الشكوى', field: 'categoryName' },
-        { header: 'المحتوى', field: 'contentShort' },
-        { header: 'الحالة', field: 'statusText' },
-        { header: 'التاريخ', field: 'createdAtFormatted' }
+        { header: this.t('complaintsList.printColumns.id'), field: 'id' },
+        { header: this.t('complaintsList.printColumns.userName'), field: 'userName' },
+        { header: this.t('complaintsList.printColumns.userEmail'), field: 'userEmail' },
+        { header: this.t('complaintsList.printColumns.categoryName'), field: 'categoryName' },
+        { header: this.t('complaintsList.printColumns.content'), field: 'contentShort' },
+        { header: this.t('complaintsList.printColumns.status'), field: 'statusText' },
+        { header: this.t('complaintsList.printColumns.date'), field: 'createdAtFormatted' }
       ],
       data: this.filteredComplaints.map((complaint, index) => ({
         ...complaint,
         index: index + 1,
         contentShort: complaint.content?.substring(0, 50) + (complaint.content?.length > 50 ? '...' : ''),
-        statusText: complaint.isResolved ? 'تم الحل' : 'معلقة',
+        statusText: this.t(complaint.isResolved ? 'complaintsList.printColumns.resolved' : 'complaintsList.printColumns.pending'),
         createdAtFormatted: this.formatDate(complaint.createdAt)
       }))
     });

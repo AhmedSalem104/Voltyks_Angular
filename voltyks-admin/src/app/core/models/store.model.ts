@@ -193,41 +193,42 @@ export interface DeleteProductImageDto {
 
 // ============= Payment Methods =============
 
+// Labels are translation keys; use TranslateService.instant() or | translate pipe at the consumer.
 export const PAYMENT_METHODS = [
-  { value: 'cash', label: 'كاش' },
-  { value: 'bank_transfer', label: 'تحويل بنكي' },
-  { value: 'instapay', label: 'إنستاباي' },
-  { value: 'vodafone_cash', label: 'فودافون كاش' },
-  { value: 'fawry', label: 'فوري' },
-  { value: 'other', label: 'أخرى' }
+  { value: 'cash', label: 'store.paymentMethods.cash' },
+  { value: 'bank_transfer', label: 'store.paymentMethods.bankTransfer' },
+  { value: 'instapay', label: 'store.paymentMethods.instapay' },
+  { value: 'vodafone_cash', label: 'store.paymentMethods.vodafoneCash' },
+  { value: 'fawry', label: 'store.paymentMethods.fawry' },
+  { value: 'other', label: 'store.paymentMethods.other' }
 ] as const;
 
 // ============= Status Labels =============
 
 export const CATEGORY_STATUS_LABELS: Record<CategoryStatus, string> = {
-  active: 'نشط',
-  coming_soon: 'قريباً',
-  hidden: 'مخفي'
+  active: 'store.categoryStatus.active',
+  coming_soon: 'store.categoryStatus.comingSoon',
+  hidden: 'store.categoryStatus.hidden'
 };
 
 export const PRODUCT_STATUS_LABELS: Record<ProductStatus, string> = {
-  active: 'نشط',
-  hidden: 'مخفي'
+  active: 'store.productStatus.active',
+  hidden: 'store.productStatus.hidden'
 };
 
 export const RESERVATION_STATUS_LABELS: Record<ReservationStatus, string> = {
-  pending: 'في انتظار التواصل',
-  contacted: 'تم التواصل',
-  completed: 'مكتمل',
-  cancelled: 'ملغي'
+  pending: 'store.reservationStatus.pending',
+  contacted: 'store.reservationStatus.contacted',
+  completed: 'store.reservationStatus.completed',
+  cancelled: 'store.reservationStatus.cancelled'
 };
 
 export const PAYMENT_STATUS_LABELS: Record<PaymentStatus, string> = {
-  unpaid: 'لم يتم الدفع',
-  paid: 'تم الدفع'
+  unpaid: 'store.paymentStatus.unpaid',
+  paid: 'store.paymentStatus.paid'
 };
 
 export const DELIVERY_STATUS_LABELS: Record<DeliveryStatus, string> = {
-  pending: 'في انتظار التوصيل',
-  delivered: 'تم التوصيل'
+  pending: 'store.deliveryStatus.pending',
+  delivered: 'store.deliveryStatus.delivered'
 };

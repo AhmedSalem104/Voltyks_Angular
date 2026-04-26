@@ -714,6 +714,37 @@
       "street": "مثال: شارع الملك فهد",
       "latitude": "مثال: 30.0444",
       "longitude": "مثال: 31.2357"
+    },
+    "msg": {
+      "loadFail": "فشل تحميل الشواحن",
+      "addSuccess": "تم إضافة الشاحن بنجاح",
+      "addFail": "فشل إضافة الشاحن",
+      "updateSuccess": "تم تحديث الشاحن بنجاح",
+      "updateFail": "فشل تحديث الشاحن",
+      "deleteSuccess": "تم حذف الشاحن بنجاح",
+      "deleteFail": "فشل حذف الشاحن",
+      "toggleSuccess": "تم {{action}} الشاحن بنجاح",
+      "actionEnable": "تفعيل",
+      "actionDisable": "إيقاف",
+      "toggleFail": "فشل تحديث حالة الشاحن",
+      "selectUser": "يرجى اختيار المستخدم",
+      "selectProtocol": "يرجى اختيار البروتوكول",
+      "selectCapacity": "يرجى اختيار السعة",
+      "selectPrice": "يرجى اختيار خيار السعر",
+      "enterArea": "يرجى إدخال المنطقة",
+      "enterStreet": "يرجى إدخال الشارع",
+      "enterBuilding": "يرجى إدخال رقم المبنى",
+      "active": "نشط",
+      "inactive": "متوقف",
+      "selectedUser": "مستخدم محدد"
+    },
+    "printTitle": "تقرير الشواحن",
+    "printColumns": {
+      "user": "المستخدم",
+      "protocol": "البروتوكول",
+      "area": "المنطقة",
+      "street": "الشارع",
+      "status": "الحالة"
     }
   },
   "vehicles": {
@@ -803,7 +834,28 @@
     "chargerStatus": "حالة الشاحن",
     "active": "نشط",
     "inactive": "غير نشط",
-    "noRating": "لا يوجد"
+    "noRating": "لا يوجد",
+    "statusPending": "قيد الانتظار",
+    "statusAccepted": "مقبول",
+    "statusInProgress": "جاري التنفيذ",
+    "statusCompleted": "مكتمل",
+    "statusAborted": "ملغي",
+    "statusRejected": "مرفوض",
+    "loadError": "فشل تحميل عمليات الشحن",
+    "kmUnit": "كم",
+    "minuteUnit": "دقيقة",
+    "hourUnit": "ساعة",
+    "hoursAndMinutes": "{{hours}} ساعة و {{minutes}} دقيقة",
+    "printTitle": "تقرير عمليات الشحن",
+    "printColumns": {
+      "id": "رقم العملية",
+      "vehicleOwner": "صاحب المركبة",
+      "plate": "رقم اللوحة",
+      "vehicleType": "نوع المركبة",
+      "chargerOwner": "صاحب الشاحن",
+      "status": "الحالة",
+      "requestedAt": "تاريخ الطلب"
+    }
   },
   "fees": {
     "title": "إدارة الرسوم",
@@ -993,7 +1045,31 @@
     "warnHasComplaints": "يوجد {{count}} شكوى مرتبطة بهذا النوع",
     "restoreNote": "يمكنك استعادة هذا النوع لاحقاً من خلال تفعيل خيار \"عرض المحذوفة\"",
     "confirmDelete": "تأكيد الحذف",
-    "deleteConfirmMessageFull": "هل أنت متأكد من حذف نوع الشكوى <strong>&quot;{{name}}&quot;</strong>؟"
+    "deleteConfirmMessageFull": "هل أنت متأكد من حذف نوع الشكوى <strong>&quot;{{name}}&quot;</strong>؟",
+    "msg": {
+      "loadFail": "فشل تحميل أنواع الشكاوى",
+      "nameRequired": "اسم نوع الشكوى مطلوب",
+      "updateSuccess": "تم تحديث نوع الشكوى بنجاح",
+      "updateFail": "فشل تحديث نوع الشكوى",
+      "addSuccess": "تم إضافة نوع الشكوى بنجاح",
+      "addFail": "فشل إضافة نوع الشكوى",
+      "deleteSuccess": "تم حذف نوع الشكوى بنجاح",
+      "deleteFail": "فشل حذف نوع الشكوى",
+      "restoreSuccess": "تم استعادة نوع الشكوى بنجاح",
+      "restoreFail": "فشل استعادة نوع الشكوى",
+      "selectType": "يرجى اختيار نوع الشكوى",
+      "contentRequired": "محتوى الشكوى مطلوب",
+      "submitSuccess": "تم إرسال الشكوى بنجاح",
+      "submitFail": "فشل إرسال الشكوى"
+    },
+    "printTitle": "تقرير أنواع الشكاوى",
+    "printColumns": {
+      "name": "اسم النوع",
+      "description": "الوصف",
+      "count": "عدد الشكاوى",
+      "status": "الحالة",
+      "createdAt": "تاريخ الإنشاء"
+    }
   },
   "complaintCategories": {
     "title": "أنواع الشكاوى",
@@ -1209,6 +1285,30 @@
         "customer": "العميل",
         "phone": "الهاتف",
         "price": "السعر"
+      },
+      "msg": {
+        "loadFail": "فشل تحميل الحجوزات",
+        "contactSuccess": "تم تسجيل التواصل بنجاح",
+        "contactFail": "فشل تسجيل التواصل",
+        "paymentSuccess": "تم تسجيل الدفع بنجاح",
+        "paymentFail": "فشل تسجيل الدفع",
+        "deliverySuccess": "تم تسجيل التسليم بنجاح",
+        "deliveryFail": "فشل تسجيل التسليم",
+        "completeSuccess": "تم إكمال الحجز بنجاح",
+        "completeFail": "فشل إكمال الحجز",
+        "cancelSuccess": "تم إلغاء الحجز بنجاح",
+        "cancelFail": "فشل إلغاء الحجز"
+      },
+      "printTitle": "تقرير حجوزات المتجر",
+      "printColumns": {
+        "product": "المنتج",
+        "customer": "العميل",
+        "phone": "الهاتف",
+        "status": "الحالة",
+        "payment": "الدفع",
+        "delivery": "التسليم",
+        "price": "السعر",
+        "date": "التاريخ"
       }
     },
     "clearFilters": "مسح الفلاتر",
@@ -1240,6 +1340,37 @@
       "addProductAction": "إضافة منتج",
       "pendingAlert": "حجوزات معلقة ({{count}})",
       "allReservations": "جميع الحجوزات"
+    },
+    "paymentMethods": {
+      "cash": "كاش",
+      "bankTransfer": "تحويل بنكي",
+      "instapay": "إنستاباي",
+      "vodafoneCash": "فودافون كاش",
+      "fawry": "فوري",
+      "other": "أخرى"
+    },
+    "categoryStatus": {
+      "active": "نشط",
+      "comingSoon": "قريباً",
+      "hidden": "مخفي"
+    },
+    "productStatus": {
+      "active": "نشط",
+      "hidden": "مخفي"
+    },
+    "reservationStatus": {
+      "pending": "في انتظار التواصل",
+      "contacted": "تم التواصل",
+      "completed": "مكتمل",
+      "cancelled": "ملغي"
+    },
+    "paymentStatus": {
+      "unpaid": "لم يتم الدفع",
+      "paid": "تم الدفع"
+    },
+    "deliveryStatus": {
+      "pending": "في انتظار التوصيل",
+      "delivered": "تم التوصيل"
     }
   },
   "chargingProtocols": {
@@ -1361,7 +1492,30 @@
     "phoneLabel": "رقم الهاتف",
     "contentLabel": "محتوى الشكوى",
     "unmarkResolved": "إلغاء الحل",
-    "markResolved": "تحديد كمحلولة"
+    "markResolved": "تحديد كمحلولة",
+    "msg": {
+      "loadFail": "فشل تحميل الشكاوى",
+      "markedResolved": "تم تحديد الشكوى كمحلولة",
+      "unmarkResolved": "تم إلغاء حل الشكوى",
+      "updateFail": "فشل تحديث حالة الشكوى",
+      "selectUser": "يرجى اختيار المستخدم",
+      "selectType": "يرجى اختيار نوع الشكوى",
+      "contentRequired": "محتوى الشكوى مطلوب",
+      "submitSuccess": "تم إرسال الشكوى بنجاح",
+      "submitFail": "فشل إرسال الشكوى"
+    },
+    "printTitle": "تقرير الشكاوى",
+    "printColumns": {
+      "id": "رقم الشكوى",
+      "userName": "اسم المستخدم",
+      "userEmail": "البريد الإلكتروني",
+      "categoryName": "نوع الشكوى",
+      "content": "المحتوى",
+      "status": "الحالة",
+      "date": "التاريخ",
+      "resolved": "تم الحل",
+      "pending": "معلقة"
+    }
   },
   "protocol": {
     "pageTitle": "البروتوكولات",

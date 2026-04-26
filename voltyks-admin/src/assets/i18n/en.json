@@ -714,6 +714,37 @@
       "street": "Example: King Fahd Road",
       "latitude": "Example: 30.0444",
       "longitude": "Example: 31.2357"
+    },
+    "msg": {
+      "loadFail": "Failed to load chargers",
+      "addSuccess": "Charger added successfully",
+      "addFail": "Failed to add charger",
+      "updateSuccess": "Charger updated successfully",
+      "updateFail": "Failed to update charger",
+      "deleteSuccess": "Charger deleted successfully",
+      "deleteFail": "Failed to delete charger",
+      "toggleSuccess": "Charger {{action}} successfully",
+      "actionEnable": "enabled",
+      "actionDisable": "disabled",
+      "toggleFail": "Failed to update charger status",
+      "selectUser": "Please select a user",
+      "selectProtocol": "Please select a protocol",
+      "selectCapacity": "Please select a capacity",
+      "selectPrice": "Please select a price option",
+      "enterArea": "Please enter the area",
+      "enterStreet": "Please enter the street",
+      "enterBuilding": "Please enter the building number",
+      "active": "Active",
+      "inactive": "Disabled",
+      "selectedUser": "Selected user"
+    },
+    "printTitle": "Chargers report",
+    "printColumns": {
+      "user": "User",
+      "protocol": "Protocol",
+      "area": "Area",
+      "street": "Street",
+      "status": "Status"
     }
   },
   "vehicles": {
@@ -803,7 +834,28 @@
     "chargerStatus": "Charger status",
     "active": "Active",
     "inactive": "Inactive",
-    "noRating": "Not rated"
+    "noRating": "Not rated",
+    "statusPending": "Pending",
+    "statusAccepted": "Accepted",
+    "statusInProgress": "In progress",
+    "statusCompleted": "Completed",
+    "statusAborted": "Aborted",
+    "statusRejected": "Rejected",
+    "loadError": "Failed to load charging processes",
+    "kmUnit": "km",
+    "minuteUnit": "min",
+    "hourUnit": "h",
+    "hoursAndMinutes": "{{hours}}h {{minutes}}m",
+    "printTitle": "Charging processes report",
+    "printColumns": {
+      "id": "Process ID",
+      "vehicleOwner": "Vehicle owner",
+      "plate": "Plate number",
+      "vehicleType": "Vehicle type",
+      "chargerOwner": "Charger owner",
+      "status": "Status",
+      "requestedAt": "Request date"
+    }
   },
   "fees": {
     "title": "Fee Management",
@@ -993,7 +1045,31 @@
     "warnHasComplaints": "There are {{count}} complaints linked to this type",
     "restoreNote": "You can restore this type later by enabling the show-deleted option",
     "confirmDelete": "Confirm deletion",
-    "deleteConfirmMessageFull": "Are you sure you want to delete the complaint type <strong>&quot;{{name}}&quot;</strong>?"
+    "deleteConfirmMessageFull": "Are you sure you want to delete the complaint type <strong>&quot;{{name}}&quot;</strong>?",
+    "msg": {
+      "loadFail": "Failed to load complaint types",
+      "nameRequired": "Complaint type name is required",
+      "updateSuccess": "Complaint type updated successfully",
+      "updateFail": "Failed to update complaint type",
+      "addSuccess": "Complaint type added successfully",
+      "addFail": "Failed to add complaint type",
+      "deleteSuccess": "Complaint type deleted successfully",
+      "deleteFail": "Failed to delete complaint type",
+      "restoreSuccess": "Complaint type restored successfully",
+      "restoreFail": "Failed to restore complaint type",
+      "selectType": "Please select a complaint type",
+      "contentRequired": "Complaint content is required",
+      "submitSuccess": "Complaint submitted successfully",
+      "submitFail": "Failed to submit complaint"
+    },
+    "printTitle": "Complaint types report",
+    "printColumns": {
+      "name": "Type name",
+      "description": "Description",
+      "count": "Complaints count",
+      "status": "Status",
+      "createdAt": "Created at"
+    }
   },
   "complaintCategories": {
     "title": "Complaint Categories",
@@ -1209,6 +1285,30 @@
         "customer": "Customer",
         "phone": "Phone",
         "price": "Price"
+      },
+      "msg": {
+        "loadFail": "Failed to load reservations",
+        "contactSuccess": "Contact recorded successfully",
+        "contactFail": "Failed to record contact",
+        "paymentSuccess": "Payment recorded successfully",
+        "paymentFail": "Failed to record payment",
+        "deliverySuccess": "Delivery recorded successfully",
+        "deliveryFail": "Failed to record delivery",
+        "completeSuccess": "Reservation completed successfully",
+        "completeFail": "Failed to complete reservation",
+        "cancelSuccess": "Reservation cancelled successfully",
+        "cancelFail": "Failed to cancel reservation"
+      },
+      "printTitle": "Store reservations report",
+      "printColumns": {
+        "product": "Product",
+        "customer": "Customer",
+        "phone": "Phone",
+        "status": "Status",
+        "payment": "Payment",
+        "delivery": "Delivery",
+        "price": "Price",
+        "date": "Date"
       }
     },
     "clearFilters": "Clear filters",
@@ -1240,6 +1340,37 @@
       "addProductAction": "Add product",
       "pendingAlert": "Pending reservations ({{count}})",
       "allReservations": "All reservations"
+    },
+    "paymentMethods": {
+      "cash": "Cash",
+      "bankTransfer": "Bank transfer",
+      "instapay": "InstaPay",
+      "vodafoneCash": "Vodafone Cash",
+      "fawry": "Fawry",
+      "other": "Other"
+    },
+    "categoryStatus": {
+      "active": "Active",
+      "comingSoon": "Coming soon",
+      "hidden": "Hidden"
+    },
+    "productStatus": {
+      "active": "Active",
+      "hidden": "Hidden"
+    },
+    "reservationStatus": {
+      "pending": "Awaiting contact",
+      "contacted": "Contacted",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "paymentStatus": {
+      "unpaid": "Unpaid",
+      "paid": "Paid"
+    },
+    "deliveryStatus": {
+      "pending": "Awaiting delivery",
+      "delivered": "Delivered"
     }
   },
   "chargingProtocols": {
@@ -1361,7 +1492,30 @@
     "phoneLabel": "Phone number",
     "contentLabel": "Complaint content",
     "unmarkResolved": "Unmark resolved",
-    "markResolved": "Mark resolved"
+    "markResolved": "Mark resolved",
+    "msg": {
+      "loadFail": "Failed to load complaints",
+      "markedResolved": "Complaint marked as resolved",
+      "unmarkResolved": "Complaint resolution removed",
+      "updateFail": "Failed to update complaint status",
+      "selectUser": "Please select a user",
+      "selectType": "Please select a complaint type",
+      "contentRequired": "Complaint content is required",
+      "submitSuccess": "Complaint submitted successfully",
+      "submitFail": "Failed to submit complaint"
+    },
+    "printTitle": "Complaints report",
+    "printColumns": {
+      "id": "Complaint ID",
+      "userName": "User name",
+      "userEmail": "Email",
+      "categoryName": "Complaint type",
+      "content": "Content",
+      "status": "Status",
+      "date": "Date",
+      "resolved": "Resolved",
+      "pending": "Pending"
+    }
   },
   "protocol": {
     "pageTitle": "Protocols",

@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AdminComplaintCategoriesService } from '../../core/services/admin/admin-complaint-categories.service';
 import { AdminComplaintsService } from '../../core/services/admin/admin-complaints.service';
@@ -77,8 +77,13 @@ export class ComplaintsComponent implements OnInit {
     private complaintsService: AdminComplaintsService,
     private toaster: ToasterService,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string): string {
+    return this.translate.instant(key);
+  }
 
   ngOnInit(): void {
     this.loadCategories();
@@ -98,7 +103,7 @@ export class ComplaintsComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (err) => {
-        this.toaster.error(err.message || 'فشل تحميل أنواع الشكاوى');
+        this.toaster.error(err.message || this.t('complaints.msg.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -175,7 +180,7 @@ export class ComplaintsComponent implements OnInit {
 
   saveCategory(): void {
     if (!this.categoryForm.name.trim()) {
-      this.toaster.error('اسم نوع الشكوى مطلوب');
+      this.toaster.error(this.t('complaints.msg.nameRequired'));
       return;
     }
 
@@ -185,17 +190,17 @@ export class ComplaintsComponent implements OnInit {
       this.categoriesService.updateCategory(this.editingCategoryId, this.categoryForm as UpdateComplaintCategoryDto).subscribe({
         next: (response) => {
           if (response.status) {
-            this.toaster.success('تم تحديث نوع الشكوى بنجاح');
+            this.toaster.success(this.t('complaints.msg.updateSuccess'));
             this.closeCategoryModal();
             this.loadCategories();
           } else {
-            this.toaster.error(response.message || 'فشل تحديث نوع الشكوى');
+            this.toaster.error(response.message || this.t('complaints.msg.updateFail'));
           }
           this.isSaving = false;
           this.cdr.markForCheck();
         },
         error: (err) => {
-          this.toaster.error(err.error?.message || 'فشل تحديث نوع الشكوى');
+          this.toaster.error(err.error?.message || this.t('complaints.msg.updateFail'));
           this.isSaving = false;
           this.cdr.markForCheck();
         }
@@ -204,17 +209,17 @@ export class ComplaintsComponent implements OnInit {
       this.categoriesService.createCategory(this.categoryForm as CreateComplaintCategoryDto).subscribe({
         next: (response) => {
           if (response.status) {
-            this.toaster.success('تم إضافة نوع الشكوى بنجاح');
+            this.toaster.success(this.t('complaints.msg.addSuccess'));
             this.closeCategoryModal();
             this.loadCategories();
           } else {
-            this.toaster.error(response.message || 'فشل إضافة نوع الشكوى');
+            this.toaster.error(response.message || this.t('complaints.msg.addFail'));
           }
           this.isSaving = false;
           this.cdr.markForCheck();
         },
         error: (err) => {
-          this.toaster.error(err.error?.message || 'فشل إضافة نوع الشكوى');
+          this.toaster.error(err.error?.message || this.t('complaints.msg.addFail'));
           this.isSaving = false;
           this.cdr.markForCheck();
         }
@@ -240,17 +245,17 @@ export class ComplaintsComponent implements OnInit {
     this.categoriesService.deleteCategory(this.deletingCategory.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حذف نوع الشكوى بنجاح');
+          this.toaster.success(this.t('complaints.msg.deleteSuccess'));
           this.cancelDelete();
           this.loadCategories();
         } else {
-          this.toaster.error(response.message || 'فشل حذف نوع الشكوى');
+          this.toaster.error(response.message || this.t('complaints.msg.deleteFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (err) => {
-        this.toaster.error(err.error?.message || 'فشل حذف نوع الشكوى');
+        this.toaster.error(err.error?.message || this.t('complaints.msg.deleteFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -262,15 +267,15 @@ export class ComplaintsComponent implements OnInit {
     this.categoriesService.restoreCategory(category.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم استعادة نوع الشكوى بنجاح');
+          this.toaster.success(this.t('complaints.msg.restoreSuccess'));
           this.loadCategories();
         } else {
-          this.toaster.error(response.message || 'فشل استعادة نوع الشكوى');
+          this.toaster.error(response.message || this.t('complaints.msg.restoreFail'));
         }
         this.cdr.markForCheck();
       },
       error: (err) => {
-        this.toaster.error(err.error?.message || 'فشل استعادة نوع الشكوى');
+        this.toaster.error(err.error?.message || this.t('complaints.msg.restoreFail'));
         this.cdr.markForCheck();
       }
     });
@@ -289,11 +294,11 @@ export class ComplaintsComponent implements OnInit {
 
   submitComplaint(): void {
     if (!this.complaintForm.categoryId) {
-      this.toaster.error('يرجى اختيار نوع الشكوى');
+      this.toaster.error(this.t('complaints.msg.selectType'));
       return;
     }
     if (!this.complaintForm.content.trim()) {
-      this.toaster.error('محتوى الشكوى مطلوب');
+      this.toaster.error(this.t('complaints.msg.contentRequired'));
       return;
     }
 
@@ -301,17 +306,17 @@ export class ComplaintsComponent implements OnInit {
     this.complaintsService.createComplaint(this.complaintForm).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم إرسال الشكوى بنجاح');
+          this.toaster.success(this.t('complaints.msg.submitSuccess'));
           this.closeComplaintModal();
           this.loadCategories(); // Refresh to update complaints count
         } else {
-          this.toaster.error(response.message || 'فشل إرسال الشكوى');
+          this.toaster.error(response.message || this.t('complaints.msg.submitFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (err) => {
-        this.toaster.error(err.error?.message || 'فشل إرسال الشكوى');
+        this.toaster.error(err.error?.message || this.t('complaints.msg.submitFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -348,22 +353,22 @@ export class ComplaintsComponent implements OnInit {
 
   printToPdf(): void {
     this.printService.printTableToPdf({
-      title: 'تقرير أنواع الشكاوى',
+      title: this.t('complaints.printTitle'),
       filename: 'complaint_categories_report',
       orientation: 'landscape',
       columns: [
         { header: '#', field: 'index' },
-        { header: 'اسم النوع', field: 'name' },
-        { header: 'الوصف', field: 'descriptionShort' },
-        { header: 'عدد الشكاوى', field: 'complaintsCount' },
-        { header: 'الحالة', field: 'statusText' },
-        { header: 'تاريخ الإنشاء', field: 'createdAtFormatted' }
+        { header: this.t('complaints.printColumns.name'), field: 'name' },
+        { header: this.t('complaints.printColumns.description'), field: 'descriptionShort' },
+        { header: this.t('complaints.printColumns.count'), field: 'complaintsCount' },
+        { header: this.t('complaints.printColumns.status'), field: 'statusText' },
+        { header: this.t('complaints.printColumns.createdAt'), field: 'createdAtFormatted' }
       ],
       data: this.filteredCategories.map((category, index) => ({
         ...category,
         index: index + 1,
         descriptionShort: category.description?.substring(0, 30) + (category.description && category.description.length > 30 ? '...' : ''),
-        statusText: category.isDeleted ? 'محذوف' : 'نشط',
+        statusText: this.t(category.isDeleted ? 'complaints.deleted' : 'complaints.active'),
         createdAtFormatted: this.formatDate(category.createdAt)
       }))
     });

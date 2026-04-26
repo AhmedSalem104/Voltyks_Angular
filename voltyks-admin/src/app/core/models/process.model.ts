@@ -78,13 +78,13 @@ export interface ProcessFilterParams {
   search?: string;
 }
 
-// Status options for filter dropdown
+// Status options for filter dropdown — labels are translation keys
 export const PROCESS_STATUS_OPTIONS = [
-  { value: '', label: 'الكل' },
-  { value: 'Pending', label: 'قيد الانتظار' },
-  { value: 'Accepted', label: 'مقبول' },
-  { value: 'InProgress', label: 'جاري التنفيذ' },
-  { value: 'Completed', label: 'مكتمل' },
-  { value: 'Aborted', label: 'ملغي' },
-  { value: 'Rejected', label: 'مرفوض' }
+  { value: '', label: 'common.all' },
+  { value: 'Pending', label: 'processes.statusPending' },
+  { value: 'Accepted', label: 'processes.statusAccepted' },
+  { value: 'InProgress', label: 'processes.statusInProgress' },
+  { value: 'Completed', label: 'processes.statusCompleted' },
+  { value: 'Aborted', label: 'processes.statusAborted' },
+  { value: 'Rejected', label: 'processes.statusRejected' }
 ];
