@@ -1,7 +1,7 @@
 <div class="capacities-container">
   <div class="page-header">
-    <h2>إدارة سعات الشواحن</h2>
-    <p class="page-description">عرض و{{ "capacities.subtitle" | translate }} (7kW, 15kW, 22kW, ...)</p>
+    <h2>{{ "capacities.pageTitle" | translate }}</h2>
+    <p class="page-description">{{ "capacities.pageSubtitle" | translate }}</p>
   </div>
 
   <!-- Compact Filters Section -->
@@ -26,7 +26,7 @@
   <!-- Capacities Table -->
   <div class="voltyks-card">
     <div class="table-header">
-      <h3>قائمة سعات الشواحن</h3>
+      <h3>{{ "capacities.listTitle" | translate }}</h3>
       <div class="header-actions">
         <span class="total-count">{{ "common.total" | translate }}: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredCapacities.length === 0">
@@ -35,7 +35,7 @@
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
           <span class="material-symbols-rounded">add</span>
-          إضافة سعة
+          {{ "capacities.addCapacity" | translate }}
         </button>
       </div>
     </div>
@@ -46,7 +46,7 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>السعة (كيلوواط)</th>
+              <th>{{ "capacities.capacityCol" | translate }}</th>
               <th>{{ "common.actions" | translate }}</th>
             </tr>
           </thead>
@@ -93,7 +93,7 @@
     } @else {
       <div class="empty-state">
         <span class="material-symbols-rounded empty-icon">bolt</span>
-        <p>لا توجد سعات شواحن</p>
+        <p>{{ "capacities.empty" | translate }}</p>
       </div>
     }
   </div>
@@ -113,25 +113,25 @@
         <div class="modal-body">
           <form class="capacity-form">
             <div class="form-group">
-              <label>السعة (كيلوواط) <span class="required">*</span></label>
+              <label>{{ "capacities.capacityLabel" | translate }} <span class="required">*</span></label>
               <input
                 type="number"
                 class="voltyks-input"
                 [(ngModel)]="createDto.kw"
                 name="kw"
                 min="1"
-                placeholder="مثال: 7, 15, 22, 50..."
+                [placeholder]="'capacities.capacityExample' | translate"
               />
             </div>
           </form>
         </div>
         <div class="modal-footer">
           <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">
-            إلغاء
+            {{ "common.cancel" | translate }}
           </button>
           <button class="voltyks-btn btn-primary" (click)="createCapacity()">
             <span class="material-symbols-rounded">save</span>
-            حفظ
+            {{ "common.save" | translate }}
           </button>
         </div>
       </div>
@@ -145,7 +145,7 @@
     <div class="modal-overlay" (click)="closeEditDialog()">
       <div class="modal-content modal-sm" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h3>تعديل السعة</h3>
+          <h3>{{ "capacities.editCapacity" | translate }}</h3>
           <button class="close-btn" (click)="closeEditDialog()">
             <span class="material-symbols-rounded">close</span>
           </button>
@@ -153,7 +153,7 @@
         <div class="modal-body">
           <form class="capacity-form">
             <div class="form-group">
-              <label>السعة (كيلوواط) <span class="required">*</span></label>
+              <label>{{ "capacities.capacityLabel" | translate }} <span class="required">*</span></label>
               <input
                 type="number"
                 class="voltyks-input"
@@ -166,11 +166,11 @@
         </div>
         <div class="modal-footer">
           <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">
-            إلغاء
+            {{ "common.cancel" | translate }}
           </button>
           <button class="voltyks-btn btn-primary" (click)="updateCapacity()">
             <span class="material-symbols-rounded">save</span>
-            حفظ التغييرات
+            {{ "common.saveChanges" | translate }}
           </button>
         </div>
       </div>
@@ -181,8 +181,8 @@
 <!-- Delete Confirmation Dialog -->
 <app-confirm-dialog
   [isOpen]="showDeleteConfirm"
-  title="تأكيد حذف السعة"
-  [message]="'هل أنت متأكد من حذف السعة \'' + (currentCapacity?.kw || '') + ' kW\'؟'"
+  [title]="'capacities.deleteConfirmTitle' | translate"
+  [message]="'capacities.deleteConfirmMessage' | translate: { kw: currentCapacity?.kw || '' }"
   type="danger"
   (confirm)="confirmDelete()"
   (cancel)="closeDeleteConfirm()"

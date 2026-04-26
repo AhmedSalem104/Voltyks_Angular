@@ -3,8 +3,8 @@
     <div class="header-title">
       <span class="material-symbols-rounded header-icon">security</span>
       <div>
-        <h2>System Vault</h2>
-        <p class="page-description">Database Backup Management</p>
+        <h2>{{ "backup.pageTitle" | translate }}</h2>
+        <p class="page-description">{{ "backup.pageSubtitle" | translate }}</p>
       </div>
     </div>
     <button
@@ -14,10 +14,10 @@
     >
       @if (isTriggering) {
         <span class="material-symbols-rounded spinning">sync</span>
-        جاري الإنشاء...
+        {{ "backup.creating" | translate }}
       } @else {
         <span class="material-symbols-rounded">backup</span>
-        إنشاء نسخة احتياطية
+        {{ "backup.createBackup" | translate }}
       }
     </button>
   </div>
@@ -27,32 +27,32 @@
     <div class="voltyks-card result-card">
       <div class="result-header">
         <span class="material-symbols-rounded result-icon">check_circle</span>
-        <h3>تم إنشاء النسخة الاحتياطية</h3>
+        <h3>{{ "backup.resultTitle" | translate }}</h3>
       </div>
       <div class="result-grid">
         <div class="result-item">
           <span class="material-symbols-rounded">insert_drive_file</span>
-          <span class="result-label">الملف</span>
+          <span class="result-label">{{ "backup.fileLabel" | translate }}</span>
           <span class="result-value">{{ lastResult.fileName }}</span>
         </div>
         <div class="result-item">
           <span class="material-symbols-rounded">data_usage</span>
-          <span class="result-label">الحجم</span>
+          <span class="result-label">{{ "backup.sizeLabel" | translate }}</span>
           <span class="result-value">{{ formatSize(lastResult.sizeMb) }}</span>
         </div>
         <div class="result-item">
           <span class="material-symbols-rounded">table_chart</span>
-          <span class="result-label">الجداول</span>
+          <span class="result-label">{{ "backup.tablesLabel" | translate }}</span>
           <span class="result-value">{{ lastResult.tablesExported }}</span>
         </div>
         <div class="result-item">
           <span class="material-symbols-rounded">storage</span>
-          <span class="result-label">الصفوف</span>
+          <span class="result-label">{{ "backup.rowsLabel" | translate }}</span>
           <span class="result-value">{{ lastResult.totalRows | number }}</span>
         </div>
         <div class="result-item">
           <span class="material-symbols-rounded">timer</span>
-          <span class="result-label">المدة</span>
+          <span class="result-label">{{ "backup.durationLabel" | translate }}</span>
           <span class="result-value">{{ formatDuration(lastResult.durationSeconds) }}</span>
         </div>
       </div>
@@ -62,8 +62,8 @@
   <!-- Backups List -->
   <div class="voltyks-card">
     <div class="table-header">
-      <h3>النسخ الاحتياطية المتاحة</h3>
-      <span class="total-count">{{ filteredBackups.length }} ملف</span>
+      <h3>{{ "backup.availableTitle" | translate }}</h3>
+      <span class="total-count">{{ filteredBackups.length }} {{ "backup.filesUnit" | translate }}</span>
     </div>
 
     <!-- Date Filter -->
@@ -73,27 +73,27 @@
           <span class="material-symbols-rounded">tune</span>
         </div>
         <div class="preset-group">
-          <button class="preset-chip" [class.active]="activePreset === 'today'" (click)="setPreset('today')">اليوم</button>
-          <button class="preset-chip" [class.active]="activePreset === 'week'" (click)="setPreset('week')">أسبوع</button>
-          <button class="preset-chip" [class.active]="activePreset === 'month'" (click)="setPreset('month')">شهر</button>
-          <button class="preset-chip" [class.active]="activePreset === 'year'" (click)="setPreset('year')">سنة</button>
+          <button class="preset-chip" [class.active]="activePreset === 'today'" (click)="setPreset('today')">{{ "backup.presetToday" | translate }}</button>
+          <button class="preset-chip" [class.active]="activePreset === 'week'" (click)="setPreset('week')">{{ "backup.presetWeek" | translate }}</button>
+          <button class="preset-chip" [class.active]="activePreset === 'month'" (click)="setPreset('month')">{{ "backup.presetMonth" | translate }}</button>
+          <button class="preset-chip" [class.active]="activePreset === 'year'" (click)="setPreset('year')">{{ "backup.presetYear" | translate }}</button>
           <button class="preset-chip" [class.active]="activePreset === 'all'" (click)="setPreset('all')">{{ "common.all" | translate }}</button>
         </div>
         <div class="date-range">
           <div class="date-group">
-            <span class="date-label">من</span>
+            <span class="date-label">{{ "backup.fromLabel" | translate }}</span>
             <input type="date" [(ngModel)]="dateFrom" (ngModelChange)="onDateChange()" />
           </div>
           <span class="range-arrow">
             <span class="material-symbols-rounded">east</span>
           </span>
           <div class="date-group">
-            <span class="date-label">إلى</span>
+            <span class="date-label">{{ "backup.toLabel" | translate }}</span>
             <input type="date" [(ngModel)]="dateTo" (ngModelChange)="onDateChange()" />
           </div>
         </div>
         @if (activePreset !== 'today') {
-          <button class="reset-btn" (click)="clearFilter()" title="إعادة تعيين">
+          <button class="reset-btn" (click)="clearFilter()" [title]="'backup.resetTip' | translate">
             <span class="material-symbols-rounded">restart_alt</span>
           </button>
         }
@@ -106,10 +106,10 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>اسم الملف</th>
-              <th>الحجم</th>
+              <th>{{ "backup.fileNameCol" | translate }}</th>
+              <th>{{ "backup.sizeLabel" | translate }}</th>
               <th>{{ "common.createdAt" | translate }}</th>
-              <th>تحميل</th>
+              <th>{{ "backup.downloadCol" | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -127,7 +127,7 @@
                     class="voltyks-btn btn-icon btn-info"
                     (click)="downloadBackup(backup.fileName)"
                     [disabled]="downloadingFile === backup.fileName"
-                    title="تحميل"
+                    [title]="'backup.downloadTip' | translate"
                   >
                     @if (downloadingFile === backup.fileName) {
                       <span class="material-symbols-rounded spinning">sync</span>
@@ -152,16 +152,16 @@
     } @else if (!isLoading && hasFilter) {
       <div class="empty-state">
         <span class="material-symbols-rounded empty-icon">event_busy</span>
-        <p>لا توجد نسخ احتياطية في هذه الفترة</p>
+        <p>{{ "backup.emptyInRange" | translate }}</p>
         <button class="voltyks-btn btn-outline-orange clear-empty-btn" (click)="clearFilter()">
           <span class="material-symbols-rounded">filter_alt_off</span>
-          مسح الفلتر
+          {{ "backup.clearFilter" | translate }}
         </button>
       </div>
     } @else if (!isLoading) {
       <div class="empty-state">
         <span class="material-symbols-rounded empty-icon">cloud_off</span>
-        <p>لا توجد نسخ احتياطية بعد</p>
+        <p>{{ "backup.emptyAll" | translate }}</p>
       </div>
     }
   </div>
