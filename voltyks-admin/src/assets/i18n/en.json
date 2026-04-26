@@ -774,8 +774,17 @@
       "totalPrice": "Total",
       "status": "Status",
       "paymentStatus": "Payment status",
+      "deliveryStatus": "Delivery status",
+      "payment": "Payment",
+      "delivery": "Delivery",
+      "allPaymentStatuses": "All payment statuses",
+      "allDeliveryStatuses": "All delivery statuses",
+      "clearFilters": "Clear filters",
       "completeReservation": "Complete reservation",
-      "addNotes": "Add notes from contact with the customer"
+      "recordContact": "Record contact",
+      "recordPayment": "Record payment",
+      "recordDelivery": "Record delivery",
+      "addNotes": "Add contact notes with the customer"
     }
   },
   "chargingProtocols": {

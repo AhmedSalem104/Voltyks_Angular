@@ -774,7 +774,16 @@
       "totalPrice": "الإجمالي",
       "status": "الحالة",
       "paymentStatus": "حالة الدفع",
+      "deliveryStatus": "حالة التسليم",
+      "payment": "الدفع",
+      "delivery": "التسليم",
+      "allPaymentStatuses": "جميع حالات الدفع",
+      "allDeliveryStatuses": "جميع حالات التسليم",
+      "clearFilters": "مسح الفلاتر",
       "completeReservation": "إكمال الحجز",
+      "recordContact": "تسجيل تواصل",
+      "recordPayment": "تسجيل دفع",
+      "recordDelivery": "تسجيل تسليم",
       "addNotes": "أدخل ملاحظات التواصل مع العميل"
     }
   },

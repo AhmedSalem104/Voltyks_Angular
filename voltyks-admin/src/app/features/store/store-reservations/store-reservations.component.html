@@ -8,12 +8,12 @@
   <nav class="breadcrumb-nav">
     <a routerLink="/store" class="back-link">
       <span class="material-symbols-rounded">arrow_forward</span>
-      <span>العودة للمتجر</span>
+      <span>{{ "store.back" | translate }}</span>
     </a>
     <div class="breadcrumb-path">
-      <a routerLink="/store" class="path-item">المتجر</a>
+      <a routerLink="/store" class="path-item">{{ "store.title" | translate }}</a>
       <span class="material-symbols-rounded separator">chevron_left</span>
-      <span class="path-item current">الحجوزات</span>
+      <span class="path-item current">{{ "store.reservations.title" | translate }}</span>
     </div>
   </nav>
 
@@ -24,8 +24,8 @@
         <span class="material-symbols-rounded">shopping_cart</span>
       </div>
       <div class="header-text">
-        <h2>حجوزات المتجر</h2>
-        <p class="page-description">إدارة ومتابعة حجوزات العملاء</p>
+        <h2>{{ "store.reservations.title" | translate }}</h2>
+        <p class="page-description">{{ "store.reservations.subtitle" | translate }}</p>
       </div>
     </div>
   </div>
@@ -40,7 +40,7 @@
           <input
             type="text"
             class="voltyks-input"
-            placeholder="البحث (اسم/هاتف/منتج)..."
+            [placeholder]="'common.search' | translate"
             [ngModel]="searchTerm"
             (ngModelChange)="onSearchChange($event)"
           />
@@ -60,7 +60,7 @@
       <!-- Payment Status Filter -->
       <div class="filter-item">
         <select class="voltyks-input" [(ngModel)]="paymentStatusFilter" (ngModelChange)="onFilterChange()">
-          <option value="">جميع حالات الدفع</option>
+          <option value="">{{ "store.reservations.allPaymentStatuses" | translate }}</option>
           @for (option of paymentStatusOptions; track option.value) {
             <option [value]="option.value">{{ option.label }}</option>
           }
@@ -70,7 +70,7 @@
       <!-- Delivery Status Filter -->
       <div class="filter-item">
         <select class="voltyks-input" [(ngModel)]="deliveryStatusFilter" (ngModelChange)="onFilterChange()">
-          <option value="">جميع حالات التسليم</option>
+          <option value="">{{ "store.reservations.allDeliveryStatuses" | translate }}</option>
           @for (option of deliveryStatusOptions; track option.value) {
             <option [value]="option.value">{{ option.label }}</option>
           }
@@ -81,13 +81,13 @@
     <div class="filters-row-2">
       <!-- From Date -->
       <div class="filter-item">
-        <label>من تاريخ:</label>
+        <label>{{ "common.fromDate" | translate }}:</label>
         <input type="date" class="voltyks-input" [(ngModel)]="fromDate" (ngModelChange)="onFilterChange()" />
       </div>
 
       <!-- To Date -->
       <div class="filter-item">
-        <label>إلى تاريخ:</label>
+        <label>{{ "common.toDate" | translate }}:</label>
         <input type="date" class="voltyks-input" [(ngModel)]="toDate" (ngModelChange)="onFilterChange()" />
       </div>
 
@@ -121,8 +121,8 @@
               <th>{{ "common.product" | translate }}</th>
               <th>{{ "common.customer" | translate }}</th>
               <th>{{ "common.status" | translate }}</th>
-              <th>الدفع</th>
-              <th>التسليم</th>
+              <th>{{ "store.reservations.payment" | translate }}</th>
+              <th>{{ "store.reservations.delivery" | translate }}</th>
               <th>{{ "common.date" | translate }}</th>
               <th>{{ "common.actions" | translate }}</th>
             </tr>
@@ -175,25 +175,25 @@
                     </button>
 
                     @if (canContact(reservation)) {
-                      <button class="voltyks-btn btn-icon btn-contact" title="تسجيل تواصل" (click)="openContactDialog(reservation)">
+                      <button class="voltyks-btn btn-icon btn-contact" [title]="'store.reservations.recordContact' | translate" (click)="openContactDialog(reservation)">
                         <span class="material-symbols-rounded">phone</span>
                       </button>
                     }
 
                     @if (canRecordPayment(reservation)) {
-                      <button class="voltyks-btn btn-icon btn-payment" title="تسجيل دفع" (click)="openPaymentDialog(reservation)">
+                      <button class="voltyks-btn btn-icon btn-payment" [title]="'store.reservations.recordPayment' | translate" (click)="openPaymentDialog(reservation)">
                         <span class="material-symbols-rounded">payments</span>
                       </button>
                     }
 
                     @if (canRecordDelivery(reservation)) {
-                      <button class="voltyks-btn btn-icon btn-delivery" title="تسجيل تسليم" (click)="openDeliveryDialog(reservation)">
+                      <button class="voltyks-btn btn-icon btn-delivery" [title]="'store.reservations.recordDelivery' | translate" (click)="openDeliveryDialog(reservation)">
                         <span class="material-symbols-rounded">local_shipping</span>
                       </button>
                     }
 
                     @if (canComplete(reservation)) {
-                      <button class="voltyks-btn btn-icon btn-complete" title="إكمال الحجز" (click)="openCompleteConfirm(reservation)">
+                      <button class="voltyks-btn btn-icon btn-complete" [title]="'store.reservations.completeReservation' | translate" (click)="openCompleteConfirm(reservation)">
                         <span class="material-symbols-rounded">check_circle</span>
                       </button>
                     }
