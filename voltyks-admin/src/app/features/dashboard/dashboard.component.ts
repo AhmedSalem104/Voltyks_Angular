@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRe
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { BaseChartDirective } from 'ng2-charts';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { AdminUsersService } from '../../core/services/admin/admin-users.service';
 import { AdminFeesService } from '../../core/services/admin/admin-fees.service';
@@ -143,11 +143,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   unreadNotificationsCount = 0;
 
   // Typing Animation
-  typingTexts = [
-    'نظام إدارة شحن المركبات الكهربائية',
-    'مستقبل النقل المستدام',
-    'شحن ذكي لحياة أفضل'
-  ];
+  typingTexts: string[] = [];
   currentTypingText = '';
   typingIndex = 0;
   charIndex = 0;
@@ -256,11 +252,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private storeService: AdminStoreService,
     private notificationService: NotificationService,
     private authService: AuthService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
+    this.typingTexts = [
+      this.translate.instant('dashboard.tagline1'),
+      this.translate.instant('dashboard.tagline2'),
+      this.translate.instant('dashboard.tagline3')
+    ];
     this.setGreeting();
     this.subscribeToNotifications();
     this.startTypingAnimation();
@@ -623,11 +625,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private setGreeting(): void {
     const hour = new Date().getHours();
+    let key: string;
     if (hour >= 5 && hour < 12) {
-      this.greeting = 'صباح الخير';
+      key = 'dashboard.greetingMorning';
+    } else if (hour < 18) {
+      key = 'dashboard.greetingAfternoon';
     } else {
-      this.greeting = 'مساء الخير';
+      key = 'dashboard.greetingEvening';
     }
+    this.greeting = this.translate.instant(key);
   }
 
   private startTypingAnimation(): void {

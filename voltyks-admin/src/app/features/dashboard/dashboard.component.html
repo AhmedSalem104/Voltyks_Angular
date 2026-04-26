@@ -33,14 +33,14 @@
         </div>
       </div>
     } @else {
-      <div class="revenue-card total-revenue fade-in" title="مجموع قيمة كل الحجوزات (غير الملغية) = سعر المنتج × الكمية">
+      <div class="revenue-card total-revenue fade-in" [title]="'dashboard.totalRevenueTooltip' | translate">
         <div class="revenue-icon">
           <span class="material-symbols-rounded">account_balance_wallet</span>
         </div>
         <div class="revenue-content">
-          <span class="revenue-label">إجمالي الإيرادات</span>
+          <span class="revenue-label">{{ 'dashboard.totalRevenue' | translate }}</span>
           <span class="revenue-value">{{ formatCurrency(stats.totalRevenue) }}</span>
-          <span class="revenue-hint">قيمة جميع الحجوزات</span>
+          <span class="revenue-hint">{{ 'dashboard.totalRevenueHint' | translate }}</span>
         </div>
       </div>
     }
@@ -56,14 +56,14 @@
         </div>
       </div>
     } @else {
-      <div class="revenue-card paid-revenue fade-in" title="قيمة الحجوزات التي تم دفعها فعلياً">
+      <div class="revenue-card paid-revenue fade-in" [title]="'dashboard.paidRevenueTooltip' | translate">
         <div class="revenue-icon">
           <span class="material-symbols-rounded">paid</span>
         </div>
         <div class="revenue-content">
-          <span class="revenue-label">الإيرادات المحصلة</span>
+          <span class="revenue-label">{{ 'dashboard.paidRevenue' | translate }}</span>
           <span class="revenue-value">{{ formatCurrency(stats.paidRevenue) }}</span>
-          <span class="revenue-hint">المدفوع فعلياً</span>
+          <span class="revenue-hint">{{ 'dashboard.paidRevenueHint' | translate }}</span>
         </div>
       </div>
     }
@@ -79,17 +79,17 @@
         </div>
       </div>
     } @else {
-      <div class="revenue-card products-card fade-in" title="عدد المنتجات المسجلة في المتجر">
+      <div class="revenue-card products-card fade-in" [title]="'dashboard.storeProductsTooltip' | translate">
         <div class="revenue-icon">
           <span class="material-symbols-rounded">inventory_2</span>
         </div>
         <div class="revenue-content">
-          <span class="revenue-label">منتجات المتجر</span>
+          <span class="revenue-label">{{ 'dashboard.storeProducts' | translate }}</span>
           <span class="revenue-value">{{ stats.totalProducts }}</span>
-          <span class="revenue-hint">{{ stats.activeProducts }} نشط</span>
+          <span class="revenue-hint">{{ stats.activeProducts }} {{ 'dashboard.active' | translate }}</span>
         </div>
         @if (stats.outOfStockProducts > 0) {
-          <span class="stock-warning">{{ stats.outOfStockProducts }} غير متاح</span>
+          <span class="stock-warning">{{ stats.outOfStockProducts }} {{ 'dashboard.outOfStock' | translate }}</span>
         }
       </div>
     }
@@ -105,17 +105,17 @@
         </div>
       </div>
     } @else {
-      <div class="revenue-card reservations-card fade-in" title="عدد طلبات حجز المنتجات من العملاء">
+      <div class="revenue-card reservations-card fade-in" [title]="'dashboard.reservationsTooltip' | translate">
         <div class="revenue-icon">
           <span class="material-symbols-rounded">shopping_cart</span>
         </div>
         <div class="revenue-content">
-          <span class="revenue-label">الحجوزات</span>
+          <span class="revenue-label">{{ 'dashboard.reservations' | translate }}</span>
           <span class="revenue-value">{{ stats.totalReservations }}</span>
-          <span class="revenue-hint">{{ stats.completedReservations }} مكتمل</span>
+          <span class="revenue-hint">{{ stats.completedReservations }} {{ 'dashboard.completed' | translate }}</span>
         </div>
         @if (stats.pendingReservations > 0) {
-          <span class="pending-badge pulse-badge">{{ stats.pendingReservations }} جديد</span>
+          <span class="pending-badge pulse-badge">{{ 'dashboard.newCount' | translate:{count: stats.pendingReservations} }}</span>
         }
       </div>
     }
@@ -129,7 +129,7 @@
         <span class="material-symbols-rounded">{{ mobileAppEnabled ? 'smartphone' : 'phonelink_off' }}</span>
       </div>
       <div class="status-content">
-        <h4>تطبيق الجوال</h4>
+        <h4>{{ 'dashboard.mobileApp' | translate }}</h4>
         <span class="status-text">
           @if (mobileAppEnabled === null) {
             جاري التحميل...
@@ -154,7 +154,7 @@
         <span class="material-symbols-rounded">{{ chargingModeEnabled ? 'electric_bolt' : 'power_off' }}</span>
       </div>
       <div class="status-content">
-        <h4>وضع الشحن</h4>
+        <h4>{{ 'dashboard.chargingMode' | translate }}</h4>
         <span class="status-text">
           @if (chargingModeEnabled === null) {
             جاري التحميل...
@@ -179,12 +179,12 @@
         <span class="material-symbols-rounded">{{ unreadNotificationsCount > 0 ? 'notifications_active' : 'notifications_none' }}</span>
       </div>
       <div class="status-content">
-        <h4>الإشعارات</h4>
+        <h4>{{ 'dashboard.notifications' | translate }}</h4>
         <span class="status-text">
           @if (unreadNotificationsCount > 0) {
-            {{ unreadNotificationsCount }} إشعار جديد
+            {{ 'dashboard.newNotificationsCount' | translate:{count: unreadNotificationsCount} }}
           } @else {
-            لا توجد إشعارات جديدة
+            {{ 'dashboard.noNewNotifications' | translate }}
           }
         </span>
       </div>
@@ -200,7 +200,7 @@
       <div class="section-header">
         <h3>
           <span class="material-symbols-rounded">notifications</span>
-          آخر الإشعارات
+          {{ 'dashboard.recentNotifications' | translate }}
         </h3>
         <a routerLink="/reports" class="view-all-link">
           عرض الكل
@@ -224,7 +224,7 @@
               <div class="notification-header">
                 <span class="notification-title">{{ notification.title }}</span>
                 @if (!notification.isRead) {
-                  <span class="new-badge">جديد</span>
+                  <span class="new-badge">{{ 'dashboard.newBadge' | translate }}</span>
                 }
               </div>
               <p class="notification-message">{{ notification.message }}</p>
@@ -251,7 +251,7 @@
       <div class="main-grid">
         <!-- Overview Chart -->
         <div class="chart-card overview-chart">
-          <h3>نظرة عامة</h3>
+          <h3>{{ 'dashboard.overview' | translate }}</h3>
           @if (sectionLoading.users && sectionLoading.chargers && sectionLoading.vehicles && sectionLoading.reports) {
             <div class="chart-skeleton">
               <div class="skeleton-circle"></div>
@@ -271,28 +271,28 @@
               </canvas>
               <div class="chart-center">
                 <span class="total-value">{{ stats.totalUsers + stats.totalChargers + stats.totalVehicles }}</span>
-                <span class="total-label">إجمالي</span>
+                <span class="total-label">{{ 'dashboard.totalChip' | translate }}</span>
               </div>
             </div>
             <div class="chart-legend fade-in">
               <div class="legend-item" [class.loading]="sectionLoading.users">
                 <span class="legend-color users"></span>
-                <span class="legend-label">مستخدمين</span>
+                <span class="legend-label">{{ 'dashboard.legend.users' | translate }}</span>
                 <span class="legend-value">{{ sectionLoading.users ? '...' : stats.totalUsers }}</span>
               </div>
               <div class="legend-item" [class.loading]="sectionLoading.chargers">
                 <span class="legend-color chargers"></span>
-                <span class="legend-label">شواحن</span>
+                <span class="legend-label">{{ 'dashboard.legend.chargers' | translate }}</span>
                 <span class="legend-value">{{ sectionLoading.chargers ? '...' : stats.totalChargers }}</span>
               </div>
               <div class="legend-item" [class.loading]="sectionLoading.vehicles">
                 <span class="legend-color vehicles"></span>
-                <span class="legend-label">مركبات</span>
+                <span class="legend-label">{{ 'dashboard.legend.vehicles' | translate }}</span>
                 <span class="legend-value">{{ sectionLoading.vehicles ? '...' : stats.totalVehicles }}</span>
               </div>
               <div class="legend-item" [class.loading]="sectionLoading.reports">
                 <span class="legend-color reports"></span>
-                <span class="legend-label">بلاغات</span>
+                <span class="legend-label">{{ 'dashboard.legend.reports' | translate }}</span>
                 <span class="legend-value">{{ sectionLoading.reports ? '...' : stats.totalReports }}</span>
               </div>
             </div>
@@ -301,7 +301,7 @@
 
         <!-- Reports Chart -->
         <div class="chart-card reports-chart">
-          <h3>حالة البلاغات</h3>
+          <h3>{{ 'dashboard.reportsStatus' | translate }}</h3>
           @if (sectionLoading.reports) {
             <div class="bar-chart-skeleton">
               <div class="skeleton-bar"></div>
@@ -343,28 +343,28 @@
               </canvas>
               <div class="chart-center">
                 <span class="total-value">{{ stats.totalReservations }}</span>
-                <span class="total-label">حجز</span>
+                <span class="total-label">{{ 'dashboard.reservation' | translate }}</span>
               </div>
             </div>
             <div class="chart-legend fade-in">
               <div class="legend-item">
                 <span class="legend-color pending"></span>
-                <span class="legend-label">قيد الانتظار</span>
+                <span class="legend-label">{{ 'dashboard.legend.pending' | translate }}</span>
                 <span class="legend-value">{{ stats.pendingReservations }}</span>
               </div>
               <div class="legend-item">
                 <span class="legend-color contacted"></span>
-                <span class="legend-label">تم التواصل</span>
+                <span class="legend-label">{{ 'dashboard.legend.contacted' | translate }}</span>
                 <span class="legend-value">{{ stats.totalReservations - stats.pendingReservations - stats.completedReservations - stats.cancelledReservations }}</span>
               </div>
               <div class="legend-item">
                 <span class="legend-color completed"></span>
-                <span class="legend-label">مكتمل</span>
+                <span class="legend-label">{{ 'dashboard.legend.completed' | translate }}</span>
                 <span class="legend-value">{{ stats.completedReservations }}</span>
               </div>
               <div class="legend-item">
                 <span class="legend-color cancelled"></span>
-                <span class="legend-label">ملغي</span>
+                <span class="legend-label">{{ 'dashboard.legend.cancelled' | translate }}</span>
                 <span class="legend-value">{{ stats.cancelledReservations }}</span>
               </div>
             </div>
@@ -382,7 +382,7 @@
             } @else {
               <span class="chip-value">{{ stats.totalUsers }}</span>
             }
-            <span class="chip-label">مستخدم</span>
+            <span class="chip-label">{{ 'dashboard.chip.user' | translate }}</span>
           </div>
           @if (!sectionLoading.users && stats.activeUsers > 0) {
             <span class="chip-badge active">{{ stats.activeUsers }}</span>
@@ -398,7 +398,7 @@
             } @else {
               <span class="chip-value">{{ stats.totalChargers }}</span>
             }
-            <span class="chip-label">شاحن</span>
+            <span class="chip-label">{{ 'dashboard.chip.charger' | translate }}</span>
           </div>
         </a>
 
@@ -411,7 +411,7 @@
             } @else {
               <span class="chip-value">{{ stats.totalVehicles }}</span>
             }
-            <span class="chip-label">مركبة</span>
+            <span class="chip-label">{{ 'dashboard.chip.vehicle' | translate }}</span>
           </div>
         </a>
 
@@ -424,7 +424,7 @@
             } @else {
               <span class="chip-value">{{ stats.totalReports }}</span>
             }
-            <span class="chip-label">بلاغ</span>
+            <span class="chip-label">{{ 'dashboard.chip.report' | translate }}</span>
           </div>
           @if (!sectionLoading.reports && stats.pendingReports > 0) {
             <span class="chip-badge pending">{{ stats.pendingReports }}</span>
@@ -440,7 +440,7 @@
             } @else {
               <span class="chip-value">{{ stats.totalBrands }}</span>
             }
-            <span class="chip-label">علامة</span>
+            <span class="chip-label">{{ 'dashboard.chip.brand' | translate }}</span>
           </div>
         </a>
 
@@ -453,7 +453,7 @@
             } @else {
               <span class="chip-value">{{ stats.currentFees }}%</span>
             }
-            <span class="chip-label">رسوم</span>
+            <span class="chip-label">{{ 'dashboard.chip.fees' | translate }}</span>
           </div>
         </a>
 
@@ -466,7 +466,7 @@
             } @else {
               <span class="chip-value">{{ stats.totalProcesses }}</span>
             }
-            <span class="chip-label">عملية شحن</span>
+            <span class="chip-label">{{ 'dashboard.chip.process' | translate }}</span>
           </div>
         </a>
 
@@ -479,7 +479,7 @@
             } @else {
               <span class="chip-value">{{ stats.totalComplaints }}</span>
             }
-            <span class="chip-label">شكوى</span>
+            <span class="chip-label">{{ 'dashboard.chip.complaint' | translate }}</span>
           </div>
           @if (!sectionLoading.complaints && stats.pendingComplaints > 0) {
             <span class="chip-badge pending">{{ stats.pendingComplaints }}</span>
@@ -495,7 +495,7 @@
             } @else {
               <span class="chip-value">{{ stats.totalComplaintCategories }}</span>
             }
-            <span class="chip-label">نوع شكوى</span>
+            <span class="chip-label">{{ 'dashboard.chip.complaintCategory' | translate }}</span>
           </div>
         </a>
 
@@ -508,7 +508,7 @@
             } @else {
               <span class="chip-value">{{ stats.totalCategories }}</span>
             }
-            <span class="chip-label">فئة منتج</span>
+            <span class="chip-label">{{ 'dashboard.chip.productCategory' | translate }}</span>
           </div>
         </a>
 
@@ -521,7 +521,7 @@
             } @else {
               <span class="chip-value">{{ stats.totalProducts }}</span>
             }
-            <span class="chip-label">منتج</span>
+            <span class="chip-label">{{ 'dashboard.chip.product' | translate }}</span>
           </div>
           @if (!sectionLoading.store && stats.outOfStockProducts > 0) {
             <span class="chip-badge warning">{{ stats.outOfStockProducts }}</span>
@@ -537,7 +537,7 @@
             } @else {
               <span class="chip-value">{{ stats.totalReservations }}</span>
             }
-            <span class="chip-label">حجز</span>
+            <span class="chip-label">{{ 'dashboard.chip.reservation' | translate }}</span>
           </div>
           @if (!sectionLoading.store && stats.pendingReservations > 0) {
             <span class="chip-badge pending">{{ stats.pendingReservations }}</span>
@@ -559,67 +559,67 @@
   <!-- Quick Actions - Deferred for performance -->
   @defer (on viewport) {
     <section class="quick-actions">
-      <h3>الوصول السريع</h3>
+      <h3>{{ 'dashboard.quickAccess' | translate }}</h3>
       <div class="actions-grid">
         <a routerLink="/users" class="action-item">
           <span class="material-symbols-rounded">people</span>
-          <span>المستخدمين</span>
+          <span>{{ 'dashboard.actions.users' | translate }}</span>
         </a>
         <a routerLink="/processes" class="action-item">
           <span class="material-symbols-rounded">electric_bolt</span>
-          <span>عمليات الشحن</span>
+          <span>{{ 'dashboard.actions.processes' | translate }}</span>
         </a>
         <a routerLink="/chargers" class="action-item">
           <span class="material-symbols-rounded">ev_station</span>
-          <span>الشواحن</span>
+          <span>{{ 'dashboard.actions.chargers' | translate }}</span>
         </a>
         <a routerLink="/vehicles" class="action-item">
           <span class="material-symbols-rounded">electric_car</span>
-          <span>المركبات</span>
+          <span>{{ 'dashboard.actions.vehicles' | translate }}</span>
         </a>
         <a routerLink="/brands" class="action-item">
           <span class="material-symbols-rounded">category</span>
-          <span>العلامات</span>
+          <span>{{ 'dashboard.actions.brands' | translate }}</span>
         </a>
         <a routerLink="/reports" class="action-item">
           <span class="material-symbols-rounded">flag</span>
-          <span>البلاغات</span>
+          <span>{{ 'dashboard.actions.reports' | translate }}</span>
         </a>
         <a routerLink="/complaints" class="action-item">
           <span class="material-symbols-rounded">feedback</span>
-          <span>الشكاوى</span>
+          <span>{{ 'dashboard.actions.complaints' | translate }}</span>
         </a>
         <a routerLink="/complaint-categories" class="action-item">
           <span class="material-symbols-rounded">category</span>
-          <span>أنواع الشكاوى</span>
+          <span>{{ 'dashboard.actions.complaintCategories' | translate }}</span>
         </a>
         <a routerLink="/fees" class="action-item">
           <span class="material-symbols-rounded">payments</span>
-          <span>الرسوم</span>
+          <span>{{ 'dashboard.actions.fees' | translate }}</span>
         </a>
         <a routerLink="/terms" class="action-item">
           <span class="material-symbols-rounded">article</span>
-          <span>الشروط</span>
+          <span>{{ 'dashboard.actions.terms' | translate }}</span>
         </a>
         <a routerLink="/protocol" class="action-item">
           <span class="material-symbols-rounded">policy</span>
-          <span>البروتوكول</span>
+          <span>{{ 'dashboard.actions.protocol' | translate }}</span>
         </a>
         <a routerLink="/app-config" class="action-item">
           <span class="material-symbols-rounded">smartphone</span>
-          <span>تطبيق الجوال</span>
+          <span>{{ 'dashboard.actions.appConfig' | translate }}</span>
         </a>
         <a routerLink="/store" class="action-item store-action">
           <span class="material-symbols-rounded">storefront</span>
-          <span>المتجر</span>
+          <span>{{ 'dashboard.actions.store' | translate }}</span>
         </a>
         <a routerLink="/store/products" class="action-item store-action">
           <span class="material-symbols-rounded">inventory_2</span>
-          <span>المنتجات</span>
+          <span>{{ 'dashboard.actions.storeProducts' | translate }}</span>
         </a>
         <a routerLink="/store/reservations" class="action-item store-action">
           <span class="material-symbols-rounded">shopping_cart</span>
-          <span>الحجوزات</span>
+          <span>{{ 'dashboard.actions.storeReservations' | translate }}</span>
         </a>
       </div>
     </section>
@@ -634,7 +634,7 @@
         <div class="section-header">
           <h3>
             <span class="material-symbols-rounded">shopping_cart</span>
-            آخر الحجوزات
+            {{ 'dashboard.recentReservations' | translate }}
           </h3>
           <a routerLink="/store/reservations" class="view-all-link">
             عرض الكل
@@ -668,7 +668,7 @@
         <div class="section-header">
           <h3>
             <span class="material-symbols-rounded">shopping_cart</span>
-            آخر الحجوزات
+            {{ 'dashboard.recentReservations' | translate }}
           </h3>
         </div>
         <div class="reservations-grid">
