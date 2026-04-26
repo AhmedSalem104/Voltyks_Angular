@@ -3,11 +3,11 @@
   <div class="detail-header">
     <button class="back-btn" (click)="goBack()">
       <span class="material-symbols-rounded">arrow_forward</span>
-      رجوع
+      {{ "common.back" | translate }}
     </button>
     <div class="header-title">
       <span class="material-symbols-rounded type-icon" [class]="type">{{ getTypeIcon() }}</span>
-      <h1>تفاصيل {{ getTypeLabel() }}</h1>
+      <h1>{{ "notifications.detail.title" | translate:{type: getTypeLabel()} }}</h1>
     </div>
   </div>
 
@@ -23,12 +23,11 @@
   @if (loadError && !isLoading) {
     <div class="error-state">
       <span class="material-symbols-rounded">error</span>
-      <h3>فشل تحميل البيانات</h3>
-      <p>لم نتمكن من تحميل تفاصيل الإشعار. قد يكون تم حذفه أو غير موجود.</p>
+      <h3>{{ "notifications.detail.loadError" | translate }}</h3>
+      <p>{{ "notifications.detail.loadErrorDesc" | translate }}</p>
       <button class="retry-btn" (click)="loadData()">
         <span class="material-symbols-rounded">refresh</span>
-        إعادة المحاولة
-      </button>
+        {{ "common.retry" | translate }}      </button>
     </div>
   }
 
@@ -38,14 +37,14 @@
       <!-- Status Badge -->
       <div class="status-banner" [class.resolved]="report.isResolved" [class.pending]="!report.isResolved">
         <span class="material-symbols-rounded">{{ report.isResolved ? 'check_circle' : 'pending' }}</span>
-        <span>{{ report.isResolved ? 'تم الحل' : 'معلق' }}</span>
+        <span>{{ (report.isResolved ? 'notifications.detail.resolved' : 'notifications.detail.pendingReport') | translate }}</span>
       </div>
 
       <!-- Main Info Card -->
       <div class="info-card">
         <div class="card-header">
           <span class="material-symbols-rounded">description</span>
-          <h3>محتوى البلاغ</h3>
+          <h3>{{ "notifications.detail.reportContent" | translate }}</h3>
         </div>
         <div class="card-body">
           <p class="content-text">{{ report.reportContent }}</p>
@@ -56,22 +55,22 @@
       <div class="info-card">
         <div class="card-header">
           <span class="material-symbols-rounded">person</span>
-          <h3>معلومات المُبلِّغ</h3>
+          <h3>{{ "notifications.detail.reporterInfo" | translate }}</h3>
         </div>
         <div class="card-body">
           <div class="info-row">
-            <span class="label">الاسم:</span>
+            <span class="label">{{ "common.name" | translate }}:</span>
             <span class="value">{{ report.userFullName }}</span>
           </div>
           @if (report.userEmail) {
             <div class="info-row">
-              <span class="label">البريد الإلكتروني:</span>
+              <span class="label">{{ "common.email" | translate }}:</span>
               <a class="value link" href="mailto:{{ report.userEmail }}">{{ report.userEmail }}</a>
             </div>
           }
           @if (report.userPhone) {
             <div class="info-row">
-              <span class="label">رقم الهاتف:</span>
+              <span class="label">{{ "common.phone" | translate }}:</span>
               <a class="value link" href="tel:{{ report.userPhone }}">{{ report.userPhone }}</a>
             </div>
           }
@@ -86,11 +85,11 @@
         </div>
         <div class="card-body">
           <div class="info-row">
-            <span class="label">تاريخ البلاغ:</span>
+            <span class="label">{{ "notifications.detail.reportDate" | translate }}:</span>
             <span class="value">{{ formatDate(report.reportDate) }}</span>
           </div>
           <div class="info-row">
-            <span class="label">رقم البلاغ:</span>
+            <span class="label">{{ "notifications.detail.reportNumber" | translate }}:</span>
             <span class="value">#{{ report.id }}</span>
           </div>
         </div>
@@ -101,13 +100,11 @@
         @if (!report.isResolved) {
           <button class="action-btn success" (click)="resolveReport()" [disabled]="isSaving">
             <span class="material-symbols-rounded">check_circle</span>
-            حل البلاغ
-          </button>
+            {{ "notifications.detail.resolveReport" | translate }}          </button>
         }
         <button class="action-btn danger" (click)="deleteReport()" [disabled]="isSaving">
           <span class="material-symbols-rounded">delete</span>
-          حذف البلاغ
-        </button>
+          {{ "notifications.detail.deleteReport" | translate }}        </button>
       </div>
     </div>
   }
@@ -118,14 +115,14 @@
       <!-- Status Badge -->
       <div class="status-banner" [class.resolved]="complaint.isResolved" [class.pending]="!complaint.isResolved">
         <span class="material-symbols-rounded">{{ complaint.isResolved ? 'check_circle' : 'pending' }}</span>
-        <span>{{ complaint.isResolved ? 'تم الحل' : 'معلقة' }}</span>
+        <span>{{ (complaint.isResolved ? 'notifications.detail.resolved' : 'notifications.detail.pendingComplaint') | translate }}</span>
       </div>
 
       <!-- Main Info Card -->
       <div class="info-card">
         <div class="card-header">
           <span class="material-symbols-rounded">feedback</span>
-          <h3>محتوى الشكوى</h3>
+          <h3>{{ "notifications.detail.complaintContent" | translate }}</h3>
         </div>
         <div class="card-body">
           <p class="content-text">{{ complaint.content }}</p>
@@ -137,7 +134,7 @@
         <div class="info-card category-card">
           <div class="card-header">
             <span class="material-symbols-rounded">category</span>
-            <h3>التصنيف</h3>
+            <h3>{{ "notifications.detail.category" | translate }}</h3>
           </div>
           <div class="card-body">
             <span class="category-badge">{{ complaint.categoryName }}</span>
@@ -149,22 +146,22 @@
       <div class="info-card">
         <div class="card-header">
           <span class="material-symbols-rounded">person</span>
-          <h3>معلومات المشتكي</h3>
+          <h3>{{ "notifications.detail.complainantInfo" | translate }}</h3>
         </div>
         <div class="card-body">
           <div class="info-row">
-            <span class="label">الاسم:</span>
+            <span class="label">{{ "common.name" | translate }}:</span>
             <span class="value">{{ complaint.userName }}</span>
           </div>
           @if (complaint.userEmail) {
             <div class="info-row">
-              <span class="label">البريد الإلكتروني:</span>
+              <span class="label">{{ "common.email" | translate }}:</span>
               <a class="value link" href="mailto:{{ complaint.userEmail }}">{{ complaint.userEmail }}</a>
             </div>
           }
           @if (complaint.userPhone) {
             <div class="info-row">
-              <span class="label">رقم الهاتف:</span>
+              <span class="label">{{ "common.phone" | translate }}:</span>
               <a class="value link" href="tel:{{ complaint.userPhone }}">{{ complaint.userPhone }}</a>
             </div>
           }
@@ -179,11 +176,11 @@
         </div>
         <div class="card-body">
           <div class="info-row">
-            <span class="label">تاريخ الشكوى:</span>
+            <span class="label">{{ "notifications.detail.complaintDate" | translate }}:</span>
             <span class="value">{{ formatDate(complaint.createdAt) }}</span>
           </div>
           <div class="info-row">
-            <span class="label">رقم الشكوى:</span>
+            <span class="label">{{ "notifications.detail.complaintNumber" | translate }}:</span>
             <span class="value">#{{ complaint.id }}</span>
           </div>
         </div>
@@ -194,7 +191,7 @@
         <div class="info-card replies-card">
           <div class="card-header">
             <span class="material-symbols-rounded">chat</span>
-            <h3>الردود ({{ complaint.replies.length }})</h3>
+            <h3>{{ "notifications.detail.replies" | translate }} ({{ complaint.replies.length }})</h3>
           </div>
           <div class="card-body">
             <div class="replies-list">
@@ -203,7 +200,7 @@
                   <div class="reply-header">
                     <span class="reply-author">
                       <span class="material-symbols-rounded">{{ reply.isAdmin ? 'admin_panel_settings' : 'person' }}</span>
-                      {{ reply.isAdmin ? 'الإدارة' : complaint.userName }}
+                      {{ reply.isAdmin ? ('sidebar.items.adminsMode' | translate) : complaint.userName }}
                     </span>
                     <span class="reply-date">{{ formatDate(reply.createdAt) }}</span>
                   </div>
@@ -220,19 +217,18 @@
         <div class="info-card reply-form-card">
           <div class="card-header">
             <span class="material-symbols-rounded">reply</span>
-            <h3>إضافة رد</h3>
+            <h3>{{ "notifications.detail.addReply" | translate }}</h3>
           </div>
           <div class="card-body">
             <textarea
               class="reply-input"
               [(ngModel)]="replyContent"
-              placeholder="اكتب ردك هنا..."
+              [placeholder]="'notifications.detail.writeYourReply' | translate"
               rows="4"
             ></textarea>
             <button class="action-btn primary" (click)="addReply()" [disabled]="isSaving || !replyContent.trim()">
               <span class="material-symbols-rounded">send</span>
-              إرسال الرد
-            </button>
+              {{ "notifications.detail.sendReply" | translate }}            </button>
           </div>
         </div>
       }
@@ -242,8 +238,7 @@
         @if (!complaint.isResolved) {
           <button class="action-btn success" (click)="resolveComplaint()" [disabled]="isSaving">
             <span class="material-symbols-rounded">check_circle</span>
-            حل الشكوى
-          </button>
+            {{ "notifications.detail.resolveComplaint" | translate }}          </button>
         }
       </div>
     </div>
@@ -268,7 +263,7 @@
       <div class="info-card product-card">
         <div class="card-header">
           <span class="material-symbols-rounded">inventory_2</span>
-          <h3>تفاصيل المنتج</h3>
+          <h3>{{ "notifications.detail.productInfo" | translate }}</h3>
         </div>
         <div class="card-body">
           <div class="product-info">
@@ -282,13 +277,13 @@
             <div class="product-details">
               <h4 class="product-name">{{ reservation.productName }}</h4>
               <div class="product-meta">
-                <span class="quantity">الكمية: {{ reservation.quantity }}</span>
-                <span class="unit-price">سعر الوحدة: {{ formatCurrency(reservation.unitPrice) }}</span>
+                <span class="quantity">{{ "notifications.detail.quantity" | translate }}: {{ reservation.quantity }}</span>
+                <span class="unit-price">{{ "notifications.detail.unitPrice" | translate }}: {{ formatCurrency(reservation.unitPrice) }}</span>
               </div>
             </div>
           </div>
           <div class="total-price">
-            <span class="label">الإجمالي:</span>
+            <span class="label">{{ "notifications.detail.total" | translate }}:</span>
             <span class="value">{{ formatCurrency(reservation.totalPrice || (reservation.unitPrice * reservation.quantity)) }}</span>
           </div>
         </div>
@@ -298,28 +293,28 @@
       <div class="info-card">
         <div class="card-header">
           <span class="material-symbols-rounded">person</span>
-          <h3>معلومات العميل</h3>
+          <h3>{{ "notifications.detail.customerInfo" | translate }}</h3>
         </div>
         <div class="card-body">
           <div class="info-row">
-            <span class="label">الاسم:</span>
+            <span class="label">{{ "common.name" | translate }}:</span>
             <span class="value">{{ reservation.userName }}</span>
           </div>
           @if (reservation.userEmail) {
             <div class="info-row">
-              <span class="label">البريد الإلكتروني:</span>
+              <span class="label">{{ "common.email" | translate }}:</span>
               <a class="value link" href="mailto:{{ reservation.userEmail }}">{{ reservation.userEmail }}</a>
             </div>
           }
           @if (reservation.userPhone) {
             <div class="info-row">
-              <span class="label">رقم الهاتف:</span>
+              <span class="label">{{ "common.phone" | translate }}:</span>
               <a class="value link" href="tel:{{ reservation.userPhone }}">{{ reservation.userPhone }}</a>
             </div>
           }
           @if (reservation.address) {
             <div class="info-row">
-              <span class="label">العنوان:</span>
+              <span class="label">{{ "common.addressStreet" | translate }}:</span>
               <span class="value">{{ reservation.address }}</span>
             </div>
           }
@@ -331,7 +326,7 @@
         <div class="info-card">
           <div class="card-header">
             <span class="material-symbols-rounded">notes</span>
-            <h3>ملاحظات العميل</h3>
+            <h3>{{ "common.notes" | translate }}</h3>
           </div>
           <div class="card-body">
             <p class="content-text">{{ reservation.notes }}</p>
@@ -347,11 +342,11 @@
         </div>
         <div class="card-body">
           <div class="info-row">
-            <span class="label">تاريخ الحجز:</span>
+            <span class="label">{{ "common.orderDate" | translate }}:</span>
             <span class="value">{{ formatDate(reservation.createdAt) }}</span>
           </div>
           <div class="info-row">
-            <span class="label">رقم الحجز:</span>
+            <span class="label">{{ "notifications.detail.reservationNumber" | translate }}:</span>
             <span class="value">#{{ reservation.id }}</span>
           </div>
         </div>
@@ -361,11 +356,11 @@
       <div class="info-card actions-section">
         <div class="card-header">
           <span class="material-symbols-rounded">edit</span>
-          <h3>تغيير الحالة</h3>
+          <h3>{{ "common.status" | translate }}</h3>
         </div>
         <div class="card-body">
           <div class="status-actions">
-            <h4>حالة الحجز</h4>
+            <h4>{{ "notifications.detail.reservationStatus" | translate }}</h4>
             <div class="status-buttons">
               <button
                 class="status-btn"
@@ -373,37 +368,33 @@
                 (click)="updateReservationStatus('pending')"
                 [disabled]="isSaving || reservation.status === 'pending'"
               >
-                قيد الانتظار
-              </button>
+                {{ "common.pending" | translate }}              </button>
               <button
                 class="status-btn"
                 [class.active]="reservation.status === 'contacted'"
                 (click)="updateReservationStatus('contacted')"
                 [disabled]="isSaving || reservation.status === 'contacted'"
               >
-                تم التواصل
-              </button>
+                Contacted              </button>
               <button
                 class="status-btn success"
                 [class.active]="reservation.status === 'completed'"
                 (click)="updateReservationStatus('completed')"
                 [disabled]="isSaving || reservation.status === 'completed'"
               >
-                مكتمل
-              </button>
+                {{ "common.completed" | translate }}              </button>
               <button
                 class="status-btn danger"
                 [class.active]="reservation.status === 'cancelled'"
                 (click)="updateReservationStatus('cancelled')"
                 [disabled]="isSaving || reservation.status === 'cancelled'"
               >
-                ملغي
-              </button>
+                Cancelled              </button>
             </div>
           </div>
 
           <div class="status-actions">
-            <h4>حالة الدفع</h4>
+            <h4>{{ "notifications.detail.paymentStatus" | translate }}</h4>
             <div class="status-buttons">
               <button
                 class="status-btn"
@@ -411,24 +402,21 @@
                 (click)="updatePaymentStatus('pending')"
                 [disabled]="isSaving || reservation.paymentStatus === 'pending'"
               >
-                في انتظار الدفع
-              </button>
+                Pending payment              </button>
               <button
                 class="status-btn success"
                 [class.active]="reservation.paymentStatus === 'paid'"
                 (click)="updatePaymentStatus('paid')"
                 [disabled]="isSaving || reservation.paymentStatus === 'paid'"
               >
-                مدفوع
-              </button>
+                Paid              </button>
               <button
                 class="status-btn warning"
                 [class.active]="reservation.paymentStatus === 'refunded'"
                 (click)="updatePaymentStatus('refunded')"
                 [disabled]="isSaving || reservation.paymentStatus === 'refunded'"
               >
-                مسترد
-              </button>
+                Refunded              </button>
             </div>
           </div>
         </div>
@@ -458,19 +446,19 @@
       <div class="info-card">
         <div class="card-header">
           <span class="material-symbols-rounded">electric_car</span>
-          <h3>بيانات السيارة المطلوبة</h3>
+          <h3>{{ "vehicleRequests.details.vehicle" | translate }}</h3>
         </div>
         <div class="card-body">
           <div class="info-row">
-            <span class="label">الماركة:</span>
+            <span class="label">{{ "common.brand" | translate }}:</span>
             <span class="value">{{ vehicleRequest.brandName }}</span>
           </div>
           <div class="info-row">
-            <span class="label">الموديل:</span>
+            <span class="label">{{ "common.model" | translate }}:</span>
             <span class="value">{{ vehicleRequest.modelName }}</span>
           </div>
           <div class="info-row">
-            <span class="label">السعة:</span>
+            <span class="label">{{ "common.capacity" | translate }}:</span>
             <span class="value">{{ vehicleRequest.capacity }}</span>
           </div>
         </div>
@@ -480,22 +468,22 @@
       <div class="info-card">
         <div class="card-header">
           <span class="material-symbols-rounded">person</span>
-          <h3>بيانات المستخدم</h3>
+          <h3>{{ "vehicleRequests.details.user" | translate }}</h3>
         </div>
         <div class="card-body">
           <div class="info-row">
-            <span class="label">الاسم:</span>
+            <span class="label">{{ "common.name" | translate }}:</span>
             <span class="value">{{ vehicleRequest.userFullName }}</span>
           </div>
           @if (vehicleRequest.userEmail) {
             <div class="info-row">
-              <span class="label">البريد الإلكتروني:</span>
+              <span class="label">{{ "common.email" | translate }}:</span>
               <a class="value link" href="mailto:{{ vehicleRequest.userEmail }}">{{ vehicleRequest.userEmail }}</a>
             </div>
           }
           @if (vehicleRequest.userPhone) {
             <div class="info-row">
-              <span class="label">رقم الهاتف:</span>
+              <span class="label">{{ "common.phone" | translate }}:</span>
               <a class="value link" href="tel:{{ vehicleRequest.userPhone }}">{{ vehicleRequest.userPhone }}</a>
             </div>
           }
@@ -510,22 +498,22 @@
         </div>
         <div class="card-body">
           <div class="info-row">
-            <span class="label">رقم الطلب:</span>
+            <span class="label">{{ "vehicleRequests.details.requestId" | translate }}:</span>
             <span class="value">#{{ vehicleRequest.id }}</span>
           </div>
           <div class="info-row">
-            <span class="label">تاريخ الطلب:</span>
+            <span class="label">{{ "common.orderDate" | translate }}:</span>
             <span class="value">{{ formatDate(vehicleRequest.createdAt) }}</span>
           </div>
           @if (vehicleRequest.updatedAt) {
             <div class="info-row">
-              <span class="label">تاريخ المعالجة:</span>
+              <span class="label">{{ "vehicleRequests.details.updatedAt" | translate }}:</span>
               <span class="value">{{ formatDate(vehicleRequest.updatedAt) }}</span>
             </div>
           }
           @if (vehicleRequest.processedBy) {
             <div class="info-row">
-              <span class="label">تمت المعالجة بواسطة:</span>
+              <span class="label">{{ "vehicleRequests.details.processedBy" | translate }}:</span>
               <span class="value">{{ vehicleRequest.processedBy }}</span>
             </div>
           }
@@ -541,16 +529,14 @@
             (click)="acceptVehicleRequest()"
           >
             <span class="material-symbols-rounded">check</span>
-            قبول وإضافة للنظام
-          </button>
+            {{ "vehicleRequests.actions.accept" | translate }}          </button>
           <button
             class="action-btn danger"
             [disabled]="isSaving"
             (click)="declineVehicleRequest()"
           >
             <span class="material-symbols-rounded">close</span>
-            رفض الطلب
-          </button>
+            {{ "vehicleRequests.actions.decline" | translate }}          </button>
         </div>
       }
     </div>
