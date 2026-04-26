@@ -7,12 +7,12 @@
   <nav class="breadcrumb-nav">
     <a routerLink="/store" class="back-link">
       <span class="material-symbols-rounded">arrow_forward</span>
-      <span>العودة للمتجر</span>
+      <span>{{ "store.categories.storeBack" | translate }}</span>
     </a>
     <div class="breadcrumb-path">
-      <a routerLink="/store" class="path-item">المتجر</a>
+      <a routerLink="/store" class="path-item">{{ "store.categories.storePath" | translate }}</a>
       <span class="material-symbols-rounded separator">chevron_left</span>
-      <span class="path-item current">الفئات</span>
+      <span class="path-item current">{{ "store.categories.pathCategories" | translate }}</span>
     </div>
   </nav>
 
@@ -23,8 +23,8 @@
         <span class="material-symbols-rounded">category</span>
       </div>
       <div class="header-text">
-        <h2>فئات المتجر</h2>
-        <p class="page-description">إدارة فئات المنتجات في المتجر</p>
+        <h2>{{ "store.categories.pageTitle" | translate }}</h2>
+        <p class="page-description">{{ "store.categories.pageSubtitle" | translate }}</p>
       </div>
     </div>
   </div>
@@ -60,14 +60,14 @@
       <div class="filter-item checkbox-filter">
         <label class="checkbox-label">
           <input type="checkbox" [(ngModel)]="showTrashed" (ngModelChange)="onTrashedFilterChange()" />
-          <span>إظهار المحذوفة</span>
+          <span>{{ "store.categories.showTrashed" | translate }}</span>
         </label>
       </div>
 
       <div class="filter-item checkbox-filter">
         <label class="checkbox-label">
           <input type="checkbox" [(ngModel)]="onlyTrashed" (ngModelChange)="onTrashedFilterChange()" />
-          <span>المحذوفة فقط</span>
+          <span>{{ "store.categories.onlyTrashed" | translate }}</span>
         </label>
       </div>
     </div>
@@ -85,7 +85,7 @@
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
           <span class="material-symbols-rounded">add</span>
-          إضافة فئة
+          {{ "store.categories.addCategory" | translate }}
         </button>
       </div>
     </div>
@@ -96,10 +96,10 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>الأيقونة</th>
+              <th>{{ "store.categories.iconCol" | translate }}</th>
               <th>{{ "common.name" | translate }}</th>
               <th>{{ "common.status" | translate }}</th>
-              <th>عدد المنتجات</th>
+              <th>{{ "store.categories.productCount" | translate }}</th>
               <th>{{ "common.order" | translate }}</th>
               <th>{{ "common.createdAt" | translate }}</th>
               <th>{{ "common.actions" | translate }}</th>
@@ -127,7 +127,7 @@
                     {{ getStatusLabel(category.status) }}
                   </span>
                   @if (category.isDeleted) {
-                    <span class="deleted-badge">محذوفة</span>
+                    <span class="deleted-badge">{{ "store.categories.deletedBadge" | translate }}</span>
                   }
                 </td>
                 <td>
@@ -145,7 +145,7 @@
                         <span class="material-symbols-rounded">delete</span>
                       </button>
                     } @else {
-                      <button class="voltyks-btn btn-icon btn-restore" title="استرجاع" (click)="restoreCategory(category)">
+                      <button class="voltyks-btn btn-icon btn-restore" [title]="'store.categories.restore' | translate" (click)="restoreCategory(category)">
                         <span class="material-symbols-rounded">restore</span>
                       </button>
                       <button class="voltyks-btn btn-icon btn-danger" [title]="'userActions.permanentDelete' | translate" (click)="openForceDeleteConfirm(category)">
@@ -170,7 +170,7 @@
     } @else {
       <div class="no-data">
         <span class="material-symbols-rounded">category</span>
-        <p>لا توجد فئات</p>
+        <p>{{ "store.categories.empty" | translate }}</p>
       </div>
     }
   </div>
@@ -187,18 +187,18 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label>اسم الفئة <span class="required">*</span></label>
-            <input type="text" class="voltyks-input" [(ngModel)]="createDto.name" placeholder="أدخل اسم الفئة" />
+            <label>{{ "store.categories.nameLabel" | translate }} <span class="required">*</span></label>
+            <input type="text" class="voltyks-input" [(ngModel)]="createDto.name" [placeholder]="'store.categories.namePlaceholder' | translate" />
           </div>
 
           <div class="form-group">
-            <label>Slug (اختياري)</label>
-            <input type="text" class="voltyks-input" [(ngModel)]="createDto.slug" placeholder="يُنشأ تلقائياً من الاسم" />
+            <label>{{ "store.categories.slugLabel" | translate }}</label>
+            <input type="text" class="voltyks-input" [(ngModel)]="createDto.slug" [placeholder]="'store.categories.slugAuto' | translate" />
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>الحالة <span class="required">*</span></label>
+              <label>{{ "store.categories.statusLabel" | translate }} <span class="required">*</span></label>
               <select class="voltyks-input" [(ngModel)]="createDto.status">
                 @for (option of statusOptions; track option.value) {
                   <option [value]="option.value">{{ option.label }}</option>
@@ -207,27 +207,27 @@
             </div>
 
             <div class="form-group">
-              <label>الترتيب <span class="required">*</span></label>
+              <label>{{ "store.categories.orderLabel" | translate }} <span class="required">*</span></label>
               <input type="number" class="voltyks-input" [(ngModel)]="createDto.sortOrder" min="0" />
             </div>
           </div>
 
           <div class="form-group">
-            <label>رابط الأيقونة</label>
+            <label>{{ "store.categories.iconUrl" | translate }}</label>
             <input type="text" class="voltyks-input" [(ngModel)]="createDto.icon" placeholder="https://..." />
           </div>
 
           @if (createDto.status === 'coming_soon') {
             <div class="form-group">
-              <label>رسالة قريباً</label>
-              <textarea class="voltyks-input" [(ngModel)]="createDto.placeholderMessage" rows="3" placeholder="رسالة تظهر للمستخدمين"></textarea>
+              <label>{{ "store.categories.comingSoonMessage" | translate }}</label>
+              <textarea class="voltyks-input" [(ngModel)]="createDto.placeholderMessage" rows="3" [placeholder]="'store.categories.comingSoonPlaceholder' | translate"></textarea>
             </div>
           }
         </div>
         <div class="modal-footer">
           <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">{{ "common.cancel" | translate }}</button>
           <button class="voltyks-btn btn-primary" (click)="createCategory()" [disabled]="isSaving">
-            {{ isSaving ? 'جاري الحفظ...' : 'حفظ' }}
+            {{ (isSaving ? 'store.categories.saving' : 'store.categories.save') | translate }}
           </button>
         </div>
       </div>
@@ -246,8 +246,8 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label>اسم الفئة</label>
-            <input type="text" class="voltyks-input" [(ngModel)]="updateDto.name" placeholder="أدخل اسم الفئة" />
+            <label>{{ "store.categories.nameLabel" | translate }}</label>
+            <input type="text" class="voltyks-input" [(ngModel)]="updateDto.name" [placeholder]="'store.categories.namePlaceholder' | translate" />
           </div>
 
           <div class="form-group">
@@ -272,21 +272,21 @@
           </div>
 
           <div class="form-group">
-            <label>رابط الأيقونة</label>
+            <label>{{ "store.categories.iconUrl" | translate }}</label>
             <input type="text" class="voltyks-input" [(ngModel)]="updateDto.icon" placeholder="https://..." />
           </div>
 
           @if (updateDto.status === 'coming_soon') {
             <div class="form-group">
-              <label>رسالة قريباً</label>
-              <textarea class="voltyks-input" [(ngModel)]="updateDto.placeholderMessage" rows="3" placeholder="رسالة تظهر للمستخدمين"></textarea>
+              <label>{{ "store.categories.comingSoonMessage" | translate }}</label>
+              <textarea class="voltyks-input" [(ngModel)]="updateDto.placeholderMessage" rows="3" [placeholder]="'store.categories.comingSoonPlaceholder' | translate"></textarea>
             </div>
           }
         </div>
         <div class="modal-footer">
           <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">{{ "common.cancel" | translate }}</button>
           <button class="voltyks-btn btn-primary" (click)="updateCategory()" [disabled]="isSaving">
-            {{ isSaving ? 'جاري الحفظ...' : 'حفظ التعديلات' }}
+            {{ (isSaving ? 'store.categories.saving' : 'store.categories.saveEdits') | translate }}
           </button>
         </div>
       </div>
@@ -296,9 +296,9 @@
   <!-- Delete Confirm -->
   <app-confirm-dialog
     [isOpen]="showDeleteConfirm"
-    title="تأكيد الحذف"
-    [message]="'هل أنت متأكد من حذف الفئة \'' + (currentCategory?.name || '') + '\'؟ يمكن استرجاعها لاحقاً.'"
-    confirmText="حذف"
+    [title]="'store.categories.deleteConfirmTitle' | translate"
+    [message]="'store.categories.deleteConfirmMessage' | translate: { name: currentCategory?.name || '' }"
+    [confirmText]="'store.categories.deleteConfirmAction' | translate"
     type="danger"
     (confirm)="confirmDelete()"
     (cancel)="closeDeleteConfirm()"
@@ -307,9 +307,9 @@
   <!-- Force Delete Confirm -->
   <app-confirm-dialog
     [isOpen]="showForceDeleteConfirm"
-    title="تأكيد الحذف النهائي"
-    [message]="'هل أنت متأكد من حذف الفئة \'' + (currentCategory?.name || '') + '\' نهائياً؟ لا يمكن استرجاعها!'"
-    confirmText="حذف نهائي"
+    [title]="'store.categories.forceDeleteTitle' | translate"
+    [message]="'store.categories.forceDeleteMessage' | translate: { name: currentCategory?.name || '' }"
+    [confirmText]="'store.categories.forceDeleteAction' | translate"
     type="danger"
     (confirm)="confirmForceDelete()"
     (cancel)="closeForceDeleteConfirm()"

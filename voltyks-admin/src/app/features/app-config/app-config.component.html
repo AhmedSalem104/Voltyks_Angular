@@ -15,15 +15,15 @@
   @if (isChargingModeLoading) {
     <div class="charging-mode-card loading">
       <div class="loading-spinner small"></div>
-      <span>جاري تحميل حالة الشحن...</span>
+      <span>{{ "appConfig.loadingChargingMode" | translate }}</span>
     </div>
   } @else if (chargingModeLoadError) {
     <div class="charging-mode-card error">
       <span class="material-symbols-rounded">error</span>
-      <span>فشل تحميل حالة الشحن</span>
+      <span>{{ "appConfig.failedChargingMode" | translate }}</span>
       <button class="retry-btn" (click)="loadChargingModeConfig()">
         <span class="material-symbols-rounded">refresh</span>
-        إعادة المحاولة
+        {{ "appConfig.retry" | translate }}
       </button>
     </div>
   } @else {
@@ -35,7 +35,7 @@
         <div class="charging-mode-info">
           <h4>{{ "appConfig.chargingModeStatus" | translate }}</h4>
           <span class="status-badge" [class]="chargingModeEnabled ? 'status-active' : 'status-inactive'">
-            {{ chargingModeEnabled ? 'مفعّل' : 'معطّل' }}
+            {{ (chargingModeEnabled ? 'appConfig.enabledLabel' : 'appConfig.disabledLabel') | translate }}
           </span>
         </div>
         <div class="charging-mode-toggle">
@@ -50,7 +50,7 @@
             } @else {
               <span class="material-symbols-rounded">{{ chargingModeEnabled ? 'toggle_on' : 'toggle_off' }}</span>
             }
-            <span>{{ chargingModeEnabled ? 'تعطيل' : 'تفعيل' }}</span>
+            <span>{{ (chargingModeEnabled ? 'appConfig.disableAction' : 'appConfig.enableAction') | translate }}</span>
           </button>
         </div>
       </div>
@@ -60,22 +60,22 @@
           <div class="status-message success">
             <span class="material-symbols-rounded">check_circle</span>
             <div>
-              <strong>{{ "common.yes" | translate }}</strong>
-              <p>Chargers and processes are running normally.</p>
+              <strong>{{ "appConfig.chargingModeEnabled" | translate }}</strong>
+              <p>{{ "appConfig.chargingNormal" | translate }}</p>
             </div>
           </div>
         } @else {
           <div class="status-message warning">
             <span class="material-symbols-rounded">warning</span>
             <div>
-              <strong>الشحن معطّل - وضع الإعداد</strong>
-              <p>التطبيق في وضع التسجيل فقط. لن يتمكن المستخدمون من:</p>
+              <strong>{{ "appConfig.chargingDisabledTitle" | translate }}</strong>
+              <p>{{ "appConfig.chargingDisabledIntro" | translate }}</p>
               <ul>
-                <li>تفعيل الشواحن</li>
-                <li>بدء عمليات شحن جديدة</li>
-                <li>استخدام أي من ميزات الشحن</li>
+                <li>{{ "appConfig.chargingDisabled1" | translate }}</li>
+                <li>{{ "appConfig.chargingDisabled2" | translate }}</li>
+                <li>{{ "appConfig.chargingDisabled3" | translate }}</li>
               </ul>
-              <p class="user-message">رسالة للمستخدمين: "الشحن غير مفعّل حالياً. في انتظار تفعيل المسؤول."</p>
+              <p class="user-message">{{ "appConfig.chargingUserMessage" | translate }}</p>
             </div>
           </div>
         }
@@ -134,7 +134,7 @@
           <div class="version-section">
             <label class="version-label">
               <span class="material-symbols-rounded">update</span>
-              الحد الأدنى للإصدار
+              {{ "appConfig.minVersion" | translate }}
             </label>
             <input
               type="text"
@@ -142,12 +142,12 @@
               [class.invalid]="!isValidVersion(formConfig.android_min_version)"
               [(ngModel)]="formConfig.android_min_version"
               (ngModelChange)="onFormChange()"
-              placeholder="مثال: 1.0.0"
+              [placeholder]="'appConfig.exampleVersion' | translate"
             />
             @if (!isValidVersion(formConfig.android_min_version)) {
-              <span class="version-error">صيغة غير صحيحة (استخدم X.Y.Z)</span>
+              <span class="version-error">{{ "appConfig.minVersionInvalid" | translate }}</span>
             }
-            <span class="version-hint">اتركه فارغاً لعدم وجود حد أدنى</span>
+            <span class="version-hint">{{ "appConfig.minVersionHint" | translate }}</span>
           </div>
         </div>
       </div>
@@ -194,7 +194,7 @@
           <div class="version-section">
             <label class="version-label">
               <span class="material-symbols-rounded">update</span>
-              الحد الأدنى للإصدار
+              {{ "appConfig.minVersion" | translate }}
             </label>
             <input
               type="text"
@@ -202,12 +202,12 @@
               [class.invalid]="!isValidVersion(formConfig.ios_min_version)"
               [(ngModel)]="formConfig.ios_min_version"
               (ngModelChange)="onFormChange()"
-              placeholder="مثال: 1.0.0"
+              [placeholder]="'appConfig.exampleVersion' | translate"
             />
             @if (!isValidVersion(formConfig.ios_min_version)) {
-              <span class="version-error">صيغة غير صحيحة (استخدم X.Y.Z)</span>
+              <span class="version-error">{{ "appConfig.minVersionInvalid" | translate }}</span>
             }
-            <span class="version-hint">اتركه فارغاً لعدم وجود حد أدنى</span>
+            <span class="version-hint">{{ "appConfig.minVersionHint" | translate }}</span>
           </div>
         </div>
       </div>
@@ -218,13 +218,13 @@
       <div class="warning-card">
         <span class="material-symbols-rounded">warning</span>
         <div class="warning-content">
-          <strong>تنبيه:</strong>
+          <strong>{{ "appConfig.warningPrefix" | translate }}</strong>
           @if (!formConfig.android_enabled && !formConfig.ios_enabled) {
-            <p>كلا التطبيقين معطلان. لن يتمكن أي مستخدم من الوصول إلى التطبيق.</p>
+            <p>{{ "appConfig.warnBothDown" | translate }}</p>
           } @else if (!formConfig.android_enabled) {
-            <p>تطبيق Android معطل. لن يتمكن مستخدمو Android من الوصول.</p>
+            <p>{{ "appConfig.warnAndroidDown" | translate }}</p>
           } @else {
-            <p>تطبيق iOS معطل. لن يتمكن مستخدمو iOS من الوصول.</p>
+            <p>{{ "appConfig.warnIosDown" | translate }}</p>
           }
         </div>
       </div>
@@ -235,20 +235,20 @@
       <div class="actions-bar">
         <div class="changes-indicator">
           <span class="material-symbols-rounded">edit</span>
-          يوجد تغييرات غير محفوظة
+          {{ "appConfig.unsavedChangesShort" | translate }}
         </div>
         <div class="action-buttons">
           <button class="voltyks-btn btn-secondary" (click)="discardChanges()" [disabled]="isSaving">
             <span class="material-symbols-rounded">undo</span>
-            تراجع
+            {{ "appConfig.discard" | translate }}
           </button>
           <button class="voltyks-btn btn-primary" (click)="saveChanges()" [disabled]="isSaving">
             @if (isSaving) {
               <span class="material-symbols-rounded spin">sync</span>
-              جاري الحفظ...
+              {{ "appConfig.saving" | translate }}
             } @else {
               <span class="material-symbols-rounded">save</span>
-              حفظ التغييرات
+              {{ "appConfig.saveChanges" | translate }}
             }
           </button>
         </div>
@@ -259,8 +259,8 @@
     <div class="info-card">
       <span class="material-symbols-rounded">info</span>
       <div class="info-content">
-        <p>عند تعطيل منصة معينة، سيظهر للمستخدمين رسالة "التطبيق غير متاح حالياً" عند محاولة فتح التطبيق.</p>
-        <p>الحد الأدنى للإصدار يمنع المستخدمين الذين لديهم إصدار أقدم من الوصول ويطلب منهم التحديث.</p>
+        <p>{{ "appConfig.infoDisablePlatform" | translate }}</p>
+        <p>{{ "appConfig.infoMinVersion" | translate }}</p>
       </div>
     </div>
 
@@ -268,18 +268,18 @@
     <div class="voltyks-card error-card">
       <div class="error-content">
         <span class="material-symbols-rounded">error</span>
-        <p class="error-title">فشل تحميل البيانات</p>
-        <p class="error-message">تأكد من اتصال الخادم وحاول مرة أخرى</p>
+        <p class="error-title">{{ "appConfig.loadFailed" | translate }}</p>
+        <p class="error-message">{{ "appConfig.loadFailedHint" | translate }}</p>
         <button class="voltyks-btn btn-primary" (click)="loadConfig()">
           <span class="material-symbols-rounded">refresh</span>
-          إعادة المحاولة
+          {{ "appConfig.retry" | translate }}
         </button>
       </div>
     </div>
   } @else {
     <div class="loading-card">
       <div class="loading-spinner"></div>
-      <p class="loading-text">جاري تحميل الإعدادات...</p>
+      <p class="loading-text">{{ "appConfig.loading" | translate }}</p>
     </div>
   }
 </div>
