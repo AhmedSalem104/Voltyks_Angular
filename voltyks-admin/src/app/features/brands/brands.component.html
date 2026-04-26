@@ -28,10 +28,10 @@
     <div class="table-header">
       <h3>قائمة العلامات التجارية</h3>
       <div class="header-actions">
-        <span class="total-count">إجمالي: {{ totalItems }}</span>
+        <span class="total-count">{{ "common.total" | translate }}: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredBrands.length === 0">
           <span class="material-symbols-rounded">print</span>
-          <span>طباعة PDF</span>
+          <span>{{ "common.printPdf" | translate }}</span>
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
           <span class="material-symbols-rounded">add</span>

@@ -82,10 +82,10 @@
     <div class="table-header">
       <h3>قائمة التقارير</h3>
       <div class="header-actions">
-        <span class="total-count">إجمالي: {{ totalReports }}</span>
+        <span class="total-count">{{ "common.total" | translate }}: {{ totalReports }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredReports.length === 0">
           <span class="material-symbols-rounded">print</span>
-          <span>طباعة PDF</span>
+          <span>{{ "common.printPdf" | translate }}</span>
         </button>
       </div>
     </div>
@@ -159,7 +159,7 @@
                     <button
                       class="voltyks-btn btn-icon"
                       (click)="openSidePanel(report); $event.stopPropagation()"
-                      title="عرض التفاصيل"
+                      [title]="'userActions.viewDetails' | translate"
                     >
                       <span class="material-symbols-rounded">visibility</span>
                     </button>

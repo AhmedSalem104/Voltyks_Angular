@@ -104,10 +104,10 @@
     <div class="table-header">
       <h3>قائمة الحجوزات</h3>
       <div class="header-actions">
-        <span class="total-count">إجمالي: {{ totalItems }}</span>
+        <span class="total-count">{{ "common.total" | translate }}: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()">
           <span class="material-symbols-rounded">print</span>
-          <span>طباعة PDF</span>
+          <span>{{ "common.printPdf" | translate }}</span>
         </button>
       </div>
     </div>
@@ -170,7 +170,7 @@
                 <td>{{ formatShortDate(reservation.createdAt) }}</td>
                 <td>
                   <div class="action-buttons">
-                    <button class="voltyks-btn btn-icon btn-view" title="عرض التفاصيل" (click)="openDetailsDialog(reservation)">
+                    <button class="voltyks-btn btn-icon btn-view" [title]="'userActions.viewDetails' | translate" (click)="openDetailsDialog(reservation)">
                       <span class="material-symbols-rounded">visibility</span>
                     </button>
 

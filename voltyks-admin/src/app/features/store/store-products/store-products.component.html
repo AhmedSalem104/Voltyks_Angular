@@ -89,10 +89,10 @@
     <div class="table-header">
       <h3>قائمة المنتجات</h3>
       <div class="header-actions">
-        <span class="total-count">إجمالي: {{ totalItems }}</span>
+        <span class="total-count">{{ "common.total" | translate }}: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()">
           <span class="material-symbols-rounded">print</span>
-          <span>طباعة PDF</span>
+          <span>{{ "common.printPdf" | translate }}</span>
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
           <span class="material-symbols-rounded">add</span>
@@ -147,7 +147,7 @@
                     {{ getStatusLabel(product.status) }}
                   </span>
                   @if (product.isDeleted) {
-                    <span class="deleted-badge">محذوف</span>
+                    <span class="deleted-badge">{{ "common.deletedBadge" | translate }}</span>
                   }
                 </td>
                 <td>
@@ -160,7 +160,7 @@
                 </td>
                 <td>
                   <div class="action-buttons">
-                    <button class="voltyks-btn btn-icon btn-view" title="عرض التفاصيل" (click)="openDetailsDialog(product)">
+                    <button class="voltyks-btn btn-icon btn-view" [title]="'userActions.viewDetails' | translate" (click)="openDetailsDialog(product)">
                       <span class="material-symbols-rounded">visibility</span>
                     </button>
                     @if (!product.isDeleted) {
@@ -177,7 +177,7 @@
                       <button class="voltyks-btn btn-icon btn-restore" title="استرجاع" (click)="restoreProduct(product)">
                         <span class="material-symbols-rounded">restore</span>
                       </button>
-                      <button class="voltyks-btn btn-icon btn-danger" title="حذف نهائي" (click)="openForceDeleteConfirm(product)">
+                      <button class="voltyks-btn btn-icon btn-danger" [title]="'userActions.permanentDelete' | translate" (click)="openForceDeleteConfirm(product)">
                         <span class="material-symbols-rounded">delete_forever</span>
                       </button>
                     }

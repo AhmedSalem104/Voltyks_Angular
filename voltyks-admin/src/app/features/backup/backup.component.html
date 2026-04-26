@@ -77,7 +77,7 @@
           <button class="preset-chip" [class.active]="activePreset === 'week'" (click)="setPreset('week')">أسبوع</button>
           <button class="preset-chip" [class.active]="activePreset === 'month'" (click)="setPreset('month')">شهر</button>
           <button class="preset-chip" [class.active]="activePreset === 'year'" (click)="setPreset('year')">سنة</button>
-          <button class="preset-chip" [class.active]="activePreset === 'all'" (click)="setPreset('all')">الكل</button>
+          <button class="preset-chip" [class.active]="activePreset === 'all'" (click)="setPreset('all')">{{ "common.all" | translate }}</button>
         </div>
         <div class="date-range">
           <div class="date-group">

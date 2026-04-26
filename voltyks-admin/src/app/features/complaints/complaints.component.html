@@ -80,10 +80,10 @@
     <div class="table-header">
       <h3>أنواع الشكاوى</h3>
       <div class="header-actions">
-        <span class="total-count">إجمالي: {{ totalCategories }}</span>
+        <span class="total-count">{{ "common.total" | translate }}: {{ totalCategories }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredCategories.length === 0">
           <span class="material-symbols-rounded">print</span>
-          <span>طباعة PDF</span>
+          <span>{{ "common.printPdf" | translate }}</span>
         </button>
       </div>
     </div>

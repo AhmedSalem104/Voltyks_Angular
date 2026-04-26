@@ -6,7 +6,7 @@
     </div>
     <button class="voltyks-btn print-btn" (click)="printToPdf()" *ngIf="fees">
       <span class="material-symbols-rounded">print</span>
-      <span>طباعة PDF</span>
+      <span>{{ "common.printPdf" | translate }}</span>
     </button>
   </div>
 
@@ -137,7 +137,7 @@
                   } @else {
                     <div class="no-results">
                       <span class="material-symbols-rounded">search_off</span>
-                      <p>لا توجد نتائج</p>
+                      <p>{{ "common.noResults" | translate }}</p>
                     </div>
                   }
                 </div>
