@@ -225,12 +225,12 @@
               <th>المالك</th>
               <th>البريد</th>
               <th>الهاتف</th>
-              <th>العلامة التجارية</th>
-              <th>الموديل</th>
-              <th>سعة البطارية</th>
-              <th>السنة</th>
-              <th>اللون</th>
-              <th>رقم اللوحة</th>
+              <th>{{ "common.brand" | translate }}</th>
+              <th>{{ "common.model" | translate }}</th>
+              <th>{{ "common.batteryCapacity" | translate }}</th>
+              <th>{{ "common.year" | translate }}</th>
+              <th>{{ "common.color" | translate }}</th>
+              <th>{{ "common.plate" | translate }}</th>
               <th>تاريخ الإضافة</th>
               <th>{{ "common.actions" | translate }}</th>
             </tr>
@@ -554,7 +554,7 @@
         <form class="vehicle-form">
           <div class="form-row">
             <div class="form-group">
-              <label>السنة</label>
+              <label>{{ "common.year" | translate }}</label>
               <input
                 type="number"
                 class="voltyks-input"
@@ -565,7 +565,7 @@
               />
             </div>
             <div class="form-group">
-              <label>اللون</label>
+              <label>{{ "common.color" | translate }}</label>
               <input
                 type="text"
                 class="voltyks-input"
@@ -576,7 +576,7 @@
           </div>
 
           <div class="form-group">
-            <label>رقم اللوحة</label>
+            <label>{{ "common.plate" | translate }}</label>
             <input
               type="text"
               class="voltyks-input"

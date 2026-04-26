@@ -97,7 +97,7 @@
               <th>اسم النوع</th>
               <th>الوصف</th>
               <th>عدد الشكاوى</th>
-              <th>تاريخ الإنشاء</th>
+              <th>{{ "common.createdAt" | translate }}</th>
               <th>{{ "common.status" | translate }}</th>
               <th>{{ "common.actions" | translate }}</th>
             </tr>
@@ -251,7 +251,7 @@
     <div class="modal confirm-modal">
       <div class="modal-header danger">
         <span class="material-symbols-rounded">warning</span>
-        <h3>تأكيد الحذف</h3>
+        <h3>{{ "common.deleteConfirm" | translate }}</h3>
       </div>
       <div class="modal-body">
         <p class="confirm-message">

@@ -95,8 +95,8 @@
         <table class="voltyks-table">
           <thead>
             <tr>
-              <th>المستخدم</th>
-              <th>محتوى البلاغ</th>
+              <th>{{ "common.user" | translate }}</th>
+              <th>{{ "common.reportContent" | translate }}</th>
               <th>{{ "common.date" | translate }}</th>
               <th>{{ "common.status" | translate }}</th>
               <th>{{ "common.actions" | translate }}</th>
@@ -465,7 +465,7 @@
         <div class="detail-section">
           <div class="section-header">
             <span class="material-symbols-rounded">person</span>
-            <h4>مالك المركبة</h4>
+            <h4>{{ "common.vehicleOwner" | translate }}</h4>
           </div>
           <div class="section-content">
             <div class="detail-row">
@@ -489,11 +489,11 @@
               <span class="detail-value">{{ selectedProcess.vehicleOwnerRating || '-' }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">رصيد المحفظة</span>
+              <span class="detail-label">{{ "common.walletBalance" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.vehicleOwnerWallet }} ج.م</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">حالة الحساب</span>
+              <span class="detail-label">{{ "common.accountStatus" | translate }}</span>
               <span class="detail-value" [class.banned]="selectedProcess.vehicleOwnerIsBanned" [class.active]="!selectedProcess.vehicleOwnerIsBanned">
                 {{ selectedProcess.vehicleOwnerIsBanned ? 'محظور' : 'نشط' }}
               </span>
@@ -505,7 +505,7 @@
         <div class="detail-section">
           <div class="section-header">
             <span class="material-symbols-rounded">engineering</span>
-            <h4>مالك الشاحن</h4>
+            <h4>{{ "common.chargerOwner" | translate }}</h4>
           </div>
           <div class="section-content">
             <div class="detail-row">
@@ -529,11 +529,11 @@
               <span class="detail-value">{{ selectedProcess.chargerOwnerRating || '-' }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">رصيد المحفظة</span>
+              <span class="detail-label">{{ "common.walletBalance" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.chargerOwnerWallet }} ج.م</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">حالة الحساب</span>
+              <span class="detail-label">{{ "common.accountStatus" | translate }}</span>
               <span class="detail-value" [class.banned]="selectedProcess.chargerOwnerIsBanned" [class.active]="!selectedProcess.chargerOwnerIsBanned">
                 {{ selectedProcess.chargerOwnerIsBanned ? 'محظور' : 'نشط' }}
               </span>

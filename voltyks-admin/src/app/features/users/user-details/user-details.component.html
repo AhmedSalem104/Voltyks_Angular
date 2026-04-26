@@ -109,7 +109,7 @@
         <!-- Overview Tab -->
         @if (activeTab === 'overview') {
           <div class="tab-pane">
-            <h4>معلومات إضافية</h4>
+            <h4>{{ "common.extraInfo" | translate }}</h4>
             <div class="info-grid">
               <div class="info-item">
                 <p class="info-label">عدد الشواحن</p>
@@ -124,7 +124,7 @@
                 <p class="info-value">{{ user.totalChargingRequests || 0 }}</p>
               </div>
               <div class="info-item">
-                <p class="info-label">رصيد المحفظة</p>
+                <p class="info-label">{{ "common.walletBalance" | translate }}</p>
                 <p class="info-value">{{ user.wallet || 0 }} ج.م</p>
               </div>
             </div>
@@ -157,12 +157,12 @@
               <table class="voltyks-table">
                 <thead>
                   <tr>
-                    <th>العلامة التجارية</th>
-                    <th>الموديل</th>
-                    <th>السعة</th>
-                    <th>رقم اللوحة</th>
-                    <th>اللون</th>
-                    <th>السنة</th>
+                    <th>{{ "common.brand" | translate }}</th>
+                    <th>{{ "common.model" | translate }}</th>
+                    <th>{{ "common.capacity" | translate }}</th>
+                    <th>{{ "common.plate" | translate }}</th>
+                    <th>{{ "common.color" | translate }}</th>
+                    <th>{{ "common.year" | translate }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -199,7 +199,7 @@
               <table class="voltyks-table">
                 <thead>
                   <tr>
-                    <th>محتوى البلاغ</th>
+                    <th>{{ "common.reportContent" | translate }}</th>
                     <th>{{ "common.date" | translate }}</th>
                     <th>{{ "common.status" | translate }}</th>
                   </tr>

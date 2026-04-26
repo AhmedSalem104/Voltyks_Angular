@@ -108,15 +108,15 @@
         <table class="voltyks-table">
           <thead>
             <tr>
-              <th>المستخدم</th>
+              <th>{{ "common.user" | translate }}</th>
               <th>الهاتف</th>
-              <th>البروتوكول</th>
-              <th>السعة</th>
+              <th>{{ "common.protocol" | translate }}</th>
+              <th>{{ "common.capacity" | translate }}</th>
               <th>السعر/ساعة</th>
               <th>المنطقة</th>
               <th>الشارع</th>
               <th>الأدابتر</th>
-              <th>التقييم</th>
+              <th>{{ "common.rating" | translate }}</th>
               <th>تاريخ الإضافة</th>
               <th>{{ "common.status" | translate }}</th>
               <th>{{ "common.actions" | translate }}</th>
@@ -411,7 +411,7 @@
         <form class="charger-form">
           <div class="form-row">
             <div class="form-group">
-              <label>البروتوكول</label>
+              <label>{{ "common.protocol" | translate }}</label>
               <select
                 class="voltyks-input"
                 [(ngModel)]="updateDto.protocolId"
@@ -424,7 +424,7 @@
               </select>
             </div>
             <div class="form-group">
-              <label>السعة</label>
+              <label>{{ "common.capacity" | translate }}</label>
               <select
                 class="voltyks-input"
                 [(ngModel)]="updateDto.capacityId"
@@ -453,7 +453,7 @@
               </select>
             </div>
             <div class="form-group">
-              <label>رقم المبنى</label>
+              <label>{{ "common.addressBuilding" | translate }}</label>
               <input
                 type="text"
                 class="voltyks-input"
@@ -465,7 +465,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>المنطقة</label>
+              <label>{{ "common.addressArea" | translate }}</label>
               <input
                 type="text"
                 class="voltyks-input"
@@ -474,7 +474,7 @@
               />
             </div>
             <div class="form-group">
-              <label>الشارع</label>
+              <label>{{ "common.addressStreet" | translate }}</label>
               <input
                 type="text"
                 class="voltyks-input"

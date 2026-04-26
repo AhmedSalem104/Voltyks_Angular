@@ -50,7 +50,7 @@
       <!-- Status Filter -->
       <div class="filter-item">
         <select class="voltyks-input" [(ngModel)]="statusFilter" (ngModelChange)="onFilterChange()">
-          <option value="">جميع الحالات</option>
+          <option [ngValue]="null">{{ "common.allStatuses" | translate }}</option>
           @for (option of statusOptions; track option.value) {
             <option [value]="option.value">{{ option.label }}</option>
           }
@@ -118,8 +118,8 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>المنتج</th>
-              <th>العميل</th>
+              <th>{{ "common.product" | translate }}</th>
+              <th>{{ "common.customer" | translate }}</th>
               <th>{{ "common.status" | translate }}</th>
               <th>الدفع</th>
               <th>التسليم</th>
@@ -261,7 +261,7 @@
             <div class="timeline-connector" [class.active]="currentReservation.status === 'completed'"></div>
             <div class="timeline-step" [class.active]="currentReservation.status === 'completed'">
               <span class="step-icon material-symbols-rounded">check_circle</span>
-              <span class="step-label">مكتمل</span>
+              <span class="step-label">{{ "common.completed" | translate }}</span>
             </div>
           </div>
 
@@ -462,7 +462,7 @@
             </div>
 
             <div class="form-group">
-              <label>ملاحظات</label>
+              <label>{{ "common.notes" | translate }}</label>
               <textarea class="voltyks-input" [(ngModel)]="paymentDto.notes" rows="3" placeholder="ملاحظات إضافية..."></textarea>
             </div>
           </div>

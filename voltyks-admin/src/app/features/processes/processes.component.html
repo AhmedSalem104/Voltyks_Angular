@@ -100,10 +100,10 @@
           <thead>
             <tr>
               <th>رقم العملية</th>
-              <th>تاريخ الطلب</th>
+              <th>{{ "common.orderDate" | translate }}</th>
               <th>{{ "common.status" | translate }}</th>
-              <th>مالك المركبة</th>
-              <th>مالك الشاحن</th>
+              <th>{{ "common.vehicleOwner" | translate }}</th>
+              <th>{{ "common.chargerOwner" | translate }}</th>
               <th>السعر التقديري</th>
               <th>{{ "common.actions" | translate }}</th>
             </tr>
@@ -351,7 +351,7 @@
       <div class="detail-section">
         <div class="section-header">
           <span class="material-symbols-rounded">person</span>
-          <h4>مالك المركبة</h4>
+          <h4>{{ "common.vehicleOwner" | translate }}</h4>
         </div>
         <div class="section-content">
           <div class="detail-row">
@@ -387,11 +387,11 @@
             <span class="value">{{ selectedProcess.vehicleOwnerUserRating || 'لا يوجد' }}</span>
           </div>
           <div class="detail-row">
-            <span class="label">رصيد المحفظة</span>
+            <span class="label">{{ "common.walletBalance" | translate }}</span>
             <span class="value">{{ formatCurrency(selectedProcess.vehicleOwnerWallet) }}</span>
           </div>
           <div class="detail-row">
-            <span class="label">حالة الحساب</span>
+            <span class="label">{{ "common.accountStatus" | translate }}</span>
             <span class="value">
               <span class="status-badge sm" [ngClass]="selectedProcess.vehicleOwnerIsBanned ? 'status-rejected' : 'status-completed'">
                 {{ selectedProcess.vehicleOwnerIsBanned ? 'محظور' : 'نشط' }}
@@ -405,7 +405,7 @@
       <div class="detail-section">
         <div class="section-header">
           <span class="material-symbols-rounded">business</span>
-          <h4>مالك الشاحن</h4>
+          <h4>{{ "common.chargerOwner" | translate }}</h4>
         </div>
         <div class="section-content">
           <div class="detail-row">
@@ -441,11 +441,11 @@
             <span class="value">{{ selectedProcess.chargerOwnerUserRating || 'لا يوجد' }}</span>
           </div>
           <div class="detail-row">
-            <span class="label">رصيد المحفظة</span>
+            <span class="label">{{ "common.walletBalance" | translate }}</span>
             <span class="value">{{ formatCurrency(selectedProcess.chargerOwnerWallet) }}</span>
           </div>
           <div class="detail-row">
-            <span class="label">حالة الحساب</span>
+            <span class="label">{{ "common.accountStatus" | translate }}</span>
             <span class="value">
               <span class="status-badge sm" [ngClass]="selectedProcess.chargerOwnerIsBanned ? 'status-rejected' : 'status-completed'">
                 {{ selectedProcess.chargerOwnerIsBanned ? 'محظور' : 'نشط' }}

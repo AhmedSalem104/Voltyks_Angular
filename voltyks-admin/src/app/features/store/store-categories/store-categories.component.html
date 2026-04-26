@@ -49,7 +49,7 @@
       <!-- Status Filter -->
       <div class="filter-item">
         <select class="voltyks-input" [(ngModel)]="statusFilter" (ngModelChange)="onStatusFilterChange()">
-          <option value="">جميع الحالات</option>
+          <option [ngValue]="null">{{ "common.allStatuses" | translate }}</option>
           @for (option of statusOptions; track option.value) {
             <option [value]="option.value">{{ option.label }}</option>
           }
@@ -100,8 +100,8 @@
               <th>{{ "common.name" | translate }}</th>
               <th>{{ "common.status" | translate }}</th>
               <th>عدد المنتجات</th>
-              <th>الترتيب</th>
-              <th>تاريخ الإنشاء</th>
+              <th>{{ "common.order" | translate }}</th>
+              <th>{{ "common.createdAt" | translate }}</th>
               <th>{{ "common.actions" | translate }}</th>
             </tr>
           </thead>
@@ -266,7 +266,7 @@
             </div>
 
             <div class="form-group">
-              <label>الترتيب</label>
+              <label>{{ "common.order" | translate }}</label>
               <input type="number" class="voltyks-input" [(ngModel)]="updateDto.sortOrder" min="0" />
             </div>
           </div>
