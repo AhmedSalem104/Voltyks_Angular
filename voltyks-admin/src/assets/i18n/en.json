@@ -734,31 +734,48 @@
   },
   "store": {
     "title": "Store",
+    "back": "Back to store",
+    "image": "Image",
+    "trashedOnly": "Trashed only",
+    "allCategories": "All categories",
     "categories": {
       "title": "Product Categories",
       "subtitle": "Manage store product categories",
       "addCategory": "Add category",
-      "editCategory": "Edit category"
+      "editCategory": "Edit category",
+      "categoryName": "Category name",
+      "namePlaceholder": "Enter category name",
+      "deleteConfirm": "Are you sure you want to delete this category?"
     },
     "products": {
       "title": "Products",
-      "subtitle": "Manage all store products",
+      "subtitle": "Manage store products and reservations",
       "addProduct": "Add product",
       "editProduct": "Edit product",
       "name": "Product name",
+      "namePlaceholder": "Enter product name",
       "price": "Price",
       "stock": "Stock",
-      "category": "Category"
+      "category": "Category",
+      "reservations": "Reservations",
+      "image": "Image",
+      "manageImages": "Manage images",
+      "imagesManagement": "Product images",
+      "uploadHint": "Click to choose images or drag them here",
+      "allowedTypes": "Allowed types",
+      "deleteConfirm": "Are you sure you want to delete this product?"
     },
     "reservations": {
-      "title": "Store Reservations",
-      "subtitle": "Track product reservations",
+      "title": "Reservations",
+      "subtitle": "Manage and track customer reservations",
       "user": "User",
       "product": "Product",
       "quantity": "Quantity",
       "totalPrice": "Total",
       "status": "Status",
-      "paymentStatus": "Payment status"
+      "paymentStatus": "Payment status",
+      "completeReservation": "Complete reservation",
+      "addNotes": "Add notes from contact with the customer"
     }
   },
   "chargingProtocols": {

@@ -8,12 +8,12 @@
   <nav class="breadcrumb-nav">
     <a routerLink="/store" class="back-link">
       <span class="material-symbols-rounded">arrow_forward</span>
-      <span>العودة للمتجر</span>
+      <span>{{ "store.back" | translate }}</span>
     </a>
     <div class="breadcrumb-path">
-      <a routerLink="/store" class="path-item">المتجر</a>
+      <a routerLink="/store" class="path-item">{{ "store.title" | translate }}</a>
       <span class="material-symbols-rounded separator">chevron_left</span>
-      <span class="path-item current">المنتجات</span>
+      <span class="path-item current">{{ "store.products.title" | translate }}</span>
     </div>
   </nav>
 
@@ -24,8 +24,8 @@
         <span class="material-symbols-rounded">inventory_2</span>
       </div>
       <div class="header-text">
-        <h2>منتجات المتجر</h2>
-        <p class="page-description">إدارة منتجات المتجر والحجوزات</p>
+        <h2>{{ "store.products.title" | translate }}</h2>
+        <p class="page-description">{{ "store.products.subtitle" | translate }}</p>
       </div>
     </div>
   </div>
@@ -50,7 +50,7 @@
       <!-- Category Filter -->
       <div class="filter-item">
         <select class="voltyks-input" [(ngModel)]="categoryFilter" (ngModelChange)="onCategoryFilterChange()">
-          <option value="">جميع الفئات</option>
+          <option value="">{{ "store.allCategories" | translate }}</option>
           @for (category of categories; track category.id) {
             <option [value]="category.id">{{ category.name }}</option>
           }
@@ -71,14 +71,14 @@
       <div class="filter-item checkbox-filter">
         <label class="checkbox-label">
           <input type="checkbox" [(ngModel)]="showTrashed" (ngModelChange)="onTrashedFilterChange()" />
-          <span>إظهار المحذوفة</span>
+          <span>{{ "common.showDeleted" | translate }}</span>
         </label>
       </div>
 
       <div class="filter-item checkbox-filter">
         <label class="checkbox-label">
           <input type="checkbox" [(ngModel)]="onlyTrashed" (ngModelChange)="onTrashedFilterChange()" />
-          <span>المحذوفة فقط</span>
+          <span>{{ "store.trashedOnly" | translate }}</span>
         </label>
       </div>
     </div>
@@ -107,13 +107,13 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>الصورة</th>
+              <th>{{ "store.image" | translate }}</th>
               <th>{{ "common.name" | translate }}</th>
               <th>{{ "common.category" | translate }}</th>
               <th>{{ "common.price" | translate }}</th>
               <th>{{ "common.status" | translate }}</th>
               <th>{{ "common.reservable" | translate }}</th>
-              <th>الحجوزات</th>
+              <th>{{ "store.products.reservations" | translate }}</th>
               <th>{{ "common.actions" | translate }}</th>
             </tr>
           </thead>
@@ -152,7 +152,7 @@
                 </td>
                 <td>
                   <span class="reservable-badge" [class.yes]="product.isReservable" [class.no]="!product.isReservable">
-                    {{ product.isReservable ? 'نعم' : 'لا' }}
+                    {{ (product.isReservable ? 'common.yes' : 'common.no') | translate }}
                   </span>
                 </td>
                 <td>
@@ -164,7 +164,7 @@
                       <span class="material-symbols-rounded">visibility</span>
                     </button>
                     @if (!product.isDeleted) {
-                      <button class="voltyks-btn btn-icon btn-images" title="إدارة الصور" (click)="openImageManager(product)">
+                      <button class="voltyks-btn btn-icon btn-images" [title]="'store.products.manageImages' | translate" (click)="openImageManager(product)">
                         <span class="material-symbols-rounded">collections</span>
                       </button>
                       <button class="voltyks-btn btn-icon btn-edit" [title]="'common.edit' | translate" (click)="openEditDialog(product)">
@@ -174,7 +174,7 @@
                         <span class="material-symbols-rounded">delete</span>
                       </button>
                     } @else {
-                      <button class="voltyks-btn btn-icon btn-restore" title="استرجاع" (click)="restoreProduct(product)">
+                      <button class="voltyks-btn btn-icon btn-restore" [title]="'common.restore' | translate" (click)="restoreProduct(product)">
                         <span class="material-symbols-rounded">restore</span>
                       </button>
                       <button class="voltyks-btn btn-icon btn-danger" [title]="'userActions.permanentDelete' | translate" (click)="openForceDeleteConfirm(product)">
@@ -199,7 +199,7 @@
     } @else {
       <div class="no-data">
         <span class="material-symbols-rounded">inventory_2</span>
-        <p>لا توجد منتجات</p>
+        <p>{{ "common.noData" | translate }}</p>
       </div>
     }
   </div>
@@ -217,26 +217,26 @@
         <div class="modal-body">
           <div class="form-row">
             <div class="form-group">
-              <label>اسم المنتج <span class="required">*</span></label>
-              <input type="text" class="voltyks-input" [(ngModel)]="createDto.name" placeholder="أدخل اسم المنتج" />
+              <label>{{ "store.products.name" | translate }} <span class="required">*</span></label>
+              <input type="text" class="voltyks-input" [(ngModel)]="createDto.name" [placeholder]="'store.products.namePlaceholder' | translate" />
             </div>
 
             <div class="form-group">
-              <label>Slug (اختياري)</label>
-              <input type="text" class="voltyks-input" [(ngModel)]="createDto.slug" placeholder="يُنشأ تلقائياً من الاسم" />
+              <label>Slug ({{ "common.optional" | translate }})</label>
+              <input type="text" class="voltyks-input" [(ngModel)]="createDto.slug" placeholder="auto" />
             </div>
           </div>
 
           <div class="form-group">
             <label>{{ "common.description" | translate }}</label>
-            <textarea class="voltyks-input" [(ngModel)]="createDto.description" rows="3" placeholder="وصف المنتج"></textarea>
+            <textarea class="voltyks-input" [(ngModel)]="createDto.description" rows="3" [placeholder]="'common.description' | translate"></textarea>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>الفئة <span class="required">*</span></label>
+              <label>{{ "common.category" | translate }} <span class="required">*</span></label>
               <select class="voltyks-input" [(ngModel)]="createDto.categoryId">
-                <option [value]="0" disabled>اختر الفئة</option>
+                <option [value]="0" disabled>{{ "common.selectFromList" | translate }}</option>
                 @for (category of categories; track category.id) {
                   <option [value]="category.id">{{ category.name }}</option>
                 }
@@ -244,14 +244,14 @@
             </div>
 
             <div class="form-group">
-              <label>السعر <span class="required">*</span></label>
+              <label>{{ "common.price" | translate }} <span class="required">*</span></label>
               <input type="number" class="voltyks-input" [(ngModel)]="createDto.price" min="0" step="0.01" />
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>الحالة <span class="required">*</span></label>
+              <label>{{ "common.status" | translate }} <span class="required">*</span></label>
               <select class="voltyks-input" [(ngModel)]="createDto.status">
                 @for (option of statusOptions; track option.value) {
                   <option [value]="option.value">{{ option.label }}</option>
@@ -267,7 +267,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>رابط الصورة المصغرة</label>
+              <label>Thumbnail URL</label>
               <input type="text" class="voltyks-input" [(ngModel)]="createDto.thumbnailUrl" placeholder="https://..." />
             </div>
 
@@ -282,7 +282,7 @@
           <!-- Specifications -->
           <div class="form-section">
             <div class="section-header">
-              <label>المواصفات</label>
+              <label>Specifications</label>
               <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="addSpecification(true)">
                 <span class="material-symbols-rounded">add</span>
                 إضافة
@@ -290,8 +290,8 @@
             </div>
             @for (spec of createSpecs; track $index; let i = $index) {
               <div class="spec-row">
-                <input type="text" class="voltyks-input" [(ngModel)]="spec.key" placeholder="المفتاح" />
-                <input type="text" class="voltyks-input" [(ngModel)]="spec.value" placeholder="القيمة" />
+                <input type="text" class="voltyks-input" [(ngModel)]="spec.key" placeholder="Key" />
+                <input type="text" class="voltyks-input" [(ngModel)]="spec.value" [placeholder]="'common.value' | translate" />
                 <button type="button" class="voltyks-btn btn-icon btn-danger" (click)="removeSpecification(i, true)">
                   <span class="material-symbols-rounded">close</span>
                 </button>
@@ -303,14 +303,14 @@
           <div class="form-section images-note">
             <div class="note-content">
               <span class="material-symbols-rounded">info</span>
-              <span>سيتم فتح نافذة إدارة الصور تلقائياً بعد إنشاء المنتج لرفع الصور</span>
+              <span>An image manager will open after the product is created.</span>
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">{{ "common.cancel" | translate }}</button>
           <button class="voltyks-btn btn-primary" (click)="createProduct()" [disabled]="isSaving">
-            {{ isSaving ? 'جاري الحفظ...' : 'حفظ' }}
+            {{ (isSaving ? 'common.saving' : 'common.save') | translate }}
           </button>
         </div>
       </div>
@@ -331,7 +331,7 @@
           <div class="form-row">
             <div class="form-group">
               <label>اسم المنتج</label>
-              <input type="text" class="voltyks-input" [(ngModel)]="updateDto.name" placeholder="أدخل اسم المنتج" />
+              <input type="text" class="voltyks-input" [(ngModel)]="updateDto.name" [placeholder]="'store.products.namePlaceholder' | translate" />
             </div>
 
             <div class="form-group">
@@ -342,7 +342,7 @@
 
           <div class="form-group">
             <label>{{ "common.description" | translate }}</label>
-            <textarea class="voltyks-input" [(ngModel)]="updateDto.description" rows="3" placeholder="وصف المنتج"></textarea>
+            <textarea class="voltyks-input" [(ngModel)]="updateDto.description" rows="3" [placeholder]="'common.description' | translate"></textarea>
           </div>
 
           <div class="form-row">
@@ -379,7 +379,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>رابط الصورة المصغرة</label>
+              <label>Thumbnail URL</label>
               <input type="text" class="voltyks-input" [(ngModel)]="updateDto.thumbnailUrl" placeholder="https://..." />
             </div>
 
@@ -394,7 +394,7 @@
           <!-- Specifications -->
           <div class="form-section">
             <div class="section-header">
-              <label>المواصفات</label>
+              <label>Specifications</label>
               <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="addSpecification(false)">
                 <span class="material-symbols-rounded">add</span>
                 إضافة
@@ -402,8 +402,8 @@
             </div>
             @for (spec of updateSpecs; track $index; let i = $index) {
               <div class="spec-row">
-                <input type="text" class="voltyks-input" [(ngModel)]="spec.key" placeholder="المفتاح" />
-                <input type="text" class="voltyks-input" [(ngModel)]="spec.value" placeholder="القيمة" />
+                <input type="text" class="voltyks-input" [(ngModel)]="spec.key" placeholder="Key" />
+                <input type="text" class="voltyks-input" [(ngModel)]="spec.value" [placeholder]="'common.value' | translate" />
                 <button type="button" class="voltyks-btn btn-icon btn-danger" (click)="removeSpecification(i, false)">
                   <span class="material-symbols-rounded">close</span>
                 </button>

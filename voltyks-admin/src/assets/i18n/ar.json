@@ -734,31 +734,48 @@
   },
   "store": {
     "title": "المتجر",
+    "back": "العودة للمتجر",
+    "image": "الصورة",
+    "trashedOnly": "المحذوفة فقط",
+    "allCategories": "جميع الفئات",
     "categories": {
-      "title": "أنواع المنتجات",
-      "subtitle": "إدارة أنواع منتجات المتجر",
-      "addCategory": "إضافة نوع",
-      "editCategory": "تعديل النوع"
+      "title": "فئات المنتجات",
+      "subtitle": "إدارة فئات المنتجات في المتجر",
+      "addCategory": "إضافة فئة",
+      "editCategory": "تعديل الفئة",
+      "categoryName": "اسم الفئة",
+      "namePlaceholder": "أدخل اسم الفئة",
+      "deleteConfirm": "هل أنت متأكد من حذف هذه الفئة؟"
     },
     "products": {
       "title": "المنتجات",
-      "subtitle": "إدارة كل منتجات المتجر",
+      "subtitle": "إدارة منتجات المتجر والحجوزات",
       "addProduct": "إضافة منتج",
       "editProduct": "تعديل المنتج",
       "name": "اسم المنتج",
+      "namePlaceholder": "أدخل اسم المنتج",
       "price": "السعر",
       "stock": "المخزون",
-      "category": "النوع"
+      "category": "الفئة",
+      "reservations": "الحجوزات",
+      "image": "الصورة",
+      "manageImages": "إدارة الصور",
+      "imagesManagement": "إدارة صور المنتج",
+      "uploadHint": "اضغط لاختيار الصور أو اسحبها هنا",
+      "allowedTypes": "الأنواع المسموحة",
+      "deleteConfirm": "هل أنت متأكد من حذف هذا المنتج؟"
     },
     "reservations": {
-      "title": "حجوزات المتجر",
-      "subtitle": "متابعة حجوزات المنتجات",
+      "title": "الحجوزات",
+      "subtitle": "إدارة ومتابعة حجوزات العملاء",
       "user": "المستخدم",
       "product": "المنتج",
       "quantity": "الكمية",
       "totalPrice": "الإجمالي",
       "status": "الحالة",
-      "paymentStatus": "حالة الدفع"
+      "paymentStatus": "حالة الدفع",
+      "completeReservation": "إكمال الحجز",
+      "addNotes": "أدخل ملاحظات التواصل مع العميل"
     }
   },
   "chargingProtocols": {
