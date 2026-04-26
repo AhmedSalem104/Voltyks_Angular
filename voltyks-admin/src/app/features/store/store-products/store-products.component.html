@@ -40,7 +40,7 @@
           <input
             type="text"
             class="voltyks-input"
-            placeholder="البحث في المنتجات..."
+            [placeholder]="'common.search' | translate"
             [ngModel]="searchTerm"
             (ngModelChange)="onSearchChange($event)"
           />
@@ -87,7 +87,7 @@
   <!-- Data Table -->
   <div class="voltyks-card">
     <div class="table-header">
-      <h3>قائمة المنتجات</h3>
+      <h3>{{ "store.products.title" | translate }}</h3>
       <div class="header-actions">
         <span class="total-count">{{ "common.total" | translate }}: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()">
@@ -167,10 +167,10 @@
                       <button class="voltyks-btn btn-icon btn-images" title="إدارة الصور" (click)="openImageManager(product)">
                         <span class="material-symbols-rounded">collections</span>
                       </button>
-                      <button class="voltyks-btn btn-icon btn-edit" title="تعديل" (click)="openEditDialog(product)">
+                      <button class="voltyks-btn btn-icon btn-edit" [title]="'common.edit' | translate" (click)="openEditDialog(product)">
                         <span class="material-symbols-rounded">edit</span>
                       </button>
-                      <button class="voltyks-btn btn-icon btn-danger" title="حذف" (click)="openDeleteConfirm(product)">
+                      <button class="voltyks-btn btn-icon btn-danger" [title]="'common.delete' | translate" (click)="openDeleteConfirm(product)">
                         <span class="material-symbols-rounded">delete</span>
                       </button>
                     } @else {
@@ -209,7 +209,7 @@
     <div class="modal-overlay" (click)="closeCreateDialog()">
       <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h3>إضافة منتج جديد</h3>
+          <h3>{{ "store.products.addProduct" | translate }}</h3>
           <button type="button" class="close-btn" (click)="closeCreateDialog()">
             <span class="material-symbols-rounded">close</span>
           </button>
@@ -228,7 +228,7 @@
           </div>
 
           <div class="form-group">
-            <label>الوصف</label>
+            <label>{{ "common.description" | translate }}</label>
             <textarea class="voltyks-input" [(ngModel)]="createDto.description" rows="3" placeholder="وصف المنتج"></textarea>
           </div>
 
@@ -322,7 +322,7 @@
     <div class="modal-overlay" (click)="closeEditDialog()">
       <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h3>تعديل المنتج</h3>
+          <h3>{{ "store.products.editProduct" | translate }}</h3>
           <button type="button" class="close-btn" (click)="closeEditDialog()">
             <span class="material-symbols-rounded">close</span>
           </button>
@@ -341,7 +341,7 @@
           </div>
 
           <div class="form-group">
-            <label>الوصف</label>
+            <label>{{ "common.description" | translate }}</label>
             <textarea class="voltyks-input" [(ngModel)]="updateDto.description" rows="3" placeholder="وصف المنتج"></textarea>
           </div>
 
@@ -363,7 +363,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>الحالة</label>
+              <label>{{ "common.status" | translate }}</label>
               <select class="voltyks-input" [(ngModel)]="updateDto.status">
                 @for (option of statusOptions; track option.value) {
                   <option [value]="option.value">{{ option.label }}</option>

@@ -14,7 +14,7 @@
           <input
             type="text"
             class="voltyks-input"
-            placeholder="البحث عن سعة..."
+            [placeholder]="'common.search' | translate"
             [(ngModel)]="searchTerm"
             (ngModelChange)="onSearchChange($event)"
           />
@@ -63,14 +63,14 @@
                     <button
                       class="voltyks-btn btn-icon btn-edit"
                       (click)="openEditDialog(capacity)"
-                      title="تعديل"
+                      [title]="'common.edit' | translate"
                     >
                       <span class="material-symbols-rounded">edit</span>
                     </button>
                     <button
                       class="voltyks-btn btn-icon btn-danger"
                       (click)="openDeleteConfirm(capacity)"
-                      title="حذف"
+                      [title]="'common.delete' | translate"
                     >
                       <span class="material-symbols-rounded">delete</span>
                     </button>
@@ -105,7 +105,7 @@
     <div class="modal-overlay" (click)="closeCreateDialog()">
       <div class="modal-content modal-sm" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h3>إضافة سعة شاحن جديدة</h3>
+          <h3>{{ "capacities.addCapacity" | translate }}</h3>
           <button class="close-btn" (click)="closeCreateDialog()">
             <span class="material-symbols-rounded">close</span>
           </button>

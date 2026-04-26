@@ -53,7 +53,7 @@
           <input
             type="text"
             class="voltyks-input"
-            placeholder="البحث في أنواع الشكاوى..."
+            [placeholder]="'common.search' | translate"
             [(ngModel)]="searchTerm"
             (ngModelChange)="onSearchChange()"
           />
@@ -138,14 +138,14 @@
                       <button
                         class="action-btn edit"
                         (click)="openEditCategoryModal(category)"
-                        title="تعديل"
+                        [title]="'common.edit' | translate"
                       >
                         <span class="material-symbols-rounded">edit</span>
                       </button>
                       <button
                         class="action-btn delete"
                         (click)="confirmDelete(category)"
-                        title="حذف"
+                        [title]="'common.delete' | translate"
                       >
                         <span class="material-symbols-rounded">delete</span>
                       </button>

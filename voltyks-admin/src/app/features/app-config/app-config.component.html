@@ -9,7 +9,7 @@
   <!-- Charging Mode Section -->
   <div class="section-header">
     <span class="material-symbols-rounded">bolt</span>
-    <h3>وضع الشحن</h3>
+    <h3>{{ "appConfig.chargingMode" | translate }}</h3>
   </div>
 
   @if (isChargingModeLoading) {
@@ -33,7 +33,7 @@
           <span class="material-symbols-rounded">{{ chargingModeEnabled ? 'electric_bolt' : 'power_off' }}</span>
         </div>
         <div class="charging-mode-info">
-          <h4>حالة الشحن</h4>
+          <h4>{{ "appConfig.chargingModeStatus" | translate }}</h4>
           <span class="status-badge" [class]="chargingModeEnabled ? 'status-active' : 'status-inactive'">
             {{ chargingModeEnabled ? 'مفعّل' : 'معطّل' }}
           </span>
@@ -60,8 +60,8 @@
           <div class="status-message success">
             <span class="material-symbols-rounded">check_circle</span>
             <div>
-              <strong>الشحن مفعّل</strong>
-              <p>يمكن للمستخدمين استخدام الشواحن وإجراء عمليات الشحن بشكل طبيعي.</p>
+              <strong>{{ "common.yes" | translate }}</strong>
+              <p>Chargers and processes are running normally.</p>
             </div>
           </div>
         } @else {
@@ -86,7 +86,7 @@
   <!-- Mobile App Section -->
   <div class="section-header">
     <span class="material-symbols-rounded">smartphone</span>
-    <h3>إعدادات تطبيق الموبايل</h3>
+    <h3>{{ "appConfig.mobileConfig" | translate }}</h3>
   </div>
 
   @if (config !== null) {
@@ -116,7 +116,7 @@
                 (click)="togglePlatform('android')"
               >
                 <span class="material-symbols-rounded">power_settings_new</span>
-                <span>تفعيل</span>
+                <span>{{ "common.confirm" | translate }}</span>
               </button>
 
               <button
@@ -126,7 +126,7 @@
                 (click)="togglePlatform('android')"
               >
                 <span class="material-symbols-rounded">block</span>
-                <span>تعطيل</span>
+                <span>{{ "common.cancel" | translate }}</span>
               </button>
             </div>
           </div>
@@ -176,7 +176,7 @@
                 (click)="togglePlatform('ios')"
               >
                 <span class="material-symbols-rounded">power_settings_new</span>
-                <span>تفعيل</span>
+                <span>{{ "common.confirm" | translate }}</span>
               </button>
 
               <button
@@ -186,7 +186,7 @@
                 (click)="togglePlatform('ios')"
               >
                 <span class="material-symbols-rounded">block</span>
-                <span>تعطيل</span>
+                <span>{{ "common.cancel" | translate }}</span>
               </button>
             </div>
           </div>

@@ -14,7 +14,7 @@
           <input
             type="text"
             class="voltyks-input"
-            placeholder="البحث عن شاحن (المعرف، البروتوكول، العنوان)..."
+            [placeholder]="'common.search' | translate"
             [(ngModel)]="searchTerm"
             (ngModelChange)="onSearchChange($event)"
           />
@@ -49,7 +49,7 @@
                   class="search-input"
                   [(ngModel)]="filterSearchQuery"
                   (keyup)="filterUsersInFilterDropdown()"
-                  placeholder="ابحث عن مستخدم..."
+                  [placeholder]="'common.search' | translate"
                   (click)="$event.stopPropagation()"
                 />
               </div>
@@ -89,7 +89,7 @@
   <!-- Chargers Table -->
   <div class="voltyks-card">
     <div class="table-header">
-      <h3>قائمة الشواحن</h3>
+      <h3>{{ "chargers.title" | translate }}</h3>
       <div class="header-actions">
         <span class="total-count">{{ "common.total" | translate }}: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredChargers.length === 0">
@@ -161,7 +161,7 @@
                     <button
                       class="voltyks-btn btn-icon btn-edit"
                       (click)="openEditDialog(charger)"
-                      title="تعديل"
+                      [title]="'common.edit' | translate"
                     >
                       <span class="material-symbols-rounded">edit</span>
                     </button>
@@ -176,7 +176,7 @@
                     <button
                       class="voltyks-btn btn-icon btn-danger"
                       (click)="openDeleteConfirm(charger)"
-                      title="حذف"
+                      [title]="'common.delete' | translate"
                     >
                       <span class="material-symbols-rounded">delete</span>
                     </button>
@@ -211,7 +211,7 @@
     <div class="modal-overlay" (click)="closeCreateDialog()">
       <div class="modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h3>إضافة شاحن جديد</h3>
+          <h3>{{ "chargers.addCharger" | translate }}</h3>
           <button class="close-btn" (click)="closeCreateDialog()">
             <span class="material-symbols-rounded">close</span>
           </button>
@@ -345,7 +345,7 @@
                       class="search-input"
                       [(ngModel)]="createUserSearchQuery"
                       (keyup)="filterUsersInCreateDropdown()"
-                      placeholder="ابحث عن مستخدم..."
+                      [placeholder]="'common.search' | translate"
                       name="userSearch"
                       (click)="$event.stopPropagation()"
                     />
@@ -402,7 +402,7 @@
   <div class="modal-overlay" (click)="closeEditDialog()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>تعديل الشاحن</h3>
+        <h3>{{ "chargers.editCharger" | translate }}</h3>
         <button class="close-btn" (click)="closeEditDialog()">
           <span class="material-symbols-rounded">close</span>
         </button>

@@ -48,7 +48,7 @@
                   class="search-input"
                   [(ngModel)]="userSearchQuery"
                   (keyup)="filterUsersDropdown()"
-                  placeholder="ابحث عن مستخدم..."
+                  [placeholder]="'common.search' | translate"
                   (click)="$event.stopPropagation()"
                 />
               </div>
@@ -203,7 +203,7 @@
   <!-- Vehicles Table -->
   <div class="voltyks-card">
     <div class="table-header">
-      <h3>قائمة المركبات</h3>
+      <h3>{{ "vehicles.title" | translate }}</h3>
       <div class="header-actions">
         <span class="total-count">{{ "common.total" | translate }}: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredVehicles.length === 0">
@@ -265,14 +265,14 @@
                     <button
                       class="voltyks-btn btn-icon btn-edit"
                       (click)="openEditDialog(vehicle)"
-                      title="تعديل"
+                      [title]="'common.edit' | translate"
                     >
                       <span class="material-symbols-rounded">edit</span>
                     </button>
                     <button
                       class="voltyks-btn btn-icon btn-danger"
                       (click)="openDeleteConfirm(vehicle)"
-                      title="حذف"
+                      [title]="'common.delete' | translate"
                     >
                       <span class="material-symbols-rounded">delete</span>
                     </button>
@@ -490,7 +490,7 @@
                       class="search-input"
                       [(ngModel)]="userSearchQuery"
                       (keyup)="filterUsersDropdown()"
-                      placeholder="ابحث عن مستخدم..."
+                      [placeholder]="'common.search' | translate"
                       name="userSearch"
                       (click)="$event.stopPropagation()"
                     />

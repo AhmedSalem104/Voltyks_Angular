@@ -14,7 +14,7 @@
       </div>
       <div class="stat-content">
         <span class="stat-value">{{ totalPending }}</span>
-        <span class="stat-label">غير محلولة</span>
+        <span class="stat-label">{{ "complaints.pending" | translate }}</span>
       </div>
     </div>
     <div class="stat-card resolved">
@@ -23,7 +23,7 @@
       </div>
       <div class="stat-content">
         <span class="stat-value">{{ totalResolved }}</span>
-        <span class="stat-label">محلولة</span>
+        <span class="stat-label">{{ "complaints.resolved" | translate }}</span>
       </div>
     </div>
   </div>
@@ -38,7 +38,7 @@
           <input
             type="text"
             class="voltyks-input"
-            placeholder="البحث في الشكاوى..."
+            [placeholder]="'complaints.search' | translate"
             [(ngModel)]="searchTerm"
             (ngModelChange)="onSearchChange()"
           />
@@ -68,7 +68,7 @@
             (ngModelChange)="onShowResolvedChange()"
           />
           <span class="toggle-switch"></span>
-          <span class="toggle-text">عرض المحلولة</span>
+          <span class="toggle-text">{{ "complaints.showResolved" | translate }}</span>
         </label>
       </div>
     </div>
@@ -77,7 +77,7 @@
   <!-- Complaints Table -->
   <div class="voltyks-card">
     <div class="table-header">
-      <h3>قائمة الشكاوى</h3>
+      <h3>{{ "complaints.listTitle" | translate }}</h3>
       <div class="header-actions">
         <span class="total-count">{{ "common.total" | translate }}: {{ totalComplaints }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredComplaints.length === 0">
@@ -174,7 +174,7 @@
     } @else {
       <div class="empty-state">
         <span class="material-symbols-rounded empty-icon">inbox</span>
-        <p>لا توجد شكاوى</p>
+        <p>{{ "complaints.empty" | translate }}</p>
       </div>
     }
   </div>

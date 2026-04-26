@@ -614,6 +614,7 @@
   },
   "complaints": {
     "title": "Complaint Management",
+    "listTitle": "Complaints list",
     "subtitle": "Track every complaint submitted by users",
     "totalCount": "Total",
     "search": "Search complaints...",
@@ -627,7 +628,18 @@
     "date": "Date",
     "actions": "Actions",
     "viewDetails": "View details",
-    "empty": "No complaints"
+    "empty": "No complaints",
+    "markResolved": "Click to mark as resolved",
+    "markPending": "Click to revert to pending",
+    "type": "Complaint type",
+    "addReply": "Add reply",
+    "sendReply": "Send reply",
+    "writeReplyHere": "Write your reply here",
+    "replies": "Replies",
+    "noReplies": "No replies",
+    "reply": "Reply",
+    "totalComplaints": "Total complaints",
+    "deleteConfirm": "Are you sure you want to delete this complaint?"
   },
   "complaintCategories": {
     "title": "Complaint Categories",

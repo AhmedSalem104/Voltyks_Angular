@@ -157,7 +157,7 @@
     } @else {
       <div class="empty-state">
         <span class="material-symbols-rounded empty-icon">electric_bolt</span>
-        <p>لا توجد عمليات شحن</p>
+        <p>{{ "processes.empty" | translate }}</p>
         @if (hasActiveFilters()) {
           <button class="voltyks-btn btn-secondary" (click)="clearFilters()">
             مسح الفلاتر وعرض الكل

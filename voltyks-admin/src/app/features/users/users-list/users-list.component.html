@@ -14,7 +14,7 @@
           <input
             type="text"
             class="voltyks-input"
-            placeholder="البحث عن مستخدم (الاسم، البريد، رقم الهاتف)..."
+            [placeholder]="'common.search' | translate"
             [(ngModel)]="searchTerm"
             (ngModelChange)="onSearchChange($event)"
           />

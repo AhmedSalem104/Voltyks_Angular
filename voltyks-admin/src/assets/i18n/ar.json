@@ -614,6 +614,7 @@
   },
   "complaints": {
     "title": "إدارة الشكاوى",
+    "listTitle": "قائمة الشكاوى",
     "subtitle": "متابعة كل الشكاوى المقدمة من المستخدمين",
     "totalCount": "إجمالي",
     "search": "البحث في الشكاوى...",
@@ -627,7 +628,18 @@
     "date": "التاريخ",
     "actions": "الإجراءات",
     "viewDetails": "عرض التفاصيل",
-    "empty": "لا توجد شكاوى"
+    "empty": "لا توجد شكاوى",
+    "markResolved": "اضغط لتحديد كمحلول",
+    "markPending": "اضغط لإرجاع إلى معلق",
+    "type": "نوع الشكوى",
+    "addReply": "إضافة رد",
+    "sendReply": "إرسال الرد",
+    "writeReplyHere": "اكتب ردك هنا",
+    "replies": "الردود",
+    "noReplies": "لا توجد ردود",
+    "reply": "رد",
+    "totalComplaints": "إجمالي الشكاوى",
+    "deleteConfirm": "هل أنت متأكد من حذف هذه الشكوى؟"
   },
   "complaintCategories": {
     "title": "أنواع الشكاوى",

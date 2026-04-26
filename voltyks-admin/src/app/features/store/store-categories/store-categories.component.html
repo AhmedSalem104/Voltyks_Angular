@@ -39,7 +39,7 @@
           <input
             type="text"
             class="voltyks-input"
-            placeholder="البحث في الفئات..."
+            [placeholder]="'common.search' | translate"
             [ngModel]="searchTerm"
             (ngModelChange)="onSearchChange($event)"
           />
@@ -76,7 +76,7 @@
   <!-- Data Table -->
   <div class="voltyks-card">
     <div class="table-header">
-      <h3>قائمة الفئات</h3>
+      <h3>{{ "store.categories.title" | translate }}</h3>
       <div class="header-actions">
         <span class="total-count">{{ "common.total" | translate }}: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()">
@@ -138,10 +138,10 @@
                 <td>
                   <div class="action-buttons">
                     @if (!category.isDeleted) {
-                      <button class="voltyks-btn btn-icon btn-edit" title="تعديل" (click)="openEditDialog(category)">
+                      <button class="voltyks-btn btn-icon btn-edit" [title]="'common.edit' | translate" (click)="openEditDialog(category)">
                         <span class="material-symbols-rounded">edit</span>
                       </button>
-                      <button class="voltyks-btn btn-icon btn-danger" title="حذف" (click)="openDeleteConfirm(category)">
+                      <button class="voltyks-btn btn-icon btn-danger" [title]="'common.delete' | translate" (click)="openDeleteConfirm(category)">
                         <span class="material-symbols-rounded">delete</span>
                       </button>
                     } @else {
@@ -180,7 +180,7 @@
     <div class="modal-overlay" (click)="closeCreateDialog()">
       <div class="modal-dialog" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h3>إضافة فئة جديدة</h3>
+          <h3>{{ "store.categories.addCategory" | translate }}</h3>
           <button type="button" class="close-btn" (click)="closeCreateDialog()">
             <span class="material-symbols-rounded">close</span>
           </button>
@@ -239,7 +239,7 @@
     <div class="modal-overlay" (click)="closeEditDialog()">
       <div class="modal-dialog" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h3>تعديل الفئة</h3>
+          <h3>{{ "store.categories.editCategory" | translate }}</h3>
           <button type="button" class="close-btn" (click)="closeEditDialog()">
             <span class="material-symbols-rounded">close</span>
           </button>
@@ -257,7 +257,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>الحالة</label>
+              <label>{{ "common.status" | translate }}</label>
               <select class="voltyks-input" [(ngModel)]="updateDto.status">
                 @for (option of statusOptions; track option.value) {
                   <option [value]="option.value">{{ option.label }}</option>
