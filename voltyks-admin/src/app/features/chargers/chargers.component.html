@@ -1,7 +1,7 @@
 <div class="chargers-container">
   <div class="page-header">
     <h2>{{ "chargers.title" | translate }}</h2>
-    <p class="page-description">عرض وإدارة جميع شواحن المنصة</p>
+    <p class="page-description">{{ "chargers.subtitle" | translate }}</p>
   </div>
 
   <!-- Compact Filters Section -->
@@ -35,7 +35,7 @@
               </div>
             } @else {
               <span class="material-symbols-rounded filter-icon">person</span>
-              <span class="placeholder">جميع المستخدمين</span>
+              <span class="placeholder">{{ "chargers.allUsers" | translate }}</span>
               <span class="material-symbols-rounded dropdown-arrow">arrow_drop_down</span>
             }
           </div>
@@ -98,7 +98,7 @@
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
           <span class="material-symbols-rounded">add</span>
-          إضافة شاحن
+          {{ "chargers.addCharger" | translate }}
         </button>
       </div>
     </div>
@@ -109,15 +109,15 @@
           <thead>
             <tr>
               <th>{{ "common.user" | translate }}</th>
-              <th>الهاتف</th>
+              <th>{{ "common.phone" | translate }}</th>
               <th>{{ "common.protocol" | translate }}</th>
               <th>{{ "common.capacity" | translate }}</th>
-              <th>السعر/ساعة</th>
-              <th>المنطقة</th>
-              <th>الشارع</th>
-              <th>الأدابتر</th>
+              <th>{{ "chargers.pricePerHour" | translate }}</th>
+              <th>{{ "chargers.area" | translate }}</th>
+              <th>{{ "chargers.street" | translate }}</th>
+              <th>{{ "chargers.adapter" | translate }}</th>
               <th>{{ "common.rating" | translate }}</th>
-              <th>تاريخ الإضافة</th>
+              <th>{{ "chargers.dateAdded" | translate }}</th>
               <th>{{ "common.status" | translate }}</th>
               <th>{{ "common.actions" | translate }}</th>
             </tr>
@@ -135,12 +135,12 @@
                 </td>
                 <td>{{ charger.protocolName }}</td>
                 <td>{{ charger.capacityKw }} kW</td>
-                <td>{{ charger.priceValue }} ج.م/ساعة</td>
+                <td>{{ charger.priceValue }} {{ "chargers.currencyPerHour" | translate }}</td>
                 <td>{{ charger.area }}</td>
                 <td>{{ charger.street }}</td>
                 <td>
                   <span class="adaptor-badge" [ngClass]="charger.adaptor ? 'available' : 'unavailable'">
-                    {{ charger.adaptor ? 'متوفر' : 'غير متوفر' }}
+                    {{ (charger.adaptor ? 'chargers.adapterAvailable' : 'chargers.adapterUnavailable') | translate }}
                   </span>
                 </td>
                 <td>
@@ -169,7 +169,7 @@
                       class="voltyks-btn btn-icon"
                       [ngClass]="charger.isActive ? 'btn-warning' : 'btn-success'"
                       (click)="toggleStatus(charger)"
-                      [title]="charger.isActive ? 'إيقاف' : 'تفعيل'"
+                      [title]="(charger.isActive ? 'chargers.deactivate' : 'chargers.activate') | translate"
                     >
                       <span class="material-symbols-rounded">{{ charger.isActive ? 'toggle_on' : 'toggle_off' }}</span>
                     </button>
@@ -199,7 +199,7 @@
     } @else {
       <div class="empty-state">
         <span class="material-symbols-rounded empty-icon">ev_station</span>
-        <p>لا يوجد شواحن</p>
+        <p>{{ "chargers.empty" | translate }}</p>
       </div>
     }
   </div>
@@ -220,26 +220,26 @@
         <form class="charger-form">
           <div class="form-row">
             <div class="form-group">
-              <label>البروتوكول <span class="required">*</span></label>
+              <label>{{ "common.protocol" | translate }} <span class="required">*</span></label>
               <select
                 class="voltyks-input"
                 [(ngModel)]="createDto.protocolId"
                 name="protocolId"
               >
-                <option [value]="0">اختر البروتوكول</option>
+                <option [value]="0">{{ "chargers.selectProtocol" | translate }}</option>
                 @for (protocol of protocols; track protocol.id) {
                   <option [value]="protocol.id">{{ protocol.name }}</option>
                 }
               </select>
             </div>
             <div class="form-group">
-              <label>السعة <span class="required">*</span></label>
+              <label>{{ "common.capacity" | translate }} <span class="required">*</span></label>
               <select
                 class="voltyks-input"
                 [(ngModel)]="createDto.capacityId"
                 name="capacityId"
               >
-                <option [value]="0">اختر السعة</option>
+                <option [value]="0">{{ "chargers.selectCapacity" | translate }}</option>
                 @for (capacity of capacities; track capacity.id) {
                   <option [value]="capacity.id">{{ capacity.kw }} kW</option>
                 }
@@ -249,80 +249,80 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>خيار السعر <span class="required">*</span></label>
+              <label>{{ "chargers.priceOption" | translate }} <span class="required">*</span></label>
               <select
                 class="voltyks-input"
                 [(ngModel)]="createDto.priceOptionId"
                 name="priceOptionId"
               >
-                <option [value]="0">اختر السعر</option>
+                <option [value]="0">{{ "chargers.selectPrice" | translate }}</option>
                 @for (price of priceOptions; track price.id) {
-                  <option [value]="price.id">{{ price.value }} ج.م/ساعة</option>
+                  <option [value]="price.id">{{ price.value }} {{ "chargers.currencyPerHour" | translate }}</option>
                 }
               </select>
             </div>
             <div class="form-group">
-              <label>رقم المبنى <span class="required">*</span></label>
+              <label>{{ "chargers.buildingNumber" | translate }} <span class="required">*</span></label>
               <input
                 type="text"
                 class="voltyks-input"
                 [(ngModel)]="createDto.buildingNumber"
                 name="buildingNumber"
-                placeholder="مثال: 123"
+                [placeholder]="'chargers.examples.building' | translate"
               />
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>المنطقة <span class="required">*</span></label>
+              <label>{{ "chargers.area" | translate }} <span class="required">*</span></label>
               <input
                 type="text"
                 class="voltyks-input"
                 [(ngModel)]="createDto.area"
                 name="area"
-                placeholder="مثال: الرياض"
+                [placeholder]="'chargers.examples.area' | translate"
               />
             </div>
             <div class="form-group">
-              <label>الشارع <span class="required">*</span></label>
+              <label>{{ "chargers.street" | translate }} <span class="required">*</span></label>
               <input
                 type="text"
                 class="voltyks-input"
                 [(ngModel)]="createDto.street"
                 name="street"
-                placeholder="مثال: شارع الملك فهد"
+                [placeholder]="'chargers.examples.street' | translate"
               />
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>خط العرض</label>
+              <label>{{ "chargers.latitude" | translate }}</label>
               <input
                 type="number"
                 class="voltyks-input"
                 [(ngModel)]="createDto.latitude"
                 name="latitude"
                 step="0.000001"
-                placeholder="مثال: 30.0444"
+                [placeholder]="'chargers.examples.latitude' | translate"
               />
             </div>
             <div class="form-group">
-              <label>خط الطول</label>
+              <label>{{ "chargers.longitude" | translate }}</label>
               <input
                 type="number"
                 class="voltyks-input"
                 [(ngModel)]="createDto.longitude"
                 name="longitude"
                 step="0.000001"
-                placeholder="مثال: 31.2357"
+                [placeholder]="'chargers.examples.longitude' | translate"
               />
             </div>
           </div>
 
           <div class="form-group">
-            <label>المستخدم المالك <span class="required">*</span></label>
+            <label>{{ "chargers.ownerUser" | translate }} <span class="required">*</span></label>
             <div class="custom-dropdown" [class.open]="isCreateUserDropdownOpen">
               <div class="dropdown-selected" (click)="toggleCreateUserDropdown()">
                 @if (createDto.userId) {
@@ -331,7 +331,7 @@
                     <span class="user-name">{{ getUserName(createDto.userId) }}</span>
                   </div>
                 } @else {
-                  <span class="placeholder">اختر المستخدم</span>
+                  <span class="placeholder">{{ "chargers.selectUser" | translate }}</span>
                   <span class="material-symbols-rounded dropdown-arrow">arrow_drop_down</span>
                 }
               </div>
@@ -384,11 +384,11 @@
       </div>
       <div class="modal-footer">
         <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">
-          إلغاء
+          {{ "common.cancel" | translate }}
         </button>
         <button class="voltyks-btn btn-primary" (click)="createCharger()">
           <span class="material-symbols-rounded">save</span>
-          حفظ
+          {{ "common.save" | translate }}
         </button>
       </div>
     </div>
@@ -417,7 +417,7 @@
                 [(ngModel)]="updateDto.protocolId"
                 name="protocolId"
               >
-                <option [value]="0">اختر البروتوكول</option>
+                <option [value]="0">{{ "chargers.selectProtocol" | translate }}</option>
                 @for (protocol of protocols; track protocol.id) {
                   <option [value]="protocol.id">{{ protocol.name }}</option>
                 }
@@ -430,7 +430,7 @@
                 [(ngModel)]="updateDto.capacityId"
                 name="capacityId"
               >
-                <option [value]="0">اختر السعة</option>
+                <option [value]="0">{{ "chargers.selectCapacity" | translate }}</option>
                 @for (capacity of capacities; track capacity.id) {
                   <option [value]="capacity.id">{{ capacity.kw }} kW</option>
                 }
@@ -440,15 +440,15 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>خيار السعر</label>
+              <label>{{ "chargers.priceOption" | translate }}</label>
               <select
                 class="voltyks-input"
                 [(ngModel)]="updateDto.priceOptionId"
                 name="priceOptionId"
               >
-                <option [value]="0">اختر السعر</option>
+                <option [value]="0">{{ "chargers.selectPrice" | translate }}</option>
                 @for (price of priceOptions; track price.id) {
-                  <option [value]="price.id">{{ price.value }} ج.م/ساعة</option>
+                  <option [value]="price.id">{{ price.value }} {{ "chargers.currencyPerHour" | translate }}</option>
                 }
               </select>
             </div>
@@ -486,7 +486,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>خط العرض</label>
+              <label>{{ "chargers.latitude" | translate }}</label>
               <input
                 type="number"
                 class="voltyks-input"
@@ -496,7 +496,7 @@
               />
             </div>
             <div class="form-group">
-              <label>خط الطول</label>
+              <label>{{ "chargers.longitude" | translate }}</label>
               <input
                 type="number"
                 class="voltyks-input"
@@ -514,18 +514,18 @@
                 [(ngModel)]="updateDto.isActive"
                 name="isActive"
               />
-              <span>الشاحن نشط</span>
+              <span>{{ "chargers.chargerActive" | translate }}</span>
             </label>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">
-          إلغاء
+          {{ "common.cancel" | translate }}
         </button>
         <button class="voltyks-btn btn-primary" (click)="updateCharger()">
           <span class="material-symbols-rounded">save</span>
-          حفظ التغييرات
+          {{ "common.saveChanges" | translate }}
         </button>
       </div>
     </div>
@@ -536,8 +536,8 @@
 <!-- Delete Confirmation Dialog -->
 <app-confirm-dialog
   [isOpen]="showDeleteConfirm"
-  title="تأكيد حذف الشاحن"
-  [message]="'هل أنت متأكد من حذف هذا الشاحن؟ لا يمكن التراجع عن هذا الإجراء.'"
+  [title]="'chargers.deleteConfirmTitle' | translate"
+  [message]="'chargers.deleteConfirmMessage' | translate"
   type="danger"
   (confirm)="confirmDelete()"
   (cancel)="closeDeleteConfirm()"

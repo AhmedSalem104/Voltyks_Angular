@@ -1,7 +1,7 @@
 <div class="vehicles-container">
   <div class="page-header">
     <h2>{{ "vehicles.title" | translate }}</h2>
-    <p class="page-description">عرض وإدارة جميع مركبات المنصة</p>
+    <p class="page-description">{{ "vehicles.subtitle" | translate }}</p>
   </div>
 
   <!-- Compact Filters Section -->
@@ -14,7 +14,7 @@
           <input
             type="text"
             class="voltyks-input"
-            placeholder="البحث (اللوحة، اللون، السنة...)"
+            [placeholder]="'vehicles.searchPlaceholder' | translate"
             [(ngModel)]="searchTerm"
             (ngModelChange)="onSearchChange($event)"
           />
@@ -35,7 +35,7 @@
               </div>
             } @else {
               <span class="material-symbols-rounded select-icon">person</span>
-              <span class="placeholder">المستخدم</span>
+              <span class="placeholder">{{ "vehicles.filterUser" | translate }}</span>
             }
           </div>
 
@@ -96,7 +96,7 @@
               </div>
             } @else {
               <span class="material-symbols-rounded select-icon">directions_car</span>
-              <span class="placeholder">الماركة</span>
+              <span class="placeholder">{{ "vehicles.filterBrand" | translate }}</span>
             }
           </div>
 
@@ -109,7 +109,7 @@
                   class="search-input"
                   [(ngModel)]="brandSearchQuery"
                   (keyup)="filterBrandsDropdown()"
-                  placeholder="ابحث عن علامة تجارية..."
+                  [placeholder]="'vehicles.searchBrand' | translate"
                   (click)="$event.stopPropagation()"
                 />
               </div>
@@ -149,7 +149,7 @@
             [(ngModel)]="filterModel"
             (ngModelChange)="onFilterModelChange()"
           >
-            <option value="">الموديل</option>
+            <option value="">{{ "vehicles.filterModel" | translate }}</option>
             @for (model of filterModelsList; track model) {
               <option [value]="model">{{ model }}</option>
             }
@@ -166,7 +166,7 @@
             [(ngModel)]="filterYear"
             (ngModelChange)="applyLocalFilters()"
           >
-            <option value="">السنة</option>
+            <option value="">{{ "vehicles.filterYear" | translate }}</option>
             @for (year of filterYearsList; track year) {
               <option [value]="year">{{ year }}</option>
             }
@@ -183,7 +183,7 @@
             [(ngModel)]="filterColor"
             (ngModelChange)="applyLocalFilters()"
           >
-            <option value="">اللون</option>
+            <option value="">{{ "vehicles.filterColor" | translate }}</option>
             @for (color of filterColorsList; track color) {
               <option [value]="color">{{ color }}</option>
             }
@@ -193,7 +193,7 @@
 
       <!-- Action Buttons -->
       <div class="filter-item filter-actions">
-        <button class="voltyks-btn btn-secondary" (click)="clearAllFilters()" title="إعادة تعيين">
+        <button class="voltyks-btn btn-secondary" (click)="clearAllFilters()" [title]="'vehicles.resetFilters' | translate">
           <span class="material-symbols-rounded">refresh</span>
         </button>
       </div>
@@ -212,7 +212,7 @@
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
           <span class="material-symbols-rounded">add</span>
-          إضافة مركبة
+          {{ "vehicles.addVehicle" | translate }}
         </button>
       </div>
     </div>
@@ -222,16 +222,16 @@
         <table class="voltyks-table">
           <thead>
             <tr>
-              <th>المالك</th>
-              <th>البريد</th>
-              <th>الهاتف</th>
+              <th>{{ "vehicles.owner" | translate }}</th>
+              <th>{{ "vehicles.email" | translate }}</th>
+              <th>{{ "vehicles.phone" | translate }}</th>
               <th>{{ "common.brand" | translate }}</th>
               <th>{{ "common.model" | translate }}</th>
               <th>{{ "common.batteryCapacity" | translate }}</th>
               <th>{{ "common.year" | translate }}</th>
               <th>{{ "common.color" | translate }}</th>
               <th>{{ "common.plate" | translate }}</th>
-              <th>تاريخ الإضافة</th>
+              <th>{{ "vehicles.dateAdded" | translate }}</th>
               <th>{{ "common.actions" | translate }}</th>
             </tr>
           </thead>
@@ -295,7 +295,7 @@
     } @else {
       <div class="empty-state">
         <span class="material-symbols-rounded empty-icon">directions_car</span>
-        <p>لا يوجد مركبات</p>
+        <p>{{ "vehicles.empty" | translate }}</p>
       </div>
     }
   </div>
@@ -306,7 +306,7 @@
   <div class="modal-overlay" (click)="closeCreateDialog()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>إضافة مركبة جديدة</h3>
+        <h3>{{ "vehicles.addVehicleNew" | translate }}</h3>
         <button class="close-btn" (click)="closeCreateDialog()">
           <span class="material-symbols-rounded">close</span>
         </button>
@@ -315,7 +315,7 @@
         <form class="vehicle-form">
           <!-- Brand Dropdown -->
           <div class="form-group">
-            <label>العلامة التجارية <span class="required">*</span></label>
+            <label>{{ "vehicles.brandLabel" | translate }} <span class="required">*</span></label>
             <div class="custom-dropdown" [class.open]="isBrandDropdownOpen">
               <div class="dropdown-selected" (click)="toggleBrandDropdown(false)">
                 @if (createDto.brandId) {
@@ -324,7 +324,7 @@
                     <span class="user-name">{{ getBrandName(createDto.brandId) }}</span>
                   </div>
                 } @else {
-                  <span class="placeholder">اختر العلامة التجارية</span>
+                  <span class="placeholder">{{ "vehicles.selectBrand" | translate }}</span>
                   <span class="material-symbols-rounded dropdown-arrow">arrow_drop_down</span>
                 }
               </div>
@@ -338,7 +338,7 @@
                       class="search-input"
                       [(ngModel)]="brandSearchQuery"
                       (keyup)="filterBrandsDropdown()"
-                      placeholder="ابحث عن علامة تجارية..."
+                      [placeholder]="'vehicles.searchBrand' | translate"
                       name="brandSearch"
                       (click)="$event.stopPropagation()"
                     />
@@ -373,7 +373,7 @@
 
           <!-- Model Dropdown -->
           <div class="form-group">
-            <label>الموديل <span class="required">*</span></label>
+            <label>{{ "vehicles.modelLabel" | translate }} <span class="required">*</span></label>
             <div class="custom-dropdown" [class.open]="isModelDropdownOpen">
               <div class="dropdown-selected" (click)="toggleModelDropdown()">
                 @if (createDto.modelId) {
@@ -382,7 +382,7 @@
                     <span class="user-name">{{ getModelName(createDto.modelId) }}</span>
                   </div>
                 } @else {
-                  <span class="placeholder">{{ createDto.brandId ? 'اختر الموديل' : 'اختر العلامة التجارية أولاً' }}</span>
+                  <span class="placeholder">{{ (createDto.brandId ? 'vehicles.selectModel' : 'vehicles.selectBrandFirst') | translate }}</span>
                   <span class="material-symbols-rounded dropdown-arrow">arrow_drop_down</span>
                 }
               </div>
@@ -396,7 +396,7 @@
                       class="search-input"
                       [(ngModel)]="modelSearchQuery"
                       (keyup)="filterModelsDropdown()"
-                      placeholder="ابحث عن موديل..."
+                      [placeholder]="'vehicles.searchModel' | translate"
                       name="modelSearch"
                       (click)="$event.stopPropagation()"
                     />
@@ -431,7 +431,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>سنة الصنع <span class="required">*</span></label>
+              <label>{{ "vehicles.yearLabel" | translate }} <span class="required">*</span></label>
               <input
                 type="number"
                 class="voltyks-input"
@@ -439,35 +439,35 @@
                 name="year"
                 min="1900"
                 [max]="maxYear"
-                placeholder="مثال: 2024"
+                [placeholder]="'vehicles.yearExample' | translate"
               />
             </div>
             <div class="form-group">
-              <label>اللون <span class="required">*</span></label>
+              <label>{{ "vehicles.colorLabel" | translate }} <span class="required">*</span></label>
               <input
                 type="text"
                 class="voltyks-input"
                 [(ngModel)]="createDto.color"
                 name="color"
-                placeholder="مثال: أسود"
+                [placeholder]="'vehicles.colorExample' | translate"
               />
             </div>
           </div>
 
           <div class="form-group">
-            <label>رقم اللوحة <span class="required">*</span></label>
+            <label>{{ "vehicles.plateLabel" | translate }} <span class="required">*</span></label>
             <input
               type="text"
               class="voltyks-input"
               [(ngModel)]="createDto.plate"
               name="plate"
-              placeholder="مثال: أ ب ج 1234"
+              [placeholder]="'vehicles.plateExample' | translate"
             />
           </div>
 
           <!-- User Dropdown -->
           <div class="form-group">
-            <label>المستخدم المالك <span class="required">*</span></label>
+            <label>{{ "vehicles.ownerUser" | translate }} <span class="required">*</span></label>
             <div class="custom-dropdown" [class.open]="isUserDropdownOpen">
               <div class="dropdown-selected" (click)="toggleUserDropdown(false)">
                 @if (createDto.userId) {
@@ -476,7 +476,7 @@
                     <span class="user-name">{{ getUserName(createDto.userId) }}</span>
                   </div>
                 } @else {
-                  <span class="placeholder">اختر المستخدم</span>
+                  <span class="placeholder">{{ "vehicles.selectUser" | translate }}</span>
                   <span class="material-symbols-rounded dropdown-arrow">arrow_drop_down</span>
                 }
               </div>
@@ -529,11 +529,11 @@
       </div>
       <div class="modal-footer">
         <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">
-          إلغاء
+          {{ "common.cancel" | translate }}
         </button>
         <button class="voltyks-btn btn-primary" (click)="createVehicle()">
           <span class="material-symbols-rounded">save</span>
-          حفظ
+          {{ "common.save" | translate }}
         </button>
       </div>
     </div>
@@ -545,7 +545,7 @@
   <div class="modal-overlay" (click)="closeEditDialog()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>تعديل المركبة</h3>
+        <h3>{{ "vehicles.editVehicle" | translate }}</h3>
         <button class="close-btn" (click)="closeEditDialog()">
           <span class="material-symbols-rounded">close</span>
         </button>
@@ -588,11 +588,11 @@
       </div>
       <div class="modal-footer">
         <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">
-          إلغاء
+          {{ "common.cancel" | translate }}
         </button>
         <button class="voltyks-btn btn-primary" (click)="updateVehicle()">
           <span class="material-symbols-rounded">save</span>
-          حفظ التغييرات
+          {{ "common.saveChanges" | translate }}
         </button>
       </div>
     </div>
@@ -602,8 +602,8 @@
 <!-- Delete Confirmation Dialog -->
 <app-confirm-dialog
   [isOpen]="showDeleteConfirm"
-  title="تأكيد حذف المركبة"
-  [message]="'هل أنت متأكد من حذف المركبة رقم ' + (currentVehicle?.plate || '') + '؟ لا يمكن التراجع عن هذا الإجراء.'"
+  [title]="'vehicles.deleteConfirmTitle' | translate"
+  [message]="'vehicles.deleteConfirmMessage' | translate: { plate: currentVehicle?.plate || '' }"
   type="danger"
   (confirm)="confirmDelete()"
   (cancel)="closeDeleteConfirm()"
