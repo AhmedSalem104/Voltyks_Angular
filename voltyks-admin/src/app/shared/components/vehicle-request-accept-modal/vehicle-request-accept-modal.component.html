@@ -9,11 +9,11 @@
             <span class="material-symbols-rounded">directions_car</span>
           </div>
           <div class="m-header-text">
-            <h3>قبول طلب إضافة سيارة</h3>
-            <span>رقم الطلب #{{ request.id }} · {{ request.userFullName }}</span>
+            <h3>{{ 'vehicleRequests.acceptModal.title' | translate }}</h3>
+            <span>{{ 'vehicleRequests.acceptModal.subtitle' | translate }} #{{ request.id }} · {{ request.userFullName }}</span>
           </div>
         </div>
-        <button class="m-header-close" (click)="onCancel()" [disabled]="isSaving">
+        <button class="m-header-close" (click)="onCancel()" [disabled]="isSaving" [title]="'common.close' | translate">
           <span class="material-symbols-rounded">close</span>
         </button>
       </header>
@@ -23,12 +23,12 @@
         @if (isLoadingPreview) {
           <div class="m-state">
             <div class="m-spinner"></div>
-            <p>جاري تحميل المعاينة والاقتراحات...</p>
+            <p>{{ 'vehicleRequests.acceptModal.loading' | translate }}</p>
           </div>
         } @else if (previewError) {
           <div class="m-state m-state--error">
             <span class="material-symbols-rounded">error</span>
-            <p>فشل تحميل المعاينة</p>
+            <p>{{ 'vehicleRequests.acceptModal.loadError' | translate }}</p>
           </div>
         } @else if (preview) {
 
@@ -37,22 +37,22 @@
             <div class="m-sec-head">
               <span class="m-sec-num">1</span>
               <div>
-                <h4>بيانات كتبها المستخدم</h4>
-                <p>للمراجعة فقط — غير قابلة للتعديل</p>
+                <h4>{{ 'vehicleRequests.acceptModal.step1.title' | translate }}</h4>
+                <p>{{ 'vehicleRequests.acceptModal.step1.subtitle' | translate }}</p>
               </div>
             </div>
 
             <div class="m-readonly">
               <div class="m-readonly-item">
-                <span class="m-readonly-label">الماركة</span>
+                <span class="m-readonly-label">{{ 'vehicleRequests.details.brand' | translate }}</span>
                 <span class="m-readonly-value">{{ preview.original.brandName }}</span>
               </div>
               <div class="m-readonly-item">
-                <span class="m-readonly-label">الموديل</span>
+                <span class="m-readonly-label">{{ 'vehicleRequests.details.model' | translate }}</span>
                 <span class="m-readonly-value">{{ preview.original.modelName }}</span>
               </div>
               <div class="m-readonly-item">
-                <span class="m-readonly-label">السعة</span>
+                <span class="m-readonly-label">{{ 'vehicleRequests.details.capacity' | translate }}</span>
                 <span class="m-readonly-value">{{ preview.original.capacity }}</span>
               </div>
             </div>
@@ -64,8 +64,8 @@
               <div class="m-sec-head">
                 <span class="m-sec-num m-sec-num--warn">!</span>
                 <div>
-                  <h4>تنبيهات النظام</h4>
-                  <p>اقرأها قبل القبول</p>
+                  <h4>{{ 'vehicleRequests.acceptModal.warnings.title' | translate }}</h4>
+                  <p>{{ 'vehicleRequests.acceptModal.warnings.subtitle' | translate }}</p>
                 </div>
               </div>
 
@@ -74,11 +74,8 @@
                   <div class="m-alert m-alert--danger">
                     <span class="material-symbols-rounded">block</span>
                     <div>
-                      <strong>موديل مكرر — لا يمكن القبول</strong>
-                      <p>
-                        الموديل "<b>{{ preview.exactModelMatch?.modelName }}</b>" موجود فعلاً تحت
-                        "<b>{{ preview.exactModelMatch?.brandName }}</b>". غيّر اسم الموديل أو ارفض الطلب.
-                      </p>
+                      <strong>{{ 'vehicleRequests.acceptModal.warnings.duplicateModelTitle' | translate }}</strong>
+                      <p>{{ 'vehicleRequests.acceptModal.warnings.duplicateModelMessage' | translate:{model: preview.exactModelMatch?.modelName, brand: preview.exactModelMatch?.brandName} }}</p>
                     </div>
                   </div>
                 }
@@ -86,8 +83,8 @@
                   <div class="m-alert m-alert--warn">
                     <span class="material-symbols-rounded">warning</span>
                     <div>
-                      <strong>تعذّر قراءة السعة تلقائيًا</strong>
-                      <p>لم نتمكن من استخراج رقم من نص المستخدم. الرجاء إدخال السعة يدويًا.</p>
+                      <strong>{{ 'vehicleRequests.acceptModal.warnings.capacityFailedTitle' | translate }}</strong>
+                      <p>{{ 'vehicleRequests.acceptModal.warnings.capacityFailedMessage' | translate }}</p>
                     </div>
                   </div>
                 }
@@ -106,8 +103,8 @@
             <div class="m-sec-head">
               <span class="m-sec-num">2</span>
               <div>
-                <h4>اختيار العلامة التجارية</h4>
-                <p>استخدم علامة موجودة لمنع التكرار، أو أنشئ واحدة جديدة</p>
+                <h4>{{ 'vehicleRequests.acceptModal.brand.title' | translate }}</h4>
+                <p>{{ 'vehicleRequests.acceptModal.brand.subtitle' | translate }}</p>
               </div>
             </div>
 
@@ -120,7 +117,7 @@
                 [disabled]="isSaving"
               >
                 <span class="material-symbols-rounded">playlist_add_check</span>
-                <span>علامة موجودة</span>
+                <span>{{ 'vehicleRequests.acceptModal.brand.useExisting' | translate }}</span>
               </button>
               <button
                 type="button"
@@ -130,20 +127,20 @@
                 [disabled]="isSaving"
               >
                 <span class="material-symbols-rounded">add_circle</span>
-                <span>علامة جديدة</span>
+                <span>{{ 'vehicleRequests.acceptModal.brand.createNew' | translate }}</span>
               </button>
             </div>
 
             @if (brandMode === 'existing') {
               <div class="m-field">
-                <label>اختر العلامة من القائمة</label>
+                <label>{{ 'vehicleRequests.acceptModal.brand.selectFromList' | translate }}</label>
                 @if (isLoadingBrands) {
-                  <span class="m-hint">جاري تحميل العلامات...</span>
+                  <span class="m-hint">{{ 'vehicleRequests.acceptModal.brand.loadingBrands' | translate }}</span>
                 } @else {
                   <select class="m-input" [(ngModel)]="selectedBrandId" [disabled]="isSaving">
-                    <option [ngValue]="null" disabled>-- اختر علامة --</option>
+                    <option [ngValue]="null" disabled>{{ 'vehicleRequests.acceptModal.brand.selectPlaceholder' | translate }}</option>
                     @for (b of allBrands; track b.id) {
-                      <option [ngValue]="b.id">{{ b.name }} ({{ b.totalModels }} موديل)</option>
+                      <option [ngValue]="b.id">{{ b.name }} ({{ 'vehicleRequests.acceptModal.brand.modelsCount' | translate:{count: b.totalModels} }})</option>
                     }
                   </select>
                 }
@@ -152,8 +149,8 @@
                   <div class="m-banner m-banner--ok">
                     <span class="material-symbols-rounded">check_circle</span>
                     <span>
-                      تطابق تام مع <b>{{ preview.exactBrandMatch.name }}</b>
-                      ({{ preview.exactBrandMatch.modelsCount }} موديل) — تم تحديدها تلقائيًا
+                      {{ 'vehicleRequests.acceptModal.brand.exactMatch' | translate }} <b>{{ preview.exactBrandMatch.name }}</b>
+                      ({{ 'vehicleRequests.acceptModal.brand.modelsCount' | translate:{count: preview.exactBrandMatch.modelsCount} }}) — {{ 'vehicleRequests.acceptModal.brand.exactMatchAuto' | translate }}
                     </span>
                   </div>
                 }
@@ -162,7 +159,7 @@
                   <div class="m-sugg">
                     <span class="m-sugg-label">
                       <span class="material-symbols-rounded">lightbulb</span>
-                      اقتراحات قريبة من "{{ preview.original.brandName }}"
+                      {{ 'vehicleRequests.acceptModal.brand.similarSuggestions' | translate }} "{{ preview.original.brandName }}"
                     </span>
                     <div class="m-chips">
                       @for (s of preview.similarBrands; track s.id) {
@@ -183,12 +180,12 @@
               </div>
             } @else {
               <div class="m-field">
-                <label>اسم العلامة الجديدة</label>
+                <label>{{ 'vehicleRequests.acceptModal.brand.newBrandLabel' | translate }}</label>
                 <input
                   type="text"
                   class="m-input"
                   [(ngModel)]="newBrandName"
-                  placeholder="مثال: Tesla"
+                  [placeholder]="'vehicleRequests.acceptModal.brand.newBrandPlaceholder' | translate"
                   [disabled]="isSaving"
                 />
               </div>
@@ -200,28 +197,28 @@
             <div class="m-sec-head">
               <span class="m-sec-num">3</span>
               <div>
-                <h4>اسم الموديل</h4>
-                <p>يمكنك تصحيحه لو المستخدم كتبه بشكل غير صحيح</p>
+                <h4>{{ 'vehicleRequests.acceptModal.modelStep.title' | translate }}</h4>
+                <p>{{ 'vehicleRequests.acceptModal.modelStep.subtitle' | translate }}</p>
               </div>
             </div>
 
             <div class="m-field">
-              <label>اسم الموديل</label>
+              <label>{{ 'vehicleRequests.acceptModal.modelStep.label' | translate }}</label>
               <input
                 type="text"
                 class="m-input"
                 [(ngModel)]="modelName"
-                placeholder="مثال: Model 3"
+                [placeholder]="'vehicleRequests.acceptModal.modelStep.placeholder' | translate"
                 [disabled]="isSaving"
               />
-              <span class="m-hint">كتبه المستخدم: <b>{{ preview.original.modelName }}</b></span>
+              <span class="m-hint">{{ 'vehicleRequests.acceptModal.modelStep.userInput' | translate }}: <b>{{ preview.original.modelName }}</b></span>
             </div>
 
             @if (preview.similarModels.length > 0) {
               <div class="m-sugg">
                 <span class="m-sugg-label">
                   <span class="material-symbols-rounded">info</span>
-                  موديلات مشابهة موجودة في النظام
+                  {{ 'vehicleRequests.acceptModal.modelStep.similarLabel' | translate }}
                 </span>
                 <div class="m-chips">
                   @for (m of preview.similarModels; track m.modelId) {
@@ -240,13 +237,13 @@
             <div class="m-sec-head">
               <span class="m-sec-num">4</span>
               <div>
-                <h4>السعة (kWh)</h4>
-                <p>القيمة الرقمية الدقيقة للسعة</p>
+                <h4>{{ 'vehicleRequests.acceptModal.capacityStep.title' | translate }}</h4>
+                <p>{{ 'vehicleRequests.acceptModal.capacityStep.subtitle' | translate }}</p>
               </div>
             </div>
 
             <div class="m-field">
-              <label>السعة بالكيلوواط/ساعة</label>
+              <label>{{ 'vehicleRequests.acceptModal.capacityStep.label' | translate }}</label>
               <div class="m-input-wrap">
                 <input
                   type="number"
@@ -263,13 +260,10 @@
               @if (preview.parsedCapacity !== null && preview.capacityParseSuccess) {
                 <div class="m-banner m-banner--ok">
                   <span class="material-symbols-rounded">check_circle</span>
-                  <span>
-                    تم استخراج <b>{{ preview.parsedCapacity }}</b> kWh من نص المستخدم
-                    "<i>{{ preview.original.capacity }}</i>"
-                  </span>
+                  <span>{{ 'vehicleRequests.acceptModal.capacityStep.extractedSuccess' | translate:{value: preview.parsedCapacity, raw: preview.original.capacity} }}</span>
                 </div>
               } @else {
-                <span class="m-hint">كتبه المستخدم: <b>{{ preview.original.capacity }}</b></span>
+                <span class="m-hint">{{ 'vehicleRequests.acceptModal.capacityStep.userInput' | translate }}: <b>{{ preview.original.capacity }}</b></span>
               }
             </div>
           </section>
@@ -279,7 +273,7 @@
             <div class="m-summary">
               <div class="m-summary-head">
                 <span class="material-symbols-rounded">preview</span>
-                <span>ملخص العملية قبل التنفيذ</span>
+                <span>{{ 'vehicleRequests.acceptModal.summary.title' | translate }}</span>
               </div>
               <p>{{ previewText }}</p>
             </div>
@@ -291,20 +285,20 @@
       <footer class="m-footer">
         <button class="m-btn m-btn--secondary" (click)="onCancel()" [disabled]="isSaving">
           <span class="material-symbols-rounded">close</span>
-          إلغاء
+          {{ 'vehicleRequests.acceptModal.actions.cancel' | translate }}
         </button>
         <button
           class="m-btn m-btn--primary"
           (click)="onConfirm()"
           [disabled]="!canAccept"
-          [title]="isDuplicateModel ? 'موديل بنفس الاسم موجود بالفعل' : ''"
+          [title]="(isDuplicateModel ? 'vehicleRequests.acceptModal.actions.duplicateTooltip' : '') | translate"
         >
           @if (isSaving) {
             <span class="material-symbols-rounded spin">sync</span>
-            جاري المعالجة...
+            {{ 'vehicleRequests.acceptModal.actions.processing' | translate }}
           } @else {
             <span class="material-symbols-rounded">check_circle</span>
-            تأكيد القبول
+            {{ 'vehicleRequests.acceptModal.actions.confirm' | translate }}
           }
         </button>
       </footer>

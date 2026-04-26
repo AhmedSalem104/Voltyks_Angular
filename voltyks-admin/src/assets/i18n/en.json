@@ -135,5 +135,208 @@
     "error": "An error occurred",
     "warning": "Warning",
     "info": "Info"
+  },
+  "vehicleRequests": {
+    "title": "Vehicle Addition Requests",
+    "subtitle": "Review user requests to add new vehicles to the system",
+    "totalLabel": "Total",
+    "refreshTooltip": "Refresh",
+    "filters": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "declined": "Declined",
+      "all": "All"
+    },
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "declined": "Declined"
+    },
+    "table": {
+      "id": "#",
+      "user": "User",
+      "brand": "Brand",
+      "model": "Model",
+      "capacity": "Capacity",
+      "status": "Status",
+      "date": "Date",
+      "actions": "Actions",
+      "loading": "Loading requests...",
+      "empty": "No requests in this status",
+      "loadError": "Failed to load requests"
+    },
+    "actions": {
+      "accept": "Accept",
+      "decline": "Decline",
+      "view": "View details"
+    },
+    "details": {
+      "modalTitle": "Request details",
+      "user": "User information",
+      "userName": "Name",
+      "userEmail": "Email",
+      "userPhone": "Phone",
+      "vehicle": "Requested vehicle",
+      "brand": "Brand",
+      "model": "Model",
+      "capacity": "Capacity",
+      "meta": "Timestamps",
+      "createdAt": "Created at",
+      "updatedAt": "Processed at",
+      "processedBy": "Processed by",
+      "requestId": "Request ID"
+    },
+    "confirm": {
+      "acceptTitle": "Accept request",
+      "acceptMessage": "Are you sure you want to accept the vehicle addition request \"{{brand}} {{model}}\" from \"{{user}}\"? The vehicle will be added to the database.",
+      "declineTitle": "Decline request",
+      "declineMessage": "Are you sure you want to decline the vehicle addition request \"{{brand}} {{model}}\" from \"{{user}}\"?"
+    },
+    "messages": {
+      "acceptSuccess": "Request accepted and vehicle added successfully",
+      "acceptFail": "Failed to accept request",
+      "declineSuccess": "Request declined",
+      "declineFail": "Failed to decline request"
+    },
+    "acceptModal": {
+      "title": "Accept vehicle addition request",
+      "subtitle": "Request",
+      "loading": "Loading preview and suggestions...",
+      "loadError": "Failed to load preview",
+      "step1": {
+        "title": "Data entered by the user",
+        "subtitle": "For review only — not editable"
+      },
+      "warnings": {
+        "title": "System warnings",
+        "subtitle": "Read before accepting",
+        "duplicateModelTitle": "Duplicate model — cannot accept",
+        "duplicateModelMessage": "Model \"{{model}}\" already exists under \"{{brand}}\". Change the model name or decline the request.",
+        "capacityFailedTitle": "Couldn't parse capacity automatically",
+        "capacityFailedMessage": "We couldn't extract a number from the user input. Please enter the capacity manually."
+      },
+      "brand": {
+        "title": "Choose the brand",
+        "subtitle": "Use an existing brand to avoid duplicates, or create a new one",
+        "useExisting": "Existing brand",
+        "createNew": "New brand",
+        "selectFromList": "Pick a brand from the list",
+        "selectPlaceholder": "-- Select a brand --",
+        "modelsCount": "{{count}} models",
+        "loadingBrands": "Loading brands...",
+        "exactMatch": "Exact match with",
+        "exactMatchAuto": "selected automatically",
+        "similarSuggestions": "Suggestions similar to",
+        "newBrandLabel": "New brand name",
+        "newBrandPlaceholder": "e.g. Tesla"
+      },
+      "modelStep": {
+        "title": "Model name",
+        "subtitle": "You can correct it if the user mistyped it",
+        "label": "Model name",
+        "placeholder": "e.g. Model 3",
+        "userInput": "User entered",
+        "similarLabel": "Similar models already in the system"
+      },
+      "capacityStep": {
+        "title": "Capacity (kWh)",
+        "subtitle": "The exact numeric capacity",
+        "label": "Capacity in kWh",
+        "extractedSuccess": "Extracted {{value}} kWh from the user input \"{{raw}}\"",
+        "userInput": "User entered"
+      },
+      "summary": {
+        "title": "Operation summary before confirmation",
+        "useExistingBrand": "On accept: use existing brand \"{{brand}}\" + create model \"{{model}}\" with {{capacity}} kWh.",
+        "createNewBrand": "On accept: create new brand \"{{brand}}\" + create model \"{{model}}\" with {{capacity}} kWh."
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "confirm": "Confirm accept",
+        "processing": "Processing...",
+        "duplicateTooltip": "A model with this name already exists"
+      }
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "newCount": "{{count}} new",
+    "filters": {
+      "all": "All",
+      "unread": "Unread",
+      "reports": "Reports",
+      "complaints": "Complaints",
+      "reservations": "Reservations",
+      "vehicleRequests": "Vehicle Requests"
+    },
+    "markAllRead": "Mark all as read",
+    "clearAll": "Clear all notifications",
+    "empty": {
+      "all": "No notifications",
+      "unread": "No unread notifications"
+    },
+    "settings": {
+      "title": "Notification settings",
+      "sound": "Sound",
+      "soundDesc": "Play a sound when a new notification arrives",
+      "reports": "Reports",
+      "reportsDesc": "Notifications for new reports",
+      "complaints": "Complaints",
+      "complaintsDesc": "Notifications for new complaints",
+      "reservations": "Reservations",
+      "reservationsDesc": "Notifications for store reservations",
+      "vehicleRequests": "Vehicle Addition Requests",
+      "vehicleRequestsDesc": "Notifications for new vehicle addition requests"
+    },
+    "loading": "Loading notifications...",
+    "loadError": "Failed to load notifications",
+    "delete": "Delete",
+    "types": {
+      "report": "Report",
+      "complaint": "Complaint",
+      "reservation": "Reservation",
+      "vehicleRequest": "Vehicle Request"
+    },
+    "detail": {
+      "title": "{{type}} details",
+      "back": "Back",
+      "loadError": "Failed to load data",
+      "loadErrorDesc": "We couldn't load the notification details. It may have been deleted or doesn't exist."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome",
+    "overview": "Overview",
+    "users": "Users",
+    "chargers": "Chargers",
+    "vehicles": "Vehicles",
+    "processes": "Charging Processes",
+    "revenue": "Revenue"
+  },
+  "users": {
+    "title": "User Management",
+    "subtitle": "View and manage all users",
+    "filters": {
+      "active": "Active",
+      "deleted": "Deleted",
+      "all": "All"
+    },
+    "search": "Search for a user (name, email, phone)...",
+    "table": {
+      "name": "Full Name",
+      "email": "Email",
+      "phone": "Phone",
+      "joinDate": "Join Date",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "deletedBadge": "Deleted",
+    "actions": {
+      "view": "View",
+      "ban": "Ban",
+      "unban": "Unban",
+      "restore": "Restore"
+    }
   }
 }

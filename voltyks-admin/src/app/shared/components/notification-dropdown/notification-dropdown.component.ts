@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
 import { NotificationService, NotificationSettings } from '../../../core/services/notification.service';
 import { AppNotification, NotificationType } from '../../../core/models';
 
@@ -12,7 +13,7 @@ type ViewType = 'list' | 'settings';
 @Component({
   selector: 'app-notification-dropdown',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './notification-dropdown.component.html',
   styleUrls: ['./notification-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -249,18 +250,18 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   /**
    * Get label for notification type
    */
-  getTypeLabel(type: NotificationType): string {
+  getTypeLabelKey(type: NotificationType): string {
     switch (type) {
       case 'report':
-        return 'بلاغ';
+        return 'notifications.types.report';
       case 'complaint':
-        return 'شكوى';
+        return 'notifications.types.complaint';
       case 'reservation':
-        return 'حجز منتج';
+        return 'notifications.types.reservation';
       case 'vehicle-request':
-        return 'طلب سيارة';
+        return 'notifications.types.vehicleRequest';
       default:
-        return 'إشعار';
+        return 'header.notifications';
     }
   }
 

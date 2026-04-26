@@ -1,4 +1,4 @@
-<div class="notification-dropdown" [class.show]="isOpen" role="dialog" aria-label="الإشعارات">
+<div class="notification-dropdown" [class.show]="isOpen" role="dialog" [attr.aria-label]="'notifications.title' | translate">
   <!-- Header -->
   <div class="dropdown-header">
     <div class="header-title">
@@ -9,10 +9,10 @@
         }
       </div>
       <div class="header-text">
-        <h3>الإشعارات</h3>
+        <h3>{{ 'notifications.title' | translate }}</h3>
         <div class="header-meta">
           @if (hasUnread) {
-            <span class="unread-count">{{ getUnreadCount() }} جديد</span>
+            <span class="unread-count">{{ 'notifications.newCount' | translate:{count: getUnreadCount()} }}</span>
           }
           <span class="connection-status" [class]="getConnectionClass()">
             <span class="status-dot"></span>
@@ -22,13 +22,13 @@
       </div>
     </div>
     <div class="header-actions">
-      <button class="icon-btn" (click)="refresh()" title="تحديث" [disabled]="isLoading">
+      <button class="icon-btn" (click)="refresh()" [title]="'common.refresh' | translate" [disabled]="isLoading">
         <span class="material-symbols-rounded" [class.spinning]="isLoading">refresh</span>
       </button>
-      <button class="icon-btn" (click)="toggleView(currentView === 'list' ? 'settings' : 'list')" title="الإعدادات">
+      <button class="icon-btn" (click)="toggleView(currentView === 'list' ? 'settings' : 'list')" [title]="'common.actions' | translate">
         <span class="material-symbols-rounded">{{ currentView === 'list' ? 'settings' : 'arrow_back' }}</span>
       </button>
-      <button class="icon-btn close-btn" (click)="close()" title="إغلاق">
+      <button class="icon-btn close-btn" (click)="close()" [title]="'common.close' | translate">
         <span class="material-symbols-rounded">close</span>
       </button>
     </div>
@@ -37,14 +37,14 @@
   <!-- Settings View -->
   @if (currentView === 'settings') {
     <div class="settings-view">
-      <h4 class="settings-title">إعدادات الإشعارات</h4>
+      <h4 class="settings-title">{{ 'notifications.settings.title' | translate }}</h4>
 
       <div class="setting-item">
         <div class="setting-info">
           <span class="material-symbols-rounded">volume_up</span>
           <div>
-            <span class="setting-label">صوت الإشعارات</span>
-            <span class="setting-desc">تشغيل صوت عند وصول إشعار جديد</span>
+            <span class="setting-label">{{ 'notifications.settings.sound' | translate }}</span>
+            <span class="setting-desc">{{ 'notifications.settings.soundDesc' | translate }}</span>
           </div>
         </div>
         <label class="toggle">
@@ -54,15 +54,15 @@
       </div>
 
       <div class="settings-divider">
-        <span>أنواع الإشعارات</span>
+        <span>{{ 'notifications.title' | translate }}</span>
       </div>
 
       <div class="setting-item">
         <div class="setting-info">
           <span class="material-symbols-rounded text-warning">report_problem</span>
           <div>
-            <span class="setting-label">البلاغات</span>
-            <span class="setting-desc">إشعارات البلاغات الجديدة</span>
+            <span class="setting-label">{{ 'notifications.settings.reports' | translate }}</span>
+            <span class="setting-desc">{{ 'notifications.settings.reportsDesc' | translate }}</span>
           </div>
         </div>
         <label class="toggle">
@@ -75,8 +75,8 @@
         <div class="setting-info">
           <span class="material-symbols-rounded text-info">feedback</span>
           <div>
-            <span class="setting-label">الشكاوى</span>
-            <span class="setting-desc">إشعارات الشكاوى الجديدة</span>
+            <span class="setting-label">{{ 'notifications.settings.complaints' | translate }}</span>
+            <span class="setting-desc">{{ 'notifications.settings.complaintsDesc' | translate }}</span>
           </div>
         </div>
         <label class="toggle">
@@ -89,8 +89,8 @@
         <div class="setting-info">
           <span class="material-symbols-rounded text-purple">shopping_cart</span>
           <div>
-            <span class="setting-label">الحجوزات</span>
-            <span class="setting-desc">إشعارات حجوزات المتجر</span>
+            <span class="setting-label">{{ 'notifications.settings.reservations' | translate }}</span>
+            <span class="setting-desc">{{ 'notifications.settings.reservationsDesc' | translate }}</span>
           </div>
         </div>
         <label class="toggle">
@@ -103,8 +103,8 @@
         <div class="setting-info">
           <span class="material-symbols-rounded text-success">directions_car</span>
           <div>
-            <span class="setting-label">طلبات إضافة السيارات</span>
-            <span class="setting-desc">إشعارات طلبات المستخدمين لإضافة سيارات جديدة</span>
+            <span class="setting-label">{{ 'notifications.settings.vehicleRequests' | translate }}</span>
+            <span class="setting-desc">{{ 'notifications.settings.vehicleRequestsDesc' | translate }}</span>
           </div>
         </div>
         <label class="toggle">
@@ -114,12 +114,12 @@
       </div>
 
       <div class="settings-divider">
-        <span>إجراءات</span>
+        <span>{{ 'common.actions' | translate }}</span>
       </div>
 
       <button class="danger-btn" (click)="clearAll()">
         <span class="material-symbols-rounded">delete_sweep</span>
-        مسح جميع الإشعارات
+        {{ 'notifications.clearAll' | translate }}
       </button>
     </div>
   } @else {
@@ -131,7 +131,7 @@
           [class.active]="activeFilter === 'all'"
           (click)="setFilter('all')"
         >
-          الكل
+          {{ 'notifications.filters.all' | translate }}
           <span class="tab-count">{{ getFilterCount('all') }}</span>
         </button>
         <button
@@ -139,7 +139,7 @@
           [class.active]="activeFilter === 'unread'"
           (click)="setFilter('unread')"
         >
-          غير مقروء
+          {{ 'notifications.filters.unread' | translate }}
           @if (getFilterCount('unread') > 0) {
             <span class="tab-badge">{{ getFilterCount('unread') }}</span>
           }
@@ -148,7 +148,7 @@
           class="tab-btn type-report"
           [class.active]="activeFilter === 'reports'"
           (click)="setFilter('reports')"
-          title="البلاغات"
+          [title]="'notifications.filters.reports' | translate"
         >
           <span class="material-symbols-rounded">report_problem</span>
         </button>
@@ -156,7 +156,7 @@
           class="tab-btn type-complaint"
           [class.active]="activeFilter === 'complaints'"
           (click)="setFilter('complaints')"
-          title="الشكاوى"
+          [title]="'notifications.filters.complaints' | translate"
         >
           <span class="material-symbols-rounded">feedback</span>
         </button>
@@ -164,7 +164,7 @@
           class="tab-btn type-reservation"
           [class.active]="activeFilter === 'reservations'"
           (click)="setFilter('reservations')"
-          title="الحجوزات"
+          [title]="'notifications.filters.reservations' | translate"
         >
           <span class="material-symbols-rounded">shopping_cart</span>
         </button>
@@ -172,7 +172,7 @@
           class="tab-btn type-vehicle-request"
           [class.active]="activeFilter === 'vehicle-requests'"
           (click)="setFilter('vehicle-requests')"
-          title="طلبات إضافة السيارات"
+          [title]="'notifications.filters.vehicleRequests' | translate"
         >
           <span class="material-symbols-rounded">directions_car</span>
         </button>
@@ -180,7 +180,7 @@
       @if (hasUnread) {
         <button class="mark-all-read-btn" (click)="markAllAsRead()">
           <span class="material-symbols-rounded">done_all</span>
-          تحديد الكل كمقروء
+          {{ 'notifications.markAllRead' | translate }}
         </button>
       }
     </div>
@@ -189,7 +189,7 @@
     @if (isLoading) {
       <div class="loading-state">
         <div class="spinner"></div>
-        <span>جاري التحميل...</span>
+        <span>{{ 'notifications.loading' | translate }}</span>
       </div>
     }
 
@@ -200,7 +200,7 @@
         <p>{{ error }}</p>
         <button class="retry-btn" (click)="refresh()">
           <span class="material-symbols-rounded">refresh</span>
-          إعادة المحاولة
+          {{ 'common.retry' | translate }}
         </button>
       </div>
     }
@@ -224,7 +224,7 @@
                   (click)="onNotificationClick(notification, $event)"
                   role="button"
                   tabindex="0"
-                  [attr.aria-label]="getTypeLabel(notification.type) + ' من ' + notification.userName"
+                  [attr.aria-label]="(getTypeLabelKey(notification.type) | translate) + ' · ' + notification.userName"
                 >
                   <!-- Type Icon -->
                   <div class="notification-icon" [class]="notification.type">
@@ -234,7 +234,7 @@
                   <!-- Content -->
                   <div class="notification-content">
                     <div class="notification-header">
-                      <span class="notification-type-label" [class]="notification.type">{{ getTypeLabel(notification.type) }}</span>
+                      <span class="notification-type-label" [class]="notification.type">{{ getTypeLabelKey(notification.type) | translate }}</span>
                       <span class="notification-time">{{ getRelativeTime(notification.timestamp) }}</span>
                     </div>
                     <p class="notification-message">{{ notification.message }}</p>
@@ -263,7 +263,7 @@
 
                   <!-- Actions -->
                   <div class="notification-actions">
-                    <button class="delete-btn" (click)="deleteNotification(notification, $event)" title="حذف">
+                    <button class="delete-btn" (click)="deleteNotification(notification, $event)" [title]="'notifications.delete' | translate">
                       <span class="material-symbols-rounded">close</span>
                     </button>
                   </div>
@@ -285,19 +285,10 @@
           </div>
           <h4>
             @switch (activeFilter) {
-              @case ('unread') { لا توجد إشعارات غير مقروءة }
-              @case ('reports') { لا توجد بلاغات }
-              @case ('complaints') { لا توجد شكاوى }
-              @case ('reservations') { لا توجد حجوزات }
-              @default { لا توجد إشعارات }
+              @case ('unread') { {{ 'notifications.empty.unread' | translate }} }
+              @default { {{ 'notifications.empty.all' | translate }} }
             }
           </h4>
-          <p>
-            @switch (activeFilter) {
-              @case ('unread') { جميع الإشعارات تم قراءتها }
-              @default { ستظهر الإشعارات الجديدة هنا }
-            }
-          </p>
         </div>
       }
     }
@@ -306,21 +297,21 @@
   <!-- Quick Navigation (only in list view) -->
   @if (currentView === 'list') {
     <div class="quick-nav">
-      <span class="nav-title">الوصول السريع</span>
+      <span class="nav-title">{{ 'common.actions' | translate }}</span>
       <div class="nav-links">
         <button class="nav-link reports" (click)="goToReports()">
           <span class="material-symbols-rounded">report_problem</span>
-          <span>البلاغات</span>
+          <span>{{ 'notifications.filters.reports' | translate }}</span>
           <span class="nav-count">{{ getFilterCount('reports') }}</span>
         </button>
         <button class="nav-link complaints" (click)="goToComplaints()">
           <span class="material-symbols-rounded">feedback</span>
-          <span>الشكاوى</span>
+          <span>{{ 'notifications.filters.complaints' | translate }}</span>
           <span class="nav-count">{{ getFilterCount('complaints') }}</span>
         </button>
         <button class="nav-link reservations" (click)="goToReservations()">
           <span class="material-symbols-rounded">shopping_cart</span>
-          <span>الحجوزات</span>
+          <span>{{ 'notifications.filters.reservations' | translate }}</span>
           <span class="nav-count">{{ getFilterCount('reservations') }}</span>
         </button>
       </div>

@@ -2,15 +2,15 @@
   <!-- Page Header -->
   <div class="page-header-row">
     <div>
-      <h2>طلبات إضافة السيارات</h2>
-      <p class="subtitle">مراجعة طلبات المستخدمين لإضافة سيارات جديدة إلى النظام</p>
+      <h2>{{ 'vehicleRequests.title' | translate }}</h2>
+      <p class="subtitle">{{ 'vehicleRequests.subtitle' | translate }}</p>
     </div>
     <div class="header-meta">
       <span class="total-chip">
         <span class="material-symbols-rounded">inventory_2</span>
-        الإجمالي: {{ totalCount }}
+        {{ 'vehicleRequests.totalLabel' | translate }}: {{ totalCount }}
       </span>
-      <button class="refresh-btn" (click)="loadData()" [disabled]="isLoading" title="تحديث">
+      <button class="refresh-btn" (click)="loadData()" [disabled]="isLoading" [title]="'vehicleRequests.refreshTooltip' | translate">
         <span class="material-symbols-rounded" [class.spin]="isLoading">refresh</span>
       </button>
     </div>
@@ -25,7 +25,7 @@
         (click)="setFilter(opt.key)"
       >
         <span class="material-symbols-rounded">{{ opt.icon }}</span>
-        <span>{{ opt.label }}</span>
+        <span>{{ opt.labelKey | translate }}</span>
       </button>
     }
   </div>
@@ -35,35 +35,35 @@
     @if (isLoading) {
       <div class="loading-state">
         <div class="loading-spinner"></div>
-        <p>جاري تحميل الطلبات...</p>
+        <p>{{ 'vehicleRequests.table.loading' | translate }}</p>
       </div>
     } @else if (loadError) {
       <div class="error-state">
         <span class="material-symbols-rounded">error</span>
-        <p>فشل تحميل الطلبات</p>
+        <p>{{ 'vehicleRequests.table.loadError' | translate }}</p>
         <button class="voltyks-btn btn-primary" (click)="loadData()">
           <span class="material-symbols-rounded">refresh</span>
-          إعادة المحاولة
+          {{ 'common.retry' | translate }}
         </button>
       </div>
     } @else if (items.length === 0) {
       <div class="empty-state">
         <span class="material-symbols-rounded">inbox</span>
-        <p>لا توجد طلبات في هذه الحالة</p>
+        <p>{{ 'vehicleRequests.table.empty' | translate }}</p>
       </div>
     } @else {
       <div class="table-wrapper">
         <table class="voltyks-table">
           <thead>
             <tr>
-              <th>#</th>
-              <th>المستخدم</th>
-              <th>الماركة</th>
-              <th>الموديل</th>
-              <th>السعة</th>
-              <th>الحالة</th>
-              <th>التاريخ</th>
-              <th>الإجراءات</th>
+              <th>{{ 'vehicleRequests.table.id' | translate }}</th>
+              <th>{{ 'vehicleRequests.table.user' | translate }}</th>
+              <th>{{ 'vehicleRequests.table.brand' | translate }}</th>
+              <th>{{ 'vehicleRequests.table.model' | translate }}</th>
+              <th>{{ 'vehicleRequests.table.capacity' | translate }}</th>
+              <th>{{ 'vehicleRequests.table.status' | translate }}</th>
+              <th>{{ 'vehicleRequests.table.date' | translate }}</th>
+              <th>{{ 'vehicleRequests.table.actions' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -81,7 +81,7 @@
                 <td>{{ req.capacity }}</td>
                 <td>
                   <span class="status-badge" [ngClass]="getStatusClass(req.status)">
-                    {{ getStatusLabel(req.status) }}
+                    {{ getStatusLabelKey(req.status) | translate }}
                   </span>
                 </td>
                 <td class="date-cell">
@@ -102,7 +102,7 @@
                       class="action-btn accept"
                       [disabled]="processingId === req.id"
                       (click)="requestAccept(req)"
-                      title="قبول"
+                      [title]="'vehicleRequests.actions.accept' | translate"
                     >
                       @if (processingId === req.id) {
                         <span class="material-symbols-rounded spin">sync</span>
@@ -114,7 +114,7 @@
                       class="action-btn decline"
                       [disabled]="processingId === req.id"
                       (click)="requestDecline(req)"
-                      title="رفض"
+                      [title]="'vehicleRequests.actions.decline' | translate"
                     >
                       <span class="material-symbols-rounded">close</span>
                     </button>
@@ -122,7 +122,7 @@
                   <button
                     class="action-btn view"
                     (click)="openDetails(req)"
-                    title="عرض التفاصيل"
+                    [title]="'vehicleRequests.actions.view' | translate"
                   >
                     <span class="material-symbols-rounded">visibility</span>
                   </button>
@@ -152,7 +152,7 @@
       <div class="modal-header">
         <h3>
           <span class="material-symbols-rounded">directions_car</span>
-          تفاصيل طلب #{{ selectedRequest.id }}
+          {{ 'vehicleRequests.details.modalTitle' | translate }} #{{ selectedRequest.id }}
         </h3>
         <button class="close-btn" (click)="closeDetails()">
           <span class="material-symbols-rounded">close</span>
@@ -163,7 +163,7 @@
         <!-- Status -->
         <div class="modal-status">
           <span class="status-badge" [ngClass]="getStatusClass(selectedRequest.status)">
-            {{ getStatusLabel(selectedRequest.status) }}
+            {{ getStatusLabelKey(selectedRequest.status) | translate }}
           </span>
         </div>
 
@@ -171,19 +171,19 @@
         <div class="detail-section">
           <h4>
             <span class="material-symbols-rounded">person</span>
-            بيانات المستخدم
+            {{ 'vehicleRequests.details.user' | translate }}
           </h4>
           <div class="detail-grid">
             <div class="detail-item">
-              <label>الاسم</label>
+              <label>{{ 'vehicleRequests.details.userName' | translate }}</label>
               <span>{{ selectedRequest.userFullName }}</span>
             </div>
             <div class="detail-item">
-              <label>البريد الإلكتروني</label>
+              <label>{{ 'vehicleRequests.details.userEmail' | translate }}</label>
               <span>{{ selectedRequest.userEmail }}</span>
             </div>
             <div class="detail-item">
-              <label>رقم الهاتف</label>
+              <label>{{ 'vehicleRequests.details.userPhone' | translate }}</label>
               <span>{{ selectedRequest.userPhone }}</span>
             </div>
           </div>
@@ -193,19 +193,19 @@
         <div class="detail-section">
           <h4>
             <span class="material-symbols-rounded">electric_car</span>
-            بيانات السيارة المطلوبة
+            {{ 'vehicleRequests.details.vehicle' | translate }}
           </h4>
           <div class="detail-grid">
             <div class="detail-item">
-              <label>الماركة</label>
+              <label>{{ 'vehicleRequests.details.brand' | translate }}</label>
               <span>{{ selectedRequest.brandName }}</span>
             </div>
             <div class="detail-item">
-              <label>الموديل</label>
+              <label>{{ 'vehicleRequests.details.model' | translate }}</label>
               <span>{{ selectedRequest.modelName }}</span>
             </div>
             <div class="detail-item">
-              <label>السعة</label>
+              <label>{{ 'vehicleRequests.details.capacity' | translate }}</label>
               <span>{{ selectedRequest.capacity }}</span>
             </div>
           </div>
@@ -215,22 +215,22 @@
         <div class="detail-section">
           <h4>
             <span class="material-symbols-rounded">schedule</span>
-            البيانات الزمنية
+            {{ 'vehicleRequests.details.meta' | translate }}
           </h4>
           <div class="detail-grid">
             <div class="detail-item">
-              <label>تاريخ الإنشاء</label>
+              <label>{{ 'vehicleRequests.details.createdAt' | translate }}</label>
               <span>{{ selectedRequest.createdAt | date:'yyyy/MM/dd' }} · {{ selectedRequest.createdAt | date:'hh:mm a' }}</span>
             </div>
             @if (selectedRequest.updatedAt) {
               <div class="detail-item">
-                <label>تاريخ المعالجة</label>
+                <label>{{ 'vehicleRequests.details.updatedAt' | translate }}</label>
                 <span>{{ selectedRequest.updatedAt | date:'yyyy/MM/dd' }} · {{ selectedRequest.updatedAt | date:'hh:mm a' }}</span>
               </div>
             }
             @if (selectedRequest.processedBy) {
               <div class="detail-item">
-                <label>تمت المعالجة بواسطة</label>
+                <label>{{ 'vehicleRequests.details.processedBy' | translate }}</label>
                 <span>{{ selectedRequest.processedBy }}</span>
               </div>
             }
@@ -246,7 +246,7 @@
             (click)="requestDecline(selectedRequest)"
           >
             <span class="material-symbols-rounded">close</span>
-            رفض
+            {{ 'vehicleRequests.actions.decline' | translate }}
           </button>
           <button
             class="voltyks-btn btn-primary"
@@ -255,14 +255,14 @@
           >
             @if (processingId === selectedRequest.id) {
               <span class="material-symbols-rounded spin">sync</span>
-              جاري المعالجة...
+              {{ 'common.processing' | translate }}
             } @else {
               <span class="material-symbols-rounded">check</span>
-              قبول وإضافة
+              {{ 'vehicleRequests.actions.accept' | translate }}
             }
           </button>
         } @else {
-          <button class="voltyks-btn btn-secondary" (click)="closeDetails()">إغلاق</button>
+          <button class="voltyks-btn btn-secondary" (click)="closeDetails()">{{ 'common.close' | translate }}</button>
         }
       </div>
     </div>

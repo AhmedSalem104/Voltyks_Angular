@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRe
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { VehicleAdditionRequestsService } from '../../core/services/admin/vehicle-addition-requests.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { DataRefreshService } from '../../core/services/data-refresh.service';
@@ -20,7 +21,7 @@ type StatusFilter = 'all' | VehicleAdditionRequestStatus;
 @Component({
   selector: 'app-vehicle-addition-requests',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConfirmDialogComponent, PaginationComponent, VehicleRequestAcceptModalComponent],
+  imports: [CommonModule, FormsModule, ConfirmDialogComponent, PaginationComponent, VehicleRequestAcceptModalComponent, TranslatePipe],
   templateUrl: './vehicle-addition-requests.component.html',
   styleUrls: ['./vehicle-addition-requests.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -56,11 +57,11 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
-  readonly filterOptions: { key: StatusFilter; label: string; icon: string }[] = [
-    { key: 'pending', label: 'قيد الانتظار', icon: 'hourglass_empty' },
-    { key: 'accepted', label: 'مقبولة', icon: 'check_circle' },
-    { key: 'declined', label: 'مرفوضة', icon: 'cancel' },
-    { key: 'all', label: 'الكل', icon: 'list' }
+  readonly filterOptions: { key: StatusFilter; labelKey: string; icon: string }[] = [
+    { key: 'pending', labelKey: 'vehicleRequests.filters.pending', icon: 'hourglass_empty' },
+    { key: 'accepted', labelKey: 'vehicleRequests.filters.accepted', icon: 'check_circle' },
+    { key: 'declined', labelKey: 'vehicleRequests.filters.declined', icon: 'cancel' },
+    { key: 'all', labelKey: 'vehicleRequests.filters.all', icon: 'list' }
   ];
 
   constructor(
@@ -68,6 +69,7 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private refreshService: DataRefreshService,
     private toaster: ToasterService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -111,7 +113,7 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
           this.totalPages = res.data.totalPages ?? 1;
         } else {
           this.loadError = !silent;
-          if (!silent) this.toaster.error(res?.message || 'فشل تحميل الطلبات');
+          if (!silent) this.toaster.error(res?.message || this.translate.instant('vehicleRequests.table.loadError'));
         }
         this.isLoading = false;
         this.cdr.markForCheck();
@@ -119,7 +121,7 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.loadError = !silent;
         this.isLoading = false;
-        if (!silent) this.toaster.error(err?.error?.message || 'فشل تحميل الطلبات');
+        if (!silent) this.toaster.error(err?.error?.message || this.translate.instant('vehicleRequests.table.loadError'));
         this.cdr.markForCheck();
       }
     });
@@ -167,9 +169,12 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
   }
 
   requestDecline(req: VehicleAdditionRequestDto): void {
-    this.confirmDialogTitle = 'رفض الطلب';
-    this.confirmDialogMessage =
-      `هل أنت متأكد من رفض طلب إضافة السيارة "${req.brandName} ${req.modelName}" للمستخدم "${req.userFullName}"؟`;
+    this.confirmDialogTitle = this.translate.instant('vehicleRequests.confirm.declineTitle');
+    this.confirmDialogMessage = this.translate.instant('vehicleRequests.confirm.declineMessage', {
+      brand: req.brandName,
+      model: req.modelName,
+      user: req.userFullName
+    });
     this.confirmDialogType = 'danger';
     this.pendingAction = () => this.doDecline(req.id);
     this.showConfirmDialog = true;
@@ -198,7 +203,7 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
     this.requestsService.accept(id, body ?? null).subscribe({
       next: (res) => {
         if (res?.status) {
-          this.toaster.success(res.message || 'تم قبول الطلب وإضافة السيارة بنجاح');
+          this.toaster.success(res.message || this.translate.instant('vehicleRequests.messages.acceptSuccess'));
           this.closeDetails();
           this.onAcceptModalCancel();
           this.loadData();
@@ -207,13 +212,13 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
           this.refreshService.emit('brand');
           this.refreshService.emit('model');
         } else {
-          this.toaster.error(res?.message || 'فشل قبول الطلب');
+          this.toaster.error(res?.message || this.translate.instant('vehicleRequests.messages.acceptFail'));
         }
         this.processingId = null;
         this.cdr.markForCheck();
       },
       error: (err) => {
-        this.toaster.error(err?.error?.message || 'فشل قبول الطلب');
+        this.toaster.error(err?.error?.message || this.translate.instant('vehicleRequests.messages.acceptFail'));
         this.processingId = null;
         this.cdr.markForCheck();
       }
@@ -227,19 +232,19 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
     this.requestsService.decline(id).subscribe({
       next: (res) => {
         if (res?.status) {
-          this.toaster.success(res.message || 'تم رفض الطلب');
+          this.toaster.success(res.message || this.translate.instant('vehicleRequests.messages.declineSuccess'));
           this.closeDetails();
           this.loadData();
           this.notificationService.loadVehicleRequestNotifications();
           this.refreshService.emit('vehicle-request');
         } else {
-          this.toaster.error(res?.message || 'فشل رفض الطلب');
+          this.toaster.error(res?.message || this.translate.instant('vehicleRequests.messages.declineFail'));
         }
         this.processingId = null;
         this.cdr.markForCheck();
       },
       error: (err) => {
-        this.toaster.error(err?.error?.message || 'فشل رفض الطلب');
+        this.toaster.error(err?.error?.message || this.translate.instant('vehicleRequests.messages.declineFail'));
         this.processingId = null;
         this.cdr.markForCheck();
       }
@@ -250,13 +255,8 @@ export class VehicleAdditionRequestsComponent implements OnInit, OnDestroy {
     return `status-${status}`;
   }
 
-  getStatusLabel(status: VehicleAdditionRequestStatus): string {
-    switch (status) {
-      case 'pending': return 'قيد الانتظار';
-      case 'accepted': return 'مقبولة';
-      case 'declined': return 'مرفوضة';
-      default: return status;
-    }
+  getStatusLabelKey(status: VehicleAdditionRequestStatus): string {
+    return `vehicleRequests.status.${status}`;
   }
 
   trackById(_: number, item: VehicleAdditionRequestDto): number {

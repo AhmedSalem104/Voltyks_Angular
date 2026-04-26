@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { VehicleAdditionRequestsService } from '../../../core/services/admin/vehicle-addition-requests.service';
 import { AdminBrandsService } from '../../../core/services/admin/admin-brands.service';
 import {
@@ -24,7 +25,7 @@ type BrandMode = 'existing' | 'new';
 @Component({
   selector: 'app-vehicle-request-accept-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './vehicle-request-accept-modal.component.html',
   styleUrls: ['./vehicle-request-accept-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -57,6 +58,7 @@ export class VehicleRequestAcceptModalComponent implements OnChanges {
   constructor(
     private requestsService: VehicleAdditionRequestsService,
     private brandsService: AdminBrandsService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -180,10 +182,10 @@ export class VehicleRequestAcceptModalComponent implements OnChanges {
     const cap = this.capacity;
     if (!brand || !model || cap === null) return '';
 
-    const brandPart = this.brandMode === 'existing'
-      ? `استخدام العلامة "${brand}"`
-      : `إنشاء علامة جديدة "${brand}"`;
-    return `عند القبول: ${brandPart} + إنشاء الموديل "${model}" بسعة ${cap} kWh.`;
+    const summaryKey = this.brandMode === 'existing'
+      ? 'vehicleRequests.acceptModal.summary.useExistingBrand'
+      : 'vehicleRequests.acceptModal.summary.createNewBrand';
+    return this.translate.instant(summaryKey, { brand, model, capacity: cap });
   }
 
   onConfirm(): void {

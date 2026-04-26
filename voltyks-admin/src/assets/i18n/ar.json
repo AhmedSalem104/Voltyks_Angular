@@ -135,5 +135,208 @@
     "error": "حدث خطأ",
     "warning": "تنبيه",
     "info": "معلومة"
+  },
+  "vehicleRequests": {
+    "title": "طلبات إضافة السيارات",
+    "subtitle": "مراجعة طلبات المستخدمين لإضافة سيارات جديدة إلى النظام",
+    "totalLabel": "الإجمالي",
+    "refreshTooltip": "تحديث",
+    "filters": {
+      "pending": "قيد الانتظار",
+      "accepted": "مقبولة",
+      "declined": "مرفوضة",
+      "all": "الكل"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "accepted": "مقبولة",
+      "declined": "مرفوضة"
+    },
+    "table": {
+      "id": "#",
+      "user": "المستخدم",
+      "brand": "الماركة",
+      "model": "الموديل",
+      "capacity": "السعة",
+      "status": "الحالة",
+      "date": "التاريخ",
+      "actions": "الإجراءات",
+      "loading": "جاري تحميل الطلبات...",
+      "empty": "لا توجد طلبات في هذه الحالة",
+      "loadError": "فشل تحميل الطلبات"
+    },
+    "actions": {
+      "accept": "قبول",
+      "decline": "رفض",
+      "view": "عرض التفاصيل"
+    },
+    "details": {
+      "modalTitle": "تفاصيل طلب",
+      "user": "بيانات المستخدم",
+      "userName": "الاسم",
+      "userEmail": "البريد الإلكتروني",
+      "userPhone": "رقم الهاتف",
+      "vehicle": "بيانات السيارة المطلوبة",
+      "brand": "الماركة",
+      "model": "الموديل",
+      "capacity": "السعة",
+      "meta": "البيانات الزمنية",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "تاريخ المعالجة",
+      "processedBy": "تمت المعالجة بواسطة",
+      "requestId": "رقم الطلب"
+    },
+    "confirm": {
+      "acceptTitle": "قبول الطلب",
+      "acceptMessage": "هل أنت متأكد من قبول طلب إضافة السيارة \"{{brand}} {{model}}\" للمستخدم \"{{user}}\"؟ سيتم إضافتها إلى قاعدة البيانات.",
+      "declineTitle": "رفض الطلب",
+      "declineMessage": "هل أنت متأكد من رفض طلب إضافة السيارة \"{{brand}} {{model}}\" للمستخدم \"{{user}}\"؟"
+    },
+    "messages": {
+      "acceptSuccess": "تم قبول الطلب وإضافة السيارة بنجاح",
+      "acceptFail": "فشل قبول الطلب",
+      "declineSuccess": "تم رفض الطلب",
+      "declineFail": "فشل رفض الطلب"
+    },
+    "acceptModal": {
+      "title": "قبول طلب إضافة سيارة",
+      "subtitle": "رقم الطلب",
+      "loading": "جاري تحميل المعاينة والاقتراحات...",
+      "loadError": "فشل تحميل المعاينة",
+      "step1": {
+        "title": "بيانات كتبها المستخدم",
+        "subtitle": "للمراجعة فقط — غير قابلة للتعديل"
+      },
+      "warnings": {
+        "title": "تنبيهات النظام",
+        "subtitle": "اقرأها قبل القبول",
+        "duplicateModelTitle": "موديل مكرر — لا يمكن القبول",
+        "duplicateModelMessage": "الموديل \"{{model}}\" موجود فعلاً تحت \"{{brand}}\". غيّر اسم الموديل أو ارفض الطلب.",
+        "capacityFailedTitle": "تعذّر قراءة السعة تلقائيًا",
+        "capacityFailedMessage": "لم نتمكن من استخراج رقم من نص المستخدم. الرجاء إدخال السعة يدويًا."
+      },
+      "brand": {
+        "title": "اختيار العلامة التجارية",
+        "subtitle": "استخدم علامة موجودة لمنع التكرار، أو أنشئ واحدة جديدة",
+        "useExisting": "علامة موجودة",
+        "createNew": "علامة جديدة",
+        "selectFromList": "اختر العلامة من القائمة",
+        "selectPlaceholder": "-- اختر علامة --",
+        "modelsCount": "{{count}} موديل",
+        "loadingBrands": "جاري تحميل العلامات...",
+        "exactMatch": "تطابق تام مع",
+        "exactMatchAuto": "تم تحديدها تلقائيًا",
+        "similarSuggestions": "اقتراحات قريبة من",
+        "newBrandLabel": "اسم العلامة الجديدة",
+        "newBrandPlaceholder": "مثال: Tesla"
+      },
+      "modelStep": {
+        "title": "اسم الموديل",
+        "subtitle": "يمكنك تصحيحه لو المستخدم كتبه بشكل غير صحيح",
+        "label": "اسم الموديل",
+        "placeholder": "مثال: Model 3",
+        "userInput": "كتبه المستخدم",
+        "similarLabel": "موديلات مشابهة موجودة في النظام"
+      },
+      "capacityStep": {
+        "title": "السعة (kWh)",
+        "subtitle": "القيمة الرقمية الدقيقة للسعة",
+        "label": "السعة بالكيلوواط/ساعة",
+        "extractedSuccess": "تم استخراج {{value}} kWh من نص المستخدم \"{{raw}}\"",
+        "userInput": "كتبه المستخدم"
+      },
+      "summary": {
+        "title": "ملخص العملية قبل التنفيذ",
+        "useExistingBrand": "عند القبول: استخدام العلامة \"{{brand}}\" + إنشاء الموديل \"{{model}}\" بسعة {{capacity}} kWh.",
+        "createNewBrand": "عند القبول: إنشاء علامة جديدة \"{{brand}}\" + إنشاء الموديل \"{{model}}\" بسعة {{capacity}} kWh."
+      },
+      "actions": {
+        "cancel": "إلغاء",
+        "confirm": "تأكيد القبول",
+        "processing": "جاري المعالجة...",
+        "duplicateTooltip": "موديل بنفس الاسم موجود بالفعل"
+      }
+    }
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "newCount": "{{count}} جديد",
+    "filters": {
+      "all": "الكل",
+      "unread": "غير مقروء",
+      "reports": "البلاغات",
+      "complaints": "الشكاوى",
+      "reservations": "الحجوزات",
+      "vehicleRequests": "طلبات إضافة السيارات"
+    },
+    "markAllRead": "تحديد الكل كمقروء",
+    "clearAll": "مسح جميع الإشعارات",
+    "empty": {
+      "all": "لا توجد إشعارات",
+      "unread": "لا توجد إشعارات غير مقروءة"
+    },
+    "settings": {
+      "title": "إعدادات الإشعارات",
+      "sound": "الصوت",
+      "soundDesc": "تشغيل صوت عند وصول إشعار جديد",
+      "reports": "البلاغات",
+      "reportsDesc": "إشعارات البلاغات الجديدة",
+      "complaints": "الشكاوى",
+      "complaintsDesc": "إشعارات الشكاوى الجديدة",
+      "reservations": "الحجوزات",
+      "reservationsDesc": "إشعارات حجوزات المتجر",
+      "vehicleRequests": "طلبات إضافة السيارات",
+      "vehicleRequestsDesc": "إشعارات طلبات المستخدمين لإضافة سيارات جديدة"
+    },
+    "loading": "جاري تحميل الإشعارات...",
+    "loadError": "فشل تحميل الإشعارات",
+    "delete": "حذف",
+    "types": {
+      "report": "بلاغ",
+      "complaint": "شكوى",
+      "reservation": "حجز منتج",
+      "vehicleRequest": "طلب سيارة"
+    },
+    "detail": {
+      "title": "تفاصيل {{type}}",
+      "back": "رجوع",
+      "loadError": "فشل تحميل البيانات",
+      "loadErrorDesc": "لم نتمكن من تحميل تفاصيل الإشعار. قد يكون تم حذفه أو غير موجود."
+    }
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "welcome": "مرحباً",
+    "overview": "نظرة عامة",
+    "users": "المستخدمون",
+    "chargers": "الشواحن",
+    "vehicles": "المركبات",
+    "processes": "عمليات الشحن",
+    "revenue": "الإيرادات"
+  },
+  "users": {
+    "title": "إدارة المستخدمين",
+    "subtitle": "عرض وإدارة جميع المستخدمين",
+    "filters": {
+      "active": "النشطين",
+      "deleted": "المحذوفين",
+      "all": "الكل"
+    },
+    "search": "البحث عن مستخدم (الاسم، البريد، رقم الهاتف)...",
+    "table": {
+      "name": "الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "joinDate": "تاريخ التسجيل",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "deletedBadge": "محذوف",
+    "actions": {
+      "view": "عرض",
+      "ban": "حظر",
+      "unban": "إلغاء الحظر",
+      "restore": "استعادة"
+    }
   }
 }
