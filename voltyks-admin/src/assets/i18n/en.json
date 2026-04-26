@@ -592,7 +592,20 @@
       "banConfirmTitle": "Confirm ban",
       "banConfirmMsg": "Are you sure you want to ban this user?",
       "unbanConfirmTitle": "Confirm unban",
-      "unbanConfirmMsg": "Are you sure you want to unban this user?"
+      "unbanConfirmMsg": "Are you sure you want to unban this user?",
+      "transactionsHistory": "Transactions history",
+      "today": "Today",
+      "txTypeAdd": "Add",
+      "txTypeDeduct": "Deduct",
+      "txAmount": "Amount",
+      "txPrevious": "Previous balance",
+      "txNew": "New balance",
+      "txNotes": "Notes",
+      "noTransactions": "No transactions",
+      "addBalanceConfirmTitle": "Confirm balance addition",
+      "addBalanceConfirmMsg": "Are you sure you want to add {{amount}} {{currency}} to {{name}}'s balance?",
+      "deductBalanceConfirmTitle": "Confirm balance deduction",
+      "deductBalanceConfirmMsg": "Are you sure you want to deduct {{amount}} {{currency}} from {{name}}'s balance?"
     }
   },
   "brands": {

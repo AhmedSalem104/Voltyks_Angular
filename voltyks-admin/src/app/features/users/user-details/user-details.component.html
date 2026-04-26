@@ -4,9 +4,9 @@
     <div class="page-header">
       <button class="back-btn voltyks-btn btn-secondary" (click)="goBack()">
         <span class="material-symbols-rounded">arrow_forward</span>
-        رجوع
+        {{ 'common.back' | translate }}
       </button>
-      <h2>تفاصيل المستخدم</h2>
+      <h2>{{ 'users.details.title' | translate }}</h2>
     </div>
 
     <!-- User Overview Card -->
@@ -19,7 +19,7 @@
           <h3>{{ user.fullName }}</h3>
           <p class="user-email">{{ user.email }}</p>
           <span class="status-badge" [class.banned]="user.isBanned">
-            {{ user.isBanned ? 'محظور' : 'نشط' }}
+            {{ (user.isBanned ? 'common.banned' : 'common.active') | translate }}
           </span>
         </div>
       </div>
@@ -28,21 +28,21 @@
         <div class="stat-item">
           <span class="material-symbols-rounded">phone</span>
           <div>
-            <p class="stat-label">رقم الهاتف</p>
+            <p class="stat-label">{{ 'common.phone' | translate }}</p>
             <p class="stat-value">{{ user.phoneNumber }}</p>
           </div>
         </div>
         <div class="stat-item">
           <span class="material-symbols-rounded">event</span>
           <div>
-            <p class="stat-label">تاريخ التسجيل</p>
+            <p class="stat-label">{{ 'users.details.registrationDate' | translate }}</p>
             <p class="stat-value">{{ formatDate(user.dateCreated) }}</p>
           </div>
         </div>
         <div class="stat-item">
           <span class="material-symbols-rounded">star</span>
           <div>
-            <p class="stat-label">التقييم</p>
+            <p class="stat-label">{{ 'common.rating' | translate }}</p>
             <p class="stat-value">{{ user.rating }}/5 ({{ user.ratingCount }})</p>
           </div>
         </div>
@@ -55,7 +55,7 @@
           [class.btn-primary]="user.isBanned"
           (click)="openBanDialog()"
         >
-          {{ user.isBanned ? 'إلغاء الحظر' : 'حظر المستخدم' }}
+          {{ (user.isBanned ? 'users.details.unban' : 'users.details.ban') | translate }}
         </button>
       </div>
     </div>
@@ -69,7 +69,7 @@
           (click)="switchTab('overview')"
         >
           <span class="material-symbols-rounded">info</span>
-          نظرة عامة
+          {{ 'users.details.tabs.overview' | translate }}
         </button>
         <button
           class="tab-button"
@@ -77,7 +77,7 @@
           (click)="switchTab('wallet')"
         >
           <span class="material-symbols-rounded">account_balance_wallet</span>
-          المحفظة
+          {{ 'users.details.tabs.wallet' | translate }}
         </button>
         <button
           class="tab-button"
@@ -85,7 +85,7 @@
           (click)="switchTab('vehicles')"
         >
           <span class="material-symbols-rounded">directions_car</span>
-          المركبات
+          {{ 'users.details.tabs.vehicles' | translate }}
         </button>
         <button
           class="tab-button"
@@ -93,7 +93,7 @@
           (click)="switchTab('reports')"
         >
           <span class="material-symbols-rounded">report</span>
-          التقارير
+          {{ 'users.details.tabs.reports' | translate }}
         </button>
         <button
           class="tab-button"
@@ -101,7 +101,7 @@
           (click)="switchTab('manageBalance')"
         >
           <span class="material-symbols-rounded">account_balance_wallet</span>
-          إدارة الرصيد
+          {{ 'users.details.tabs.manageBalance' | translate }}
         </button>
       </div>
 
@@ -112,20 +112,20 @@
             <h4>{{ "common.extraInfo" | translate }}</h4>
             <div class="info-grid">
               <div class="info-item">
-                <p class="info-label">عدد الشواحن</p>
+                <p class="info-label">{{ 'users.details.stats.chargersCount' | translate }}</p>
                 <p class="info-value">{{ user.totalChargers || 0 }}</p>
               </div>
               <div class="info-item">
-                <p class="info-label">عدد المركبات</p>
+                <p class="info-label">{{ 'users.details.stats.vehiclesCount' | translate }}</p>
                 <p class="info-value">{{ vehicles.length }}</p>
               </div>
               <div class="info-item">
-                <p class="info-label">طلبات الشحن</p>
+                <p class="info-label">{{ 'users.details.stats.chargingRequests' | translate }}</p>
                 <p class="info-value">{{ user.totalChargingRequests || 0 }}</p>
               </div>
               <div class="info-item">
                 <p class="info-label">{{ "common.walletBalance" | translate }}</p>
-                <p class="info-value">{{ user.wallet || 0 }} ج.م</p>
+                <p class="info-value">{{ user.wallet || 0 }} {{ 'common.currency' | translate }}</p>
               </div>
             </div>
           </div>
@@ -135,16 +135,16 @@
         @if (activeTab === 'wallet') {
           <div class="tab-pane">
             @if (wallet) {
-              <h4>بيانات المحفظة - {{ wallet.fullName }}</h4>
+              <h4>{{ 'users.details.wallet.title' | translate }} - {{ wallet.fullName }}</h4>
               <div class="wallet-info">
                 <div class="wallet-balance">
-                  <p class="balance-label">الرصيد الحالي</p>
-                  <p class="balance-value">{{ wallet.walletBalance || 0 }} ج.م</p>
+                  <p class="balance-label">{{ 'users.details.wallet.currentBalance' | translate }}</p>
+                  <p class="balance-value">{{ wallet.walletBalance || 0 }} {{ 'common.currency' | translate }}</p>
                 </div>
-                <p class="last-updated">آخر تحديث: {{ formatDate(wallet.lastUpdated) }}</p>
+                <p class="last-updated">{{ 'users.details.wallet.lastUpdated' | translate }}: {{ formatDate(wallet.lastUpdated) }}</p>
               </div>
             } @else {
-              <p class="loading-text">جاري التحميل...</p>
+              <p class="loading-text">{{ 'common.loading' | translate }}</p>
             }
           </div>
         }
@@ -152,7 +152,7 @@
         <!-- Vehicles Tab -->
         @if (activeTab === 'vehicles') {
           <div class="tab-pane">
-            <h4>مركبات المستخدم</h4>
+            <h4>{{ 'users.details.vehiclesTab' | translate }}</h4>
             @if (paginatedVehicles.length > 0) {
               <table class="voltyks-table">
                 <thead>
@@ -186,7 +186,7 @@
                 (pageChange)="onVehiclesPageChange($event)"
               ></app-pagination>
             } @else {
-              <p class="empty-text">لا توجد مركبات</p>
+              <p class="empty-text">{{ 'users.details.noVehicles' | translate }}</p>
             }
           </div>
         }
@@ -194,7 +194,7 @@
         <!-- Reports Tab -->
         @if (activeTab === 'reports') {
           <div class="tab-pane">
-            <h4>التقارير المتعلقة بالمستخدم</h4>
+            <h4>{{ 'users.details.reportsTab' | translate }}</h4>
             @if (paginatedReports.length > 0) {
               <table class="voltyks-table">
                 <thead>
@@ -211,7 +211,7 @@
                       <td>{{ formatDate(report.reportDate) }}</td>
                       <td>
                         <span class="status-badge" [class.resolved]="report.isResolved">
-                          {{ report.isResolved ? 'تم الحل' : 'معلق' }}
+                          {{ (report.isResolved ? 'common.resolved' : 'common.pending') | translate }}
                         </span>
                       </td>
                     </tr>
@@ -226,7 +226,7 @@
                 (pageChange)="onReportsPageChange($event)"
               ></app-pagination>
             } @else {
-              <p class="empty-text">لا توجد تقارير</p>
+              <p class="empty-text">{{ 'users.details.noReports' | translate }}</p>
             }
           </div>
         }
@@ -234,40 +234,40 @@
         <!-- Manage Balance Tab -->
         @if (activeTab === 'manageBalance') {
           <div class="tab-pane manage-balance-section">
-            <h4>إدارة رصيد المستخدم</h4>
+            <h4>{{ 'users.details.manageBalanceTitle' | translate }}</h4>
             <div class="balance-actions-grid">
               <!-- Add Balance Section -->
               <div class="balance-card add-balance-card">
                 <div class="card-header add-header">
                   <span class="material-symbols-rounded">add_circle</span>
-                  <h5>إضافة رصيد</h5>
+                  <h5>{{ 'users.details.addBalance' | translate }}</h5>
                 </div>
                 <div class="card-body">
                   <div class="form-group">
-                    <label>المبلغ (ج.م) <span class="required">*</span></label>
+                    <label>{{ 'common.value' | translate }} ({{ 'common.currency' | translate }}) <span class="required">*</span></label>
                     <input
                       type="number"
                       class="voltyks-input"
                       [(ngModel)]="addBalanceDto.amount"
                       min="0"
                       step="0.01"
-                      placeholder="أدخل المبلغ المراد إضافته"
+                      [placeholder]="'users.details.amountPlaceholderAdd' | translate"
                     />
                   </div>
 
                   <div class="form-group">
-                    <label>ملاحظات <span class="required">*</span></label>
+                    <label>{{ 'common.notes' | translate }} <span class="required">*</span></label>
                     <textarea
                       class="voltyks-input"
                       [(ngModel)]="addBalanceDto.notes"
                       rows="2"
-                      placeholder="أضف ملاحظات..."
+                      [placeholder]="'common.addNotes' | translate"
                     ></textarea>
                   </div>
 
                   <button class="voltyks-btn btn-success" (click)="openAddBalanceDialog()">
                     <span class="material-symbols-rounded">add</span>
-                    إضافة الرصيد
+                    {{ 'users.details.addBalance' | translate }}
                   </button>
                 </div>
               </div>
@@ -276,34 +276,34 @@
               <div class="balance-card deduct-balance-card">
                 <div class="card-header deduct-header">
                   <span class="material-symbols-rounded">remove_circle</span>
-                  <h5>خصم رصيد</h5>
+                  <h5>{{ 'users.details.deductBalance' | translate }}</h5>
                 </div>
                 <div class="card-body">
                   <div class="form-group">
-                    <label>المبلغ (ج.م) <span class="required">*</span></label>
+                    <label>{{ 'common.value' | translate }} ({{ 'common.currency' | translate }}) <span class="required">*</span></label>
                     <input
                       type="number"
                       class="voltyks-input"
                       [(ngModel)]="deductBalanceDto.amount"
                       min="0"
                       step="0.01"
-                      placeholder="أدخل المبلغ المراد خصمه"
+                      [placeholder]="'users.details.amountPlaceholderDeduct' | translate"
                     />
                   </div>
 
                   <div class="form-group">
-                    <label>ملاحظات <span class="required">*</span></label>
+                    <label>{{ 'common.notes' | translate }} <span class="required">*</span></label>
                     <textarea
                       class="voltyks-input"
                       [(ngModel)]="deductBalanceDto.notes"
                       rows="2"
-                      placeholder="أضف ملاحظات..."
+                      [placeholder]="'common.addNotes' | translate"
                     ></textarea>
                   </div>
 
                   <button class="voltyks-btn btn-danger" (click)="openDeductBalanceDialog()">
                     <span class="material-symbols-rounded">remove</span>
-                    خصم الرصيد
+                    {{ 'users.details.deductBalance' | translate }}
                   </button>
                 </div>
               </div>
@@ -313,7 +313,7 @@
             <div class="transactions-section">
               <!-- Transactions Header -->
               <div class="transactions-header">
-                <h4>سجل المعاملات</h4>
+                <h4>{{ 'users.details.transactionsHistory' | translate }}</h4>
                 <div class="transactions-actions">
                   <span class="total-count">{{ "common.total" | translate }}: {{ filteredTransactions.length }}</span>
                   <button class="voltyks-btn print-btn" (click)="printTransactionsToPdf()" [disabled]="filteredTransactions.length === 0">
@@ -326,7 +326,7 @@
               <!-- Date Filter -->
               <div class="date-filter">
                 <div class="filter-group">
-                  <label>من تاريخ</label>
+                  <label>{{ 'common.fromDate' | translate }}</label>
                   <input
                     type="date"
                     class="voltyks-input"
@@ -335,7 +335,7 @@
                   />
                 </div>
                 <div class="filter-group">
-                  <label>إلى تاريخ</label>
+                  <label>{{ 'common.toDate' | translate }}</label>
                   <input
                     type="date"
                     class="voltyks-input"
@@ -345,11 +345,11 @@
                 </div>
                 <button class="voltyks-btn btn-secondary clear-btn" (click)="clearTransactionsFilter()">
                   <span class="material-symbols-rounded">today</span>
-                  اليوم
+                  {{ 'users.details.today' | translate }}
                 </button>
                 <button class="voltyks-btn btn-secondary show-all-btn" (click)="showAllTransactions()">
                   <span class="material-symbols-rounded">list</span>
-                  عرض الكل
+                  {{ 'common.viewAll' | translate }}
                 </button>
               </div>
 
@@ -360,11 +360,11 @@
                       <tr>
                         <th>#</th>
                         <th>{{ "common.date" | translate }}</th>
-                        <th>النوع</th>
-                        <th>المبلغ</th>
-                        <th>الرصيد السابق</th>
-                        <th>الرصيد الجديد</th>
-                        <th>الملاحظات</th>
+                        <th>{{ 'common.type' | translate }}</th>
+                        <th>{{ 'users.details.txAmount' | translate }}</th>
+                        <th>{{ 'users.details.txPrevious' | translate }}</th>
+                        <th>{{ 'users.details.txNew' | translate }}</th>
+                        <th>{{ 'users.details.txNotes' | translate }}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -374,14 +374,14 @@
                           <td>{{ formatDate(transaction.createdAt) }}</td>
                           <td>
                             <span class="transaction-type" [class.add]="transaction.transactionType === 'Add'" [class.deduct]="transaction.transactionType === 'Deduct'">
-                              {{ transaction.transactionType === 'Add' ? 'إضافة' : 'خصم' }}
+                              {{ (transaction.transactionType === 'Add' ? 'users.details.txTypeAdd' : 'users.details.txTypeDeduct') | translate }}
                             </span>
                           </td>
                           <td [class.amount-add]="transaction.transactionType === 'Add'" [class.amount-deduct]="transaction.transactionType === 'Deduct'">
-                            {{ transaction.transactionType === 'Add' ? '+' : '' }}{{ transaction.amount }} ج.م
+                            {{ transaction.transactionType === 'Add' ? '+' : '' }}{{ transaction.amount }} {{ 'common.currency' | translate }}
                           </td>
-                          <td>{{ transaction.previousBalance }} ج.م</td>
-                          <td>{{ transaction.newBalance }} ج.م</td>
+                          <td>{{ transaction.previousBalance }} {{ 'common.currency' | translate }}</td>
+                          <td>{{ transaction.newBalance }} {{ 'common.currency' | translate }}</td>
                           <td class="notes-cell">{{ transaction.notes || '-' }}</td>
                         </tr>
                       }
@@ -399,7 +399,7 @@
               } @else {
                 <div class="empty-state">
                   <span class="material-symbols-rounded empty-icon">receipt_long</span>
-                  <p>لا توجد معاملات</p>
+                  <p>{{ 'users.details.noTransactions' | translate }}</p>
                 </div>
               }
             </div>
@@ -414,9 +414,9 @@
 @defer (when showBanDialog) {
   <app-confirm-dialog
     [isOpen]="showBanDialog"
-    [title]="user?.isBanned ? 'إلغاء حظر المستخدم' : 'حظر المستخدم'"
-    [message]="user?.isBanned ? 'هل أنت متأكد من إلغاء حظر هذا المستخدم؟' : 'هل أنت متأكد من حظر هذا المستخدم؟'"
-    [confirmText]="user?.isBanned ? 'إلغاء الحظر' : 'حظر'"
+    [title]="(user?.isBanned ? 'users.details.unbanConfirmTitle' : 'users.details.banConfirmTitle') | translate"
+    [message]="(user?.isBanned ? 'users.details.unbanConfirmMsg' : 'users.details.banConfirmMsg') | translate"
+    [confirmText]="(user?.isBanned ? 'users.details.unban' : 'users.actions.ban') | translate"
     [type]="user?.isBanned ? 'primary' : 'danger'"
     (confirm)="confirmBanToggle()"
     (cancel)="showBanDialog = false"
@@ -427,9 +427,9 @@
 @defer (when showAddBalanceDialog) {
   <app-confirm-dialog
     [isOpen]="showAddBalanceDialog"
-    title="تأكيد إضافة الرصيد"
-    [message]="'هل أنت متأكد من إضافة ' + addBalanceDto.amount + ' ج.م للمستخدم ' + user?.fullName + '؟'"
-    confirmText="إضافة"
+    [title]="'users.details.addBalanceConfirmTitle' | translate"
+    [message]="'users.details.addBalanceConfirmMsg' | translate:{amount: addBalanceDto.amount, currency: ('common.currency' | translate), name: user?.fullName}"
+    [confirmText]="'common.add' | translate"
     type="primary"
     (confirm)="confirmAddBalance()"
     (cancel)="closeAddBalanceDialog()"
@@ -440,9 +440,9 @@
 @defer (when showDeductBalanceDialog) {
   <app-confirm-dialog
     [isOpen]="showDeductBalanceDialog"
-    title="تأكيد خصم الرصيد"
-    [message]="'هل أنت متأكد من خصم ' + deductBalanceDto.amount + ' ج.م من رصيد المستخدم ' + user?.fullName + '؟'"
-    confirmText="خصم"
+    [title]="'users.details.deductBalanceConfirmTitle' | translate"
+    [message]="'users.details.deductBalanceConfirmMsg' | translate:{amount: deductBalanceDto.amount, currency: ('common.currency' | translate), name: user?.fullName}"
+    [confirmText]="'users.details.txTypeDeduct' | translate"
     type="danger"
     (confirm)="confirmDeductBalance()"
     (cancel)="closeDeductBalanceDialog()"

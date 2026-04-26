@@ -592,7 +592,20 @@
       "banConfirmTitle": "تأكيد الحظر",
       "banConfirmMsg": "هل أنت متأكد من حظر هذا المستخدم؟",
       "unbanConfirmTitle": "تأكيد إلغاء الحظر",
-      "unbanConfirmMsg": "هل أنت متأكد من إلغاء حظر هذا المستخدم؟"
+      "unbanConfirmMsg": "هل أنت متأكد من إلغاء حظر هذا المستخدم؟",
+      "transactionsHistory": "سجل المعاملات",
+      "today": "اليوم",
+      "txTypeAdd": "إضافة",
+      "txTypeDeduct": "خصم",
+      "txAmount": "المبلغ",
+      "txPrevious": "الرصيد السابق",
+      "txNew": "الرصيد الجديد",
+      "txNotes": "الملاحظات",
+      "noTransactions": "لا توجد معاملات",
+      "addBalanceConfirmTitle": "تأكيد إضافة الرصيد",
+      "addBalanceConfirmMsg": "هل أنت متأكد من إضافة {{amount}} {{currency}} للمستخدم {{name}}؟",
+      "deductBalanceConfirmTitle": "تأكيد خصم الرصيد",
+      "deductBalanceConfirmMsg": "هل أنت متأكد من خصم {{amount}} {{currency}} من رصيد المستخدم {{name}}؟"
     }
   },
   "brands": {
