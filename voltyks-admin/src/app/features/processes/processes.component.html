@@ -303,7 +303,7 @@
             <span class="value">{{ selectedProcess.chargerRating || 'لا يوجد' }}</span>
           </div>
           <div class="detail-row">
-            <span class="label">العنوان</span>
+            <span class="label">{{ "common.addressStreet" | translate }}</span>
             <span class="value">{{ selectedProcess.chargerArea }} - {{ selectedProcess.chargerStreet }}</span>
           </div>
           <div class="detail-row">
@@ -337,11 +337,11 @@
             <span class="value highlight">{{ selectedProcess.vehiclePlate }}</span>
           </div>
           <div class="detail-row">
-            <span class="label">سعة البطارية</span>
+            <span class="label">{{ "common.batteryCapacity" | translate }}</span>
             <span class="value">{{ selectedProcess.vehicleCapacity }} kWh</span>
           </div>
           <div class="detail-row">
-            <span class="label">العنوان</span>
+            <span class="label">{{ "common.addressStreet" | translate }}</span>
 <span class="value">{{ selectedProcess.chargerArea }} - {{ selectedProcess.chargerStreet }}</span>
           </div>
         </div>
