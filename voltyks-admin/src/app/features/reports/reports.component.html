@@ -1,7 +1,7 @@
 <div class="reports-container">
   <div class="page-header">
-    <h2>إدارة التقارير</h2>
-    <p class="page-description">عرض وإدارة جميع التقارير المقدمة</p>
+    <h2>{{ 'reports.title' | translate }}</h2>
+    <p class="page-description">{{ 'reports.subtitle' | translate }}</p>
   </div>
 
   <!-- Compact Filters Section -->
@@ -14,7 +14,7 @@
           <input
             type="text"
             class="voltyks-input"
-            placeholder="البحث (اسم المستخدم، محتوى البلاغ...)"
+            [placeholder]="'common.search' | translate"
             [(ngModel)]="filters.search"
             (ngModelChange)="onSearchChange($event)"
           />
@@ -31,7 +31,7 @@
             [(ngModel)]="filters.startDate"
             (ngModelChange)="onDateChange()"
             [max]="filters.endDate || today"
-            title="من تاريخ"
+            [title]="'common.fromDate' | translate"
           />
         </div>
       </div>
@@ -47,7 +47,7 @@
             (ngModelChange)="onDateChange()"
             [min]="filters.startDate"
             [max]="today"
-            title="إلى تاريخ"
+            [title]="'common.toDate' | translate"
           />
         </div>
       </div>
@@ -70,7 +70,7 @@
 
       <!-- Action Buttons -->
       <div class="filter-item filter-actions">
-        <button class="voltyks-btn btn-secondary" (click)="clearFilters()" title="إعادة تعيين">
+        <button class="voltyks-btn btn-secondary" (click)="clearFilters()" [title]="'common.reset' | translate">
           <span class="material-symbols-rounded">refresh</span>
         </button>
       </div>
@@ -80,7 +80,7 @@
   <!-- Reports Table -->
   <div class="voltyks-card">
     <div class="table-header">
-      <h3>قائمة التقارير</h3>
+      <h3>{{ 'reports.title' | translate }}</h3>
       <div class="header-actions">
         <span class="total-count">{{ "common.total" | translate }}: {{ totalReports }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredReports.length === 0">
@@ -106,7 +106,7 @@
             @for (report of paginatedReports; track report.id) {
               <tr class="clickable-row" (click)="openSidePanel(report)">
                 <td>
-                  <div class="user-cell" [title]="'معرف المستخدم: ' + report.userId">
+                  <div class="user-cell" [title]="('reports.userId' | translate) + ': ' + report.userId">
                     <div class="user-avatar">
                       <span class="material-symbols-rounded">account_circle</span>
                     </div>
@@ -120,7 +120,7 @@
                           <span class="material-symbols-rounded contact-icon">phone</span>
                           {{ report.userPhone }}
                         } @else {
-                          <span class="loading-contact">جاري التحميل...</span>
+                          <span class="loading-contact">{{ "common.loading" | translate }}</span>
                         }
                       </span>
                     </div>
@@ -142,14 +142,14 @@
                       [class.updating]="isReportUpdating(report.id)"
                       [disabled]="isReportUpdating(report.id)"
                       (click)="toggleReportStatus(report, $event)"
-                      [title]="report.isResolved ? 'اضغط لإرجاع إلى معلق' : 'اضغط لتحديد كمحلول'"
+                      [title]="(report.isResolved ? 'complaints.markPending' : 'complaints.markResolved') | translate"
                     >
                       @if (isReportUpdating(report.id)) {
                         <span class="material-symbols-rounded spinning">sync</span>
-                        <span class="status-text">جاري التحديث</span>
+                        <span class="status-text">{{ "reports.updating" | translate }}</span>
                       } @else {
                         <span class="material-symbols-rounded">{{ report.isResolved ? 'check_circle' : 'schedule' }}</span>
-                        <span class="status-text">{{ report.isResolved ? 'تم الحل' : 'معلق' }}</span>
+                        <span class="status-text">{{ (report.isResolved ? 'common.resolved' : 'common.pending') | translate }}</span>
                       }
                     </button>
                   </div>
@@ -180,10 +180,10 @@
     } @else {
       <div class="empty-state">
         <span class="material-symbols-rounded empty-icon">report_off</span>
-        <p>لا توجد تقارير</p>
+        <p>{{ "reports.empty" | translate }}</p>
         @if (hasActiveFilters()) {
           <button class="voltyks-btn btn-secondary" (click)="clearFilters()">
-            مسح الفلاتر وعرض الكل
+            {{ 'reports.clearFiltersAll' | translate }}
           </button>
         }
       </div>
@@ -197,7 +197,7 @@
     <div class="side-panel-overlay" (click)="closeSidePanel()"></div>
     <div class="side-panel">
     <div class="side-panel-header">
-      <h3>تفاصيل البلاغ #{{ selectedReport.id }}</h3>
+      <h3>{{ "reports.detailsOf" | translate }} #{{ selectedReport.id }}</h3>
       <button class="close-btn" (click)="closeSidePanel()">
         <span class="material-symbols-rounded">close</span>
       </button>
@@ -208,23 +208,23 @@
       <div class="detail-section">
         <div class="section-header">
           <span class="material-symbols-rounded">report</span>
-          <h4>معلومات البلاغ</h4>
+          <h4>{{ "reports.infoSection" | translate }}</h4>
         </div>
         <div class="section-content">
           <div class="detail-row">
-            <span class="detail-label">محتوى البلاغ</span>
+            <span class="detail-label">{{ "common.reportContent" | translate }}</span>
             <span class="detail-value report-content">{{ selectedReport.reportContent }}</span>
           </div>
           <div class="detail-row">
-            <span class="detail-label">تاريخ البلاغ</span>
+            <span class="detail-label">{{ "reports.reportDate" | translate }}</span>
             <span class="detail-value">{{ formatDateLong(selectedReport.reportDate) }}</span>
           </div>
           <div class="detail-row">
-            <span class="detail-label">الحالة</span>
+            <span class="detail-label">{{ "common.status" | translate }}</span>
             <div class="status-action">
               <span class="status-badge" [class.resolved]="selectedReport.isResolved">
                 <span class="material-symbols-rounded">{{ selectedReport.isResolved ? 'check_circle' : 'schedule' }}</span>
-                {{ selectedReport.isResolved ? 'تم الحل' : 'معلق' }}
+                {{ (selectedReport.isResolved ? 'common.resolved' : 'common.pending') | translate }}
               </span>
               <button
                 class="voltyks-btn btn-sm"
@@ -238,7 +238,7 @@
                 } @else {
                   <span class="material-symbols-rounded">{{ selectedReport.isResolved ? 'undo' : 'check' }}</span>
                 }
-                {{ selectedReport.isResolved ? 'إرجاع للمعلق' : 'تحديد كمحلول' }}
+                {{ (selectedReport.isResolved ? 'reports.revertToPending' : 'reports.markAsResolved') | translate }}
               </button>
             </div>
           </div>
@@ -249,38 +249,38 @@
       <div class="detail-section">
         <div class="section-header">
           <span class="material-symbols-rounded">person</span>
-          <h4>بيانات صاحب البلاغ</h4>
+          <h4>{{ "reports.reporterSection" | translate }}</h4>
         </div>
         <div class="section-content">
           <div class="detail-row">
-            <span class="detail-label">الاسم</span>
+            <span class="detail-label">{{ "common.name" | translate }}</span>
             <span class="detail-value">{{ selectedReport.userFullName }}</span>
           </div>
           @if (isLoadingReportDetails) {
             <div class="detail-row">
-              <span class="detail-label">البريد الإلكتروني</span>
-              <span class="detail-value loading-text">جاري التحميل...</span>
+              <span class="detail-label">{{ "common.email" | translate }}</span>
+              <span class="detail-value loading-text">{{ "common.loading" | translate }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">رقم الهاتف</span>
-              <span class="detail-value loading-text">جاري التحميل...</span>
+              <span class="detail-label">{{ "common.phone" | translate }}</span>
+              <span class="detail-value loading-text">{{ "common.loading" | translate }}</span>
             </div>
           } @else if (selectedReportDetails) {
             <div class="detail-row">
-              <span class="detail-label">البريد الإلكتروني</span>
+              <span class="detail-label">{{ "common.email" | translate }}</span>
               <a class="detail-value link" [href]="'mailto:' + selectedReportDetails.userEmail">
                 {{ selectedReportDetails.userEmail || '-' }}
               </a>
             </div>
             <div class="detail-row">
-              <span class="detail-label">رقم الهاتف</span>
+              <span class="detail-label">{{ "common.phone" | translate }}</span>
               <a class="detail-value link" [href]="'tel:' + selectedReportDetails.userPhone">
                 {{ selectedReportDetails.userPhone || '-' }}
               </a>
             </div>
           }
           <div class="detail-row">
-            <span class="detail-label">معرف المستخدم</span>
+            <span class="detail-label">{{ "reports.userId" | translate }}</span>
             <span class="detail-value">{{ selectedReport.userId }}</span>
           </div>
         </div>
@@ -290,26 +290,26 @@
       @if (isLoadingProcess) {
         <div class="loading-section">
           <span class="material-symbols-rounded spinning">sync</span>
-          <p>جاري تحميل بيانات العملية...</p>
+          <p>{{ "reports.loadingProcessData" | translate }}</p>
         </div>
       } @else if (selectedProcess) {
         <!-- Process Info Section -->
         <div class="detail-section">
           <div class="section-header">
             <span class="material-symbols-rounded">electric_bolt</span>
-            <h4>معلومات العملية</h4>
+            <h4>{{ "processes.title" | translate }}</h4>
           </div>
           <div class="section-content">
             <div class="detail-row">
-              <span class="detail-label">رقم العملية</span>
+              <span class="detail-label">#</span>
               <span class="detail-value">#{{ selectedProcess.id }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">تاريخ الطلب</span>
+              <span class="detail-label">{{ "common.orderDate" | translate }}</span>
               <span class="detail-value">{{ formatDateLong(selectedProcess.requestedAt) }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">الحالة</span>
+              <span class="detail-label">{{ "common.status" | translate }}</span>
               <span class="status-badge process-status" [ngClass]="getStatusClass(selectedProcess.status)">
                 {{ getStatusText(selectedProcess.status) }}
               </span>
@@ -321,28 +321,28 @@
         <div class="detail-section">
           <div class="section-header">
             <span class="material-symbols-rounded">info</span>
-            <h4>تفاصيل الطلب</h4>
+            <h4>{{ "reports.processDetails" | translate }}</h4>
           </div>
           <div class="section-content">
             <div class="detail-row">
-              <span class="detail-label">الطاقة المطلوبة</span>
+              <span class="detail-label">{{ "reports.requiredEnergy" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.kwNeeded }} kW</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">نسبة البطارية الحالية</span>
+              <span class="detail-label">Battery %</span>
               <span class="detail-value">{{ selectedProcess.currentBatteryPercentage }}%</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">الكمية المشحونة</span>
+              <span class="detail-label">{{ "reports.chargedAmount" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.amountCharged }} kW</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">تاريخ الإنشاء</span>
+              <span class="detail-label">{{ "common.createdAt" | translate }}</span>
               <span class="detail-value">{{ formatDateLong(selectedProcess.dateCreated) }}</span>
             </div>
             @if (selectedProcess.dateCompleted) {
               <div class="detail-row">
-                <span class="detail-label">تاريخ الإكمال</span>
+                <span class="detail-label">{{ "reports.completionDate" | translate }}</span>
                 <span class="detail-value">{{ formatDateLong(selectedProcess.dateCompleted) }}</span>
               </div>
             }
@@ -353,28 +353,28 @@
         <div class="detail-section">
           <div class="section-header">
             <span class="material-symbols-rounded">payments</span>
-            <h4>الأسعار</h4>
+            <h4>{{ "common.price" | translate }}</h4>
           </div>
           <div class="section-content">
             <div class="detail-row">
-              <span class="detail-label">المبلغ الأساسي</span>
-              <span class="detail-value">{{ selectedProcess.baseAmount }} ج.م</span>
+              <span class="detail-label">{{ "reports.baseAmount" | translate }}</span>
+              <span class="detail-value">{{ selectedProcess.baseAmount }} {{ "common.currency" | translate }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">رسوم Voltyks</span>
-              <span class="detail-value">{{ selectedProcess.voltyksFees }} ج.م</span>
+              <span class="detail-label">{{ "reports.fees" | translate }} Voltyks</span>
+              <span class="detail-value">{{ selectedProcess.voltyksFees }} {{ "common.currency" | translate }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">السعر التقديري</span>
-              <span class="detail-value">{{ selectedProcess.estimatedPrice }} ج.م</span>
+              <span class="detail-label">{{ "reports.estimatedPrice" | translate }}</span>
+              <span class="detail-value">{{ selectedProcess.estimatedPrice }} {{ "common.currency" | translate }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">المبلغ المدفوع</span>
-              <span class="detail-value highlight">{{ selectedProcess.amountPaid }} ج.م</span>
+              <span class="detail-label">{{ "reports.paidAmount" | translate }}</span>
+              <span class="detail-value highlight">{{ selectedProcess.amountPaid }} {{ "common.currency" | translate }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">سعر الشاحن</span>
-              <span class="detail-value">{{ selectedProcess.chargerPrice }} ج.م/kW</span>
+              <span class="detail-label">{{ "common.price" | translate }}</span>
+              <span class="detail-value">{{ selectedProcess.chargerPrice }} {{ "common.currency" | translate }}/kW</span>
             </div>
           </div>
         </div>
@@ -383,45 +383,45 @@
         <div class="detail-section">
           <div class="section-header">
             <span class="material-symbols-rounded">ev_station</span>
-            <h4>معلومات الشاحن</h4>
+            <h4>{{ "chargers.title" | translate }}</h4>
           </div>
           <div class="section-content">
             <div class="detail-row">
-              <span class="detail-label">رقم الشاحن</span>
+              <span class="detail-label">#</span>
               <span class="detail-value">#{{ selectedProcess.chargerId }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">البروتوكول</span>
+              <span class="detail-label">{{ "common.protocol" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.chargerProtocol }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">السعة</span>
+              <span class="detail-label">{{ "common.capacity" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.chargerCapacityKw }} kW</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">توفر الأدابتر</span>
-              <span class="detail-value">{{ selectedProcess.chargerHasAdaptor ? 'نعم' : 'لا' }}</span>
+              <span class="detail-label">{{ "reports.adapterAvailable" | translate }}</span>
+              <span class="detail-value">{{ (selectedProcess.chargerHasAdaptor ? 'common.yes' : 'common.no') | translate }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">حالة الشاحن</span>
+              <span class="detail-label">{{ "reports.chargerStatus" | translate }}</span>
               <span class="detail-value" [class.active]="selectedProcess.chargerIsActive" [class.inactive]="!selectedProcess.chargerIsActive">
-                {{ selectedProcess.chargerIsActive ? 'نشط' : 'غير نشط' }}
+                {{ (selectedProcess.chargerIsActive ? 'common.active' : 'common.inactive') | translate }}
               </span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">التقييم</span>
+              <span class="detail-label">{{ "common.rating" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.chargerRating || '-' }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">المنطقة</span>
+              <span class="detail-label">{{ "common.addressArea" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.chargerArea }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">الشارع</span>
+              <span class="detail-label">{{ "common.addressStreet" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.chargerStreet }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">رقم المبنى</span>
+              <span class="detail-label">{{ "common.addressBuilding" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.chargerBuildingNumber }}</span>
             </div>
           </div>
@@ -431,31 +431,31 @@
         <div class="detail-section">
           <div class="section-header">
             <span class="material-symbols-rounded">directions_car</span>
-            <h4>معلومات المركبة</h4>
+            <h4>{{ "vehicles.title" | translate }}</h4>
           </div>
           <div class="section-content">
             <div class="detail-row">
-              <span class="detail-label">العلامة التجارية</span>
+              <span class="detail-label">{{ "common.brand" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.vehicleBrand }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">الموديل</span>
+              <span class="detail-label">{{ "common.model" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.vehicleModel }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">اللون</span>
+              <span class="detail-label">{{ "common.color" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.vehicleColor }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">رقم اللوحة</span>
+              <span class="detail-label">{{ "common.plate" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.vehiclePlate }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">سعة البطارية</span>
+              <span class="detail-label">{{ "common.batteryCapacity" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.vehicleCapacity }} kW</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">سنة الصنع</span>
+              <span class="detail-label">{{ "common.year" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.vehicleYear }}</span>
             </div>
           </div>
@@ -469,33 +469,33 @@
           </div>
           <div class="section-content">
             <div class="detail-row">
-              <span class="detail-label">الاسم</span>
+              <span class="detail-label">{{ "common.name" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.vehicleOwnerName }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">البريد الإلكتروني</span>
+              <span class="detail-label">{{ "common.email" | translate }}</span>
               <a class="detail-value link" [href]="'mailto:' + selectedProcess.vehicleOwnerEmail">
                 {{ selectedProcess.vehicleOwnerEmail }}
               </a>
             </div>
             <div class="detail-row">
-              <span class="detail-label">رقم الهاتف</span>
+              <span class="detail-label">{{ "common.phone" | translate }}</span>
               <a class="detail-value link" [href]="'tel:' + selectedProcess.vehicleOwnerPhone">
                 {{ selectedProcess.vehicleOwnerPhone }}
               </a>
             </div>
             <div class="detail-row">
-              <span class="detail-label">التقييم</span>
+              <span class="detail-label">{{ "common.rating" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.vehicleOwnerRating || '-' }}</span>
             </div>
             <div class="detail-row">
               <span class="detail-label">{{ "common.walletBalance" | translate }}</span>
-              <span class="detail-value">{{ selectedProcess.vehicleOwnerWallet }} ج.م</span>
+              <span class="detail-value">{{ selectedProcess.vehicleOwnerWallet }} {{ "common.currency" | translate }}</span>
             </div>
             <div class="detail-row">
               <span class="detail-label">{{ "common.accountStatus" | translate }}</span>
               <span class="detail-value" [class.banned]="selectedProcess.vehicleOwnerIsBanned" [class.active]="!selectedProcess.vehicleOwnerIsBanned">
-                {{ selectedProcess.vehicleOwnerIsBanned ? 'محظور' : 'نشط' }}
+                {{ (selectedProcess.vehicleOwnerIsBanned ? 'common.banned' : 'common.active') | translate }}
               </span>
             </div>
           </div>
@@ -509,33 +509,33 @@
           </div>
           <div class="section-content">
             <div class="detail-row">
-              <span class="detail-label">الاسم</span>
+              <span class="detail-label">{{ "common.name" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.chargerOwnerName }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">البريد الإلكتروني</span>
+              <span class="detail-label">{{ "common.email" | translate }}</span>
               <a class="detail-value link" [href]="'mailto:' + selectedProcess.chargerOwnerEmail">
                 {{ selectedProcess.chargerOwnerEmail }}
               </a>
             </div>
             <div class="detail-row">
-              <span class="detail-label">رقم الهاتف</span>
+              <span class="detail-label">{{ "common.phone" | translate }}</span>
               <a class="detail-value link" [href]="'tel:' + selectedProcess.chargerOwnerPhone">
                 {{ selectedProcess.chargerOwnerPhone }}
               </a>
             </div>
             <div class="detail-row">
-              <span class="detail-label">التقييم</span>
+              <span class="detail-label">{{ "common.rating" | translate }}</span>
               <span class="detail-value">{{ selectedProcess.chargerOwnerRating || '-' }}</span>
             </div>
             <div class="detail-row">
               <span class="detail-label">{{ "common.walletBalance" | translate }}</span>
-              <span class="detail-value">{{ selectedProcess.chargerOwnerWallet }} ج.م</span>
+              <span class="detail-value">{{ selectedProcess.chargerOwnerWallet }} {{ "common.currency" | translate }}</span>
             </div>
             <div class="detail-row">
               <span class="detail-label">{{ "common.accountStatus" | translate }}</span>
               <span class="detail-value" [class.banned]="selectedProcess.chargerOwnerIsBanned" [class.active]="!selectedProcess.chargerOwnerIsBanned">
-                {{ selectedProcess.chargerOwnerIsBanned ? 'محظور' : 'نشط' }}
+                {{ (selectedProcess.chargerOwnerIsBanned ? 'common.banned' : 'common.active') | translate }}
               </span>
             </div>
           </div>
@@ -543,7 +543,7 @@
       } @else {
         <div class="no-process">
           <span class="material-symbols-rounded">info</span>
-          <p>لا توجد بيانات عملية مرتبطة بهذا البلاغ</p>
+          <p>{{ 'reports.noProcessDetails' | translate }}</p>
         </div>
       }
     </div>
