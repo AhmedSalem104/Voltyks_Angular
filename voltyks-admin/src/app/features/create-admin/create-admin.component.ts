@@ -1,5 +1,6 @@
 import { Component, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AdminUsersService } from '../../core/services/admin/admin-users.service';
 import { CreateAdminDto, CreatedAdminDto } from '../../core/models';
@@ -13,7 +14,7 @@ import { ToasterService } from '../../shared/components/toaster/toaster.service'
     CommonModule,
     FormsModule,
     LoadingOverlayComponent
-  ],
+  , TranslatePipe],
   templateUrl: './create-admin.component.html',
   styleUrls: ['./create-admin.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

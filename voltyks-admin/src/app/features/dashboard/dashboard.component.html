@@ -15,8 +15,8 @@
     </div>
     <div class="hero-greeting">
       <span class="greeting-label">{{ greeting }}</span>
-      <span class="greeting-name">{{ currentUser?.firstName || 'المشرف' }}</span>
-      <span class="date-text">{{ today | date:'EEEE، d MMMM yyyy':undefined:'ar-EG' }}</span>
+      <span class="greeting-name">{{ currentUser?.firstName || ('header.profile' | translate) }}</span>
+      <span class="date-text">{{ today | date:'EEEE، d MMMM yyyy' }}</span>
     </div>
   </section>
 

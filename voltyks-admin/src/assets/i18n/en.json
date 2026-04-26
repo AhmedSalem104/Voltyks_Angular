@@ -338,5 +338,233 @@
       "unban": "Unban",
       "restore": "Restore"
     }
+  },
+  "brands": {
+    "title": "Brand Management",
+    "subtitle": "View and manage all electric vehicle brands",
+    "addBrand": "Add brand",
+    "editBrand": "Edit brand",
+    "deleteBrand": "Delete brand",
+    "name": "Brand name",
+    "logo": "Logo",
+    "modelsCount": "Models count",
+    "search": "Search brands...",
+    "empty": "No brands",
+    "deleteConfirm": "Are you sure you want to delete this brand?"
+  },
+  "models": {
+    "title": "Model Management",
+    "subtitle": "View and manage all electric vehicle models",
+    "addModel": "Add model",
+    "editModel": "Edit model",
+    "deleteModel": "Delete model",
+    "name": "Model name",
+    "brand": "Brand",
+    "capacity": "Capacity",
+    "search": "Search models...",
+    "empty": "No models"
+  },
+  "chargers": {
+    "title": "Charger Management",
+    "subtitle": "View and manage the charger network",
+    "addCharger": "Add charger",
+    "editCharger": "Edit charger",
+    "deleteCharger": "Delete charger",
+    "name": "Charger name",
+    "location": "Location",
+    "protocol": "Protocol",
+    "capacity": "Capacity",
+    "price": "Price",
+    "status": "Status",
+    "search": "Search chargers...",
+    "empty": "No chargers",
+    "active": "Available",
+    "inactive": "Unavailable",
+    "occupied": "Occupied"
+  },
+  "vehicles": {
+    "title": "Vehicle Management",
+    "subtitle": "View all user vehicles",
+    "owner": "Owner",
+    "brand": "Brand",
+    "model": "Model",
+    "capacity": "Capacity",
+    "search": "Search vehicles...",
+    "empty": "No vehicles"
+  },
+  "processes": {
+    "title": "Charging Processes",
+    "subtitle": "Track all active and completed charging processes",
+    "user": "User",
+    "charger": "Charger",
+    "vehicle": "Vehicle",
+    "startTime": "Start time",
+    "endTime": "End time",
+    "duration": "Duration",
+    "energy": "Energy",
+    "cost": "Cost",
+    "status": "Status",
+    "search": "Search processes...",
+    "empty": "No charging processes"
+  },
+  "fees": {
+    "title": "Fee Management",
+    "subtitle": "Set charging fees and system commissions",
+    "feeType": "Fee type",
+    "amount": "Amount",
+    "currency": "Currency",
+    "status": "Status",
+    "actions": "Actions",
+    "addFee": "Add fee",
+    "editFee": "Edit fee",
+    "deleteFee": "Delete fee"
+  },
+  "terms": {
+    "title": "Terms & Conditions",
+    "subtitle": "Manage system terms and conditions",
+    "addTerm": "Add clause",
+    "editTerm": "Edit clause",
+    "deleteTerm": "Delete clause"
+  },
+  "appConfig": {
+    "title": "App Configuration",
+    "subtitle": "Control app settings and charging mode",
+    "chargingMode": "Charging Mode",
+    "chargingModeStatus": "Charging status",
+    "chargingModeEnabled": "Charging is enabled",
+    "chargingModeDisabled": "Charging disabled — setup mode",
+    "mobileConfig": "Mobile App Settings",
+    "minVersion": "Minimum version",
+    "minVersionPlaceholder": "e.g. 1.0.0",
+    "minVersionInvalid": "Invalid format (use X.Y.Z)",
+    "minVersionHint": "Leave empty for no minimum",
+    "saveChanges": "Save changes",
+    "discard": "Discard",
+    "unsavedChanges": "You have unsaved changes"
+  },
+  "adminsMode": {
+    "title": "Admin-Only Mode",
+    "subtitle": "Control new user registration",
+    "sectionTitle": "Registration status",
+    "activated": "Active — registration closed",
+    "deactivated": "Inactive — registration open",
+    "loading": "Loading admin-only mode status...",
+    "loadError": "Failed to load admin-only mode status",
+    "activeTitle": "Admin-only mode is active — registration closed",
+    "activeDesc": "The system is in admin-only mode. No one will be able to:",
+    "activeBullet1": "Create a new account",
+    "activeBullet2": "Register in the system",
+    "activeBullet3": "Access except as an existing admin",
+    "userMessage": "User message: \"Registration is currently disabled. The system is in admin-only mode.\"",
+    "openTitle": "Registration is open",
+    "openDesc": "New users can create accounts and register normally.",
+    "infoLine1": "When admin-only mode is enabled, registration is closed entirely. No new user can create an account.",
+    "infoLine2": "Existing users are not affected — they can keep using the system normally.",
+    "infoLine3": "You can reopen registration at any time by disabling admin-only mode.",
+    "confirmActivate": "Activate admin-only mode",
+    "confirmDeactivate": "Deactivate admin-only mode",
+    "confirmActivateMsg": "Are you sure you want to activate admin-only mode? Registration will be closed and no one will be able to create a new account.",
+    "confirmDeactivateMsg": "Are you sure you want to deactivate admin-only mode? Registration will reopen for new users.",
+    "successActivated": "Admin-only mode activated — registration closed",
+    "successDeactivated": "Admin-only mode deactivated — registration open",
+    "failUpdate": "Failed to update admin-only mode"
+  },
+  "complaints": {
+    "title": "Complaint Management",
+    "subtitle": "Track every complaint submitted by users",
+    "totalCount": "Total",
+    "search": "Search complaints...",
+    "category": "Category",
+    "allCategories": "All categories",
+    "showResolved": "Show resolved",
+    "resolved": "Resolved",
+    "pending": "Pending",
+    "content": "Content",
+    "user": "User",
+    "date": "Date",
+    "actions": "Actions",
+    "viewDetails": "View details",
+    "empty": "No complaints"
+  },
+  "complaintCategories": {
+    "title": "Complaint Categories",
+    "subtitle": "Manage complaint categories",
+    "addCategory": "Add category",
+    "editCategory": "Edit category",
+    "deleteCategory": "Delete category",
+    "name": "Category name"
+  },
+  "reports": {
+    "title": "Reports",
+    "subtitle": "Track all submitted reports",
+    "search": "Search reports...",
+    "content": "Content",
+    "user": "Reporter",
+    "date": "Date",
+    "status": "Status",
+    "resolved": "Resolved",
+    "pending": "Pending",
+    "actions": "Actions"
+  },
+  "store": {
+    "title": "Store",
+    "categories": {
+      "title": "Product Categories",
+      "subtitle": "Manage store product categories",
+      "addCategory": "Add category",
+      "editCategory": "Edit category"
+    },
+    "products": {
+      "title": "Products",
+      "subtitle": "Manage all store products",
+      "addProduct": "Add product",
+      "editProduct": "Edit product",
+      "name": "Product name",
+      "price": "Price",
+      "stock": "Stock",
+      "category": "Category"
+    },
+    "reservations": {
+      "title": "Store Reservations",
+      "subtitle": "Track product reservations",
+      "user": "User",
+      "product": "Product",
+      "quantity": "Quantity",
+      "totalPrice": "Total",
+      "status": "Status",
+      "paymentStatus": "Payment status"
+    }
+  },
+  "chargingProtocols": {
+    "title": "Charging Protocols",
+    "subtitle": "Manage supported charging protocols",
+    "name": "Protocol name",
+    "addProtocol": "Add protocol",
+    "editProtocol": "Edit protocol"
+  },
+  "capacities": {
+    "title": "Charger Capacities",
+    "subtitle": "Manage available charger capacities",
+    "value": "Capacity",
+    "addCapacity": "Add capacity",
+    "editCapacity": "Edit capacity"
+  },
+  "createAdmin": {
+    "title": "Create Admin",
+    "subtitle": "Add a new admin to the system",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "submit": "Create admin account"
+  },
+  "backup": {
+    "title": "Backup",
+    "subtitle": "Create and restore system backups"
+  },
+  "about": {
+    "title": "About Voltyks",
+    "subtitle": "Smart EV charging-station management system"
   }
 }

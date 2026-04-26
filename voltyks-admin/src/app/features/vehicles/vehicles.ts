@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { AdminVehiclesService } from '../../core/services/admin/admin-vehicles.service';
@@ -21,7 +22,7 @@ import { PrintService } from '../../core/services/print.service';
     PaginationComponent,
     LoadingOverlayComponent,
     ConfirmDialogComponent
-  ],
+  , TranslatePipe],
   templateUrl: './vehicles.html',
   styleUrl: './vehicles.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

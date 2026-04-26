@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AppConfigService } from '../../core/services/admin/app-config.service';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
@@ -10,7 +11,7 @@ import { AdminMobileConfigDto, UpdateAdminMobileConfigDto } from '../../core/mod
 @Component({
   selector: 'app-app-config',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingOverlayComponent, ConfirmDialogComponent],
+  imports: [CommonModule, FormsModule, LoadingOverlayComponent, ConfirmDialogComponent, TranslatePipe],
   templateUrl: './app-config.component.html',
   styleUrls: ['./app-config.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

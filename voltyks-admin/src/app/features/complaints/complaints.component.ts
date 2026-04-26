@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AdminComplaintCategoriesService } from '../../core/services/admin/admin-complaint-categories.service';
 import { AdminComplaintsService } from '../../core/services/admin/admin-complaints.service';
@@ -22,7 +23,7 @@ import { PrintService } from '../../core/services/print.service';
     FormsModule,
     PaginationComponent,
     LoadingOverlayComponent
-  ],
+  , TranslatePipe],
   templateUrl: './complaints.component.html',
   styleUrls: ['./complaints.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

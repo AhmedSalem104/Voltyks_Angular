@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, forkJoin, takeUntil } from 'rxjs';
 import { AdminReportsService } from '../../core/services/admin/admin-reports.service';
@@ -31,7 +32,7 @@ const REPORT_STATUS_OPTIONS = [
     FormsModule,
     PaginationComponent,
     LoadingOverlayComponent
-  ],
+  , TranslatePipe],
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

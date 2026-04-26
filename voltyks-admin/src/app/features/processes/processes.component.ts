@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { AdminProcessesService } from '../../core/services/admin/admin-processes.service';
@@ -17,7 +18,7 @@ import { PrintService } from '../../core/services/print.service';
     FormsModule,
     PaginationComponent,
     LoadingOverlayComponent
-  ],
+  , TranslatePipe],
   templateUrl: './processes.component.html',
   styleUrls: ['./processes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

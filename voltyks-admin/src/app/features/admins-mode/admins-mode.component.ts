@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AdminsModeService } from '../../core/services/admin/admins-mode.service';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
@@ -9,7 +10,7 @@ import { ToasterService } from '../../shared/components/toaster/toaster.service'
 @Component({
   selector: 'app-admins-mode',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingOverlayComponent, ConfirmDialogComponent],
+  imports: [CommonModule, FormsModule, LoadingOverlayComponent, ConfirmDialogComponent, TranslatePipe],
   templateUrl: './admins-mode.component.html',
   styleUrls: ['./admins-mode.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

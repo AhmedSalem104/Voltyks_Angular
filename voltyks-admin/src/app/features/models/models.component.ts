@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
@@ -20,7 +21,7 @@ import { PrintService } from '../../core/services/print.service';
     PaginationComponent,
     LoadingOverlayComponent,
     ConfirmDialogComponent
-  ],
+  , TranslatePipe],
   templateUrl: './models.component.html',
   styleUrls: ['./models.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

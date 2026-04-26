@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { AdminTermsService } from '../../core/services/admin/admin-terms.service';
@@ -11,7 +12,7 @@ import { PrintService } from '../../core/services/print.service';
 @Component({
   selector: 'app-terms',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxJsonViewerModule, LoadingOverlayComponent],
+  imports: [CommonModule, FormsModule, NgxJsonViewerModule, LoadingOverlayComponent, TranslatePipe],
   templateUrl: './terms.component.html',
   styleUrls: ['./terms.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

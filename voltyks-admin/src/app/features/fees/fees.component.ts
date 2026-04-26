@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AdminFeesService } from '../../core/services/admin/admin-fees.service';
 import { AdminUsersService } from '../../core/services/admin/admin-users.service';
@@ -12,7 +13,7 @@ import { PrintService } from '../../core/services/print.service';
 @Component({
   selector: 'app-fees',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingOverlayComponent, ConfirmDialogComponent],
+  imports: [CommonModule, FormsModule, LoadingOverlayComponent, ConfirmDialogComponent, TranslatePipe],
   templateUrl: './fees.component.html',
   styleUrls: ['./fees.component.scss'],
   host: {

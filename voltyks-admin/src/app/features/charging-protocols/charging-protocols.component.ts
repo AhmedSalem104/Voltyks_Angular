@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { ChargingProtocolService } from '../../core/services/admin/charging-protocol.service';
@@ -19,7 +20,7 @@ import { PrintService } from '../../core/services/print.service';
     PaginationComponent,
     LoadingOverlayComponent,
     ConfirmDialogComponent
-  ],
+  , TranslatePipe],
   templateUrl: './charging-protocols.component.html',
   styleUrls: ['./charging-protocols.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

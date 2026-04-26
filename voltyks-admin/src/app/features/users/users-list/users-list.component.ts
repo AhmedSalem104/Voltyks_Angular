@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRe
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { AdminUsersService } from '../../../core/services/admin/admin-users.service';
 import { AdminUserDto } from '../../../core/models';
@@ -23,7 +24,8 @@ type DeleteAction = 'soft' | 'permanent' | 'restore' | null;
     FormsModule,
     PaginationComponent,
     LoadingOverlayComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    TranslatePipe
   ],
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.scss'],
