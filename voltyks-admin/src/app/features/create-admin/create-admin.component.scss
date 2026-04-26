@@ -37,7 +37,7 @@
       font-size: 32px;
       font-weight: 700;
       margin-bottom: 8px;
-      background: linear-gradient(135deg, #fff 0%, #00C853 100%);
+      background: linear-gradient(135deg, var(--text-primary) 0%, #00C853 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -72,7 +72,7 @@
         justify-content: center;
         font-size: 14px;
         font-weight: 600;
-        background: #2A2A2A;
+        background: var(--bg-elevated);
         color: #B0B0B0;
         border: 2px solid #444;
         transition: all 0.3s ease;
@@ -193,7 +193,7 @@
       flex-wrap: wrap;
       gap: 12px;
       padding: 16px 24px;
-      background: #252525;
+      background: var(--bg-elevated);
       border-radius: 12px;
       margin-bottom: 28px;
 
@@ -375,7 +375,7 @@
       }
 
       .admin-details {
-        background: #252525;
+        background: var(--bg-elevated);
         border-radius: 12px;
         padding: 24px;
         margin-bottom: 28px;

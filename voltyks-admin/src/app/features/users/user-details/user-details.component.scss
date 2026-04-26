@@ -78,7 +78,7 @@
         align-items: center;
         gap: 16px;
         padding: 16px;
-        background-color: #2A2A2A;
+        background-color: var(--bg-elevated);
         border-radius: 8px;
 
         .material-symbols-rounded {
@@ -163,7 +163,7 @@
 
           .info-item {
             padding: 16px;
-            background-color: #2A2A2A;
+            background-color: var(--bg-elevated);
             border-radius: 8px;
 
             .info-label {
@@ -238,7 +238,7 @@
             margin-bottom: 32px;
 
             .balance-card {
-              background-color: #2A2A2A;
+              background-color: var(--bg-elevated);
               border-radius: 12px;
               overflow: hidden;
 
@@ -291,7 +291,7 @@
                   .voltyks-input {
                     width: 100%;
                     padding: 12px 16px;
-                    background-color: #1E1E1E;
+                    background-color: var(--bg-secondary);
                     border: 1px solid #333;
                     border-radius: 8px;
                     color: #fff;
@@ -418,7 +418,7 @@
               gap: 16px;
               margin-bottom: 20px;
               padding: 16px;
-              background-color: #2A2A2A;
+              background-color: var(--bg-elevated);
               border-radius: 12px;
               flex-wrap: wrap;
 
@@ -438,7 +438,7 @@
 
                 .voltyks-input {
                   padding: 10px 12px;
-                  background-color: #1E1E1E;
+                  background-color: var(--bg-secondary);
                   border: 1px solid #333;
                   border-radius: 8px;
                   color: #fff;
@@ -494,7 +494,7 @@
               }
 
               &::-webkit-scrollbar-track {
-                background: #1E1E1E;
+                background: var(--bg-secondary);
               }
 
               &::-webkit-scrollbar-thumb {
@@ -552,7 +552,7 @@
             .empty-state {
               text-align: center;
               padding: 60px 32px;
-              background-color: #2A2A2A;
+              background-color: var(--bg-elevated);
               border-radius: 12px;
 
               .empty-icon {

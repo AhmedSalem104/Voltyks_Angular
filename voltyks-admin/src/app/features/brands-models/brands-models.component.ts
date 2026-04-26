@@ -102,11 +102,11 @@ import { ToasterService } from '../../shared/components/toaster/toaster.service'
       }
 
       h2 {
-        color: white;
+        color: var(--text-primary);
         font-size: 32px;
         font-weight: 700;
         margin-bottom: 8px;
-        background: linear-gradient(135deg, #fff 0%, #00C853 100%);
+        background: linear-gradient(135deg, var(--text-primary) 0%, #00C853 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;

@@ -16,7 +16,7 @@ $info: #3b82f6;
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: var(--overlay-bg-strong);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -35,7 +35,7 @@ $info: #3b82f6;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 20px;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+  box-shadow: var(--shadow-overlay);
   overflow: hidden;
   animation: m-pop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }

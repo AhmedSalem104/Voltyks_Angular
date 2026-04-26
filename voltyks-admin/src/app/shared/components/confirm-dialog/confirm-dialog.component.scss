@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -106,11 +106,10 @@
 // Light Theme Overrides
 :host-context([data-theme='light']) {
   .dialog-overlay {
-    background-color: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(4px);
 
     .dialog-container {
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-overlay);
     }
   }
 }

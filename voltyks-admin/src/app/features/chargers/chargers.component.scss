@@ -65,7 +65,7 @@
       font-size: 32px;
       font-weight: 700;
       margin-bottom: 8px;
-      background: linear-gradient(135deg, #fff 0%, #00C853 100%);
+      background: linear-gradient(135deg, var(--text-primary) 0%, #00C853 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -138,7 +138,7 @@
         z-index: 1001;
 
         .dropdown-selected {
-          background-color: #2A2A2A;
+          background-color: var(--bg-elevated);
           border: 1px solid #333;
           border-radius: 6px;
           padding: 6px 10px;
@@ -232,7 +232,7 @@
           top: calc(100% + 4px);
           left: 0;
           right: 0;
-          background: #2A2A2A;
+          background: var(--bg-elevated);
           border: 1px solid #00C853;
           border-radius: 6px;
           box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
@@ -247,7 +247,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            background: #252525;
+            background: var(--bg-elevated);
 
             .search-icon {
               color: #00C853;
@@ -278,7 +278,7 @@
             }
 
             &::-webkit-scrollbar-track {
-              background: #1E1E1E;
+              background: var(--bg-secondary);
             }
 
             &::-webkit-scrollbar-thumb {
@@ -659,7 +659,7 @@
   padding: 20px;
 
   .modal-content {
-    background: #1E1E1E;
+    background: var(--bg-secondary);
     border-radius: 16px;
     border: 1px solid #333;
     max-width: 700px;
@@ -674,7 +674,7 @@
     }
 
     &::-webkit-scrollbar-track {
-      background: #252525;
+      background: var(--bg-elevated);
     }
 
     &::-webkit-scrollbar-thumb {
@@ -773,7 +773,7 @@
             gap: 12px;
             cursor: pointer;
             padding: 12px;
-            background: #2A2A2A;
+            background: var(--bg-elevated);
             border-radius: 8px;
             border: 1px solid #333;
             transition: all 0.3s ease;

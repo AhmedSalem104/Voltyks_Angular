@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,7 +27,7 @@
     }
 
     .loading-text {
-      color: white;
+      color: var(--text-primary);
       font-family: 'Cairo', sans-serif;
       font-size: 16px;
       font-weight: 500;

@@ -6,13 +6,15 @@ $complaint-color: #2196F3;
 $reservation-color: #9C27B0;
 $vehicle-request-color: #10B981;
 
-$bg-dark: #1a1a1a;
-$bg-card: #242424;
-$bg-hover: #2a2a2a;
-$border-color: rgba(255, 255, 255, 0.08);
-$text-primary: #ffffff;
-$text-secondary: rgba(255, 255, 255, 0.7);
-$text-muted: rgba(255, 255, 255, 0.4);
+// Theme-aware tokens — bound to CSS variables so they flip automatically
+// when [data-theme='light'] is applied.
+$bg-dark: var(--bg-primary);
+$bg-card: var(--bg-secondary);
+$bg-hover: var(--bg-elevated);
+$border-color: var(--border-color);
+$text-primary: var(--text-primary);
+$text-secondary: var(--text-secondary);
+$text-muted: var(--text-disabled);
 
 .notification-dropdown {
   position: absolute;
@@ -23,7 +25,7 @@ $text-muted: rgba(255, 255, 255, 0.4);
   background: $bg-dark;
   border: 1px solid $border-color;
   border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-overlay);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-20px) scale(0.95);
