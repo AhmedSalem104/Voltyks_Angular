@@ -96,7 +96,7 @@
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
           <span class="material-symbols-rounded">add</span>
-          إضافة منتج
+          {{ "store.products.addProductBtn" | translate }}
         </button>
       </div>
     </div>
@@ -285,7 +285,7 @@
               <label>Specifications</label>
               <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="addSpecification(true)">
                 <span class="material-symbols-rounded">add</span>
-                إضافة
+                {{ "store.products.addSpecBtn" | translate }}
               </button>
             </div>
             @for (spec of createSpecs; track $index; let i = $index) {
@@ -303,7 +303,7 @@
           <div class="form-section images-note">
             <div class="note-content">
               <span class="material-symbols-rounded">info</span>
-              <span>An image manager will open after the product is created.</span>
+              <span>{{ "store.products.imagesAfterCreate" | translate }}</span>
             </div>
           </div>
         </div>
@@ -330,7 +330,7 @@
         <div class="modal-body">
           <div class="form-row">
             <div class="form-group">
-              <label>اسم المنتج</label>
+              <label>{{ "store.products.productNameLabel" | translate }}</label>
               <input type="text" class="voltyks-input" [(ngModel)]="updateDto.name" [placeholder]="'store.products.namePlaceholder' | translate" />
             </div>
 
@@ -397,7 +397,7 @@
               <label>Specifications</label>
               <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="addSpecification(false)">
                 <span class="material-symbols-rounded">add</span>
-                إضافة
+                {{ "store.products.addSpecBtn" | translate }}
               </button>
             </div>
             @for (spec of updateSpecs; track $index; let i = $index) {
@@ -414,10 +414,10 @@
           <!-- Images Section -->
           <div class="form-section">
             <div class="section-header">
-              <label>صور المنتج</label>
+              <label>{{ "store.products.productImages" | translate }}</label>
               <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="closeEditDialog(); openImageManager(currentProduct!)">
                 <span class="material-symbols-rounded">collections</span>
-                إدارة الصور
+                {{ "store.products.manageImages" | translate }}
               </button>
             </div>
             @if (currentProduct!.images && currentProduct!.images.length > 0) {
@@ -434,14 +434,14 @@
                 }
               </div>
             } @else {
-              <p class="no-images-text">لا توجد صور للمنتج</p>
+              <p class="no-images-text">{{ "store.products.noImages" | translate }}</p>
             }
           </div>
         </div>
         <div class="modal-footer">
           <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">{{ "common.cancel" | translate }}</button>
           <button class="voltyks-btn btn-primary" (click)="updateProduct()" [disabled]="isSaving">
-            {{ isSaving ? 'جاري الحفظ...' : 'حفظ التعديلات' }}
+            {{ (isSaving ? 'store.products.saving' : 'store.products.saveEdits') | translate }}
           </button>
         </div>
       </div>
@@ -454,7 +454,7 @@
       <div class="modal-overlay" (click)="closeDetailsDialog()">
         <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
           <div class="modal-header">
-            <h3>تفاصيل المنتج</h3>
+            <h3>{{ "store.products.detailsTitle" | translate }}</h3>
           <button type="button" class="close-btn" (click)="closeDetailsDialog()">
             <span class="material-symbols-rounded">close</span>
           </button>
@@ -462,7 +462,7 @@
         <div class="modal-body details-body">
           <div class="details-grid">
             <div class="detail-item">
-              <span class="label">الاسم:</span>
+              <span class="label">{{ "store.products.fName" | translate }}:</span>
               <span class="value">{{ currentProduct.name }}</span>
             </div>
             <div class="detail-item">
@@ -470,53 +470,53 @@
               <span class="value">{{ currentProduct.slug }}</span>
             </div>
             <div class="detail-item">
-              <span class="label">الفئة:</span>
+              <span class="label">{{ "store.products.fCategory" | translate }}:</span>
               <span class="value">{{ getCategoryName(currentProduct.categoryId) }}</span>
             </div>
             <div class="detail-item">
-              <span class="label">السعر:</span>
+              <span class="label">{{ "store.products.fPrice" | translate }}:</span>
               <span class="value price">{{ formatPrice(currentProduct.price) }}</span>
             </div>
             <div class="detail-item">
-              <span class="label">الحالة:</span>
+              <span class="label">{{ "store.products.fStatus" | translate }}:</span>
               <span class="status-badge" [ngClass]="getStatusClass(currentProduct.status)">
                 {{ getStatusLabel(currentProduct.status) }}
               </span>
             </div>
             <div class="detail-item">
-              <span class="label">قابل للحجز:</span>
+              <span class="label">{{ "store.products.fReservable" | translate }}:</span>
               <span class="reservable-badge" [class.yes]="currentProduct.isReservable">
-                {{ currentProduct.isReservable ? 'نعم' : 'لا' }}
+                {{ (currentProduct.isReservable ? 'common.yes' : 'common.no') | translate }}
               </span>
             </div>
             <div class="detail-item">
-              <span class="label">الترتيب:</span>
+              <span class="label">{{ "store.products.fOrder" | translate }}:</span>
               <span class="value">{{ currentProduct.sortOrder }}</span>
             </div>
             <div class="detail-item">
-              <span class="label">عدد الحجوزات:</span>
+              <span class="label">{{ "store.products.fReservationCount" | translate }}:</span>
               <span class="reservation-count">{{ currentProduct.reservationCount }}</span>
             </div>
             <div class="detail-item">
-              <span class="label">تاريخ الإنشاء:</span>
+              <span class="label">{{ "store.products.fCreatedAt" | translate }}:</span>
               <span class="value">{{ formatDate(currentProduct.createdAt) }}</span>
             </div>
             <div class="detail-item">
-              <span class="label">آخر تحديث:</span>
+              <span class="label">{{ "store.products.fUpdatedAt" | translate }}:</span>
               <span class="value">{{ formatDate(currentProduct.updatedAt) }}</span>
             </div>
           </div>
 
           @if (currentProduct.description) {
             <div class="detail-section">
-              <h4>الوصف</h4>
+              <h4>{{ "store.products.description" | translate }}</h4>
               <p class="description-text">{{ currentProduct.description }}</p>
             </div>
           }
 
           @if (currentProduct.specifications && getSpecsCount(currentProduct.specifications) > 0) {
             <div class="detail-section">
-              <h4>المواصفات</h4>
+              <h4>{{ "store.products.specifications" | translate }}</h4>
               <div class="specs-list">
                 @for (spec of currentProduct.specifications | keyvalue; track spec.key) {
                   <div class="spec-item">
@@ -530,7 +530,7 @@
 
           @if (currentProduct.images && currentProduct.images.length > 0) {
             <div class="detail-section">
-              <h4>صور المنتج ({{ currentProduct.images.length }})</h4>
+              <h4>{{ "store.products.productImagesCount" | translate: { count: currentProduct.images.length } }}</h4>
               <div class="images-gallery">
                 @for (img of currentProduct.images; track $index) {
                   <div class="gallery-image-wrapper" (click)="openLightbox(img)">
@@ -549,7 +549,7 @@
           @if (!currentProduct.isDeleted) {
             <button class="voltyks-btn btn-primary" (click)="closeDetailsDialog(); openEditDialog(currentProduct)">
               <span class="material-symbols-rounded">edit</span>
-              تعديل
+              {{ "store.products.edit" | translate }}
             </button>
           }
         </div>
@@ -562,9 +562,9 @@
   @defer (when showDeleteConfirm) {
     <app-confirm-dialog
       [isOpen]="showDeleteConfirm"
-      title="تأكيد الحذف"
-      [message]="'هل أنت متأكد من حذف المنتج \'' + (currentProduct?.name || '') + '\'؟ يمكن استرجاعه لاحقاً.'"
-      confirmText="حذف"
+      [title]="'store.products.deleteConfirmTitle' | translate"
+      [message]="'store.products.deleteConfirmMessage' | translate: { name: currentProduct?.name || '' }"
+      [confirmText]="'store.products.deleteConfirmAction' | translate"
       type="danger"
       (confirm)="confirmDelete()"
       (cancel)="closeDeleteConfirm()"
@@ -575,9 +575,9 @@
   @defer (when showForceDeleteConfirm) {
     <app-confirm-dialog
       [isOpen]="showForceDeleteConfirm"
-      title="تأكيد الحذف النهائي"
-      [message]="'هل أنت متأكد من حذف المنتج \'' + (currentProduct?.name || '') + '\' نهائياً؟ لا يمكن استرجاعه!'"
-      confirmText="حذف نهائي"
+      [title]="'store.products.forceDeleteTitle' | translate"
+      [message]="'store.products.forceDeleteMessage' | translate: { name: currentProduct?.name || '' }"
+      [confirmText]="'store.products.forceDeleteAction' | translate"
       type="danger"
       (confirm)="confirmForceDelete()"
       (cancel)="closeForceDeleteConfirm()"
@@ -592,7 +592,7 @@
           <div class="modal-header">
             <h3>
               <span class="material-symbols-rounded">collections</span>
-              إدارة صور المنتج: {{ currentProduct.name }}
+              {{ "store.products.imageManagerTitle" | translate: { name: currentProduct.name } }}
             </h3>
           <button type="button" class="close-btn" (click)="closeImageManager()">
             <span class="material-symbols-rounded">close</span>
@@ -602,13 +602,13 @@
           @if (isUploading) {
             <div class="upload-progress">
               <div class="spinner"></div>
-              <span>جاري رفع الصور...</span>
+              <span>{{ "store.products.uploading" | translate }}</span>
             </div>
           }
 
           <!-- Upload Section -->
           <div class="upload-section">
-            <h4>رفع صور جديدة</h4>
+            <h4>{{ "store.products.uploadNewImages" | translate }}</h4>
             <div class="upload-area"
                  [class.drag-over]="isDragOver"
                  (click)="fileInput.click()"
@@ -626,15 +626,15 @@
               />
               <div class="upload-placeholder">
                 <span class="material-symbols-rounded">cloud_upload</span>
-                <p>اضغط لاختيار الصور أو اسحبها هنا</p>
-                <span class="upload-hint">الأنواع المسموحة: JPG, PNG, WEBP | الحد الأقصى: 5MB لكل صورة</span>
+                <p>{{ "store.products.uploadHint" | translate }}</p>
+                <span class="upload-hint">{{ "store.products.uploadFormats" | translate }}</span>
               </div>
             </div>
 
             <!-- Selected Files Preview -->
             @if (selectedFiles.length > 0) {
               <div class="selected-files">
-                <h5>الصور المحددة للرفع ({{ selectedFiles.length }})</h5>
+                <h5>{{ "store.products.selectedFiles" | translate: { count: selectedFiles.length } }}</h5>
                 <div class="files-grid">
                   @for (file of selectedFiles; track $index; let i = $index) {
                     <div class="file-item file-item-with-preview">
@@ -655,7 +655,7 @@
                 </div>
                 <button class="voltyks-btn btn-primary upload-btn" (click)="uploadImages()" [disabled]="isUploading">
                   <span class="material-symbols-rounded">upload</span>
-                  رفع {{ selectedFiles.length }} صورة
+                  {{ "store.products.uploadCount" | translate: { count: selectedFiles.length } }}
                 </button>
               </div>
             }
@@ -663,7 +663,7 @@
 
           <!-- Current Images -->
           <div class="current-images-section">
-            <h4>الصور الحالية ({{ productImages.length }})</h4>
+            <h4>{{ "store.products.currentImages" | translate: { count: productImages.length } }}</h4>
             @if (productImages.length > 0) {
               <div class="images-grid">
                 @for (img of productImages; track $index) {
@@ -675,7 +675,7 @@
                       </div>
                     </div>
                     <div class="image-actions">
-                      <button class="voltyks-btn btn-icon btn-danger btn-small" title="حذف الصورة" (click)="openDeleteImageConfirm(img)">
+                      <button class="voltyks-btn btn-icon btn-danger btn-small" [title]="'store.products.deleteImageTip' | translate" (click)="openDeleteImageConfirm(img)">
                         <span class="material-symbols-rounded">delete</span>
                       </button>
                     </div>
@@ -685,7 +685,7 @@
             } @else {
               <div class="no-images">
                 <span class="material-symbols-rounded">image_not_supported</span>
-                <p>لا توجد صور للمنتج</p>
+                <p>{{ "store.products.noImages" | translate }}</p>
               </div>
             }
           </div>
@@ -714,9 +714,9 @@
   @defer (when showDeleteImageConfirm) {
     <app-confirm-dialog
       [isOpen]="showDeleteImageConfirm"
-      title="تأكيد حذف الصورة"
-      message="هل أنت متأكد من حذف هذه الصورة؟ لا يمكن استرجاعها."
-      confirmText="حذف"
+      [title]="'store.products.deleteImageTitle' | translate"
+      [message]="'store.products.deleteImageMessage' | translate"
+      [confirmText]="'store.products.deleteConfirmAction' | translate"
       type="danger"
       (confirm)="confirmDeleteImage()"
       (cancel)="closeDeleteImageConfirm()"

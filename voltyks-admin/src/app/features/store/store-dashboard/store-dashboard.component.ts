@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 import { AdminStoreService } from '../../../core/services/admin/admin-store.service';
 
@@ -23,7 +24,8 @@ type TabType = 'overview' | 'categories' | 'products' | 'reservations';
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    TranslateModule
   ],
   templateUrl: './store-dashboard.component.html',
   styleUrls: ['./store-dashboard.component.scss'],

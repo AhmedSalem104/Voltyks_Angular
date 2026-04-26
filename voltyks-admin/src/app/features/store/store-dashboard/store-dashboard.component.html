@@ -3,7 +3,7 @@
   @if (isLoading) {
     <div class="loading-state">
       <div class="loading-spinner"></div>
-      <span>جاري تحميل البيانات...</span>
+      <span>{{ "store.dashboard.loading" | translate }}</span>
     </div>
   }
   @if (!isLoading) {
@@ -14,13 +14,13 @@
           <span class="material-symbols-rounded">storefront</span>
         </div>
         <div class="header-text">
-          <h1>إدارة المتجر</h1>
-          <p>إدارة الفئات والمنتجات وحجوزات العملاء</p>
+          <h1>{{ "store.dashboard.pageTitle" | translate }}</h1>
+          <p>{{ "store.dashboard.pageSubtitle" | translate }}</p>
         </div>
       </div>
       <button class="refresh-btn" (click)="loadStats()" [disabled]="isLoading">
         <span class="material-symbols-rounded" [class.spinning]="isLoading">sync</span>
-        <span>تحديث</span>
+        <span>{{ "store.dashboard.refresh" | translate }}</span>
       </button>
     </header>
 
@@ -31,11 +31,11 @@
           <span class="material-symbols-rounded">category</span>
         </div>
         <div class="card-content">
-          <h3>الفئات</h3>
-          <p>{{ stats.totalCategories }} فئة</p>
+          <h3>{{ "store.dashboard.categoriesTitle" | translate }}</h3>
+          <p>{{ stats.totalCategories }} {{ "store.dashboard.categoriesUnit" | translate }}</p>
         </div>
         <div class="card-stats">
-          <span class="stat-badge active">{{ stats.activeCategories }} نشطة</span>
+          <span class="stat-badge active">{{ stats.activeCategories }} {{ "store.dashboard.activeUnit" | translate }}</span>
         </div>
         <span class="card-arrow material-symbols-rounded">arrow_back</span>
       </a>
@@ -45,11 +45,11 @@
           <span class="material-symbols-rounded">inventory_2</span>
         </div>
         <div class="card-content">
-          <h3>المنتجات</h3>
-          <p>{{ stats.totalProducts }} منتج</p>
+          <h3>{{ "store.dashboard.productsTitle" | translate }}</h3>
+          <p>{{ stats.totalProducts }} {{ "store.dashboard.productsUnit" | translate }}</p>
         </div>
         <div class="card-stats">
-          <span class="stat-badge active">{{ stats.activeProducts }} نشط</span>
+          <span class="stat-badge active">{{ stats.activeProducts }} {{ "store.dashboard.activeUnit" | translate }}</span>
         </div>
         <span class="card-arrow material-symbols-rounded">arrow_back</span>
       </a>
@@ -59,14 +59,14 @@
           <span class="material-symbols-rounded">shopping_cart</span>
         </div>
         <div class="card-content">
-          <h3>الحجوزات</h3>
-          <p>{{ stats.totalReservations }} حجز</p>
+          <h3>{{ "store.dashboard.reservationsTitle" | translate }}</h3>
+          <p>{{ stats.totalReservations }} {{ "store.dashboard.reservationsUnit" | translate }}</p>
         </div>
         <div class="card-stats">
           @if (stats.pendingReservations > 0) {
-            <span class="stat-badge pending">{{ stats.pendingReservations }} معلق</span>
+            <span class="stat-badge pending">{{ stats.pendingReservations }} {{ "store.dashboard.pendingUnit" | translate }}</span>
           }
-          <span class="stat-badge completed">{{ stats.completedReservations }} مكتمل</span>
+          <span class="stat-badge completed">{{ stats.completedReservations }} {{ "store.dashboard.completedUnit" | translate }}</span>
         </div>
         <span class="card-arrow material-symbols-rounded">arrow_back</span>
       </a>
@@ -76,7 +76,7 @@
     <section class="status-section">
       <h2 class="section-title">
         <span class="material-symbols-rounded">insights</span>
-        نظرة عامة على الحالة
+        {{ "store.dashboard.overviewTitle" | translate }}
       </h2>
 
       <div class="status-grid">
@@ -91,8 +91,8 @@
           </div>
           <div class="status-info">
             <span class="status-value">{{ stats.pendingReservations }}</span>
-            <span class="status-label">حجوزات معلقة</span>
-            <span class="status-desc">في انتظار التواصل</span>
+            <span class="status-label">{{ "store.dashboard.pendingLabel" | translate }}</span>
+            <span class="status-desc">{{ "store.dashboard.pendingDesc" | translate }}</span>
           </div>
           @if (stats.pendingReservations > 0) {
             <div class="alert-badge">
@@ -112,8 +112,8 @@
           </div>
           <div class="status-info">
             <span class="status-value">{{ stats.unpaidReservations }}</span>
-            <span class="status-label">غير مدفوعة</span>
-            <span class="status-desc">بانتظار الدفع</span>
+            <span class="status-label">{{ "store.dashboard.unpaidLabel" | translate }}</span>
+            <span class="status-desc">{{ "store.dashboard.unpaidDesc" | translate }}</span>
           </div>
           @if (stats.unpaidReservations > 0) {
             <div class="alert-badge danger">
@@ -133,8 +133,8 @@
           </div>
           <div class="status-info">
             <span class="status-value">{{ stats.pendingDeliveries }}</span>
-            <span class="status-label">قيد التوصيل</span>
-            <span class="status-desc">مدفوعة وجاهزة</span>
+            <span class="status-label">{{ "store.dashboard.deliveryLabel" | translate }}</span>
+            <span class="status-desc">{{ "store.dashboard.deliveryDesc" | translate }}</span>
           </div>
         </div>
 
@@ -145,8 +145,8 @@
           </div>
           <div class="status-info">
             <span class="status-value">{{ stats.completedReservations }}</span>
-            <span class="status-label">مكتملة</span>
-            <span class="status-desc">تم التسليم بنجاح</span>
+            <span class="status-label">{{ "store.dashboard.completedLabel" | translate }}</span>
+            <span class="status-desc">{{ "store.dashboard.completedDesc" | translate }}</span>
           </div>
         </div>
       </div>
@@ -156,25 +156,25 @@
     <section class="actions-section">
       <h2 class="section-title">
         <span class="material-symbols-rounded">bolt</span>
-        إجراءات سريعة
+        {{ "store.dashboard.quickActions" | translate }}
       </h2>
 
       <div class="actions-grid">
         <a routerLink="categories" class="action-btn">
           <span class="material-symbols-rounded">add_circle</span>
-          <span>إضافة فئة</span>
+          <span>{{ "store.dashboard.addCategoryAction" | translate }}</span>
         </a>
         <a routerLink="products" class="action-btn">
           <span class="material-symbols-rounded">add_box</span>
-          <span>إضافة منتج</span>
+          <span>{{ "store.dashboard.addProductAction" | translate }}</span>
         </a>
         <a routerLink="reservations" class="action-btn highlight" *ngIf="stats.pendingReservations > 0">
           <span class="material-symbols-rounded">notifications_active</span>
-          <span>حجوزات معلقة ({{ stats.pendingReservations }})</span>
+          <span>{{ "store.dashboard.pendingAlert" | translate: { count: stats.pendingReservations } }}</span>
         </a>
         <a routerLink="reservations" class="action-btn">
           <span class="material-symbols-rounded">list_alt</span>
-          <span>جميع الحجوزات</span>
+          <span>{{ "store.dashboard.allReservations" | translate }}</span>
         </a>
       </div>
     </section>
