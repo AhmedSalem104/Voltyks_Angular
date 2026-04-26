@@ -14,7 +14,7 @@
           <input
             type="text"
             class="voltyks-input"
-            placeholder="البحث عن علامة تجارية..."
+            [placeholder]="'brands.search' | translate"
             [(ngModel)]="searchTerm"
             (ngModelChange)="onSearchChange($event)"
           />
@@ -26,7 +26,7 @@
   <!-- Brands Table -->
   <div class="voltyks-card">
     <div class="table-header">
-      <h3>قائمة العلامات التجارية</h3>
+      <h3>{{ 'brands.title' | translate }}</h3>
       <div class="header-actions">
         <span class="total-count">{{ "common.total" | translate }}: {{ totalItems }}</span>
         <button class="voltyks-btn print-btn" (click)="printToPdf()" [disabled]="filteredBrands.length === 0">
@@ -35,7 +35,7 @@
         </button>
         <button class="voltyks-btn btn-primary" (click)="openCreateDialog()">
           <span class="material-symbols-rounded">add</span>
-          إضافة علامة تجارية
+          {{ 'brands.addBrand' | translate }}
         </button>
       </div>
     </div>
@@ -46,10 +46,10 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>الشعار</th>
-              <th>اسم العلامة التجارية</th>
-              <th>عدد الموديلات</th>
-              <th>{{ "common.actions" | translate }}</th>
+              <th>{{ 'brands.logo' | translate }}</th>
+              <th>{{ 'brands.name' | translate }}</th>
+              <th>{{ 'brands.modelsCount' | translate }}</th>
+              <th>{{ 'common.actions' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -67,28 +67,28 @@
                 </td>
                 <td class="brand-name">{{ brand.name }}</td>
                 <td>
-                  <span class="models-count">{{ brand.totalModels }} موديل</span>
+                  <span class="models-count">{{ brand.totalModels }} {{ 'sidebar.items.models' | translate }}</span>
                 </td>
                 <td>
                   <div class="action-buttons">
                     <button
                       class="voltyks-btn btn-icon btn-info"
                       (click)="viewModels(brand)"
-                      title="عرض الموديلات"
+                      [title]="'common.view' | translate"
                     >
                       <span class="material-symbols-rounded">visibility</span>
                     </button>
                     <button
                       class="voltyks-btn btn-icon btn-edit"
                       (click)="openEditDialog(brand)"
-                      title="تعديل"
+                      [title]="'common.edit' | translate"
                     >
                       <span class="material-symbols-rounded">edit</span>
                     </button>
                     <button
                       class="voltyks-btn btn-icon btn-danger"
                       (click)="openDeleteConfirm(brand)"
-                      title="حذف"
+                      [title]="'common.delete' | translate"
                     >
                       <span class="material-symbols-rounded">delete</span>
                     </button>
@@ -111,7 +111,7 @@
     } @else {
       <div class="empty-state">
         <span class="material-symbols-rounded empty-icon">category</span>
-        <p>لا توجد علامات تجارية</p>
+        <p>{{ 'brands.empty' | translate }}</p>
       </div>
     }
   </div>
@@ -123,7 +123,7 @@
     <div class="modal-overlay" (click)="closeCreateDialog()">
       <div class="modal-content modal-sm" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h3>إضافة علامة تجارية جديدة</h3>
+          <h3>{{ 'brands.addBrandFull' | translate }}</h3>
           <button class="close-btn" (click)="closeCreateDialog()">
             <span class="material-symbols-rounded">close</span>
           </button>
@@ -131,24 +131,24 @@
         <div class="modal-body">
           <form class="brand-form">
             <div class="form-group">
-              <label>اسم العلامة التجارية <span class="required">*</span></label>
+              <label>{{ 'brands.name' | translate }} <span class="required">*</span></label>
               <input
                 type="text"
                 class="voltyks-input"
                 [(ngModel)]="createDto.name"
                 name="name"
-                placeholder="مثال: Tesla, BMW, Mercedes..."
+                [placeholder]="'brands.namePlaceholder' | translate"
               />
             </div>
           </form>
         </div>
         <div class="modal-footer">
           <button class="voltyks-btn btn-secondary" (click)="closeCreateDialog()">
-            إلغاء
+            {{ 'common.cancel' | translate }}
           </button>
           <button class="voltyks-btn btn-primary" (click)="createBrand()">
             <span class="material-symbols-rounded">save</span>
-            حفظ
+            {{ 'common.save' | translate }}
           </button>
         </div>
       </div>
@@ -162,7 +162,7 @@
     <div class="modal-overlay" (click)="closeEditDialog()">
       <div class="modal-content modal-sm" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h3>تعديل العلامة التجارية</h3>
+          <h3>{{ 'brands.editBrandFull' | translate }}</h3>
           <button class="close-btn" (click)="closeEditDialog()">
             <span class="material-symbols-rounded">close</span>
           </button>
@@ -170,7 +170,7 @@
         <div class="modal-body">
           <form class="brand-form">
             <div class="form-group">
-              <label>اسم العلامة التجارية <span class="required">*</span></label>
+              <label>{{ 'brands.name' | translate }} <span class="required">*</span></label>
               <input
                 type="text"
                 class="voltyks-input"
@@ -182,11 +182,11 @@
         </div>
         <div class="modal-footer">
           <button class="voltyks-btn btn-secondary" (click)="closeEditDialog()">
-            إلغاء
+            {{ 'common.cancel' | translate }}
           </button>
           <button class="voltyks-btn btn-primary" (click)="updateBrand()">
             <span class="material-symbols-rounded">save</span>
-            حفظ التغييرات
+            {{ 'common.save' | translate }}
           </button>
         </div>
       </div>

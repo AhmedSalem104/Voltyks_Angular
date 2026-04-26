@@ -113,7 +113,25 @@
     "forgotPassword": "Forgot password?",
     "loginButton": "Sign in",
     "loginSuccess": "Logged in successfully",
-    "loginFailed": "Login failed"
+    "loginFailed": "Login failed",
+    "subtitle": "Admin control panel",
+    "emailOrPhone": "Email or phone",
+    "emailOrPhonePlaceholder": "Enter email or phone number",
+    "passwordPlaceholder": "Enter password",
+    "rememberMe": "Remember me",
+    "loggingIn": "Signing in...",
+    "footer": "All rights reserved © {{year}} Voltyks",
+    "forgetTitle": "Reset password",
+    "forgetSubtitle": "Enter your email or phone to receive a verification code",
+    "sendOtp": "Send verification code",
+    "otpLabel": "Verification code",
+    "otpPlaceholder": "Enter the 4-digit code",
+    "verify": "Verify",
+    "resendOtp": "Resend",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "resetPassword": "Reset password",
+    "backToLogin": "Back to login"
   },
   "sidebar": {
     "groups": {
@@ -464,14 +482,18 @@
     "title": "Brand Management",
     "subtitle": "View and manage all electric vehicle brands",
     "addBrand": "Add brand",
+    "addBrandFull": "Add new brand",
     "editBrand": "Edit brand",
+    "editBrandFull": "Edit brand",
     "deleteBrand": "Delete brand",
     "name": "Brand name",
+    "namePlaceholder": "Enter brand name",
     "logo": "Logo",
     "modelsCount": "Models count",
-    "search": "Search brands...",
+    "search": "Search brands",
     "empty": "No brands",
-    "deleteConfirm": "Are you sure you want to delete this brand?"
+    "deleteConfirm": "Are you sure you want to delete this brand?",
+    "deleteConfirmExtra": "All associated models will be deleted. This action cannot be undone."
   },
   "models": {
     "title": "Model Management",

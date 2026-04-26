@@ -9,21 +9,21 @@
   <!-- Section Header -->
   <div class="section-header">
     <span class="material-symbols-rounded">admin_panel_settings</span>
-    <h3>حالة التسجيل</h3>
+    <h3>{{ 'adminsMode.sectionTitle' | translate }}</h3>
   </div>
 
   @if (isLoading) {
     <div class="admins-mode-card loading">
       <div class="loading-spinner small"></div>
-      <span>جاري تحميل حالة وضع المسؤولين...</span>
+      <span>{{ 'adminsMode.loading' | translate }}</span>
     </div>
   } @else if (loadError) {
     <div class="admins-mode-card error">
       <span class="material-symbols-rounded">error</span>
-      <span>فشل تحميل حالة وضع المسؤولين</span>
+      <span>{{ 'adminsMode.loadError' | translate }}</span>
       <button class="retry-btn" (click)="loadAdminsModeConfig()">
         <span class="material-symbols-rounded">refresh</span>
-        إعادة المحاولة
+        {{ 'common.retry' | translate }}
       </button>
     </div>
   } @else {
@@ -33,9 +33,9 @@
           <span class="material-symbols-rounded">{{ adminsModeActivated ? 'shield' : 'person_add' }}</span>
         </div>
         <div class="admins-mode-info">
-          <h4>وضع المسؤولين</h4>
+          <h4>{{ 'adminsMode.title' | translate }}</h4>
           <span class="status-badge" [class]="adminsModeActivated ? 'status-danger' : 'status-active'">
-            {{ adminsModeActivated ? 'مفعّل — التسجيل مغلق' : 'معطّل — التسجيل مفتوح' }}
+            {{ (adminsModeActivated ? 'adminsMode.activated' : 'adminsMode.deactivated') | translate }}
           </span>
         </div>
         <div class="admins-mode-toggle">
@@ -50,7 +50,7 @@
             } @else {
               <span class="material-symbols-rounded">{{ adminsModeActivated ? 'toggle_on' : 'toggle_off' }}</span>
             }
-            <span>{{ adminsModeActivated ? 'تعطيل' : 'تفعيل' }}</span>
+            <span>{{ (adminsModeActivated ? 'common.no' : 'common.yes') | translate }}</span>
           </button>
         </div>
       </div>
@@ -60,22 +60,22 @@
           <div class="status-message danger">
             <span class="material-symbols-rounded">lock</span>
             <div>
-              <strong>وضع المسؤولين مفعّل — التسجيل مغلق</strong>
-              <p>النظام في وضع المسؤولين فقط. لن يتمكن أي شخص من:</p>
+              <strong>{{ 'adminsMode.activeTitle' | translate }}</strong>
+              <p>{{ 'adminsMode.activeDesc' | translate }}</p>
               <ul>
-                <li>إنشاء حساب جديد</li>
-                <li>التسجيل في النظام</li>
-                <li>الوصول إلا كمسؤول موجود</li>
+                <li>{{ 'adminsMode.activeBullet1' | translate }}</li>
+                <li>{{ 'adminsMode.activeBullet2' | translate }}</li>
+                <li>{{ 'adminsMode.activeBullet3' | translate }}</li>
               </ul>
-              <p class="user-message">رسالة للمستخدمين: "التسجيل معطّل حالياً. النظام في وضع المسؤولين فقط."</p>
+              <p class="user-message">{{ 'adminsMode.userMessage' | translate }}</p>
             </div>
           </div>
         } @else {
           <div class="status-message success">
             <span class="material-symbols-rounded">check_circle</span>
             <div>
-              <strong>التسجيل مفتوح</strong>
-              <p>يمكن للمستخدمين الجدد إنشاء حسابات والتسجيل في النظام بشكل طبيعي.</p>
+              <strong>{{ 'adminsMode.openTitle' | translate }}</strong>
+              <p>{{ 'adminsMode.openDesc' | translate }}</p>
             </div>
           </div>
         }
@@ -87,9 +87,9 @@
   <div class="info-card">
     <span class="material-symbols-rounded">info</span>
     <div class="info-content">
-      <p>عند تفعيل وضع المسؤولين، يتم إغلاق التسجيل بالكامل. لن يتمكن أي مستخدم جديد من إنشاء حساب.</p>
-      <p>المستخدمون الحاليون لن يتأثروا — يمكنهم الاستمرار في استخدام النظام بشكل طبيعي.</p>
-      <p>يمكنك إعادة فتح التسجيل في أي وقت بتعطيل وضع المسؤولين.</p>
+      <p>{{ 'adminsMode.infoLine1' | translate }}</p>
+      <p>{{ 'adminsMode.infoLine2' | translate }}</p>
+      <p>{{ 'adminsMode.infoLine3' | translate }}</p>
     </div>
   </div>
 </div>

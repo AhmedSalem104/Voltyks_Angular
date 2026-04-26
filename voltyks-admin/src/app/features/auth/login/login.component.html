@@ -1,5 +1,5 @@
 <div class="login-container">
-  <button class="theme-toggle" (click)="toggleTheme()" [title]="(currentTheme === 'dark' ? 'التبديل للوضع الفاتح' : 'التبديل للوضع الداكن')">
+  <button class="theme-toggle" (click)="toggleTheme()" [title]="'header.toggleTheme' | translate">
     <span class="material-symbols-rounded">{{ currentTheme === 'dark' ? 'light_mode' : 'dark_mode' }}</span>
   </button>
 
@@ -10,7 +10,7 @@
         <img src="assets/images/Voltyks_Logo.jpg" alt="Voltyks Logo" />
       </div>
       <h1 class="login-title">Voltyks Admin</h1>
-      <p class="login-subtitle">لوحة تحكم المسؤول</p>
+      <p class="login-subtitle">{{ 'auth.subtitle' | translate }}</p>
     </div>
 
     <!-- Error Message -->
@@ -27,7 +27,7 @@
       <!-- Email or Phone Field -->
       <div class="form-group">
         <label for="emailOrPhone" class="form-label">
-          البريد الإلكتروني أو رقم الهاتف
+          {{ 'auth.emailOrPhone' | translate }}
           <span class="required">*</span>
         </label>
         <div class="input-wrapper">
@@ -41,7 +41,7 @@
             formControlName="emailOrPhone"
             class="form-input"
             [class.error]="isFieldInvalid('emailOrPhone')"
-            placeholder="أدخل البريد الإلكتروني أو رقم الهاتف"
+            [placeholder]="'auth.emailOrPhonePlaceholder' | translate"
             autocomplete="username"
           />
         </div>
@@ -53,7 +53,7 @@
       <!-- Password Field -->
       <div class="form-group">
         <label for="password" class="form-label">
-          كلمة المرور
+          {{ 'auth.password' | translate }}
           <span class="required">*</span>
         </label>
         <div class="input-wrapper">
@@ -66,7 +66,7 @@
             formControlName="password"
             class="form-input"
             [class.error]="isFieldInvalid('password')"
-            placeholder="أدخل كلمة المرور"
+            [placeholder]="'auth.passwordPlaceholder' | translate"
             autocomplete="current-password"
           />
           <button
@@ -94,9 +94,9 @@
       <div class="form-options">
         <label class="checkbox-label">
           <input type="checkbox" formControlName="rememberMe" class="checkbox-input" />
-          <span class="checkbox-text">تذكرني</span>
+          <span class="checkbox-text">{{ 'auth.rememberMe' | translate }}</span>
         </label>
-        <a routerLink="/forget-password" class="forget-link">نسيت كلمة المرور؟</a>
+        <a routerLink="/forget-password" class="forget-link">{{ 'auth.forgotPassword' | translate }}</a>
       </div>
 
       <!-- Submit Button -->
@@ -106,12 +106,12 @@
         [disabled]="isLoading"
         [class.loading]="isLoading"
       >
-        <span *ngIf="!isLoading">تسجيل الدخول</span>
+        <span *ngIf="!isLoading">{{ 'auth.loginButton' | translate }}</span>
         <span *ngIf="isLoading" class="loading-spinner">
           <svg class="spinner" width="20" height="20" viewBox="0 0 20 20" fill="none">
             <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="40" stroke-dashoffset="10"/>
           </svg>
-          جاري تسجيل الدخول...
+          {{ 'auth.loggingIn' | translate }}
         </span>
       </button>
     </form>
@@ -119,7 +119,7 @@
     <!-- Footer -->
     <div class="login-footer">
       <p class="footer-text">
-        جميع الحقوق محفوظة &copy; {{ currentYear }} Voltyks
+        {{ 'auth.footer' | translate:{year: currentYear} }}
       </p>
     </div>
   </div>

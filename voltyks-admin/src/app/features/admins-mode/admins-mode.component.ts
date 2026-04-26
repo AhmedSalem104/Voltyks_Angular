@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AdminsModeService } from '../../core/services/admin/admins-mode.service';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
@@ -30,6 +30,7 @@ export class AdminsModeComponent implements OnInit {
   constructor(
     private adminsModeService: AdminsModeService,
     private toaster: ToasterService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -63,13 +64,12 @@ export class AdminsModeComponent implements OnInit {
 
   toggleAdminsMode(): void {
     const newStatus = !this.adminsModeActivated;
-    const actionText = newStatus ? 'تفعيل' : 'تعطيل';
-
-    this.confirmDialogTitle = `${actionText} وضع المسؤولين`;
-    this.confirmDialogMessage = newStatus
-      ? 'هل أنت متأكد من تفعيل وضع المسؤولين؟ سيتم إغلاق التسجيل للمستخدمين الجدد ولن يتمكن أي شخص من إنشاء حساب جديد.'
-      : 'هل أنت متأكد من تعطيل وضع المسؤولين؟ سيتم فتح التسجيل للمستخدمين الجدد.';
-
+    this.confirmDialogTitle = this.translate.instant(
+      newStatus ? 'adminsMode.confirmActivate' : 'adminsMode.confirmDeactivate'
+    );
+    this.confirmDialogMessage = this.translate.instant(
+      newStatus ? 'adminsMode.confirmActivateMsg' : 'adminsMode.confirmDeactivateMsg'
+    );
     this.pendingAction = () => this.confirmAdminsModeToggle(newStatus);
     this.showConfirmDialog = true;
     this.cdr.markForCheck();
@@ -96,20 +96,21 @@ export class AdminsModeComponent implements OnInit {
 
     this.adminsModeService.updateAdminsMode({ activated: newStatus }).subscribe({
       next: (res: any) => {
+        const successKey = newStatus ? 'adminsMode.successActivated' : 'adminsMode.successDeactivated';
         if (res.status && res.data) {
           this.adminsModeActivated = res.data.adminsModeActivated ?? res.data.admins_mode_activated ?? newStatus;
-          this.toaster.success(newStatus ? 'تم تفعيل وضع المسؤولين — التسجيل مغلق' : 'تم تعطيل وضع المسؤولين — التسجيل مفتوح');
+          this.toaster.success(this.translate.instant(successKey));
         } else if (res.status) {
           this.adminsModeActivated = newStatus;
-          this.toaster.success(newStatus ? 'تم تفعيل وضع المسؤولين — التسجيل مغلق' : 'تم تعطيل وضع المسؤولين — التسجيل مفتوح');
+          this.toaster.success(this.translate.instant(successKey));
         } else {
-          this.toaster.error(res.message || 'فشل تحديث وضع المسؤولين');
+          this.toaster.error(res.message || this.translate.instant('adminsMode.failUpdate'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (err: any) => {
-        this.toaster.error(err.error?.message || 'فشل تحديث وضع المسؤولين');
+        this.toaster.error(err.error?.message || this.translate.instant('adminsMode.failUpdate'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
