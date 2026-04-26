@@ -1,16 +1,17 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-pagination',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="pagination-container">
       <div class="pagination-info">
-        <span>عرض {{ startItem }} - {{ endItem }} من {{ totalItems }}</span>
+        <span>{{ 'pagination.showing' | translate:{start: startItem, end: endItem, total: totalItems} }}</span>
       </div>
 
       <div class="pagination-controls">
@@ -19,7 +20,7 @@ import { FormsModule } from '@angular/forms';
           [disabled]="currentPage === 1"
           (click)="goToPage(1)"
         >
-          الأولى
+          {{ 'pagination.first' | translate }}
         </button>
 
         <button
@@ -27,7 +28,7 @@ import { FormsModule } from '@angular/forms';
           [disabled]="currentPage === 1"
           (click)="previousPage()"
         >
-          السابقة
+          {{ 'common.previous' | translate }}
         </button>
 
         <div class="pagination-pages">
@@ -47,7 +48,7 @@ import { FormsModule } from '@angular/forms';
           [disabled]="currentPage === totalPages"
           (click)="nextPage()"
         >
-          التالية
+          {{ 'common.next' | translate }}
         </button>
 
         <button
@@ -55,12 +56,12 @@ import { FormsModule } from '@angular/forms';
           [disabled]="currentPage === totalPages"
           (click)="goToPage(totalPages)"
         >
-          الأخيرة
+          {{ 'pagination.last' | translate }}
         </button>
       </div>
 
       <div class="pagination-size">
-        <label>حجم الصفحة:</label>
+        <label>{{ 'pagination.perPage' | translate }}:</label>
         <select
           [(ngModel)]="pageSize"
           (ngModelChange)="onPageSizeChange()"

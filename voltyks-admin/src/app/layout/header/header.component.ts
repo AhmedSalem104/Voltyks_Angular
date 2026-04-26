@@ -2,16 +2,18 @@ import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDe
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { LanguageService, Language } from '../../core/services/language.service';
 import { NotificationDropdownComponent } from '../../shared/components/notification-dropdown/notification-dropdown.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, NotificationDropdownComponent],
+  imports: [CommonModule, NotificationDropdownComponent, TranslatePipe],
   template: `
     <header class="header">
       <div class="header-left">
@@ -27,7 +29,7 @@ import { NotificationDropdownComponent } from '../../shared/components/notificat
           <div class="user-avatar">
             <span class="material-symbols-rounded">account_circle</span>
           </div>
-          <span class="user-name">{{ currentUser?.firstName || 'المسؤول' }}</span>
+          <span class="user-name">{{ currentUser?.firstName || ('header.profile' | translate) }}</span>
         </div>
 
         <!-- Notifications -->
@@ -36,7 +38,7 @@ import { NotificationDropdownComponent } from '../../shared/components/notificat
             class="notification-btn"
             (click)="toggleNotifications($event)"
             [class.active]="showNotifications"
-            title="الإشعارات"
+            [title]="'header.notifications' | translate"
           >
             <span class="material-symbols-rounded">notifications</span>
             @if (unreadCount > 0) {
@@ -49,13 +51,18 @@ import { NotificationDropdownComponent } from '../../shared/components/notificat
           ></app-notification-dropdown>
         </div>
 
+        <!-- Language Toggle -->
+        <button class="lang-toggle" (click)="toggleLanguage()" [title]="'header.toggleLanguage' | translate">
+          <span class="lang-text">{{ currentLanguage === 'ar' ? 'EN' : 'ع' }}</span>
+        </button>
+
         <!-- Theme Toggle -->
-        <button class="theme-toggle" (click)="toggleTheme()" [title]="(currentTheme === 'dark' ? 'التبديل للوضع الفاتح' : 'التبديل للوضع الداكن')">
+        <button class="theme-toggle" (click)="toggleTheme()" [title]="'header.toggleTheme' | translate">
           <span class="material-symbols-rounded">{{ currentTheme === 'dark' ? 'light_mode' : 'dark_mode' }}</span>
         </button>
 
         <!-- Logout Button -->
-        <button class="logout-btn" (click)="logout()" title="تسجيل الخروج">
+        <button class="logout-btn" (click)="logout()" [title]="'header.logout' | translate">
           <span class="material-symbols-rounded">logout</span>
         </button>
       </div>
@@ -68,14 +75,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private router = inject(Router);
   private themeService = inject(ThemeService);
+  private languageService = inject(LanguageService);
   private sidebarService = inject(SidebarService);
   private notificationService = inject(NotificationService);
   private cdr = inject(ChangeDetectorRef);
 
-  pageTitle: string = 'لوحة التحكم';
+  pageTitle: string = '';
   currentUser: any = null;
   showDropdown: boolean = false;
   currentTheme: 'dark' | 'light' = 'dark';
+  currentLanguage: Language = 'ar';
 
   // Notifications
   showNotifications = false;
@@ -98,6 +107,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.themeService.theme$.subscribe(theme => {
         this.currentTheme = theme;
+      })
+    );
+
+    // Subscribe to language changes
+    this.subscriptions.push(
+      this.languageService.language$.subscribe(lang => {
+        this.currentLanguage = lang;
+        this.cdr.markForCheck();
       })
     );
 
@@ -135,6 +152,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleTheme(): void {
     this.themeService.toggleTheme();
+  }
+
+  toggleLanguage(): void {
+    this.languageService.toggleLanguage();
   }
 
   goToProfile(): void {

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDe
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { VaultService } from '../../core/services/vault.service';
 import { Subscription, filter } from 'rxjs';
@@ -33,7 +34,7 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, TranslatePipe],
   template: `
     <!-- Backdrop Overlay -->
     <div class="backdrop" [class.is-visible]="isOpen" (click)="close()"></div>
@@ -43,7 +44,7 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
            [class.is-expanded]="isOpen"
            [class.is-pinned]="isSidebarPinned"
            role="navigation"
-           aria-label="القائمة الرئيسية"
+           [attr.aria-label]="'header.menu' | translate"
            #sidebarElement>
 
       <!-- Logo Section -->
@@ -54,7 +55,7 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
         <button class="pin-sidebar-btn"
                 (click)="toggleSidebarPin()"
                 [class.is-pinned]="isSidebarPinned"
-                [title]="isSidebarPinned ? 'إلغاء التثبيت' : 'تثبيت القائمة'">
+                [title]="(isSidebarPinned ? 'sidebar.unpinSidebar' : 'sidebar.pinSidebar') | translate">
           <span class="material-symbols-rounded">{{ isSidebarPinned ? 'push_pin' : 'push_pin' }}</span>
         </button>
       </div>
@@ -65,8 +66,8 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
         <button class="toolbar-btn search-btn"
                 (click)="toggleSearch()"
                 [class.active]="isSearchOpen"
-                title="البحث (Ctrl+K)"
-                aria-label="البحث في القائمة">
+                [title]="'sidebar.searchHint' | translate"
+                [attr.aria-label]="'sidebar.search' | translate">
           <span class="material-symbols-rounded">search</span>
         </button>
         <!-- Collapse All -->
@@ -74,8 +75,8 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
                 (click)="collapseAll()"
                 [class.disabled]="!hasExpandedGroups"
                 [disabled]="!hasExpandedGroups"
-                title="طي الكل"
-                aria-label="طي جميع المجموعات">
+                [title]="'sidebar.collapseAll' | translate"
+                [attr.aria-label]="'sidebar.collapseAll' | translate">
           <span class="material-symbols-rounded">unfold_less</span>
         </button>
         <!-- Expand All -->
@@ -83,8 +84,8 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
                 (click)="expandAll()"
                 [class.disabled]="allGroupsExpanded"
                 [disabled]="allGroupsExpanded"
-                title="فتح الكل"
-                aria-label="فتح جميع المجموعات">
+                [title]="'sidebar.expandAll' | translate"
+                [attr.aria-label]="'sidebar.expandAll' | translate">
           <span class="material-symbols-rounded">unfold_more</span>
         </button>
       </div>
@@ -102,7 +103,7 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
                    (keydown.escape)="closeSearch()"
                    (keydown.arrowdown)="focusNextSearchResult($event)"
                    (keydown.arrowup)="focusPreviousSearchResult($event)"
-                   placeholder="البحث في القائمة..."
+                   [placeholder]="'sidebar.search' | translate"
                    class="search-input">
             <span class="keyboard-hint">Esc</span>
           </div>
@@ -116,8 +117,8 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
                    (mouseenter)="focusedSearchIndex = i">
                   <span class="material-symbols-rounded result-icon">{{ result.item.icon }}</span>
                   <div class="result-text">
-                    <span class="result-label">{{ result.item.label }}</span>
-                    <span class="result-group">{{ result.group.label }}</span>
+                    <span class="result-label">{{ result.item.label | translate }}</span>
+                    <span class="result-group">{{ result.group.label | translate }}</span>
                   </div>
                 </a>
               }
@@ -126,7 +127,7 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
           @if (searchQuery && filteredItems.length === 0) {
             <div class="search-no-results">
               <span class="material-symbols-rounded">search_off</span>
-              <span>لا توجد نتائج</span>
+              <span>{{ 'sidebar.noResults' | translate }}</span>
             </div>
           }
         </div>
@@ -137,7 +138,7 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
         <div class="pinned-section">
           <div class="section-header">
             <span class="material-symbols-rounded section-icon">push_pin</span>
-            <span class="section-title">المثبتة</span>
+            <span class="section-title">{{ 'sidebar.pinned' | translate }}</span>
             <span class="section-count">{{ pinnedItems.length }}</span>
           </div>
           <div class="section-items">
@@ -145,14 +146,14 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
               <a [routerLink]="item.route"
                  routerLinkActive="active"
                  class="nav-link pinned-item"
-                 [title]="item.label"
+                 [title]="item.label | translate"
                  (click)="onItemClick()">
                 <span class="icon material-symbols-rounded">{{ item.icon }}</span>
-                <span class="text">{{ item.label }}</span>
+                <span class="text">{{ item.label | translate }}</span>
                 <button class="unpin-btn"
                         (click)="unpinItem(item, $event)"
-                        [attr.aria-label]="'إلغاء تثبيت ' + item.label"
-                        title="إلغاء التثبيت">
+                        [attr.aria-label]="'sidebar.unpin' | translate"
+                        [title]="'sidebar.unpin' | translate">
                   <span class="material-symbols-rounded">close</span>
                 </button>
               </a>
@@ -173,10 +174,10 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
               [attr.aria-expanded]="group.expanded"
               [attr.aria-controls]="'group-items-' + group.id"
               (click)="toggleGroup(group)"
-              [title]="group.label"
+              [title]="group.label | translate"
             >
               <span class="icon material-symbols-rounded">{{ group.icon }}</span>
-              <span class="text">{{ group.label }}</span>
+              <span class="text">{{ group.label | translate }}</span>
               <span class="chevron material-symbols-rounded" [class.rotated]="group.expanded">
                 expand_more
               </span>
@@ -189,13 +190,13 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
                   [routerLink]="item.route"
                   routerLinkActive="active"
                   class="nav-link"
-                  [title]="item.label"
+                  [title]="item.label | translate"
                   role="listitem"
                   (click)="onItemClick()"
                   (contextmenu)="onItemRightClick(item, $event)"
                 >
                   <span class="icon material-symbols-rounded">{{ item.icon }}</span>
-                  <span class="text">{{ item.label }}</span>
+                  <span class="text">{{ item.label | translate }}</span>
                   @if (isPinned(item.route)) {
                     <span class="pin-indicator material-symbols-rounded">push_pin</span>
                   }
@@ -221,13 +222,13 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
         @if (contextMenuItem && !isPinned(contextMenuItem.route)) {
           <button class="context-menu-item" (click)="pinItem(contextMenuItem)">
             <span class="material-symbols-rounded">push_pin</span>
-            <span>تثبيت</span>
+            <span>{{ 'sidebar.pin' | translate }}</span>
           </button>
         }
         @if (contextMenuItem && isPinned(contextMenuItem.route)) {
           <button class="context-menu-item" (click)="unpinItemByRoute(contextMenuItem.route)">
             <span class="material-symbols-rounded">push_pin</span>
-            <span>إلغاء التثبيت</span>
+            <span>{{ 'sidebar.unpin' | translate }}</span>
           </button>
         }
       </div>
@@ -291,87 +292,87 @@ export class SidebarComponent implements OnInit, OnDestroy {
   menuGroups: MenuGroup[] = [
     {
       id: 'main',
-      label: 'الرئيسية',
+      label: 'sidebar.groups.main',
       icon: 'space_dashboard',
       expanded: true,
       items: [
-        { label: 'لوحة التحكم', icon: 'space_dashboard', route: '/dashboard' }
+        { label: 'sidebar.items.dashboard', icon: 'space_dashboard', route: '/dashboard' }
       ]
     },
     {
       id: 'users',
-      label: 'إدارة المستخدمين',
+      label: 'sidebar.groups.users',
       icon: 'group',
       expanded: false,
       items: [
-        { label: 'المستخدمون', icon: 'group', route: '/users' },
-        { label: 'طلبات إضافة السيارات', icon: 'directions_car', route: '/vehicle-addition-requests' },
-        { label: 'إنشاء أدمن', icon: 'person_add', route: '/create-admin' }
+        { label: 'sidebar.items.users', icon: 'group', route: '/users' },
+        { label: 'sidebar.items.vehicleAdditionRequests', icon: 'directions_car', route: '/vehicle-addition-requests' },
+        { label: 'sidebar.items.createAdmin', icon: 'person_add', route: '/create-admin' }
       ]
     },
     {
       id: 'operations',
-      label: 'العمليات',
+      label: 'sidebar.groups.operations',
       icon: 'flash_on',
       expanded: false,
       items: [
-        { label: 'عمليات الشحن', icon: 'flash_on', route: '/processes' },
-        { label: 'الشواحن', icon: 'ev_station', route: '/chargers' },
-        { label: 'المركبات', icon: 'electric_car', route: '/vehicles' }
+        { label: 'sidebar.items.processes', icon: 'flash_on', route: '/processes' },
+        { label: 'sidebar.items.chargers', icon: 'ev_station', route: '/chargers' },
+        { label: 'sidebar.items.vehicles', icon: 'electric_car', route: '/vehicles' }
       ]
     },
     {
       id: 'catalog',
-      label: 'الكتالوج',
+      label: 'sidebar.groups.catalog',
       icon: 'auto_awesome',
       expanded: false,
       items: [
-        { label: 'العلامات التجارية', icon: 'loyalty', route: '/brands' },
-        { label: 'الموديلات', icon: 'directions_car', route: '/models' }
+        { label: 'sidebar.items.brands', icon: 'loyalty', route: '/brands' },
+        { label: 'sidebar.items.models', icon: 'directions_car', route: '/models' }
       ]
     },
     {
       id: 'settings',
-      label: 'إعدادات النظام',
+      label: 'sidebar.groups.settings',
       icon: 'tune',
       expanded: false,
       items: [
-        { label: 'بروتوكولات الشحن', icon: 'cable', route: '/charging-protocols' },
-        { label: 'سعات الشواحن', icon: 'battery_charging_full', route: '/capacities' },
-        { label: 'الرسوم', icon: 'receipt_long', route: '/fees' },
-        { label: 'الشروط والأحكام', icon: 'gavel', route: '/terms' },
-        { label: 'البروتوكول', icon: 'verified_user', route: '/protocol' },
-        { label: 'إعدادات التطبيق', icon: 'smartphone', route: '/app-config' },
-        { label: 'وضع المسؤولين', icon: 'admin_panel_settings', route: '/admins-mode' }
+        { label: 'sidebar.items.chargingProtocols', icon: 'cable', route: '/charging-protocols' },
+        { label: 'sidebar.items.capacities', icon: 'battery_charging_full', route: '/capacities' },
+        { label: 'sidebar.items.fees', icon: 'receipt_long', route: '/fees' },
+        { label: 'sidebar.items.terms', icon: 'gavel', route: '/terms' },
+        { label: 'sidebar.items.protocol', icon: 'verified_user', route: '/protocol' },
+        { label: 'sidebar.items.appConfig', icon: 'smartphone', route: '/app-config' },
+        { label: 'sidebar.items.adminsMode', icon: 'admin_panel_settings', route: '/admins-mode' }
       ]
     },
     {
       id: 'analytics',
-      label: 'التقارير والدعم',
+      label: 'sidebar.groups.analytics',
       icon: 'insights',
       expanded: false,
       items: [
-        { label: 'التقارير', icon: 'assessment', route: '/reports' },
-        { label: 'الشكاوى', icon: 'support_agent', route: '/complaints' },
-        { label: 'أنواع الشكاوى', icon: 'label', route: '/complaint-categories' }
+        { label: 'sidebar.items.reports', icon: 'assessment', route: '/reports' },
+        { label: 'sidebar.items.complaints', icon: 'support_agent', route: '/complaints' },
+        { label: 'sidebar.items.complaintCategories', icon: 'label', route: '/complaint-categories' }
       ]
     },
     {
       id: 'store',
-      label: 'التجارة الإلكترونية',
+      label: 'sidebar.groups.store',
       icon: 'shopping_bag',
       expanded: false,
       items: [
-        { label: 'المتجر', icon: 'shopping_bag', route: '/store' }
+        { label: 'sidebar.items.store', icon: 'shopping_bag', route: '/store' }
       ]
     },
     {
       id: 'info',
-      label: 'معلومات',
+      label: 'sidebar.groups.info',
       icon: 'info',
       expanded: false,
       items: [
-        { label: 'عن Voltyks', icon: 'info', route: '/about' }
+        { label: 'sidebar.items.about', icon: 'info', route: '/about' }
       ]
     }
   ];

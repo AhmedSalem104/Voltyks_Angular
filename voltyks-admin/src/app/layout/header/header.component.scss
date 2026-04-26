@@ -120,6 +120,42 @@
   }
 }
 
+// Language Toggle Button — same shell as theme-toggle but with text instead of icon
+.lang-toggle {
+  position: relative;
+  background: linear-gradient(135deg, rgba(0, 200, 83, 0.1) 0%, rgba(0, 200, 83, 0.05) 100%);
+  border: 1px solid rgba(0, 200, 83, 0.2);
+  color: #00C853;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 10px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+
+  .lang-text {
+    font-size: 13px;
+    line-height: 1;
+    letter-spacing: 0.5px;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, rgba(0, 200, 83, 0.2) 0%, rgba(0, 200, 83, 0.1) 100%);
+    border-color: rgba(0, 200, 83, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 200, 83, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.95);
+  }
+}
+
 // Notification Wrapper (for dropdown positioning)
 .notification-wrapper {
   position: relative;
