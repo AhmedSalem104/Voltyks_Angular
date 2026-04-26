@@ -532,7 +532,12 @@
     "greetingEvening": "مساء الخير",
     "tagline1": "نظام إدارة شحن المركبات الكهربائية",
     "tagline2": "مستقبل النقل المستدام",
-    "tagline3": "شحن ذكي لحياة أفضل"
+    "tagline3": "شحن ذكي لحياة أفضل",
+    "statusLoading": "جاري التحميل...",
+    "statusEnabled": "مفعّل",
+    "statusDisabled": "معطّل",
+    "bookingStatus": "حالة الحجوزات",
+    "dateFormat": "EEEE، d MMMM yyyy"
   },
   "users": {
     "title": "إدارة المستخدمين",
@@ -606,6 +611,16 @@
       "addBalanceConfirmMsg": "هل أنت متأكد من إضافة {{amount}} {{currency}} للمستخدم {{name}}؟",
       "deductBalanceConfirmTitle": "تأكيد خصم الرصيد",
       "deductBalanceConfirmMsg": "هل أنت متأكد من خصم {{amount}} {{currency}} من رصيد المستخدم {{name}}؟"
+    },
+    "list": {
+      "filterActive": "النشطين",
+      "filterDeleted": "المحذوفين",
+      "filterAll": "الكل",
+      "titleActive": "قائمة المستخدمين النشطين",
+      "titleDeleted": "قائمة المستخدمين المحذوفين",
+      "titleAll": "قائمة جميع المستخدمين",
+      "emptyDeleted": "لا يوجد مستخدمون محذوفون",
+      "emptyDefault": "لا يوجد مستخدمون"
     }
   },
   "brands": {
@@ -623,7 +638,9 @@
     "search": "ابحث عن علامة تجارية",
     "empty": "لا توجد علامات تجارية",
     "deleteConfirm": "هل أنت متأكد من حذف هذه العلامة؟",
-    "deleteConfirmExtra": "سيتم حذف جميع الموديلات المرتبطة بها. لا يمكن التراجع عن هذا الإجراء."
+    "deleteConfirmExtra": "سيتم حذف جميع الموديلات المرتبطة بها. لا يمكن التراجع عن هذا الإجراء.",
+    "deleteConfirmTitle": "تأكيد حذف العلامة التجارية",
+    "deleteConfirmMessage": "هل أنت متأكد من حذف العلامة التجارية \"{{name}}\"؟ سيتم حذف جميع الموديلات المرتبطة بها."
   },
   "models": {
     "title": "إدارة الموديلات",
@@ -832,7 +849,27 @@
     "subtitle": "إدارة الشروط والأحكام للنظام",
     "addTerm": "إضافة بند",
     "editTerm": "تعديل البند",
-    "deleteTerm": "حذف البند"
+    "deleteTerm": "حذف البند",
+    "pageSubtitle": "عرض وتعديل الشروط والأحكام بطريقة منسقة واحترافية",
+    "switchTo": "التبديل إلى {{lang}}",
+    "cancelEdit": "إلغاء التعديل",
+    "edit": "تعديل",
+    "versionLabel": "الإصدار",
+    "publishedAtLabel": "تاريخ النشر",
+    "languageLabel": "اللغة",
+    "viewerTitle": "محتوى الشروط والأحكام (عرض)",
+    "editorTitle": "تعديل محتوى الشروط والأحكام (JSON)",
+    "formatJson": "تنسيق تلقائي",
+    "formatJsonTitle": "تنسيق JSON تلقائياً",
+    "validateJson": "التحقق من الصحة",
+    "validateJsonTitle": "التحقق من صحة JSON",
+    "jsonValid": "JSON صالح",
+    "jsonInvalid": "JSON غير صالح",
+    "jsonPlaceholder": "أدخل محتوى JSON هنا...",
+    "saveEdits": "حفظ التعديلات",
+    "cancel": "إلغاء",
+    "empty": "لا توجد شروط وأحكام متاحة حالياً",
+    "retry": "إعادة المحاولة"
   },
   "appConfig": {
     "title": "إعدادات التطبيق",
@@ -1238,5 +1275,36 @@
   "about": {
     "title": "عن Voltyks",
     "subtitle": "نظام إدارة محطات الشحن الذكي"
+  },
+  "complaintsList": {
+    "pageTitle": "الشكاوى",
+    "pageSubtitle": "عرض وإدارة جميع الشكاوى المقدمة من المستخدمين",
+    "allCategories": "جميع الأنواع",
+    "typeCol": "النوع",
+    "contentCol": "المحتوى",
+    "resolved": "محلولة",
+    "pending": "غير محلولة",
+    "modalTitle": "تفاصيل الشكوى",
+    "typeLabel": "نوع الشكوى",
+    "statusLabel": "الحالة",
+    "createdAtLabel": "تاريخ الإنشاء",
+    "userInfo": "معلومات المستخدم",
+    "nameLabel": "الاسم",
+    "emailLabel": "البريد الإلكتروني",
+    "phoneLabel": "رقم الهاتف",
+    "contentLabel": "محتوى الشكوى",
+    "unmarkResolved": "إلغاء الحل",
+    "markResolved": "تحديد كمحلولة"
+  },
+  "protocol": {
+    "pageTitle": "البروتوكولات",
+    "pageSubtitle": "عرض بروتوكولات الشحن (الصيني والأوروبي)",
+    "switchTo": "التبديل إلى {{label}}",
+    "protocolType": "نوع البروتوكول",
+    "standard": "المعيار",
+    "chargingType": "نوع الشحن",
+    "chargingTypeChinese": "AC/DC",
+    "chargingTypeEuropean": "AC + DC مدمج",
+    "detailedExplanation": "الشرح التفصيلي"
   }
 }

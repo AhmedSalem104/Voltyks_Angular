@@ -532,7 +532,12 @@
     "greetingEvening": "Good evening",
     "tagline1": "EV charging management system",
     "tagline2": "The future of sustainable transport",
-    "tagline3": "Smart charging for a better life"
+    "tagline3": "Smart charging for a better life",
+    "statusLoading": "Loading...",
+    "statusEnabled": "Enabled",
+    "statusDisabled": "Disabled",
+    "bookingStatus": "Booking status",
+    "dateFormat": "EEEE, d MMMM yyyy"
   },
   "users": {
     "title": "User Management",
@@ -606,6 +611,16 @@
       "addBalanceConfirmMsg": "Are you sure you want to add {{amount}} {{currency}} to {{name}}'s balance?",
       "deductBalanceConfirmTitle": "Confirm balance deduction",
       "deductBalanceConfirmMsg": "Are you sure you want to deduct {{amount}} {{currency}} from {{name}}'s balance?"
+    },
+    "list": {
+      "filterActive": "Active",
+      "filterDeleted": "Deleted",
+      "filterAll": "All",
+      "titleActive": "Active users list",
+      "titleDeleted": "Deleted users list",
+      "titleAll": "All users list",
+      "emptyDeleted": "No deleted users",
+      "emptyDefault": "No users"
     }
   },
   "brands": {
@@ -623,7 +638,9 @@
     "search": "Search brands",
     "empty": "No brands",
     "deleteConfirm": "Are you sure you want to delete this brand?",
-    "deleteConfirmExtra": "All associated models will be deleted. This action cannot be undone."
+    "deleteConfirmExtra": "All associated models will be deleted. This action cannot be undone.",
+    "deleteConfirmTitle": "Confirm brand deletion",
+    "deleteConfirmMessage": "Are you sure you want to delete brand \"{{name}}\"? All linked models will be deleted as well."
   },
   "models": {
     "title": "Model Management",
@@ -832,7 +849,27 @@
     "subtitle": "Manage system terms and conditions",
     "addTerm": "Add clause",
     "editTerm": "Edit clause",
-    "deleteTerm": "Delete clause"
+    "deleteTerm": "Delete clause",
+    "pageSubtitle": "View and edit terms & conditions in a polished, professional layout",
+    "switchTo": "Switch to {{lang}}",
+    "cancelEdit": "Cancel edit",
+    "edit": "Edit",
+    "versionLabel": "Version",
+    "publishedAtLabel": "Published at",
+    "languageLabel": "Language",
+    "viewerTitle": "Terms & conditions content (view)",
+    "editorTitle": "Edit terms & conditions content (JSON)",
+    "formatJson": "Auto-format",
+    "formatJsonTitle": "Auto-format JSON",
+    "validateJson": "Validate",
+    "validateJsonTitle": "Validate JSON",
+    "jsonValid": "JSON is valid",
+    "jsonInvalid": "JSON is invalid",
+    "jsonPlaceholder": "Enter JSON content here...",
+    "saveEdits": "Save edits",
+    "cancel": "Cancel",
+    "empty": "No terms & conditions available right now",
+    "retry": "Retry"
   },
   "appConfig": {
     "title": "App Configuration",
@@ -1238,5 +1275,36 @@
   "about": {
     "title": "About Voltyks",
     "subtitle": "Smart EV charging-station management system"
+  },
+  "complaintsList": {
+    "pageTitle": "Complaints",
+    "pageSubtitle": "View and manage all user-submitted complaints",
+    "allCategories": "All categories",
+    "typeCol": "Type",
+    "contentCol": "Content",
+    "resolved": "Resolved",
+    "pending": "Unresolved",
+    "modalTitle": "Complaint details",
+    "typeLabel": "Complaint type",
+    "statusLabel": "Status",
+    "createdAtLabel": "Created at",
+    "userInfo": "User information",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone number",
+    "contentLabel": "Complaint content",
+    "unmarkResolved": "Unmark resolved",
+    "markResolved": "Mark resolved"
+  },
+  "protocol": {
+    "pageTitle": "Protocols",
+    "pageSubtitle": "View charging protocols (Chinese and European)",
+    "switchTo": "Switch to {{label}}",
+    "protocolType": "Protocol type",
+    "standard": "Standard",
+    "chargingType": "Charging type",
+    "chargingTypeChinese": "AC/DC",
+    "chargingTypeEuropean": "AC + DC combined",
+    "detailedExplanation": "Detailed explanation"
   }
 }

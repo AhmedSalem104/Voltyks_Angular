@@ -1,8 +1,8 @@
 <div class="complaints-list-container">
   <div class="page-header">
     <div class="header-content">
-      <h2>الشكاوى</h2>
-      <p class="page-description">عرض وإدارة جميع الشكاوى المقدمة من المستخدمين</p>
+      <h2>{{ "complaintsList.pageTitle" | translate }}</h2>
+      <p class="page-description">{{ "complaintsList.pageSubtitle" | translate }}</p>
     </div>
   </div>
 
@@ -52,7 +52,7 @@
           [(ngModel)]="selectedCategoryId"
           (ngModelChange)="onCategoryChange()"
         >
-          <option [ngValue]="null">جميع الأنواع</option>
+          <option [ngValue]="null">{{ "complaintsList.allCategories" | translate }}</option>
           @for (category of categories; track category.id) {
             <option [ngValue]="category.id">{{ category.name }}</option>
           }
@@ -93,8 +93,8 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>النوع</th>
-              <th>المحتوى</th>
+              <th>{{ "complaintsList.typeCol" | translate }}</th>
+              <th>{{ "complaintsList.contentCol" | translate }}</th>
               <th>{{ "common.user" | translate }}</th>
               <th>{{ "common.status" | translate }}</th>
               <th>{{ "common.date" | translate }}</th>
@@ -140,7 +140,7 @@
                     } @else {
                       <span class="material-symbols-rounded">{{ complaint.isResolved ? 'check_circle' : 'hourglass_empty' }}</span>
                     }
-                    {{ complaint.isResolved ? 'محلولة' : 'غير محلولة' }}
+                    {{ (complaint.isResolved ? 'complaintsList.resolved' : 'complaintsList.pending') | translate }}
                   </button>
                 </td>
                 <td>
@@ -188,7 +188,7 @@
       <div class="modal-header">
         <h3>
           <span class="material-symbols-rounded">info</span>
-          تفاصيل الشكوى
+          {{ "complaintsList.modalTitle" | translate }}
         </h3>
         <button class="close-btn" (click)="closeDetailsModal()">
           <span class="material-symbols-rounded">close</span>
@@ -199,56 +199,56 @@
           <div class="detail-row">
             <span class="detail-label">
               <span class="material-symbols-rounded">category</span>
-              نوع الشكوى
+              {{ "complaintsList.typeLabel" | translate }}
             </span>
             <span class="detail-value">{{ selectedComplaint.categoryName }}</span>
           </div>
           <div class="detail-row">
             <span class="detail-label">
               <span class="material-symbols-rounded">schedule</span>
-              الحالة
+              {{ "complaintsList.statusLabel" | translate }}
             </span>
             <span class="status-badge" [class.resolved]="selectedComplaint.isResolved" [class.pending]="!selectedComplaint.isResolved">
               <span class="material-symbols-rounded">{{ selectedComplaint.isResolved ? 'check_circle' : 'hourglass_empty' }}</span>
-              {{ selectedComplaint.isResolved ? 'محلولة' : 'غير محلولة' }}
+              {{ (selectedComplaint.isResolved ? 'complaintsList.resolved' : 'complaintsList.pending') | translate }}
             </span>
           </div>
           <div class="detail-row">
             <span class="detail-label">
               <span class="material-symbols-rounded">calendar_today</span>
-              تاريخ الإنشاء
+              {{ "complaintsList.createdAtLabel" | translate }}
             </span>
             <span class="detail-value">{{ formatDateLong(selectedComplaint.createdAt) }}</span>
           </div>
         </div>
 
         <div class="detail-section">
-          <h4>معلومات المستخدم</h4>
+          <h4>{{ "complaintsList.userInfo" | translate }}</h4>
           <div class="detail-row">
             <span class="detail-label">
               <span class="material-symbols-rounded">person</span>
-              الاسم
+              {{ "complaintsList.nameLabel" | translate }}
             </span>
             <span class="detail-value">{{ selectedComplaint.userName || '-' }}</span>
           </div>
           <div class="detail-row">
             <span class="detail-label">
               <span class="material-symbols-rounded">email</span>
-              البريد الإلكتروني
+              {{ "complaintsList.emailLabel" | translate }}
             </span>
             <span class="detail-value">{{ selectedComplaint.userEmail || '-' }}</span>
           </div>
           <div class="detail-row">
             <span class="detail-label">
               <span class="material-symbols-rounded">phone</span>
-              رقم الهاتف
+              {{ "complaintsList.phoneLabel" | translate }}
             </span>
             <span class="detail-value">{{ selectedComplaint.userPhone || '-' }}</span>
           </div>
         </div>
 
         <div class="detail-section">
-          <h4>محتوى الشكوى</h4>
+          <h4>{{ "complaintsList.contentLabel" | translate }}</h4>
           <div class="complaint-content-box">
             {{ selectedComplaint.content }}
           </div>
@@ -268,7 +268,7 @@
           } @else {
             <span class="material-symbols-rounded">{{ selectedComplaint.isResolved ? 'undo' : 'check_circle' }}</span>
           }
-          {{ selectedComplaint.isResolved ? 'إلغاء الحل' : 'تحديد كمحلولة' }}
+          {{ (selectedComplaint.isResolved ? 'complaintsList.unmarkResolved' : 'complaintsList.markResolved') | translate }}
         </button>
       </div>
     </div>

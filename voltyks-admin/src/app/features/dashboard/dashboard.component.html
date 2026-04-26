@@ -16,7 +16,7 @@
     <div class="hero-greeting">
       <span class="greeting-label">{{ greeting }}</span>
       <span class="greeting-name">{{ currentUser?.firstName || ('header.profile' | translate) }}</span>
-      <span class="date-text">{{ today | date:'EEEE، d MMMM yyyy' }}</span>
+      <span class="date-text">{{ today | date: ('dashboard.dateFormat' | translate) }}</span>
     </div>
   </section>
 
@@ -132,11 +132,11 @@
         <h4>{{ 'dashboard.mobileApp' | translate }}</h4>
         <span class="status-text">
           @if (mobileAppEnabled === null) {
-            جاري التحميل...
+            {{ "dashboard.statusLoading" | translate }}
           } @else if (mobileAppEnabled) {
-            مفعّل
+            {{ "dashboard.statusEnabled" | translate }}
           } @else {
-            معطّل
+            {{ "dashboard.statusDisabled" | translate }}
           }
         </span>
       </div>
@@ -157,11 +157,11 @@
         <h4>{{ 'dashboard.chargingMode' | translate }}</h4>
         <span class="status-text">
           @if (chargingModeEnabled === null) {
-            جاري التحميل...
+            {{ "dashboard.statusLoading" | translate }}
           } @else if (chargingModeEnabled) {
-            مفعّل
+            {{ "dashboard.statusEnabled" | translate }}
           } @else {
-            وضع الإعداد
+            {{ "dashboard.setupMode" | translate }}
           }
         </span>
       </div>
@@ -203,7 +203,7 @@
           {{ 'dashboard.recentNotifications' | translate }}
         </h3>
         <a routerLink="/reports" class="view-all-link">
-          عرض الكل
+          {{ "dashboard.viewAll" | translate }}
           <span class="material-symbols-rounded">arrow_back</span>
         </a>
       </div>
@@ -322,7 +322,7 @@
         <div class="chart-card reservations-chart">
           <h3>
             <span class="material-symbols-rounded">shopping_cart</span>
-            حالة الحجوزات
+            {{ "dashboard.bookingStatus" | translate }}
           </h3>
           @if (sectionLoading.store) {
             <div class="chart-skeleton">
@@ -637,7 +637,7 @@
             {{ 'dashboard.recentReservations' | translate }}
           </h3>
           <a routerLink="/store/reservations" class="view-all-link">
-            عرض الكل
+            {{ "dashboard.viewAll" | translate }}
             <span class="material-symbols-rounded">arrow_back</span>
           </a>
         </div>

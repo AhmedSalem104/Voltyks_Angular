@@ -197,8 +197,8 @@
 <!-- Delete Confirmation Dialog -->
 <app-confirm-dialog
   [isOpen]="showDeleteConfirm"
-  title="تأكيد حذف العلامة التجارية"
-  [message]="'هل أنت متأكد من حذف العلامة التجارية \'' + (currentBrand?.name || '') + '\'؟ سيتم حذف جميع الموديلات المرتبطة بها.'"
+  [title]="'brands.deleteConfirmTitle' | translate"
+  [message]="'brands.deleteConfirmMessage' | translate: { name: currentBrand?.name || '' }"
   type="danger"
   (confirm)="confirmDelete()"
   (cancel)="closeDeleteConfirm()"

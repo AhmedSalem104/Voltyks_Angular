@@ -29,7 +29,7 @@
           (click)="onFilterChange('active')"
         >
           <span class="material-symbols-rounded">person</span>
-          النشطين
+          {{ "users.list.filterActive" | translate }}
         </button>
         <button
           class="filter-tab"
@@ -37,7 +37,7 @@
           (click)="onFilterChange('deleted')"
         >
           <span class="material-symbols-rounded">person_off</span>
-          المحذوفين
+          {{ "users.list.filterDeleted" | translate }}
         </button>
         <button
           class="filter-tab"
@@ -45,7 +45,7 @@
           (click)="onFilterChange('all')"
         >
           <span class="material-symbols-rounded">people</span>
-          الكل
+          {{ "users.list.filterAll" | translate }}
         </button>
       </div>
     </div>
@@ -56,9 +56,9 @@
     <div class="table-header">
       <h3>
         @switch (userFilter) {
-          @case ('active') { قائمة المستخدمين النشطين }
-          @case ('deleted') { قائمة المستخدمين المحذوفين }
-          @default { قائمة جميع المستخدمين }
+          @case ('active') { {{ "users.list.titleActive" | translate }} }
+          @case ('deleted') { {{ "users.list.titleDeleted" | translate }} }
+          @default { {{ "users.list.titleAll" | translate }} }
         }
       </h3>
       <div class="table-header-actions">
@@ -179,8 +179,8 @@
         </span>
         <p>
           @switch (userFilter) {
-            @case ('deleted') { لا يوجد مستخدمون محذوفون }
-            @default { لا يوجد مستخدمون }
+            @case ('deleted') { {{ "users.list.emptyDeleted" | translate }} }
+            @default { {{ "users.list.emptyDefault" | translate }} }
           }
         </p>
       </div>

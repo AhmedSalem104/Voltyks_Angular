@@ -1,8 +1,8 @@
 <div class="protocol-container">
   <div class="page-header">
     <div class="header-content">
-      <h2>{{ protocolTypeIcon }} البروتوكولات</h2>
-      <p class="subtitle">عرض بروتوكولات الشحن (الصيني والأوروبي)</p>
+      <h2>{{ protocolTypeIcon }} {{ "protocol.pageTitle" | translate }}</h2>
+      <p class="subtitle">{{ "protocol.pageSubtitle" | translate }}</p>
     </div>
 
     <div class="protocol-toggle">
@@ -15,7 +15,7 @@
         [class.chinese]="selectedType === 'chinese'"
         [class.european]="selectedType === 'european'"
         (click)="toggleProtocolType()"
-        [title]="'التبديل إلى ' + otherProtocolTypeLabel"
+        [title]="'protocol.switchTo' | translate: { label: otherProtocolTypeLabel }"
       >
         <span class="protocol-label current">{{ protocolTypeLabel }}</span>
         <span class="toggle-icon material-symbols-rounded">swap_horiz</span>
@@ -30,7 +30,7 @@
       <div class="info-item">
         <span class="material-symbols-rounded">inventory</span>
         <div class="info-content">
-          <span class="info-label">نوع البروتوكول</span>
+          <span class="info-label">{{ "protocol.protocolType" | translate }}</span>
           <span class="info-value">{{ protocolTypeLabel }}</span>
         </div>
       </div>
@@ -38,7 +38,7 @@
       <div class="info-item">
         <span class="material-symbols-rounded">language</span>
         <div class="info-content">
-          <span class="info-label">المعيار</span>
+          <span class="info-label">{{ "protocol.standard" | translate }}</span>
           <span class="info-value">{{ selectedType === 'chinese' ? 'GB/T' : 'CCS2' }}</span>
         </div>
       </div>
@@ -46,8 +46,8 @@
       <div class="info-item">
         <span class="material-symbols-rounded">electric_bolt</span>
         <div class="info-content">
-          <span class="info-label">نوع الشحن</span>
-          <span class="info-value">{{ selectedType === 'chinese' ? 'AC/DC' : 'AC + DC مدمج' }}</span>
+          <span class="info-label">{{ "protocol.chargingType" | translate }}</span>
+          <span class="info-value">{{ (selectedType === 'chinese' ? 'protocol.chargingTypeChinese' : 'protocol.chargingTypeEuropean') | translate }}</span>
         </div>
       </div>
     </div>
@@ -56,7 +56,7 @@
     <div class="protocol-content-section">
       <div class="section-header">
         <span class="material-symbols-rounded">description</span>
-        <h3>الشرح التفصيلي</h3>
+        <h3>{{ "protocol.detailedExplanation" | translate }}</h3>
       </div>
 
       <div class="protocol-content-container">

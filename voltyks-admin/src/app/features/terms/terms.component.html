@@ -2,7 +2,7 @@
   <div class="page-header">
     <div class="header-content">
       <h2>{{ "terms.title" | translate }}</h2>
-      <p class="subtitle">عرض وتعديل الشروط والأحكام بطريقة منسقة واحترافية</p>
+      <p class="subtitle">{{ "terms.pageSubtitle" | translate }}</p>
     </div>
 
     <div class="header-actions">
@@ -11,7 +11,7 @@
           class="toggle-btn"
           [class.active]="selectedLang === 'ar'"
           (click)="toggleLanguage()"
-          [title]="'التبديل إلى ' + otherLanguageLabel"
+          [title]="'terms.switchTo' | translate: { lang: otherLanguageLabel }"
           [disabled]="isEditMode"
         >
           <span class="lang-label current">{{ languageLabel }}</span>
@@ -33,7 +33,7 @@
         *ngIf="terms"
       >
         <span class="material-symbols-rounded">{{ isEditMode ? 'close' : 'edit' }}</span>
-        {{ isEditMode ? 'إلغاء التعديل' : 'تعديل' }}
+        {{ (isEditMode ? 'terms.cancelEdit' : 'terms.edit') | translate }}
       </button>
     </div>
   </div>
@@ -44,7 +44,7 @@
       <div class="info-item">
         <span class="material-symbols-rounded">numbers</span>
         <div class="info-content">
-          <span class="info-label">الإصدار</span>
+          <span class="info-label">{{ "terms.versionLabel" | translate }}</span>
           <span class="info-value">{{ terms.version }}</span>
         </div>
       </div>
@@ -52,7 +52,7 @@
       <div class="info-item">
         <span class="material-symbols-rounded">calendar_today</span>
         <div class="info-content">
-          <span class="info-label">تاريخ النشر</span>
+          <span class="info-label">{{ "terms.publishedAtLabel" | translate }}</span>
           <span class="info-value">{{ formatDate(terms.publishedAt) }}</span>
         </div>
       </div>
@@ -60,7 +60,7 @@
       <div class="info-item">
         <span class="material-symbols-rounded">language</span>
         <div class="info-content">
-          <span class="info-label">اللغة</span>
+          <span class="info-label">{{ "terms.languageLabel" | translate }}</span>
           <span class="info-value">{{ languageLabel }}</span>
         </div>
       </div>
@@ -70,7 +70,7 @@
     <div class="json-viewer-section" *ngIf="!isEditMode">
       <div class="section-header">
         <span class="material-symbols-rounded">visibility</span>
-        <h3>محتوى الشروط والأحكام (عرض)</h3>
+        <h3>{{ "terms.viewerTitle" | translate }}</h3>
       </div>
 
       <div class="json-viewer-container">
@@ -85,22 +85,22 @@
     <div class="json-editor-section" *ngIf="isEditMode">
       <div class="section-header">
         <span class="material-symbols-rounded">edit_note</span>
-        <h3>تعديل محتوى الشروط والأحكام (JSON)</h3>
+        <h3>{{ "terms.editorTitle" | translate }}</h3>
       </div>
 
       <div class="editor-toolbar">
-        <button class="toolbar-btn" (click)="formatJson()" title="تنسيق JSON تلقائياً">
+        <button class="toolbar-btn" (click)="formatJson()" [title]="'terms.formatJsonTitle' | translate">
           <span class="material-symbols-rounded">auto_fix_high</span>
-          تنسيق تلقائي
+          {{ "terms.formatJson" | translate }}
         </button>
-        <button class="toolbar-btn" (click)="validateJson()" title="التحقق من صحة JSON">
+        <button class="toolbar-btn" (click)="validateJson()" [title]="'terms.validateJsonTitle' | translate">
           <span class="material-symbols-rounded">check_circle</span>
-          التحقق من الصحة
+          {{ "terms.validateJson" | translate }}
         </button>
         <div class="validation-status">
           <span class="status-indicator" [class.valid]="isJsonValid" [class.invalid]="!isJsonValid">
             <span class="material-symbols-rounded">{{ isJsonValid ? 'check_circle' : 'error' }}</span>
-            {{ isJsonValid ? 'JSON صالح' : 'JSON غير صالح' }}
+            {{ (isJsonValid ? 'terms.jsonValid' : 'terms.jsonInvalid') | translate }}
           </span>
         </div>
       </div>
@@ -110,7 +110,7 @@
           class="json-editor"
           [(ngModel)]="editedContent"
           (input)="validateJson()"
-          placeholder="أدخل محتوى JSON هنا..."
+          [placeholder]="'terms.jsonPlaceholder' | translate"
           [class.invalid]="!isJsonValid"
         ></textarea>
         <div class="error-message" *ngIf="!isJsonValid && jsonError">
@@ -122,11 +122,11 @@
       <div class="editor-actions">
         <button class="voltyks-btn btn-primary" (click)="saveTerms()" [disabled]="!isJsonValid">
           <span class="material-symbols-rounded">save</span>
-          حفظ التعديلات
+          {{ "terms.saveEdits" | translate }}
         </button>
         <button class="voltyks-btn btn-secondary" (click)="toggleEditMode()">
           <span class="material-symbols-rounded">close</span>
-          إلغاء
+          {{ "terms.cancel" | translate }}
         </button>
       </div>
     </div>
@@ -135,10 +135,10 @@
   <!-- Empty State -->
   <div class="voltyks-card empty-state" *ngIf="!terms && !isLoading">
     <span class="material-symbols-rounded">description</span>
-    <p>لا توجد شروط وأحكام متاحة حالياً</p>
+    <p>{{ "terms.empty" | translate }}</p>
     <button class="voltyks-btn btn-secondary" (click)="loadTerms()">
       <span class="material-symbols-rounded">refresh</span>
-      إعادة المحاولة
+      {{ "terms.retry" | translate }}
     </button>
   </div>
 
