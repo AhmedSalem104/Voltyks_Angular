@@ -557,6 +557,42 @@
       "ban": "حظر",
       "unban": "إلغاء الحظر",
       "restore": "استعادة"
+    },
+    "details": {
+      "title": "تفاصيل المستخدم",
+      "registrationDate": "تاريخ التسجيل",
+      "ban": "حظر المستخدم",
+      "unban": "إلغاء الحظر",
+      "tabs": {
+        "overview": "نظرة عامة",
+        "wallet": "المحفظة",
+        "vehicles": "المركبات",
+        "reports": "التقارير",
+        "manageBalance": "إدارة الرصيد"
+      },
+      "stats": {
+        "chargersCount": "عدد الشواحن",
+        "vehiclesCount": "عدد المركبات",
+        "chargingRequests": "طلبات الشحن"
+      },
+      "wallet": {
+        "title": "بيانات المحفظة",
+        "currentBalance": "الرصيد الحالي",
+        "lastUpdated": "آخر تحديث"
+      },
+      "vehiclesTab": "مركبات المستخدم",
+      "reportsTab": "التقارير المتعلقة بالمستخدم",
+      "noVehicles": "لا توجد مركبات",
+      "noReports": "لا توجد تقارير",
+      "manageBalanceTitle": "إدارة رصيد المستخدم",
+      "addBalance": "إضافة رصيد",
+      "deductBalance": "خصم رصيد",
+      "amountPlaceholderAdd": "أدخل المبلغ المراد إضافته",
+      "amountPlaceholderDeduct": "أدخل المبلغ المراد خصمه",
+      "banConfirmTitle": "تأكيد الحظر",
+      "banConfirmMsg": "هل أنت متأكد من حظر هذا المستخدم؟",
+      "unbanConfirmTitle": "تأكيد إلغاء الحظر",
+      "unbanConfirmMsg": "هل أنت متأكد من إلغاء حظر هذا المستخدم؟"
     }
   },
   "brands": {

@@ -557,6 +557,42 @@
       "ban": "Ban",
       "unban": "Unban",
       "restore": "Restore"
+    },
+    "details": {
+      "title": "User details",
+      "registrationDate": "Registration date",
+      "ban": "Ban user",
+      "unban": "Unban",
+      "tabs": {
+        "overview": "Overview",
+        "wallet": "Wallet",
+        "vehicles": "Vehicles",
+        "reports": "Reports",
+        "manageBalance": "Manage balance"
+      },
+      "stats": {
+        "chargersCount": "Chargers count",
+        "vehiclesCount": "Vehicles count",
+        "chargingRequests": "Charging requests"
+      },
+      "wallet": {
+        "title": "Wallet info",
+        "currentBalance": "Current balance",
+        "lastUpdated": "Last updated"
+      },
+      "vehiclesTab": "User vehicles",
+      "reportsTab": "User reports",
+      "noVehicles": "No vehicles",
+      "noReports": "No reports",
+      "manageBalanceTitle": "Manage user balance",
+      "addBalance": "Add balance",
+      "deductBalance": "Deduct balance",
+      "amountPlaceholderAdd": "Enter amount to add",
+      "amountPlaceholderDeduct": "Enter amount to deduct",
+      "banConfirmTitle": "Confirm ban",
+      "banConfirmMsg": "Are you sure you want to ban this user?",
+      "unbanConfirmTitle": "Confirm unban",
+      "unbanConfirmMsg": "Are you sure you want to unban this user?"
     }
   },
   "brands": {
