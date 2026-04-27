@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
@@ -71,19 +71,24 @@ export class StoreCategoriesComponent implements OnInit, OnDestroy {
   createDto: CreateStoreCategoryDto = this.getEmptyCreateDto();
   updateDto: UpdateStoreCategoryDto = {};
 
-  // Status options
+  // Status options — labels are translation keys
   statusOptions: { value: CategoryStatus; label: string }[] = [
-    { value: 'active', label: 'نشط' },
-    { value: 'coming_soon', label: 'قريباً' },
-    { value: 'hidden', label: 'مخفي' }
+    { value: 'active', label: 'store.categoryStatus.active' },
+    { value: 'coming_soon', label: 'store.categoryStatus.comingSoon' },
+    { value: 'hidden', label: 'store.categoryStatus.hidden' }
   ];
 
   constructor(
     private storeService: AdminStoreService,
     private toaster: ToasterService,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.setupSearch();
@@ -123,7 +128,7 @@ export class StoreCategoriesComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل الفئات');
+        this.toaster.error(error.message || this.t('store.categories.msg.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -202,17 +207,17 @@ export class StoreCategoriesComponent implements OnInit, OnDestroy {
     this.storeService.createCategory(this.createDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم إضافة الفئة بنجاح');
+          this.toaster.success(this.t('store.categories.msg.addSuccess'));
           this.closeCreateDialog();
           this.loadCategories();
         } else {
-          this.toaster.error(response.message || 'فشل إضافة الفئة');
+          this.toaster.error(response.message || this.t('store.categories.msg.addFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل إضافة الفئة');
+        this.toaster.error(error.message || this.t('store.categories.msg.addFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -247,17 +252,17 @@ export class StoreCategoriesComponent implements OnInit, OnDestroy {
     this.storeService.updateCategory(this.currentCategory.id, this.updateDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم تحديث الفئة بنجاح');
+          this.toaster.success(this.t('store.categories.msg.updateSuccess'));
           this.closeEditDialog();
           this.loadCategories();
         } else {
-          this.toaster.error(response.message || 'فشل تحديث الفئة');
+          this.toaster.error(response.message || this.t('store.categories.msg.updateFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحديث الفئة');
+        this.toaster.error(error.message || this.t('store.categories.msg.updateFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -283,17 +288,17 @@ export class StoreCategoriesComponent implements OnInit, OnDestroy {
     this.storeService.deleteCategory(this.currentCategory.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حذف الفئة بنجاح');
+          this.toaster.success(this.t('store.categories.msg.deleteSuccess'));
           this.closeDeleteConfirm();
           this.loadCategories();
         } else {
-          this.toaster.error(response.message || 'فشل حذف الفئة');
+          this.toaster.error(response.message || this.t('store.categories.msg.deleteFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل حذف الفئة');
+        this.toaster.error(error.message || this.t('store.categories.msg.deleteFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -307,16 +312,16 @@ export class StoreCategoriesComponent implements OnInit, OnDestroy {
     this.storeService.restoreCategory(category.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم استرجاع الفئة بنجاح');
+          this.toaster.success(this.t('store.categories.msg.restoreSuccess'));
           this.loadCategories();
         } else {
-          this.toaster.error(response.message || 'فشل استرجاع الفئة');
+          this.toaster.error(response.message || this.t('store.categories.msg.restoreFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل استرجاع الفئة');
+        this.toaster.error(error.message || this.t('store.categories.msg.restoreFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -342,17 +347,17 @@ export class StoreCategoriesComponent implements OnInit, OnDestroy {
     this.storeService.forceDeleteCategory(this.currentCategory.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حذف الفئة نهائياً');
+          this.toaster.success(this.t('store.categories.msg.forceDeleteSuccess'));
           this.closeForceDeleteConfirm();
           this.loadCategories();
         } else {
-          this.toaster.error(response.message || 'فشل حذف الفئة نهائياً');
+          this.toaster.error(response.message || this.t('store.categories.msg.forceDeleteFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل حذف الفئة نهائياً');
+        this.toaster.error(error.message || this.t('store.categories.msg.forceDeleteFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -362,15 +367,15 @@ export class StoreCategoriesComponent implements OnInit, OnDestroy {
   // Validation
   private validateCreateForm(): boolean {
     if (!this.createDto.name?.trim()) {
-      this.toaster.error('يرجى إدخال اسم الفئة');
+      this.toaster.error(this.t('store.categories.msg.enterName'));
       return false;
     }
     if (!this.createDto.status) {
-      this.toaster.error('يرجى اختيار حالة الفئة');
+      this.toaster.error(this.t('store.categories.msg.selectStatus'));
       return false;
     }
     if (this.createDto.sortOrder === undefined || this.createDto.sortOrder < 0) {
-      this.toaster.error('يرجى إدخال ترتيب صحيح');
+      this.toaster.error(this.t('store.categories.msg.enterValidOrder'));
       return false;
     }
     return true;
@@ -378,7 +383,7 @@ export class StoreCategoriesComponent implements OnInit, OnDestroy {
 
   private validateUpdateForm(): boolean {
     if (this.updateDto.name !== undefined && !this.updateDto.name.trim()) {
-      this.toaster.error('يرجى إدخال اسم الفئة');
+      this.toaster.error(this.t('store.categories.msg.enterName'));
       return false;
     }
     return true;
@@ -394,7 +399,8 @@ export class StoreCategoriesComponent implements OnInit, OnDestroy {
 
   // Helpers
   getStatusLabel(status: CategoryStatus): string {
-    return CATEGORY_STATUS_LABELS[status] || status;
+    const key = CATEGORY_STATUS_LABELS[status];
+    return key ? this.t(key) : status;
   }
 
   getStatusClass(status: CategoryStatus): string {
@@ -418,15 +424,15 @@ export class StoreCategoriesComponent implements OnInit, OnDestroy {
 
   printToPdf(): void {
     this.printService.printTableToPdf({
-      title: 'تقرير فئات المتجر',
+      title: this.t('store.categories.printTitle'),
       filename: 'store_categories_report',
       orientation: 'portrait',
       columns: [
         { header: '#', field: 'index' },
-        { header: 'الاسم', field: 'name' },
-        { header: 'الحالة', field: 'statusLabel' },
-        { header: 'عدد المنتجات', field: 'productCount' },
-        { header: 'الترتيب', field: 'sortOrder' }
+        { header: this.t('store.categories.printColumns.name'), field: 'name' },
+        { header: this.t('store.categories.printColumns.status'), field: 'statusLabel' },
+        { header: this.t('store.categories.printColumns.productCount'), field: 'productCount' },
+        { header: this.t('store.categories.printColumns.sortOrder'), field: 'sortOrder' }
       ],
       data: this.filteredCategories.map((cat, index) => ({
         ...cat,

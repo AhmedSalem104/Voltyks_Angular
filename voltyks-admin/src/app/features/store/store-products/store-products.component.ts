@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
@@ -98,8 +98,8 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
 
   // Status options
   statusOptions: { value: ProductStatus; label: string }[] = [
-    { value: 'active', label: 'نشط' },
-    { value: 'hidden', label: 'مخفي' }
+    { value: 'active', label: 'store.productStatus.active' },
+    { value: 'hidden', label: 'store.productStatus.hidden' }
   ];
 
   // Drag & drop
@@ -116,8 +116,13 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
     private storeService: AdminStoreService,
     private toaster: ToasterService,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.setupSearch();
@@ -174,7 +179,7 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل المنتجات');
+        this.toaster.error(error.message || this.t('store.products.msg.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -273,7 +278,7 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
     this.storeService.createProduct(dto).subscribe({
       next: (response) => {
         if (response.status && response.data) {
-          this.toaster.success('تم إضافة المنتج بنجاح');
+          this.toaster.success(this.t('store.products.msg.addSuccess'));
           this.closeCreateDialog();
           // Open image manager for the new product
           this.currentProduct = response.data;
@@ -281,13 +286,13 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
           this.showImageManager = true;
           this.loadProducts();
         } else {
-          this.toaster.error(response.message || 'فشل إضافة المنتج');
+          this.toaster.error(response.message || this.t('store.products.msg.addFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل إضافة المنتج');
+        this.toaster.error(error.message || this.t('store.products.msg.addFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -348,17 +353,17 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
     this.storeService.updateProduct(this.currentProduct.id, dto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم تحديث المنتج بنجاح');
+          this.toaster.success(this.t('store.products.msg.updateSuccess'));
           this.closeEditDialog();
           this.loadProducts();
         } else {
-          this.toaster.error(response.message || 'فشل تحديث المنتج');
+          this.toaster.error(response.message || this.t('store.products.msg.updateFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحديث المنتج');
+        this.toaster.error(error.message || this.t('store.products.msg.updateFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -384,17 +389,17 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
     this.storeService.deleteProduct(this.currentProduct.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حذف المنتج بنجاح');
+          this.toaster.success(this.t('store.products.msg.deleteSuccess'));
           this.closeDeleteConfirm();
           this.loadProducts();
         } else {
-          this.toaster.error(response.message || 'فشل حذف المنتج');
+          this.toaster.error(response.message || this.t('store.products.msg.deleteFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل حذف المنتج');
+        this.toaster.error(error.message || this.t('store.products.msg.deleteFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -408,16 +413,16 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
     this.storeService.restoreProduct(product.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم استرجاع المنتج بنجاح');
+          this.toaster.success(this.t('store.products.msg.restoreSuccess'));
           this.loadProducts();
         } else {
-          this.toaster.error(response.message || 'فشل استرجاع المنتج');
+          this.toaster.error(response.message || this.t('store.products.msg.restoreFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل استرجاع المنتج');
+        this.toaster.error(error.message || this.t('store.products.msg.restoreFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -443,17 +448,17 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
     this.storeService.forceDeleteProduct(this.currentProduct.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حذف المنتج نهائياً');
+          this.toaster.success(this.t('store.products.msg.forceDeleteSuccess'));
           this.closeForceDeleteConfirm();
           this.loadProducts();
         } else {
-          this.toaster.error(response.message || 'فشل حذف المنتج نهائياً');
+          this.toaster.error(response.message || this.t('store.products.msg.forceDeleteFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل حذف المنتج نهائياً');
+        this.toaster.error(error.message || this.t('store.products.msg.forceDeleteFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -520,9 +525,9 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
 
     files.forEach(file => {
       if (!this.allowedTypes.includes(file.type)) {
-        errors.push(`${file.name}: نوع ملف غير مدعوم. الأنواع المسموحة: jpg, png, webp`);
+        errors.push(this.t('store.products.msg.unsupportedFormat', { name: file.name }));
       } else if (file.size > this.maxFileSize) {
-        errors.push(`${file.name}: حجم الملف يتجاوز 5MB`);
+        errors.push(this.t('store.products.msg.fileTooLarge', { name: file.name }));
       } else {
         validFiles.push(file);
       }
@@ -559,20 +564,20 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
     this.storeService.uploadProductImages(this.currentProduct.id, this.selectedFiles).subscribe({
       next: (response) => {
         if (response.status && response.data) {
-          this.toaster.success(`تم رفع ${response.data.uploadedUrls.length} صورة بنجاح`);
+          this.toaster.success(this.t('store.products.msg.uploadSuccess', { count: response.data.uploadedUrls.length }));
           this.productImages = response.data.allImages;
           this.selectedFiles = [];
           this.revokeImagePreviews();
           this.storeService.invalidateProductsCache();
           this.loadProducts();
         } else {
-          this.toaster.error(response.message || 'فشل رفع الصور');
+          this.toaster.error(response.message || this.t('store.products.msg.uploadFail'));
         }
         this.isUploading = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل رفع الصور');
+        this.toaster.error(error.message || this.t('store.products.msg.uploadFail'));
         this.isUploading = false;
         this.cdr.markForCheck();
       }
@@ -598,19 +603,19 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
     this.storeService.deleteProductImage(this.currentProduct.id, this.currentImageToDelete).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حذف الصورة بنجاح');
+          this.toaster.success(this.t('store.products.msg.imageDeleteSuccess'));
           this.productImages = this.productImages.filter(img => img !== this.currentImageToDelete);
           this.closeDeleteImageConfirm();
           this.storeService.invalidateProductsCache();
           this.loadProducts();
         } else {
-          this.toaster.error(response.message || 'فشل حذف الصورة');
+          this.toaster.error(response.message || this.t('store.products.msg.imageDeleteFail'));
         }
         this.isUploading = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل حذف الصورة');
+        this.toaster.error(error.message || this.t('store.products.msg.imageDeleteFail'));
         this.isUploading = false;
         this.cdr.markForCheck();
       }
@@ -680,9 +685,9 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
 
     fileArray.forEach(file => {
       if (!this.allowedTypes.includes(file.type)) {
-        errors.push(`${file.name}: نوع ملف غير مدعوم. الأنواع المسموحة: jpg, png, webp`);
+        errors.push(this.t('store.products.msg.unsupportedFormat', { name: file.name }));
       } else if (file.size > this.maxFileSize) {
-        errors.push(`${file.name}: حجم الملف يتجاوز 5MB`);
+        errors.push(this.t('store.products.msg.fileTooLarge', { name: file.name }));
       } else {
         validFiles.push(file);
       }
@@ -713,19 +718,19 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
   // Validation
   private validateCreateForm(): boolean {
     if (!this.createDto.name?.trim()) {
-      this.toaster.error('يرجى إدخال اسم المنتج');
+      this.toaster.error(this.t('store.products.msg.enterName'));
       return false;
     }
     if (!this.createDto.categoryId) {
-      this.toaster.error('يرجى اختيار الفئة');
+      this.toaster.error(this.t('store.products.msg.selectCategory'));
       return false;
     }
     if (this.createDto.price === undefined || this.createDto.price < 0) {
-      this.toaster.error('يرجى إدخال سعر صحيح');
+      this.toaster.error(this.t('store.products.msg.enterValidPrice'));
       return false;
     }
     if (!this.createDto.status) {
-      this.toaster.error('يرجى اختيار حالة المنتج');
+      this.toaster.error(this.t('store.products.msg.selectStatus'));
       return false;
     }
     return true;
@@ -733,11 +738,11 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
 
   private validateUpdateForm(): boolean {
     if (this.updateDto.name !== undefined && !this.updateDto.name.trim()) {
-      this.toaster.error('يرجى إدخال اسم المنتج');
+      this.toaster.error(this.t('store.products.msg.enterName'));
       return false;
     }
     if (this.updateDto.price !== undefined && this.updateDto.price < 0) {
-      this.toaster.error('يرجى إدخال سعر صحيح');
+      this.toaster.error(this.t('store.products.msg.enterValidPrice'));
       return false;
     }
     return true;
@@ -756,7 +761,8 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
 
   // Helpers
   getStatusLabel(status: ProductStatus): string {
-    return PRODUCT_STATUS_LABELS[status] || status;
+    const key = PRODUCT_STATUS_LABELS[status];
+    return key ? this.t(key) : status;
   }
 
   getStatusClass(status: ProductStatus): string {
@@ -773,7 +779,7 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
   }
 
   formatPrice(price: number): string {
-    return price.toLocaleString('en-US') + ' ج.م';
+    return price.toLocaleString('en-US') + ' ' + this.t('common.currency');
   }
 
   formatDate(dateString: string): string {
@@ -799,17 +805,17 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
 
   printToPdf(): void {
     this.printService.printTableToPdf({
-      title: 'تقرير منتجات المتجر',
+      title: this.t('store.products.printTitle'),
       filename: 'store_products_report',
       orientation: 'landscape',
       columns: [
         { header: '#', field: 'index' },
-        { header: 'الاسم', field: 'name' },
-        { header: 'الفئة', field: 'categoryName' },
-        { header: 'السعر', field: 'priceFormatted' },
-        { header: 'الحالة', field: 'statusLabel' },
-        { header: 'قابل للحجز', field: 'reservableLabel' },
-        { header: 'عدد الحجوزات', field: 'reservationCount' }
+        { header: this.t('store.products.printColumns.name'), field: 'name' },
+        { header: this.t('store.products.printColumns.category'), field: 'categoryName' },
+        { header: this.t('store.products.printColumns.price'), field: 'priceFormatted' },
+        { header: this.t('store.products.printColumns.status'), field: 'statusLabel' },
+        { header: this.t('store.products.printColumns.reservable'), field: 'reservableLabel' },
+        { header: this.t('store.products.printColumns.reservationCount'), field: 'reservationCount' }
       ],
       data: this.filteredProducts.map((prod, index) => ({
         ...prod,
@@ -817,7 +823,7 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
         categoryName: this.getCategoryName(prod.categoryId),
         priceFormatted: this.formatPrice(prod.price),
         statusLabel: this.getStatusLabel(prod.status),
-        reservableLabel: prod.isReservable ? 'نعم' : 'لا'
+        reservableLabel: this.t(prod.isReservable ? 'common.yes' : 'common.no')
       }))
     });
   }

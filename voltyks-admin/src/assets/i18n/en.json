@@ -1298,7 +1298,30 @@
       "deleteConfirmAction": "Delete",
       "forceDeleteTitle": "Confirm permanent deletion",
       "forceDeleteMessage": "Are you sure you want to permanently delete category \"{{name}}\"? It cannot be restored!",
-      "forceDeleteAction": "Permanent delete"
+      "forceDeleteAction": "Permanent delete",
+      "msg": {
+        "loadFail": "Failed to load categories",
+        "addSuccess": "Category added successfully",
+        "addFail": "Failed to add category",
+        "updateSuccess": "Category updated successfully",
+        "updateFail": "Failed to update category",
+        "deleteSuccess": "Category deleted successfully",
+        "deleteFail": "Failed to delete category",
+        "restoreSuccess": "Category restored successfully",
+        "restoreFail": "Failed to restore category",
+        "forceDeleteSuccess": "Category permanently deleted",
+        "forceDeleteFail": "Failed to permanently delete category",
+        "enterName": "Please enter the category name",
+        "selectStatus": "Please select the category status",
+        "enterValidOrder": "Please enter a valid sort order"
+      },
+      "printTitle": "Store categories report",
+      "printColumns": {
+        "name": "Name",
+        "status": "Status",
+        "productCount": "Product count",
+        "sortOrder": "Sort order"
+      }
     },
     "products": {
       "title": "Products",
@@ -1354,7 +1377,39 @@
       "currentImages": "Current images ({{count}})",
       "deleteImageTip": "Delete image",
       "deleteImageTitle": "Confirm image deletion",
-      "deleteImageMessage": "Are you sure you want to delete this image? It cannot be restored."
+      "deleteImageMessage": "Are you sure you want to delete this image? It cannot be restored.",
+      "msg": {
+        "loadFail": "Failed to load products",
+        "addSuccess": "Product added successfully",
+        "addFail": "Failed to add product",
+        "updateSuccess": "Product updated successfully",
+        "updateFail": "Failed to update product",
+        "deleteSuccess": "Product deleted successfully",
+        "deleteFail": "Failed to delete product",
+        "restoreSuccess": "Product restored successfully",
+        "restoreFail": "Failed to restore product",
+        "forceDeleteSuccess": "Product permanently deleted",
+        "forceDeleteFail": "Failed to permanently delete product",
+        "unsupportedFormat": "{{name}}: unsupported file type. Allowed: jpg, png, webp",
+        "fileTooLarge": "{{name}}: file size exceeds 5MB",
+        "uploadSuccess": "{{count}} image(s) uploaded successfully",
+        "uploadFail": "Failed to upload images",
+        "imageDeleteSuccess": "Image deleted successfully",
+        "imageDeleteFail": "Failed to delete image",
+        "enterName": "Please enter the product name",
+        "selectCategory": "Please select the category",
+        "enterValidPrice": "Please enter a valid price",
+        "selectStatus": "Please select the product status"
+      },
+      "printTitle": "Store products report",
+      "printColumns": {
+        "name": "Name",
+        "category": "Category",
+        "price": "Price",
+        "status": "Status",
+        "reservable": "Reservable",
+        "reservationCount": "Reservation count"
+      }
     },
     "reservations": {
       "title": "Reservations",
@@ -1715,7 +1770,11 @@
     "chargingType": "Charging type",
     "chargingTypeChinese": "AC/DC",
     "chargingTypeEuropean": "AC + DC combined",
-    "detailedExplanation": "Detailed explanation"
+    "detailedExplanation": "Detailed explanation",
+    "contentChinese": "🔵 Chinese EV charging protocol — GB/T\n\n📌 What it is:\nThe Chinese protocol, known as GB/T (or Guobiao), is a national Chinese standard purpose-built for charging electric vehicles. It uses unique connectors that differ from European or American systems, developed to meet the needs of China's massive EV market.\n\n🚗 Why it exists:\n• To establish an independent national standard supporting the local industry and technology autonomy.\n• To provide complete EV-charging infrastructure across China — the world's largest EV market.\n• To support the growth of local manufacturers like BYD, NIO, Xpeng, and other leading Chinese brands.\n\n🔌 Connector layout:\nThe Chinese system has two main connector types:\n\n1️⃣ GB/T AC (alternating current):\n   • Used for slow charging (3.3 kW – 7 kW).\n   • Looks similar to European Type 2 ports but is not interoperable.\n\n2️⃣ GB/T DC (direct current):\n   • Used for fast charging (up to 250 kW, sometimes higher).\n   • A unique design with two large DC pins plus extra communication and safety pins.\n\n📡 Communication protocol:\n• Uses a dedicated communication standard (similar to CAN Bus but with Chinese specs).\n• Lets the station and vehicle exchange data such as battery state, requested charging rate, and temperature.\n• Includes advanced protection mechanisms to keep the charging session safe.\n\n🔐 Safety features:\n• Overcurrent protection.\n• Automatic fault detection and shut-off when something goes wrong.\n• Tight electrical isolation to prevent shocks.\n• Overheating protection.\n\n🌍 Geographic distribution:\n• Mainly deployed in China and parts of the Asian market.\n• Spreading to countries that import Chinese cars (e.g., Thailand and parts of Southeast Asia).\n• Not widely supported outside China due to differing standards.\n\n✅ Strengths:\n• Full coverage of the huge Chinese market.\n• High DC fast-charging speeds.\n• High safety margin with strict protection standards.\n• Relatively low production cost thanks to local manufacturing.\n\n⚠️ Challenges:\n• Not interoperable with global standards (CCS, CHAdeMO).\n• Difficult to charge outside China without dedicated adapters.\n• Limited GB/T charging stations outside Asia.\n\n🔮 The future:\nAs Chinese EV exports grow worldwide, multi-standard stations supporting GB/T alongside CCS and CHAdeMO may become more common — but cross-standard compatibility remains a serious challenge.",
+    "contentEuropean": "🟢 European EV charging protocol — CCS2\n\n📌 What it is:\nCCS2 (Combined Charging System 2) is the unified European EV-charging standard. Developed by a consortium of European and American manufacturers, it combines AC and DC connectors into a single port.\n\n🚗 Why it exists:\n• To unify European charging standards and simplify infrastructure rollout.\n• To support both slow (home) and fast (highway) charging through the same connector.\n• To remove the need for multiple adapters or connectors.\n• To accelerate EV adoption by standardizing the technology.\n\n🔌 Connector layout:\nCCS2 uses a combined port consisting of:\n\n1️⃣ Type 2 AC (alternating current):\n   • Top section of the connector (5 pins).\n   • Used for slow charging at home or workplaces (3.7 kW – 22 kW).\n\n2️⃣ DC pins (direct current):\n   • Two extra pins at the bottom.\n   • Used for fast charging (50 kW – 350 kW).\n   • Powers networks like Ionity and Tesla Supercharger (European version).\n\n📡 Communication protocol:\n• Built on the ISO 15118 standard, an advanced communication protocol between station and vehicle.\n• Supports:\n  - Plug & Charge: automatic authentication and charging without a card or app.\n  - Smart Charging: power consumption tuned to grid conditions.\n  - Vehicle-to-Grid (V2G): pushing energy from the car back to the grid.\n• Exchanges data such as battery level, requested power, charge state, and temperature.\n\n🔐 Safety features:\n• Overcurrent and overvoltage protection.\n• Mechanical locking on the connector during charging.\n• Tight electrical isolation to prevent shocks.\n• Continuous monitoring of temperature and current.\n• Automatic shut-off on fault detection.\n\n🌍 Geographic distribution:\n• Official standard across all EU countries.\n• Supported in:\n  - All of Europe\n  - Australia and New Zealand\n  - Parts of Asia (South Korea, India)\n  - The Middle East (including Saudi Arabia and the UAE)\n• Adopted by Tesla in Europe for new Supercharger stations.\n\n✅ Strengths:\n• Widely adopted global standard.\n• Very high charging speeds (up to 350 kW).\n• Smart charging and V2G support.\n• Compatible with most modern EVs.\n• Strong, well-distributed infrastructure across Europe.\n\n⚠️ Challenges:\n• Not used in the U.S. market (which uses CCS1).\n• Incompatible with Chinese GB/T or Japanese CHAdeMO without adapters.\n• High build-out cost for fast-charging stations.\n\n🔮 The future:\nCCS2 is set to be the dominant standard across Europe and many global markets. With Tesla and most major automakers adopting it, expect it to become the most common standard in the coming years — especially as Mega Charging technology reaches up to 1 MW.",
+    "chineseLabel": "Chinese protocol",
+    "europeanLabel": "European protocol"
   },
   "brandsModels": {
     "pageTitle": "Brands & models management",
