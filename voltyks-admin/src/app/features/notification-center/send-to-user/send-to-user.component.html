@@ -1,0 +1,218 @@
+<div class="send-page">
+  <div class="page-header">
+    <div class="header-text">
+      <h2>{{ "notificationCenter.send.title" | translate }}</h2>
+      <p class="page-description">{{ "notificationCenter.send.subtitle" | translate }}</p>
+    </div>
+  </div>
+
+  <div class="form-shell voltyks-card">
+    <!-- User picker -->
+    <section class="form-section">
+      <h3 class="section-title">
+        <span class="material-symbols-rounded">person_pin</span>
+        {{ "notificationCenter.send.sectionUser" | translate }}
+      </h3>
+
+      <div class="form-group">
+        <label>{{ "notificationCenter.send.selectUser" | translate }} <span class="required">*</span></label>
+        <div class="custom-dropdown user-dropdown" [class.open]="isUserDropdownOpen">
+          <div class="dropdown-selected" (click)="toggleUserDropdown()">
+            @if (selectedUser) {
+              <div class="selected-user-info">
+                <span class="material-symbols-rounded user-icon">account_circle</span>
+                <div class="user-details">
+                  <span class="user-name">{{ selectedUser.fullName }}</span>
+                  <span class="user-meta">{{ selectedUser.email || selectedUser.phoneNumber }}</span>
+                </div>
+                <button type="button" class="clear-btn" (click)="clearUser($event)">
+                  <span class="material-symbols-rounded">close</span>
+                </button>
+              </div>
+            } @else {
+              <span class="placeholder">{{ "notificationCenter.send.selectUser" | translate }}</span>
+              <span class="material-symbols-rounded dropdown-arrow">arrow_drop_down</span>
+            }
+          </div>
+
+          @if (isUserDropdownOpen) {
+            <div class="dropdown-menu">
+              <div class="dropdown-search">
+                <span class="material-symbols-rounded search-icon">search</span>
+                <input
+                  type="text"
+                  class="search-input"
+                  [(ngModel)]="userSearchTerm"
+                  (keyup)="filterUsers()"
+                  [placeholder]="'notificationCenter.send.searchUsers' | translate"
+                  (click)="$event.stopPropagation()"
+                />
+              </div>
+              <div class="dropdown-list">
+                @if (filteredUsers.length === 0) {
+                  <div class="no-results">{{ "notificationCenter.send.noUsers" | translate }}</div>
+                } @else {
+                  @for (u of filteredUsers; track trackByUserId($index, u)) {
+                    <div
+                      class="dropdown-item"
+                      [class.selected]="selectedUser?.id === u.id"
+                      (click)="selectUser(u)"
+                    >
+                      <span class="material-symbols-rounded user-icon">account_circle</span>
+                      <div class="user-info">
+                        <span class="user-name">{{ u.fullName }}</span>
+                        <span class="user-email">{{ u.email || u.phoneNumber }}</span>
+                      </div>
+                      @if (selectedUser?.id === u.id) {
+                        <span class="material-symbols-rounded check-icon">check_circle</span>
+                      }
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Mode selector -->
+    <section class="form-section">
+      <h3 class="section-title">
+        <span class="material-symbols-rounded">edit_square</span>
+        {{ "notificationCenter.send.sectionMode" | translate }}
+      </h3>
+
+      <div class="mode-row">
+        <button
+          type="button"
+          class="mode-card"
+          [class.active]="mode === 'template'"
+          (click)="setMode('template')"
+        >
+          <span class="material-symbols-rounded">menu_book</span>
+          <span>{{ "notificationCenter.send.modeTemplate" | translate }}</span>
+        </button>
+        <button
+          type="button"
+          class="mode-card"
+          [class.active]="mode === 'custom'"
+          (click)="setMode('custom')"
+        >
+          <span class="material-symbols-rounded">edit_note</span>
+          <span>{{ "notificationCenter.send.modeCustom" | translate }}</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Template mode -->
+    @if (mode === 'template') {
+      <section class="form-section">
+        <div class="form-group">
+          <label>{{ "notificationCenter.send.templateLabel" | translate }} <span class="required">*</span></label>
+          <div class="custom-dropdown template-dropdown" [class.open]="isTemplateDropdownOpen">
+            <div class="dropdown-selected" (click)="toggleTemplateDropdown()">
+              @if (selectedTemplate) {
+                <div class="selected-template-info">
+                  <code class="template-key">{{ selectedTemplate.key }}</code>
+                  <span class="template-title">{{ templateLabel(selectedTemplate) }}</span>
+                </div>
+              } @else {
+                <span class="placeholder">{{ "notificationCenter.send.selectTemplate" | translate }}</span>
+              }
+              <span class="material-symbols-rounded dropdown-arrow">arrow_drop_down</span>
+            </div>
+
+            @if (isTemplateDropdownOpen) {
+              <div class="dropdown-menu">
+                <div class="dropdown-list">
+                  @for (t of templates; track trackByTemplateKey($index, t)) {
+                    <div
+                      class="dropdown-item"
+                      [class.selected]="selectedTemplate?.key === t.key"
+                      (click)="selectTemplate(t)"
+                    >
+                      <div class="user-info">
+                        <code class="template-key">{{ t.key }}</code>
+                        <span class="user-name">{{ templateLabel(t) }}</span>
+                      </div>
+                      @if (t.isCustomized) {
+                        <span class="material-symbols-rounded check-icon">edit_note</span>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        @if (selectedTemplate) {
+          <div class="form-group params-group">
+            <label>{{ "notificationCenter.send.paramsHeader" | translate }}</label>
+            @if (selectedTemplate.requiredParams.length === 0) {
+              <p class="muted">{{ "notificationCenter.send.paramsEmpty" | translate }}</p>
+            } @else {
+              <div class="params-grid">
+                @for (p of selectedTemplate.requiredParams; track p) {
+                  <div class="form-group">
+                    <label>
+                      <code>{{ p }}</code> <span class="required">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      class="voltyks-input"
+                      [(ngModel)]="templateParams[p]"
+                      [placeholder]="'notificationCenter.send.paramPlaceholder' | translate: { name: p }"
+                    />
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </section>
+    }
+
+    <!-- Custom mode -->
+    @if (mode === 'custom') {
+      <section class="form-section custom-section">
+        <div class="custom-grid">
+          <div class="form-group">
+            <label>{{ "notificationCenter.send.customTitleEn" | translate }} <span class="required">*</span></label>
+            <input type="text" class="voltyks-input" dir="ltr" [(ngModel)]="custom.titleEn" />
+          </div>
+          <div class="form-group">
+            <label>{{ "notificationCenter.send.customTitleAr" | translate }}</label>
+            <input type="text" class="voltyks-input" dir="rtl" [(ngModel)]="custom.titleAr" />
+          </div>
+          <div class="form-group">
+            <label>{{ "notificationCenter.send.customBodyEn" | translate }} <span class="required">*</span></label>
+            <textarea class="voltyks-input" rows="4" dir="ltr" [(ngModel)]="custom.bodyEn"></textarea>
+          </div>
+          <div class="form-group">
+            <label>{{ "notificationCenter.send.customBodyAr" | translate }}</label>
+            <textarea class="voltyks-input" rows="4" dir="rtl" [(ngModel)]="custom.bodyAr"></textarea>
+          </div>
+        </div>
+        <p class="custom-help">{{ "notificationCenter.send.customHelpAr" | translate }}</p>
+      </section>
+    }
+
+    <!-- Footer -->
+    <div class="form-actions">
+      <button type="button" class="voltyks-btn btn-secondary" (click)="resetForm()" [disabled]="isSending">
+        <span class="material-symbols-rounded">restart_alt</span>
+        {{ "notificationCenter.send.reset" | translate }}
+      </button>
+      <button type="button" class="voltyks-btn btn-primary" (click)="send()" [disabled]="isSending">
+        <span class="material-symbols-rounded">send</span>
+        {{ (isSending ? 'notificationCenter.send.submitting' : 'notificationCenter.send.submit') | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+@if (isSending || isLoadingUsers || isLoadingTemplates) {
+  <app-loading-overlay></app-loading-overlay>
+}

@@ -1,0 +1,262 @@
+<div class="broadcast-page">
+  <div class="page-header">
+    <div class="header-text">
+      <h2>{{ "notificationCenter.broadcast.title" | translate }}</h2>
+      <p class="page-description">{{ "notificationCenter.broadcast.subtitle" | translate }}</p>
+    </div>
+  </div>
+
+  <div class="form-shell voltyks-card">
+    <!-- Audience selector -->
+    <section class="form-section">
+      <h3 class="section-title">
+        <span class="material-symbols-rounded">groups</span>
+        {{ "notificationCenter.broadcast.sectionAudience" | translate }}
+      </h3>
+
+      <div class="audience-grid">
+        <button
+          type="button"
+          class="audience-card"
+          [class.active]="audienceType === 'all'"
+          (click)="setAudience('all')"
+        >
+          <span class="material-symbols-rounded">public</span>
+          <div>
+            <span class="card-title">{{ "notificationCenter.broadcast.audienceAll" | translate }}</span>
+            <span class="card-hint">{{ "notificationCenter.broadcast.audienceAllHint" | translate }}</span>
+          </div>
+        </button>
+        <button
+          type="button"
+          class="audience-card"
+          [class.active]="audienceType === 'role'"
+          (click)="setAudience('role')"
+        >
+          <span class="material-symbols-rounded">workspace_premium</span>
+          <div>
+            <span class="card-title">{{ "notificationCenter.broadcast.audienceRole" | translate }}</span>
+            <span class="card-hint">{{ "notificationCenter.broadcast.audienceRoleHint" | translate }}</span>
+          </div>
+        </button>
+        <button
+          type="button"
+          class="audience-card"
+          [class.active]="audienceType === 'users'"
+          (click)="setAudience('users')"
+        >
+          <span class="material-symbols-rounded">person_add</span>
+          <div>
+            <span class="card-title">{{ "notificationCenter.broadcast.audienceUsers" | translate }}</span>
+            <span class="card-hint">{{ "notificationCenter.broadcast.audienceUsersHint" | translate }}</span>
+          </div>
+        </button>
+        <button
+          type="button"
+          class="audience-card disabled"
+          [title]="'notificationCenter.broadcast.audienceCityHint' | translate"
+          (click)="setAudience('city')"
+        >
+          <span class="material-symbols-rounded">location_city</span>
+          <div>
+            <span class="card-title">{{ "notificationCenter.broadcast.audienceCity" | translate }}</span>
+            <span class="card-hint">{{ "notificationCenter.broadcast.audienceCityHint" | translate }}</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Conditional sub-form -->
+      @if (audienceType === 'role') {
+        <div class="sub-form">
+          <label class="sub-label">{{ "notificationCenter.broadcast.roleLabel" | translate }}</label>
+          <div class="role-row">
+            <button
+              type="button"
+              class="role-card"
+              [class.active]="audienceRole === 'vehicle_owner'"
+              (click)="setRole('vehicle_owner')"
+            >
+              <span class="material-symbols-rounded">directions_car</span>
+              <div>
+                <span class="card-title">{{ "notificationCenter.broadcast.roleVehicleOwner" | translate }}</span>
+                <span class="card-hint">{{ "notificationCenter.broadcast.roleVehicleOwnerHint" | translate }}</span>
+              </div>
+            </button>
+            <button
+              type="button"
+              class="role-card"
+              [class.active]="audienceRole === 'charger_owner'"
+              (click)="setRole('charger_owner')"
+            >
+              <span class="material-symbols-rounded">ev_station</span>
+              <div>
+                <span class="card-title">{{ "notificationCenter.broadcast.roleChargerOwner" | translate }}</span>
+                <span class="card-hint">{{ "notificationCenter.broadcast.roleChargerOwnerHint" | translate }}</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      }
+
+      @if (audienceType === 'users') {
+        <div class="sub-form">
+          <label class="sub-label">{{ "notificationCenter.broadcast.usersLabel" | translate }}</label>
+          <app-user-multi-picker
+            [selectedIds]="audienceUserIds"
+            (selectedIdsChange)="onUserIdsChange($event)"
+          ></app-user-multi-picker>
+        </div>
+      }
+    </section>
+
+    <!-- Mode selector -->
+    <section class="form-section">
+      <h3 class="section-title">
+        <span class="material-symbols-rounded">edit_square</span>
+        {{ "notificationCenter.send.sectionMode" | translate }}
+      </h3>
+
+      <div class="mode-row">
+        <button
+          type="button"
+          class="mode-card"
+          [class.active]="mode === 'template'"
+          (click)="setMode('template')"
+        >
+          <span class="material-symbols-rounded">menu_book</span>
+          <span>{{ "notificationCenter.send.modeTemplate" | translate }}</span>
+        </button>
+        <button
+          type="button"
+          class="mode-card"
+          [class.active]="mode === 'custom'"
+          (click)="setMode('custom')"
+        >
+          <span class="material-symbols-rounded">edit_note</span>
+          <span>{{ "notificationCenter.send.modeCustom" | translate }}</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Template mode -->
+    @if (mode === 'template') {
+      <section class="form-section">
+        <div class="form-group">
+          <label>{{ "notificationCenter.send.templateLabel" | translate }} <span class="required">*</span></label>
+          <div class="custom-dropdown template-dropdown" [class.open]="isTemplateDropdownOpen">
+            <div class="dropdown-selected" (click)="toggleTemplateDropdown()">
+              @if (selectedTemplate) {
+                <div class="selected-template-info">
+                  <code class="template-key">{{ selectedTemplate.key }}</code>
+                  <span class="template-title">{{ templateLabel(selectedTemplate) }}</span>
+                </div>
+              } @else {
+                <span class="placeholder">{{ "notificationCenter.send.selectTemplate" | translate }}</span>
+              }
+              <span class="material-symbols-rounded dropdown-arrow">arrow_drop_down</span>
+            </div>
+
+            @if (isTemplateDropdownOpen) {
+              <div class="dropdown-menu">
+                <div class="dropdown-list">
+                  @for (t of templates; track trackByTemplateKey($index, t)) {
+                    <div
+                      class="dropdown-item"
+                      [class.selected]="selectedTemplate?.key === t.key"
+                      (click)="selectTemplate(t)"
+                    >
+                      <div class="user-info">
+                        <code class="template-key">{{ t.key }}</code>
+                        <span class="user-name">{{ templateLabel(t) }}</span>
+                      </div>
+                      @if (t.isCustomized) {
+                        <span class="material-symbols-rounded check-icon">edit_note</span>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        @if (selectedTemplate) {
+          <div class="form-group params-group">
+            <label>{{ "notificationCenter.send.paramsHeader" | translate }}</label>
+            @if (selectedTemplate.requiredParams.length === 0) {
+              <p class="muted">{{ "notificationCenter.send.paramsEmpty" | translate }}</p>
+            } @else {
+              <div class="params-grid">
+                @for (p of selectedTemplate.requiredParams; track p) {
+                  <div class="form-group">
+                    <label>
+                      <code>{{ p }}</code> <span class="required">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      class="voltyks-input"
+                      [(ngModel)]="templateParams[p]"
+                      [placeholder]="'notificationCenter.send.paramPlaceholder' | translate: { name: p }"
+                    />
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </section>
+    }
+
+    <!-- Custom mode -->
+    @if (mode === 'custom') {
+      <section class="form-section">
+        <div class="custom-grid">
+          <div class="form-group">
+            <label>{{ "notificationCenter.send.customTitleEn" | translate }} <span class="required">*</span></label>
+            <input type="text" class="voltyks-input" dir="ltr" [(ngModel)]="custom.titleEn" />
+          </div>
+          <div class="form-group">
+            <label>{{ "notificationCenter.send.customTitleAr" | translate }}</label>
+            <input type="text" class="voltyks-input" dir="rtl" [(ngModel)]="custom.titleAr" />
+          </div>
+          <div class="form-group">
+            <label>{{ "notificationCenter.send.customBodyEn" | translate }} <span class="required">*</span></label>
+            <textarea class="voltyks-input" rows="4" dir="ltr" [(ngModel)]="custom.bodyEn"></textarea>
+          </div>
+          <div class="form-group">
+            <label>{{ "notificationCenter.send.customBodyAr" | translate }}</label>
+            <textarea class="voltyks-input" rows="4" dir="rtl" [(ngModel)]="custom.bodyAr"></textarea>
+          </div>
+        </div>
+        <p class="custom-help">{{ "notificationCenter.send.customHelpAr" | translate }}</p>
+      </section>
+    }
+
+    <!-- Footer -->
+    <div class="form-actions">
+      <button type="button" class="voltyks-btn btn-secondary" (click)="resetForm()" [disabled]="isSending">
+        <span class="material-symbols-rounded">restart_alt</span>
+        {{ "notificationCenter.send.reset" | translate }}
+      </button>
+      <button type="button" class="voltyks-btn btn-primary" (click)="prepare()" [disabled]="isSending">
+        <span class="material-symbols-rounded">campaign</span>
+        {{ (isSending ? 'notificationCenter.broadcast.submitting' : 'notificationCenter.broadcast.submit') | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-confirm-dialog
+  [isOpen]="showConfirm"
+  [title]="'notificationCenter.broadcast.confirmTitle' | translate"
+  [message]="'notificationCenter.broadcast.confirmMessage' | translate: { count: estimateCount() }"
+  [confirmText]="'notificationCenter.broadcast.confirmAction' | translate"
+  [cancelText]="'notificationCenter.broadcast.confirmCancel' | translate"
+  type="danger"
+  (confirm)="confirmSend()"
+  (cancel)="cancelConfirm()"
+></app-confirm-dialog>
+
+@if (isSending || isLoadingTemplates) {
+  <app-loading-overlay></app-loading-overlay>
+}

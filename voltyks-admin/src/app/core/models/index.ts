@@ -19,3 +19,4 @@ export * from './app-config.model';
 export * from './store.model';
 export * from './admins-mode.model';
 export * from './vehicle-addition-request.model';
+export * from './notification-template.model';

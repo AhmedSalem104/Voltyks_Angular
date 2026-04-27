@@ -1,0 +1,229 @@
+<div class="modal-overlay" (click)="onBackdropClick($event)">
+  <div class="modal-shell" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-text">
+        <h3>{{ "notificationCenter.editor.title" | translate }}</h3>
+        <p class="header-key">
+          {{ "notificationCenter.editor.subtitleKey" | translate: { key: template.key } }}
+        </p>
+      </div>
+      <button type="button" class="close-btn" (click)="close()" aria-label="Close">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <!-- Required placeholders panel -->
+      @if (template.requiredParams.length > 0) {
+        <div class="placeholders-panel">
+          <div class="placeholders-header">
+            <span class="material-symbols-rounded">data_object</span>
+            <span class="placeholders-title">{{ "notificationCenter.editor.requiredHeader" | translate }}</span>
+          </div>
+          <p class="placeholders-help">{{ "notificationCenter.editor.requiredHelp" | translate }}</p>
+          <div class="placeholders-row">
+            @for (p of template.requiredParams; track p) {
+              <button
+                type="button"
+                class="placeholder-chip"
+                [class.missing-en]="missingEn.includes(p)"
+                [class.missing-ar]="missingAr.includes(p)"
+                (click)="insertPlaceholder(p)"
+                [title]="'notificationCenter.editor.insertHere' | translate"
+              >
+                <span class="material-symbols-rounded">add</span>
+                <code>{{ '{' + p + '}' }}</code>
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Two-column editor: EN | AR -->
+      <div class="editor-grid">
+        <!-- English column -->
+        <section class="lang-column">
+          <header class="lang-column-header">
+            <span class="material-symbols-rounded">translate</span>
+            <span>{{ "notificationCenter.editor.sectionEnglish" | translate }}</span>
+          </header>
+          <div class="form-group">
+            <label>{{ "notificationCenter.editor.titleLabel" | translate }}</label>
+            <input
+              type="text"
+              class="voltyks-input"
+              dir="ltr"
+              [(ngModel)]="draft.titleEn"
+              (ngModelChange)="onFieldChange()"
+              (focus)="onFieldFocus('titleEn')"
+              data-field="titleEn"
+              #fieldInput
+            />
+          </div>
+          <div class="form-group">
+            <label>{{ "notificationCenter.editor.bodyLabel" | translate }}</label>
+            <textarea
+              class="voltyks-input"
+              rows="5"
+              dir="ltr"
+              [(ngModel)]="draft.bodyEn"
+              (ngModelChange)="onFieldChange()"
+              (focus)="onFieldFocus('bodyEn')"
+              data-field="bodyEn"
+              #fieldInput
+            ></textarea>
+          </div>
+          @if (missingEn.length > 0) {
+            <div class="field-error">
+              {{ "notificationCenter.editor.validationMissingMulti" | translate: { lang: ('notificationCenter.editor.langEnglish' | translate), list: missingEn.join(', ') } }}
+            </div>
+          }
+        </section>
+
+        <!-- Arabic column -->
+        <section class="lang-column">
+          <header class="lang-column-header">
+            <span class="material-symbols-rounded">translate</span>
+            <span>{{ "notificationCenter.editor.sectionArabic" | translate }}</span>
+          </header>
+          <div class="form-group">
+            <label>{{ "notificationCenter.editor.titleLabel" | translate }}</label>
+            <input
+              type="text"
+              class="voltyks-input"
+              dir="rtl"
+              [(ngModel)]="draft.titleAr"
+              (ngModelChange)="onFieldChange()"
+              (focus)="onFieldFocus('titleAr')"
+              data-field="titleAr"
+              #fieldInput
+            />
+          </div>
+          <div class="form-group">
+            <label>{{ "notificationCenter.editor.bodyLabel" | translate }}</label>
+            <textarea
+              class="voltyks-input"
+              rows="5"
+              dir="rtl"
+              [(ngModel)]="draft.bodyAr"
+              (ngModelChange)="onFieldChange()"
+              (focus)="onFieldFocus('bodyAr')"
+              data-field="bodyAr"
+              #fieldInput
+            ></textarea>
+          </div>
+          @if (missingAr.length > 0) {
+            <div class="field-error">
+              {{ "notificationCenter.editor.validationMissingMulti" | translate: { lang: ('notificationCenter.editor.langArabic' | translate), list: missingAr.join(', ') } }}
+            </div>
+          }
+        </section>
+      </div>
+
+      <!-- Sample param values + Preview -->
+      <div class="preview-row">
+        @if (template.requiredParams.length > 0) {
+          <div class="sample-params voltyks-card">
+            <header class="card-subheader">
+              <span class="material-symbols-rounded">tune</span>
+              {{ "notificationCenter.editor.previewParamsHeader" | translate }}
+            </header>
+            <p class="muted small">{{ "notificationCenter.editor.previewParamsHelp" | translate }}</p>
+            <div class="param-inputs">
+              @for (p of template.requiredParams; track p) {
+                <div class="form-group">
+                  <label>{{ p }}</label>
+                  <input
+                    type="text"
+                    class="voltyks-input"
+                    [(ngModel)]="sampleParams[p]"
+                    (ngModelChange)="onParamChange()"
+                  />
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="preview-pane voltyks-card">
+          <header class="card-subheader preview-header">
+            <div class="preview-title">
+              <span class="material-symbols-rounded">visibility</span>
+              {{ "notificationCenter.editor.previewHeader" | translate }}
+            </div>
+            <div class="preview-lang-switch">
+              <button
+                type="button"
+                class="lang-toggle-btn"
+                [class.active]="previewLang === 'en'"
+                (click)="setPreviewLang('en')"
+              >
+                {{ "notificationCenter.editor.previewLangEnglish" | translate }}
+              </button>
+              <button
+                type="button"
+                class="lang-toggle-btn"
+                [class.active]="previewLang === 'ar'"
+                (click)="setPreviewLang('ar')"
+              >
+                {{ "notificationCenter.editor.previewLangArabic" | translate }}
+              </button>
+            </div>
+          </header>
+
+          @if (preview) {
+            <div class="preview-content" [dir]="previewLang === 'ar' ? 'rtl' : 'ltr'" [lang]="previewLang">
+              <div class="preview-title-text">{{ preview.title }}</div>
+              <div class="preview-body-text">{{ preview.body }}</div>
+            </div>
+            <div class="preview-source">
+              <span class="material-symbols-rounded">{{ preview.fromDb ? 'edit_note' : 'verified' }}</span>
+              {{ (preview.fromDb ? 'notificationCenter.editor.previewSourceDb' : 'notificationCenter.editor.previewSourceFallback') | translate }}
+            </div>
+          } @else if (isPreviewLoading) {
+            <div class="preview-loading">…</div>
+          } @else {
+            <div class="muted small">—</div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button type="button" class="voltyks-btn btn-warning" (click)="askReset()" [disabled]="isSaving">
+        <span class="material-symbols-rounded">restart_alt</span>
+        {{ "notificationCenter.editor.resetToDefault" | translate }}
+      </button>
+      <div class="footer-spacer"></div>
+      <button type="button" class="voltyks-btn btn-secondary" (click)="close()" [disabled]="isSaving">
+        {{ "notificationCenter.editor.cancel" | translate }}
+      </button>
+      <button
+        type="button"
+        class="voltyks-btn btn-primary"
+        (click)="save()"
+        [disabled]="isSaving || hasValidationErrors"
+      >
+        <span class="material-symbols-rounded">save</span>
+        {{ (isSaving ? 'notificationCenter.editor.saving' : 'notificationCenter.editor.save') | translate }}
+      </button>
+    </div>
+
+    @if (isSaving) {
+      <app-loading-overlay></app-loading-overlay>
+    }
+  </div>
+</div>
+
+<app-confirm-dialog
+  [isOpen]="showResetConfirm"
+  [title]="'notificationCenter.templates.resetConfirmTitle' | translate"
+  [message]="'notificationCenter.templates.resetConfirmMessage' | translate: { key: template.key }"
+  [confirmText]="'notificationCenter.templates.resetAction' | translate"
+  type="danger"
+  (confirm)="confirmReset()"
+  (cancel)="cancelReset()"
+></app-confirm-dialog>

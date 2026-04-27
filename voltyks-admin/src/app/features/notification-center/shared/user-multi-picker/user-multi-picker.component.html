@@ -1,0 +1,101 @@
+<div class="multi-picker">
+  <!-- Selected chips strip -->
+  @if (selectedUsers.length > 0) {
+    <div class="selected-chips">
+      @for (u of visibleSelectedChips; track trackById($index, u)) {
+        <span class="user-chip">
+          <span class="material-symbols-rounded">account_circle</span>
+          <span class="chip-name">{{ u.fullName }}</span>
+          <button type="button" class="chip-remove" (click)="removeUser(u.id, $event)" aria-label="Remove">
+            <span class="material-symbols-rounded">close</span>
+          </button>
+        </span>
+      }
+      @if (hiddenSelectedCount > 0) {
+        <span class="user-chip muted-chip">+{{ hiddenSelectedCount }}</span>
+      }
+    </div>
+  }
+
+  <!-- Trigger -->
+  <button type="button" class="picker-trigger" [class.open]="isOpen" (click)="toggleOpen()">
+    <span class="material-symbols-rounded">people</span>
+    @if (selectedUsers.length === 0) {
+      <span class="placeholder">{{ "notificationCenter.broadcast.multiPlaceholder" | translate }}</span>
+    } @else {
+      <span class="trigger-count">
+        {{ "notificationCenter.broadcast.multiSelected" | translate: { count: selectedUsers.length } }}
+      </span>
+    }
+    <span class="material-symbols-rounded chevron">expand_more</span>
+  </button>
+
+  <!-- Dropdown -->
+  @if (isOpen) {
+    <div class="picker-menu">
+      <!-- Search -->
+      <div class="picker-search">
+        <span class="material-symbols-rounded search-icon">search</span>
+        <input
+          type="text"
+          class="search-input"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearchChange()"
+          [placeholder]="'notificationCenter.send.searchUsers' | translate"
+          (click)="$event.stopPropagation()"
+        />
+      </div>
+
+      <!-- Bulk actions -->
+      <div class="picker-bulk">
+        <button type="button" class="bulk-btn" (click)="selectAllVisible()">
+          {{ "notificationCenter.broadcast.multiSelectAll" | translate }}
+        </button>
+        <button type="button" class="bulk-btn danger" (click)="clearAll()" [disabled]="!selectedIds.length">
+          {{ "notificationCenter.broadcast.multiClear" | translate }}
+        </button>
+      </div>
+
+      <!-- Users list -->
+      <div class="picker-list">
+        @if (isLoading) {
+          <div class="picker-loading">…</div>
+        } @else if (filteredUsers.length === 0) {
+          <div class="picker-empty">{{ "notificationCenter.send.noUsers" | translate }}</div>
+        } @else {
+          @for (u of filteredUsers; track trackById($index, u)) {
+            <button
+              type="button"
+              class="picker-row"
+              [class.selected]="isSelected(u)"
+              (click)="toggleUser(u); $event.stopPropagation()"
+            >
+              <span class="row-check material-symbols-rounded">
+                {{ isSelected(u) ? 'check_box' : 'check_box_outline_blank' }}
+              </span>
+              <span class="material-symbols-rounded user-icon">account_circle</span>
+              <div class="row-info">
+                <span class="row-name">{{ u.fullName }}</span>
+                <span class="row-meta">{{ u.email || u.phoneNumber }}</span>
+              </div>
+            </button>
+          }
+        }
+      </div>
+
+      <!-- Footer -->
+      <div class="picker-footer">
+        <span class="picker-summary">
+          @if (selectedUsers.length === 0) {
+            {{ "notificationCenter.broadcast.multiSelectedNone" | translate }}
+          } @else {
+            {{ "notificationCenter.broadcast.multiSelected" | translate: { count: selectedUsers.length } }}
+          }
+        </span>
+        <button type="button" class="voltyks-btn btn-primary btn-sm" (click)="close()">
+          {{ "notificationCenter.broadcast.multiDone" | translate }}
+        </button>
+      </div>
+    </div>
+  }
+</div>

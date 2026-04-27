@@ -18,7 +18,8 @@ export const environment = {
       vehicles: '/api/admin/vehicles',
       processes: '/api/admin/process',
       complaintCategories: '/api/admin/complaint-categories',
-      complaints: '/api/admin/complaints'
+      complaints: '/api/admin/complaints',
+      notificationsCenter: '/api/admin/notifications'
     },
     auth: {
       generalComplaints: '/api/auth/general-complaints'

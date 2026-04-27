@@ -358,6 +358,17 @@ export class SidebarComponent implements OnInit, OnDestroy {
       ]
     },
     {
+      id: 'notifications',
+      label: 'sidebar.groups.notifications',
+      icon: 'campaign',
+      expanded: false,
+      items: [
+        { label: 'sidebar.items.notificationTemplates', icon: 'edit_note', route: '/notifications/templates' },
+        { label: 'sidebar.items.sendToUser', icon: 'forward_to_inbox', route: '/notifications/send-user' },
+        { label: 'sidebar.items.broadcast', icon: 'campaign', route: '/notifications/broadcast' }
+      ]
+    },
+    {
       id: 'store',
       label: 'sidebar.groups.store',
       icon: 'shopping_bag',

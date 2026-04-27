@@ -1,0 +1,208 @@
+<div class="templates-page">
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="header-text">
+      <h2>{{ "notificationCenter.templates.title" | translate }}</h2>
+      <p class="page-description">{{ "notificationCenter.templates.subtitle" | translate }}</p>
+    </div>
+    <div class="header-stats">
+      <span class="stat-chip">
+        <span class="material-symbols-rounded">notifications_active</span>
+        {{ "notificationCenter.templates.totalCount" | translate: { count: templates.length } }}
+      </span>
+      @if (customisedCount > 0) {
+        <span class="stat-chip stat-customised">
+          <span class="material-symbols-rounded">edit_note</span>
+          {{ customisedCount }} / {{ templates.length }}
+        </span>
+      }
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section voltyks-card">
+    <div class="filters-wrapper">
+      <div class="filter-item search-filter">
+        <div class="search-box">
+          <span class="material-symbols-rounded search-icon">search</span>
+          <input
+            type="text"
+            class="voltyks-input"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()"
+            [placeholder]="'notificationCenter.templates.searchPlaceholder' | translate"
+          />
+        </div>
+      </div>
+
+      <div class="filter-item category-filter">
+        <button
+          class="category-chip"
+          [class.active]="category === 'all'"
+          type="button"
+          (click)="setCategory('all')"
+        >
+          {{ "notificationCenter.templates.categoryAll" | translate }}
+        </button>
+        <button
+          class="category-chip"
+          [class.active]="category === 'charging'"
+          type="button"
+          (click)="setCategory('charging')"
+        >
+          <span class="material-symbols-rounded">bolt</span>
+          {{ "notificationCenter.templates.categoryCharging" | translate }}
+        </button>
+        <button
+          class="category-chip"
+          [class.active]="category === 'process'"
+          type="button"
+          (click)="setCategory('process')"
+        >
+          <span class="material-symbols-rounded">flash_on</span>
+          {{ "notificationCenter.templates.categoryProcess" | translate }}
+        </button>
+        <button
+          class="category-chip"
+          [class.active]="category === 'reports'"
+          type="button"
+          (click)="setCategory('reports')"
+        >
+          <span class="material-symbols-rounded">flag</span>
+          {{ "notificationCenter.templates.categoryReports" | translate }}
+        </button>
+        <button
+          class="category-chip"
+          [class.active]="category === 'vehicle'"
+          type="button"
+          (click)="setCategory('vehicle')"
+        >
+          <span class="material-symbols-rounded">directions_car</span>
+          {{ "notificationCenter.templates.categoryVehicleAddition" | translate }}
+        </button>
+        <button
+          class="category-chip"
+          [class.active]="category === 'other'"
+          type="button"
+          (click)="setCategory('other')"
+        >
+          <span class="material-symbols-rounded">more_horiz</span>
+          {{ "notificationCenter.templates.categoryOther" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="voltyks-card table-card">
+    @if (filtered.length > 0) {
+      <div class="table-wrapper">
+        <table class="voltyks-table">
+          <thead>
+            <tr>
+              <th>{{ "notificationCenter.templates.columnIndex" | translate }}</th>
+              <th>{{ "notificationCenter.templates.columnKey" | translate }}</th>
+              <th>{{ "notificationCenter.templates.columnTitle" | translate }}</th>
+              <th>{{ "notificationCenter.templates.columnRequired" | translate }}</th>
+              <th>{{ "notificationCenter.templates.columnCustomized" | translate }}</th>
+              <th>{{ "notificationCenter.templates.columnUpdated" | translate }}</th>
+              <th>{{ "notificationCenter.templates.columnActions" | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (t of filtered; track trackByKey($index, t); let i = $index) {
+              <tr>
+                <td class="cell-index">{{ i + 1 }}</td>
+                <td class="cell-key">
+                  <code>{{ t.key }}</code>
+                </td>
+                <td class="cell-title">
+                  <div class="title-stack">
+                    <span class="title-primary" [lang]="currentLang">{{ titleFor(t) }}</span>
+                  </div>
+                </td>
+                <td class="cell-params">
+                  @if (t.requiredParams.length === 0) {
+                    <span class="muted">—</span>
+                  } @else {
+                    <div class="param-chips">
+                      @for (p of t.requiredParams; track p) {
+                        <span class="param-chip">{{ p }}</span>
+                      }
+                    </div>
+                  }
+                </td>
+                <td class="cell-customised">
+                  @if (t.isCustomized) {
+                    <span class="badge badge-customised">
+                      <span class="material-symbols-rounded">edit_note</span>
+                      {{ "notificationCenter.templates.customizedBadge" | translate }}
+                    </span>
+                  } @else {
+                    <span class="badge badge-factory">
+                      <span class="material-symbols-rounded">verified</span>
+                      {{ "notificationCenter.templates.factoryBadge" | translate }}
+                    </span>
+                  }
+                </td>
+                <td class="cell-updated">
+                  {{ formatDate(t.updatedAt) }}
+                </td>
+                <td class="cell-actions">
+                  <button
+                    type="button"
+                    class="voltyks-btn btn-icon btn-edit"
+                    (click)="openEditor(t)"
+                    [title]="'notificationCenter.templates.edit' | translate"
+                  >
+                    <span class="material-symbols-rounded">edit</span>
+                  </button>
+                  @if (t.isCustomized) {
+                    <button
+                      type="button"
+                      class="voltyks-btn btn-icon btn-warning"
+                      (click)="askReset(t)"
+                      [title]="'notificationCenter.templates.reset' | translate"
+                    >
+                      <span class="material-symbols-rounded">restart_alt</span>
+                    </button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="empty-state">
+        <span class="material-symbols-rounded empty-icon">inbox</span>
+        <p>{{ "notificationCenter.templates.empty" | translate }}</p>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Editor modal (reads selectedTemplate) -->
+@if (showEditor && selectedTemplate) {
+  <app-template-editor-modal
+    [template]="selectedTemplate"
+    (saved)="onTemplateSaved($event)"
+    (resetDone)="onTemplateReset($event)"
+    (closed)="closeEditor()"
+  ></app-template-editor-modal>
+}
+
+<!-- Reset confirm -->
+<app-confirm-dialog
+  [isOpen]="showResetConfirm"
+  [title]="'notificationCenter.templates.resetConfirmTitle' | translate"
+  [message]="'notificationCenter.templates.resetConfirmMessage' | translate: { key: resetTarget?.key || '' }"
+  [confirmText]="'notificationCenter.templates.resetAction' | translate"
+  type="danger"
+  (confirm)="confirmReset()"
+  (cancel)="cancelReset()"
+></app-confirm-dialog>
+
+@if (isLoading) {
+  <app-loading-overlay></app-loading-overlay>
+}
