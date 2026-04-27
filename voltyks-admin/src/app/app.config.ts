@@ -48,13 +48,23 @@ export const appConfig: ApplicationConfig = {
       useFactory: (langService: LanguageService) => langService.currentLocale,
       deps: [LanguageService]
     },
-    // Block app bootstrap until the saved language's JSON is loaded.
-    // Without this the sidebar/header can render before translations resolve,
-    // showing raw keys like "sidebar.items.fees".
-    provideAppInitializer(() => {
+    // Block app bootstrap until the saved language's JSON is fetched and
+    // parsed. Without this the sidebar/header can render before translations
+    // resolve, showing raw keys like "sidebar.items.fees".
+    provideAppInitializer(async () => {
       const lang = inject(LanguageService);
       const translate = inject(TranslateService);
-      return firstValueFrom(translate.use(lang.currentLanguage));
+      try {
+        await firstValueFrom(translate.use(lang.currentLanguage));
+      } catch (err) {
+        // If the JSON fetch fails, fall back to Arabic so the app still boots.
+        console.error('[i18n] failed to load translations for', lang.currentLanguage, err);
+        try {
+          await firstValueFrom(translate.use('ar'));
+        } catch {
+          /* swallow — at worst the UI shows raw keys */
+        }
+      }
     })
   ]
 };

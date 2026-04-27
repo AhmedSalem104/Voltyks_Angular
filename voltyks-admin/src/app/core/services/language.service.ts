@@ -23,7 +23,11 @@ export class LanguageService {
 
     this.translate.addLangs(SUPPORTED);
     this.translate.setFallbackLang('ar');
-    this.applyLanguage(saved);
+    // Set HTML lang/dir synchronously so the inline boot script's effect
+    // is preserved. The actual translate.use(lang) call is owned by the
+    // app initializer (see app.config.ts) so bootstrap blocks on it.
+    document.documentElement.lang = saved;
+    document.documentElement.dir = this.getDirectionFor(saved);
   }
 
   private getSavedLanguage(): Language {
