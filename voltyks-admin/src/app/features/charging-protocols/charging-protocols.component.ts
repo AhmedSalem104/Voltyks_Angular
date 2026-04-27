@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { ChargingProtocolService } from '../../core/services/admin/charging-protocol.service';
@@ -67,8 +67,13 @@ export class ChargingProtocolsComponent implements OnInit, OnDestroy {
     private protocolService: ChargingProtocolService,
     private toaster: ToasterService,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.setupSearch();
@@ -106,7 +111,7 @@ export class ChargingProtocolsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل البروتوكولات');
+        this.toaster.error(error.message || this.t('chargingProtocols.msg.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -171,7 +176,7 @@ export class ChargingProtocolsComponent implements OnInit, OnDestroy {
     this.protocolService.create(this.createDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم إضافة البروتوكول بنجاح');
+          this.toaster.success(this.t('chargingProtocols.msg.addSuccess'));
           this.closeCreateDialog();
           this.loadProtocols();
         }
@@ -179,7 +184,7 @@ export class ChargingProtocolsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل إضافة البروتوكول');
+        this.toaster.error(error.message || this.t('chargingProtocols.msg.addFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -204,7 +209,7 @@ export class ChargingProtocolsComponent implements OnInit, OnDestroy {
     if (!this.currentProtocol) return;
 
     if (!this.updateDto.name?.trim()) {
-      this.toaster.error('يرجى إدخال اسم البروتوكول');
+      this.toaster.error(this.t('chargingProtocols.msg.enterName'));
       return;
     }
 
@@ -212,7 +217,7 @@ export class ChargingProtocolsComponent implements OnInit, OnDestroy {
     this.protocolService.update(this.currentProtocol.id, this.updateDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم تحديث البروتوكول بنجاح');
+          this.toaster.success(this.t('chargingProtocols.msg.updateSuccess'));
           this.closeEditDialog();
           this.loadProtocols();
         }
@@ -220,7 +225,7 @@ export class ChargingProtocolsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحديث البروتوكول');
+        this.toaster.error(error.message || this.t('chargingProtocols.msg.updateFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -244,7 +249,7 @@ export class ChargingProtocolsComponent implements OnInit, OnDestroy {
     this.protocolService.delete(this.currentProtocol.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حذف البروتوكول بنجاح');
+          this.toaster.success(this.t('chargingProtocols.msg.deleteSuccess'));
           this.closeDeleteConfirm();
           this.loadProtocols();
         }
@@ -252,7 +257,7 @@ export class ChargingProtocolsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل حذف البروتوكول');
+        this.toaster.error(error.message || this.t('chargingProtocols.msg.deleteFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -261,7 +266,7 @@ export class ChargingProtocolsComponent implements OnInit, OnDestroy {
 
   private validateCreateForm(): boolean {
     if (!this.createDto.name?.trim()) {
-      this.toaster.error('يرجى إدخال اسم البروتوكول');
+      this.toaster.error(this.t('chargingProtocols.msg.enterName'));
       return false;
     }
     return true;
@@ -275,12 +280,12 @@ export class ChargingProtocolsComponent implements OnInit, OnDestroy {
 
   printToPdf(): void {
     this.printService.printTableToPdf({
-      title: 'تقرير بروتوكولات الشحن',
+      title: this.t('chargingProtocols.printTitle'),
       filename: 'charging_protocols_report',
       orientation: 'portrait',
       columns: [
         { header: '#', field: 'index' },
-        { header: 'اسم البروتوكول', field: 'name' }
+        { header: this.t('chargingProtocols.printColumnName'), field: 'name' }
       ],
       data: this.filteredProtocols.map((protocol, index) => ({
         ...protocol,

@@ -640,7 +640,22 @@
     "deleteConfirm": "هل أنت متأكد من حذف هذه العلامة؟",
     "deleteConfirmExtra": "سيتم حذف جميع الموديلات المرتبطة بها. لا يمكن التراجع عن هذا الإجراء.",
     "deleteConfirmTitle": "تأكيد حذف العلامة التجارية",
-    "deleteConfirmMessage": "هل أنت متأكد من حذف العلامة التجارية \"{{name}}\"؟ سيتم حذف جميع الموديلات المرتبطة بها."
+    "deleteConfirmMessage": "هل أنت متأكد من حذف العلامة التجارية \"{{name}}\"؟ سيتم حذف جميع الموديلات المرتبطة بها.",
+    "msg": {
+      "loadFail": "فشل تحميل العلامات التجارية",
+      "addSuccess": "تم إضافة العلامة التجارية بنجاح",
+      "addFail": "فشل إضافة العلامة التجارية",
+      "enterName": "يرجى إدخال اسم العلامة التجارية",
+      "updateSuccess": "تم تحديث العلامة التجارية بنجاح",
+      "updateFail": "فشل تحديث العلامة التجارية",
+      "deleteSuccess": "تم حذف العلامة التجارية بنجاح",
+      "deleteFail": "فشل حذف العلامة التجارية"
+    },
+    "printTitle": "تقرير العلامات التجارية",
+    "printColumns": {
+      "name": "اسم العلامة",
+      "modelsCount": "عدد الموديلات"
+    }
   },
   "models": {
     "title": "إدارة الموديلات",
@@ -664,7 +679,25 @@
     "batteryCapacityKwh": "سعة البطارية (kWh)",
     "capacityExample": "مثال: 75",
     "deleteConfirmTitle": "تأكيد حذف الموديل",
-    "deleteConfirmMessage": "هل أنت متأكد من حذف الموديل \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء."
+    "deleteConfirmMessage": "هل أنت متأكد من حذف الموديل \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+    "msg": {
+      "loadFail": "فشل تحميل الموديلات",
+      "addSuccess": "تم إضافة الموديل بنجاح",
+      "addFail": "فشل إضافة الموديل",
+      "updateSuccess": "تم تحديث الموديل بنجاح",
+      "updateFail": "فشل تحديث الموديل",
+      "deleteSuccess": "تم حذف الموديل بنجاح",
+      "deleteFail": "فشل حذف الموديل",
+      "enterName": "يرجى إدخال اسم الموديل",
+      "selectBrand": "يرجى اختيار العلامة التجارية",
+      "enterCapacity": "يرجى إدخال سعة البطارية"
+    },
+    "printTitle": "تقرير الموديلات",
+    "printColumns": {
+      "name": "اسم الموديل",
+      "brand": "العلامة التجارية",
+      "capacity": "سعة البطارية (kWh)"
+    }
   },
   "chargers": {
     "title": "إدارة الشواحن",
@@ -785,7 +818,35 @@
     "ownerUser": "المستخدم المالك",
     "selectUser": "اختر المستخدم",
     "deleteConfirmTitle": "تأكيد حذف المركبة",
-    "deleteConfirmMessage": "هل أنت متأكد من حذف المركبة رقم {{plate}}؟ لا يمكن التراجع عن هذا الإجراء."
+    "deleteConfirmMessage": "هل أنت متأكد من حذف المركبة رقم {{plate}}؟ لا يمكن التراجع عن هذا الإجراء.",
+    "msg": {
+      "loadFail": "فشل تحميل المركبات",
+      "addSuccess": "تم إضافة المركبة بنجاح",
+      "addFail": "فشل إضافة المركبة",
+      "updateSuccess": "تم تحديث المركبة بنجاح",
+      "updateFail": "فشل تحديث المركبة",
+      "deleteSuccess": "تم حذف المركبة بنجاح",
+      "deleteFail": "فشل حذف المركبة",
+      "selectBrand": "يرجى اختيار العلامة التجارية",
+      "selectModel": "يرجى اختيار الموديل",
+      "enterValidYear": "يرجى إدخال سنة الصنع الصحيحة",
+      "enterColor": "يرجى إدخال اللون",
+      "enterPlate": "يرجى إدخال رقم اللوحة",
+      "selectUser": "يرجى اختيار المستخدم",
+      "selectedUser": "مستخدم محدد"
+    },
+    "printTitle": "تقرير المركبات",
+    "printColumns": {
+      "owner": "المالك",
+      "email": "البريد",
+      "phone": "الهاتف",
+      "brand": "العلامة التجارية",
+      "model": "الموديل",
+      "capacity": "السعة",
+      "year": "السنة",
+      "color": "اللون",
+      "plate": "اللوحة"
+    }
   },
   "processes": {
     "title": "عمليات الشحن",
@@ -894,7 +955,25 @@
     "updateConfirmTitle": "تأكيد تحديث الرسوم",
     "updateConfirmMessage": "هل أنت متأكد من تحديث إعدادات الرسوم؟ سيتم تطبيق التغييرات فوراً.",
     "transferConfirmTitle": "تأكيد تحويل الرسوم",
-    "transferConfirmMessage": "هل أنت متأكد من تحويل {{amount}} ج.م إلى المستخدم؟"
+    "transferConfirmMessage": "هل أنت متأكد من تحويل {{amount}} ج.م إلى المستخدم؟",
+    "msg": {
+      "loadFail": "فشل تحميل بيانات الرسوم",
+      "loadFailServer": "فشل تحميل بيانات الرسوم - تأكد من اتصال الخادم",
+      "loadUsersFail": "فشل تحميل قائمة المستخدمين",
+      "invalidPercentage": "نسبة الرسوم يجب أن تكون بين 0 و 100",
+      "invalidMinimum": "الحد الأدنى للرسوم يجب أن يكون أكبر من أو يساوي 0",
+      "enterRecipient": "يرجى إدخال معرف المستلم والمبلغ",
+      "updateSuccess": "تم تحديث الرسوم بنجاح",
+      "updateFail": "فشل تحديث الرسوم",
+      "transferSuccess": "تم تحويل الرسوم بنجاح",
+      "transferFail": "فشل تحويل الرسوم"
+    },
+    "printTitle": "تقرير الرسوم",
+    "printHeading": "إعدادات الرسوم الحالية",
+    "printPercent": "نسبة رسوم المنصة",
+    "printMin": "الحد الأدنى للرسوم",
+    "printLastUpdate": "آخر تحديث",
+    "printUpdatedBy": "محدّث بواسطة"
   },
   "terms": {
     "title": "الشروط والأحكام",
@@ -1387,7 +1466,19 @@
     "protocolNameLabel": "اسم البروتوكول",
     "protocolNameExample": "مثال: CCS, CHAdeMO, Type 2...",
     "deleteConfirmTitle": "تأكيد حذف البروتوكول",
-    "deleteConfirmMessage": "هل أنت متأكد من حذف البروتوكول \"{{name}}\"؟"
+    "deleteConfirmMessage": "هل أنت متأكد من حذف البروتوكول \"{{name}}\"؟",
+    "msg": {
+      "loadFail": "فشل تحميل البروتوكولات",
+      "addSuccess": "تم إضافة البروتوكول بنجاح",
+      "addFail": "فشل إضافة البروتوكول",
+      "enterName": "يرجى إدخال اسم البروتوكول",
+      "updateSuccess": "تم تحديث البروتوكول بنجاح",
+      "updateFail": "فشل تحديث البروتوكول",
+      "deleteSuccess": "تم حذف البروتوكول بنجاح",
+      "deleteFail": "فشل حذف البروتوكول"
+    },
+    "printTitle": "تقرير بروتوكولات الشحن",
+    "printColumnName": "اسم البروتوكول"
   },
   "capacities": {
     "title": "سعات الشواحن",
@@ -1403,7 +1494,19 @@
     "capacityExample": "مثال: 7, 15, 22, 50...",
     "empty": "لا توجد سعات شواحن",
     "deleteConfirmTitle": "تأكيد حذف السعة",
-    "deleteConfirmMessage": "هل أنت متأكد من حذف السعة \"{{kw}} kW\"؟"
+    "deleteConfirmMessage": "هل أنت متأكد من حذف السعة \"{{kw}} kW\"؟",
+    "msg": {
+      "loadFail": "فشل تحميل سعات الشواحن",
+      "enterValid": "يرجى إدخال سعة صحيحة أكبر من صفر",
+      "addSuccess": "تم إضافة السعة بنجاح",
+      "addFail": "فشل إضافة السعة",
+      "updateSuccess": "تم تعديل السعة بنجاح",
+      "updateFail": "فشل تعديل السعة",
+      "deleteSuccess": "تم حذف السعة بنجاح",
+      "deleteFail": "فشل حذف السعة"
+    },
+    "printTitle": "تقرير سعات الشواحن",
+    "printColumnKw": "السعة (كيلوواط)"
   },
   "createAdmin": {
     "title": "إنشاء حساب أدمن جديد",

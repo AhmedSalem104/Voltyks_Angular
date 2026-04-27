@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { CapacityService } from '../../core/services/admin/capacity.service';
@@ -62,8 +62,13 @@ export class CapacitiesComponent implements OnInit, OnDestroy {
     private capacityService: CapacityService,
     private toaster: ToasterService,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.setupSearch();
@@ -101,7 +106,7 @@ export class CapacitiesComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل سعات الشواحن');
+        this.toaster.error(error.message || this.t('capacities.msg.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -156,7 +161,7 @@ export class CapacitiesComponent implements OnInit, OnDestroy {
 
   createCapacity(): void {
     if (!this.createDto.kw || this.createDto.kw <= 0) {
-      this.toaster.error('يرجى إدخال سعة صحيحة أكبر من صفر');
+      this.toaster.error(this.t('capacities.msg.enterValid'));
       return;
     }
 
@@ -164,17 +169,17 @@ export class CapacitiesComponent implements OnInit, OnDestroy {
     this.capacityService.create(this.createDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم إضافة السعة بنجاح');
+          this.toaster.success(this.t('capacities.msg.addSuccess'));
           this.closeCreateDialog();
           this.loadCapacities();
         } else {
-          this.toaster.error(response.message || 'فشل إضافة السعة');
+          this.toaster.error(response.message || this.t('capacities.msg.addFail'));
         }
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل إضافة السعة');
+        this.toaster.error(error.message || this.t('capacities.msg.addFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -197,7 +202,7 @@ export class CapacitiesComponent implements OnInit, OnDestroy {
     if (!this.currentCapacity) return;
 
     if (!this.updateDto.kw || this.updateDto.kw <= 0) {
-      this.toaster.error('يرجى إدخال سعة صحيحة أكبر من صفر');
+      this.toaster.error(this.t('capacities.msg.enterValid'));
       return;
     }
 
@@ -205,17 +210,17 @@ export class CapacitiesComponent implements OnInit, OnDestroy {
     this.capacityService.update(this.currentCapacity.id, this.updateDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم تعديل السعة بنجاح');
+          this.toaster.success(this.t('capacities.msg.updateSuccess'));
           this.closeEditDialog();
           this.loadCapacities();
         } else {
-          this.toaster.error(response.message || 'فشل تعديل السعة');
+          this.toaster.error(response.message || this.t('capacities.msg.updateFail'));
         }
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تعديل السعة');
+        this.toaster.error(error.message || this.t('capacities.msg.updateFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -240,17 +245,17 @@ export class CapacitiesComponent implements OnInit, OnDestroy {
     this.capacityService.delete(this.currentCapacity.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حذف السعة بنجاح');
+          this.toaster.success(this.t('capacities.msg.deleteSuccess'));
           this.closeDeleteConfirm();
           this.loadCapacities();
         } else {
-          this.toaster.error(response.message || 'فشل حذف السعة');
+          this.toaster.error(response.message || this.t('capacities.msg.deleteFail'));
         }
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل حذف السعة');
+        this.toaster.error(error.message || this.t('capacities.msg.deleteFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -260,12 +265,12 @@ export class CapacitiesComponent implements OnInit, OnDestroy {
   // Print
   printToPdf(): void {
     this.printService.printTableToPdf({
-      title: 'تقرير سعات الشواحن',
+      title: this.t('capacities.printTitle'),
       filename: 'capacities_report',
       orientation: 'portrait',
       columns: [
         { header: '#', field: 'index' },
-        { header: 'السعة (كيلوواط)', field: 'kwFormatted' }
+        { header: this.t('capacities.printColumnKw'), field: 'kwFormatted' }
       ],
       data: this.filteredCapacities.map((capacity, index) => ({
         ...capacity,

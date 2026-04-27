@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
@@ -69,8 +69,13 @@ export class BrandsComponent implements OnInit, OnDestroy {
     private toaster: ToasterService,
     private router: Router,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.setupSearch();
@@ -108,7 +113,7 @@ export class BrandsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل العلامات التجارية');
+        this.toaster.error(error.message || this.t('brands.msg.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -173,7 +178,7 @@ export class BrandsComponent implements OnInit, OnDestroy {
     this.brandsService.createBrand(this.createDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم إضافة العلامة التجارية بنجاح');
+          this.toaster.success(this.t('brands.msg.addSuccess'));
           this.closeCreateDialog();
           this.loadBrands();
         }
@@ -181,7 +186,7 @@ export class BrandsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل إضافة العلامة التجارية');
+        this.toaster.error(error.message || this.t('brands.msg.addFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -206,7 +211,7 @@ export class BrandsComponent implements OnInit, OnDestroy {
     if (!this.currentBrand) return;
 
     if (!this.updateDto.name?.trim()) {
-      this.toaster.error('يرجى إدخال اسم العلامة التجارية');
+      this.toaster.error(this.t('brands.msg.enterName'));
       return;
     }
 
@@ -214,7 +219,7 @@ export class BrandsComponent implements OnInit, OnDestroy {
     this.brandsService.updateBrand(this.currentBrand.id, this.updateDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم تحديث العلامة التجارية بنجاح');
+          this.toaster.success(this.t('brands.msg.updateSuccess'));
           this.closeEditDialog();
           this.loadBrands();
         }
@@ -222,7 +227,7 @@ export class BrandsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحديث العلامة التجارية');
+        this.toaster.error(error.message || this.t('brands.msg.updateFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -246,7 +251,7 @@ export class BrandsComponent implements OnInit, OnDestroy {
     this.brandsService.deleteBrand(this.currentBrand.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حذف العلامة التجارية بنجاح');
+          this.toaster.success(this.t('brands.msg.deleteSuccess'));
           this.closeDeleteConfirm();
           this.loadBrands();
         }
@@ -254,7 +259,7 @@ export class BrandsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل حذف العلامة التجارية');
+        this.toaster.error(error.message || this.t('brands.msg.deleteFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -268,7 +273,7 @@ export class BrandsComponent implements OnInit, OnDestroy {
 
   private validateCreateForm(): boolean {
     if (!this.createDto.name?.trim()) {
-      this.toaster.error('يرجى إدخال اسم العلامة التجارية');
+      this.toaster.error(this.t('brands.msg.enterName'));
       return false;
     }
     return true;
@@ -282,13 +287,13 @@ export class BrandsComponent implements OnInit, OnDestroy {
 
   printToPdf(): void {
     this.printService.printTableToPdf({
-      title: 'تقرير العلامات التجارية',
+      title: this.t('brands.printTitle'),
       filename: 'brands_report',
       orientation: 'landscape',
       columns: [
         { header: '#', field: 'index' },
-        { header: 'اسم العلامة', field: 'name' },
-        { header: 'عدد الموديلات', field: 'modelsCount' }
+        { header: this.t('brands.printColumns.name'), field: 'name' },
+        { header: this.t('brands.printColumns.modelsCount'), field: 'modelsCount' }
       ],
       data: this.filteredBrands.map((brand, index) => ({
         ...brand,

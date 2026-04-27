@@ -640,7 +640,22 @@
     "deleteConfirm": "Are you sure you want to delete this brand?",
     "deleteConfirmExtra": "All associated models will be deleted. This action cannot be undone.",
     "deleteConfirmTitle": "Confirm brand deletion",
-    "deleteConfirmMessage": "Are you sure you want to delete brand \"{{name}}\"? All linked models will be deleted as well."
+    "deleteConfirmMessage": "Are you sure you want to delete brand \"{{name}}\"? All linked models will be deleted as well.",
+    "msg": {
+      "loadFail": "Failed to load brands",
+      "addSuccess": "Brand added successfully",
+      "addFail": "Failed to add brand",
+      "enterName": "Please enter the brand name",
+      "updateSuccess": "Brand updated successfully",
+      "updateFail": "Failed to update brand",
+      "deleteSuccess": "Brand deleted successfully",
+      "deleteFail": "Failed to delete brand"
+    },
+    "printTitle": "Brands report",
+    "printColumns": {
+      "name": "Brand name",
+      "modelsCount": "Models count"
+    }
   },
   "models": {
     "title": "Model Management",
@@ -664,7 +679,25 @@
     "batteryCapacityKwh": "Battery capacity (kWh)",
     "capacityExample": "Example: 75",
     "deleteConfirmTitle": "Confirm model deletion",
-    "deleteConfirmMessage": "Are you sure you want to delete model \"{{name}}\"? This action cannot be undone."
+    "deleteConfirmMessage": "Are you sure you want to delete model \"{{name}}\"? This action cannot be undone.",
+    "msg": {
+      "loadFail": "Failed to load models",
+      "addSuccess": "Model added successfully",
+      "addFail": "Failed to add model",
+      "updateSuccess": "Model updated successfully",
+      "updateFail": "Failed to update model",
+      "deleteSuccess": "Model deleted successfully",
+      "deleteFail": "Failed to delete model",
+      "enterName": "Please enter the model name",
+      "selectBrand": "Please select a brand",
+      "enterCapacity": "Please enter the battery capacity"
+    },
+    "printTitle": "Models report",
+    "printColumns": {
+      "name": "Model name",
+      "brand": "Brand",
+      "capacity": "Battery capacity (kWh)"
+    }
   },
   "chargers": {
     "title": "Charger Management",
@@ -785,7 +818,35 @@
     "ownerUser": "Owner user",
     "selectUser": "Select user",
     "deleteConfirmTitle": "Confirm vehicle deletion",
-    "deleteConfirmMessage": "Are you sure you want to delete vehicle {{plate}}? This action cannot be undone."
+    "deleteConfirmMessage": "Are you sure you want to delete vehicle {{plate}}? This action cannot be undone.",
+    "msg": {
+      "loadFail": "Failed to load vehicles",
+      "addSuccess": "Vehicle added successfully",
+      "addFail": "Failed to add vehicle",
+      "updateSuccess": "Vehicle updated successfully",
+      "updateFail": "Failed to update vehicle",
+      "deleteSuccess": "Vehicle deleted successfully",
+      "deleteFail": "Failed to delete vehicle",
+      "selectBrand": "Please select a brand",
+      "selectModel": "Please select a model",
+      "enterValidYear": "Please enter a valid year of manufacture",
+      "enterColor": "Please enter the color",
+      "enterPlate": "Please enter the plate number",
+      "selectUser": "Please select a user",
+      "selectedUser": "Selected user"
+    },
+    "printTitle": "Vehicles report",
+    "printColumns": {
+      "owner": "Owner",
+      "email": "Email",
+      "phone": "Phone",
+      "brand": "Brand",
+      "model": "Model",
+      "capacity": "Capacity",
+      "year": "Year",
+      "color": "Color",
+      "plate": "Plate"
+    }
   },
   "processes": {
     "title": "Charging Processes",
@@ -894,7 +955,25 @@
     "updateConfirmTitle": "Confirm fees update",
     "updateConfirmMessage": "Are you sure you want to update the fees settings? Changes will apply immediately.",
     "transferConfirmTitle": "Confirm fees transfer",
-    "transferConfirmMessage": "Are you sure you want to transfer {{amount}} EGP to the user?"
+    "transferConfirmMessage": "Are you sure you want to transfer {{amount}} EGP to the user?",
+    "msg": {
+      "loadFail": "Failed to load fees data",
+      "loadFailServer": "Failed to load fees data — check the server connection",
+      "loadUsersFail": "Failed to load users list",
+      "invalidPercentage": "Fee percentage must be between 0 and 100",
+      "invalidMinimum": "Minimum fee must be greater than or equal to 0",
+      "enterRecipient": "Please enter the recipient ID and amount",
+      "updateSuccess": "Fees updated successfully",
+      "updateFail": "Failed to update fees",
+      "transferSuccess": "Fees transferred successfully",
+      "transferFail": "Failed to transfer fees"
+    },
+    "printTitle": "Fees report",
+    "printHeading": "Current fees settings",
+    "printPercent": "Platform fee percentage",
+    "printMin": "Minimum fee",
+    "printLastUpdate": "Last updated",
+    "printUpdatedBy": "Updated by"
   },
   "terms": {
     "title": "Terms & Conditions",
@@ -1387,7 +1466,19 @@
     "protocolNameLabel": "Protocol name",
     "protocolNameExample": "Example: CCS, CHAdeMO, Type 2...",
     "deleteConfirmTitle": "Confirm protocol deletion",
-    "deleteConfirmMessage": "Are you sure you want to delete protocol \"{{name}}\"?"
+    "deleteConfirmMessage": "Are you sure you want to delete protocol \"{{name}}\"?",
+    "msg": {
+      "loadFail": "Failed to load protocols",
+      "addSuccess": "Protocol added successfully",
+      "addFail": "Failed to add protocol",
+      "enterName": "Please enter the protocol name",
+      "updateSuccess": "Protocol updated successfully",
+      "updateFail": "Failed to update protocol",
+      "deleteSuccess": "Protocol deleted successfully",
+      "deleteFail": "Failed to delete protocol"
+    },
+    "printTitle": "Charging protocols report",
+    "printColumnName": "Protocol name"
   },
   "capacities": {
     "title": "Charger Capacities",
@@ -1403,7 +1494,19 @@
     "capacityExample": "Example: 7, 15, 22, 50...",
     "empty": "No charger capacities",
     "deleteConfirmTitle": "Confirm capacity deletion",
-    "deleteConfirmMessage": "Are you sure you want to delete capacity \"{{kw}} kW\"?"
+    "deleteConfirmMessage": "Are you sure you want to delete capacity \"{{kw}} kW\"?",
+    "msg": {
+      "loadFail": "Failed to load charger capacities",
+      "enterValid": "Please enter a valid capacity greater than zero",
+      "addSuccess": "Capacity added successfully",
+      "addFail": "Failed to add capacity",
+      "updateSuccess": "Capacity updated successfully",
+      "updateFail": "Failed to update capacity",
+      "deleteSuccess": "Capacity deleted successfully",
+      "deleteFail": "Failed to delete capacity"
+    },
+    "printTitle": "Charger capacities report",
+    "printColumnKw": "Capacity (kW)"
   },
   "createAdmin": {
     "title": "Create new admin account",

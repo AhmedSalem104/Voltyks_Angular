@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
@@ -78,8 +78,13 @@ export class ModelsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.setupSearch();
@@ -139,7 +144,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل الموديلات');
+        this.toaster.error(error.message || this.t('models.msg.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -232,7 +237,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.brandsService.createModel(this.createDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم إضافة الموديل بنجاح');
+          this.toaster.success(this.t('models.msg.addSuccess'));
           this.closeCreateDialog();
           this.loadModels();
         }
@@ -240,7 +245,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل إضافة الموديل');
+        this.toaster.error(error.message || this.t('models.msg.addFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -274,7 +279,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.brandsService.updateModel(this.currentModel.id, this.updateDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم تحديث الموديل بنجاح');
+          this.toaster.success(this.t('models.msg.updateSuccess'));
           this.closeEditDialog();
           this.loadModels();
         }
@@ -282,7 +287,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحديث الموديل');
+        this.toaster.error(error.message || this.t('models.msg.updateFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -306,7 +311,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.brandsService.deleteModel(this.currentModel.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حذف الموديل بنجاح');
+          this.toaster.success(this.t('models.msg.deleteSuccess'));
           this.closeDeleteConfirm();
           this.loadModels();
         }
@@ -314,7 +319,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل حذف الموديل');
+        this.toaster.error(error.message || this.t('models.msg.deleteFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -328,15 +333,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   private validateCreateForm(): boolean {
     if (!this.createDto.name?.trim()) {
-      this.toaster.error('يرجى إدخال اسم الموديل');
+      this.toaster.error(this.t('models.msg.enterName'));
       return false;
     }
     if (!this.createDto.brandId || this.createDto.brandId === 0) {
-      this.toaster.error('يرجى اختيار العلامة التجارية');
+      this.toaster.error(this.t('models.msg.selectBrand'));
       return false;
     }
     if (!this.createDto.capacity || this.createDto.capacity <= 0) {
-      this.toaster.error('يرجى إدخال سعة البطارية');
+      this.toaster.error(this.t('models.msg.enterCapacity'));
       return false;
     }
     return true;
@@ -344,15 +349,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   private validateUpdateForm(): boolean {
     if (!this.updateDto.name?.trim()) {
-      this.toaster.error('يرجى إدخال اسم الموديل');
+      this.toaster.error(this.t('models.msg.enterName'));
       return false;
     }
     if (!this.updateDto.brandId || this.updateDto.brandId === 0) {
-      this.toaster.error('يرجى اختيار العلامة التجارية');
+      this.toaster.error(this.t('models.msg.selectBrand'));
       return false;
     }
     if (!this.updateDto.capacity || this.updateDto.capacity <= 0) {
-      this.toaster.error('يرجى إدخال سعة البطارية');
+      this.toaster.error(this.t('models.msg.enterCapacity'));
       return false;
     }
     return true;
@@ -377,14 +382,14 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   printToPdf(): void {
     this.printService.printTableToPdf({
-      title: 'تقرير الموديلات',
+      title: this.t('models.printTitle'),
       filename: 'models_report',
       orientation: 'landscape',
       columns: [
         { header: '#', field: 'index' },
-        { header: 'اسم الموديل', field: 'name' },
-        { header: 'العلامة التجارية', field: 'brandName' },
-        { header: 'سعة البطارية (kWh)', field: 'capacity' }
+        { header: this.t('models.printColumns.name'), field: 'name' },
+        { header: this.t('models.printColumns.brand'), field: 'brandName' },
+        { header: this.t('models.printColumns.capacity'), field: 'capacity' }
       ],
       data: this.filteredModels.map((model, index) => ({
         ...model,

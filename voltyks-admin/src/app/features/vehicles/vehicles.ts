@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { AdminVehiclesService } from '../../core/services/admin/admin-vehicles.service';
@@ -104,8 +104,13 @@ export class VehiclesComponent implements OnInit {
     private brandsService: AdminBrandsService,
     private toaster: ToasterService,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.setupSearch();
@@ -137,7 +142,7 @@ export class VehiclesComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل المركبات');
+        this.toaster.error(error.message || this.t('vehicles.msg.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -446,7 +451,7 @@ export class VehiclesComponent implements OnInit {
     this.vehiclesService.createVehicle(this.createDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم إضافة المركبة بنجاح');
+          this.toaster.success(this.t('vehicles.msg.addSuccess'));
           this.closeCreateDialog();
           this.loadVehicles(this.userFilterId || undefined, this.brandFilterId ? this.brandFilterId.toString() : undefined);
         }
@@ -454,7 +459,7 @@ export class VehiclesComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل إضافة المركبة');
+        this.toaster.error(error.message || this.t('vehicles.msg.addFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -492,7 +497,7 @@ export class VehiclesComponent implements OnInit {
     this.vehiclesService.updateVehicle(this.currentVehicle.id, this.updateDto).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم تحديث المركبة بنجاح');
+          this.toaster.success(this.t('vehicles.msg.updateSuccess'));
           this.closeEditDialog();
           this.loadVehicles(this.userFilterId || undefined, this.brandFilterId ? this.brandFilterId.toString() : undefined);
         }
@@ -500,7 +505,7 @@ export class VehiclesComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحديث المركبة');
+        this.toaster.error(error.message || this.t('vehicles.msg.updateFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -524,7 +529,7 @@ export class VehiclesComponent implements OnInit {
     this.vehiclesService.deleteVehicle(this.currentVehicle.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حذف المركبة بنجاح');
+          this.toaster.success(this.t('vehicles.msg.deleteSuccess'));
           this.closeDeleteConfirm();
           this.loadVehicles(this.userFilterId || undefined, this.brandFilterId ? this.brandFilterId.toString() : undefined);
         }
@@ -532,7 +537,7 @@ export class VehiclesComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل حذف المركبة');
+        this.toaster.error(error.message || this.t('vehicles.msg.deleteFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -541,27 +546,27 @@ export class VehiclesComponent implements OnInit {
 
   private validateCreateForm(): boolean {
     if (!this.createDto.brandId || this.createDto.brandId === 0) {
-      this.toaster.error('يرجى اختيار العلامة التجارية');
+      this.toaster.error(this.t('vehicles.msg.selectBrand'));
       return false;
     }
     if (!this.createDto.modelId || this.createDto.modelId === 0) {
-      this.toaster.error('يرجى اختيار الموديل');
+      this.toaster.error(this.t('vehicles.msg.selectModel'));
       return false;
     }
     if (!this.createDto.year || this.createDto.year < 1900 || this.createDto.year > new Date().getFullYear() + 1) {
-      this.toaster.error('يرجى إدخال سنة الصنع الصحيحة');
+      this.toaster.error(this.t('vehicles.msg.enterValidYear'));
       return false;
     }
     if (!this.createDto.color?.trim()) {
-      this.toaster.error('يرجى إدخال اللون');
+      this.toaster.error(this.t('vehicles.msg.enterColor'));
       return false;
     }
     if (!this.createDto.plate?.trim()) {
-      this.toaster.error('يرجى إدخال رقم اللوحة');
+      this.toaster.error(this.t('vehicles.msg.enterPlate'));
       return false;
     }
     if (!this.createDto.userId?.trim()) {
-      this.toaster.error('يرجى اختيار المستخدم');
+      this.toaster.error(this.t('vehicles.msg.selectUser'));
       return false;
     }
     return true;
@@ -589,7 +594,7 @@ export class VehiclesComponent implements OnInit {
   }
 
   getUserName(userId: string): string {
-    return this.users.find(u => u.id === userId)?.fullName || 'مستخدم محدد';
+    return this.users.find(u => u.id === userId)?.fullName || this.t('vehicles.msg.selectedUser');
   }
 
   formatDate(dateString: string): string {
@@ -604,19 +609,19 @@ export class VehiclesComponent implements OnInit {
 
   printToPdf(): void {
     this.printService.printTableToPdf({
-      title: 'تقرير المركبات',
+      title: this.t('vehicles.printTitle'),
       filename: 'vehicles_report',
       orientation: 'landscape',
       columns: [
-        { header: 'المالك', field: 'userName' },
-        { header: 'البريد', field: 'userEmail' },
-        { header: 'الهاتف', field: 'userPhone' },
-        { header: 'العلامة التجارية', field: 'brandName' },
-        { header: 'الموديل', field: 'modelName' },
-        { header: 'السعة', field: 'capacityText' },
-        { header: 'السنة', field: 'year' },
-        { header: 'اللون', field: 'color' },
-        { header: 'اللوحة', field: 'plate' }
+        { header: this.t('vehicles.printColumns.owner'), field: 'userName' },
+        { header: this.t('vehicles.printColumns.email'), field: 'userEmail' },
+        { header: this.t('vehicles.printColumns.phone'), field: 'userPhone' },
+        { header: this.t('vehicles.printColumns.brand'), field: 'brandName' },
+        { header: this.t('vehicles.printColumns.model'), field: 'modelName' },
+        { header: this.t('vehicles.printColumns.capacity'), field: 'capacityText' },
+        { header: this.t('vehicles.printColumns.year'), field: 'year' },
+        { header: this.t('vehicles.printColumns.color'), field: 'color' },
+        { header: this.t('vehicles.printColumns.plate'), field: 'plate' }
       ],
       data: this.filteredVehicles.map(vehicle => ({
         ...vehicle,
