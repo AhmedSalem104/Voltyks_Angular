@@ -6,7 +6,7 @@ export interface AppNotification {
   id: string;              // "report_123" or "complaint_456" or "reservation_789" or "vehicle-request_42"
   type: NotificationType;
   originalId: number;
-  title: string;           // "بلاغ جديد" or "شكوى جديدة" or "حجز منتج جديد" or "طلب إضافة سيارة"
+  title: string;           // e.g. "New report" / "New complaint" / "New product reservation" / "New vehicle addition request"
   message: string;
   userName: string;
   timestamp: string;       // ISO UTC

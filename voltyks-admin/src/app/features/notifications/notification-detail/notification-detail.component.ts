@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -63,8 +63,13 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private refreshService: DataRefreshService,
     private toaster: ToasterService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.route.params.pipe(
@@ -140,7 +145,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     this.vehicleRequestsService.accept(this.id, body).subscribe({
       next: (response) => {
         if (response?.status) {
-          this.toaster.success(response.message || 'تم قبول الطلب وإضافة السيارة بنجاح');
+          this.toaster.success(response.message || this.t('notifications.detail.acceptSuccess'));
           this.showVehicleAcceptModal = false;
           this.notificationService.loadVehicleRequestNotifications();
           this.refreshService.emit('vehicle-request');
@@ -148,13 +153,13 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
           this.refreshService.emit('model');
           this.closeDetail();
         } else {
-          this.toaster.error(response?.message || 'فشل قبول الطلب');
+          this.toaster.error(response?.message || this.t('notifications.detail.acceptFail'));
           this.isSaving = false;
           this.cdr.markForCheck();
         }
       },
       error: (err) => {
-        this.toaster.error(err?.error?.message || 'فشل قبول الطلب');
+        this.toaster.error(err?.error?.message || this.t('notifications.detail.acceptFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -169,9 +174,11 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
 
   declineVehicleRequest(): void {
     if (!this.vehicleRequest) return;
-    this.confirmDialogTitle = 'رفض الطلب';
-    this.confirmDialogMessage =
-      `هل أنت متأكد من رفض طلب إضافة السيارة "${this.vehicleRequest.brandName} ${this.vehicleRequest.modelName}"؟`;
+    this.confirmDialogTitle = this.t('notifications.detail.declineTitle');
+    this.confirmDialogMessage = this.t('notifications.detail.declineConfirm', {
+      brand: this.vehicleRequest.brandName,
+      model: this.vehicleRequest.modelName
+    });
     this.pendingAction = () => this.confirmDeclineVehicleRequest();
     this.showConfirmDialog = true;
     this.cdr.markForCheck();
@@ -184,18 +191,18 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     this.vehicleRequestsService.decline(this.id).subscribe({
       next: (response) => {
         if (response?.status) {
-          this.toaster.success(response.message || 'تم رفض الطلب');
+          this.toaster.success(response.message || this.t('notifications.detail.declineSuccess'));
           this.notificationService.loadVehicleRequestNotifications();
           this.refreshService.emit('vehicle-request');
           this.closeDetail();
         } else {
-          this.toaster.error(response?.message || 'فشل رفض الطلب');
+          this.toaster.error(response?.message || this.t('notifications.detail.declineFail'));
           this.isSaving = false;
           this.cdr.markForCheck();
         }
       },
       error: (err) => {
-        this.toaster.error(err?.error?.message || 'فشل رفض الطلب');
+        this.toaster.error(err?.error?.message || this.t('notifications.detail.declineFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -280,8 +287,8 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   // ========== Report Actions ==========
 
   resolveReport(): void {
-    this.confirmDialogTitle = 'حل البلاغ';
-    this.confirmDialogMessage = 'هل أنت متأكد من حل هذا البلاغ؟';
+    this.confirmDialogTitle = this.t('notifications.detail.resolveReportTitle');
+    this.confirmDialogMessage = this.t('notifications.detail.resolveReportConfirm');
     this.pendingAction = () => this.confirmResolveReport();
     this.showConfirmDialog = true;
     this.cdr.markForCheck();
@@ -294,17 +301,17 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     this.reportsService.resolveReport(this.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حل البلاغ بنجاح');
+          this.toaster.success(this.t('notifications.detail.resolveReportSuccess'));
           this.refreshService.emit('report');
           this.closeDetail();
         } else {
-          this.toaster.error(response.message || 'فشل حل البلاغ');
+          this.toaster.error(response.message || this.t('notifications.detail.resolveReportFail'));
           this.isSaving = false;
           this.cdr.markForCheck();
         }
       },
       error: () => {
-        this.toaster.error('فشل حل البلاغ');
+        this.toaster.error(this.t('notifications.detail.resolveReportFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -312,8 +319,8 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteReport(): void {
-    this.confirmDialogTitle = 'حذف البلاغ';
-    this.confirmDialogMessage = 'هل أنت متأكد من حذف هذا البلاغ؟ لا يمكن التراجع عن هذا الإجراء.';
+    this.confirmDialogTitle = this.t('notifications.detail.deleteReportTitle');
+    this.confirmDialogMessage = this.t('notifications.detail.deleteReportConfirm');
     this.pendingAction = () => this.confirmDeleteReport();
     this.showConfirmDialog = true;
     this.cdr.markForCheck();
@@ -326,17 +333,17 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     this.reportsService.deleteReport(this.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حذف البلاغ بنجاح');
+          this.toaster.success(this.t('notifications.detail.deleteReportSuccess'));
           this.refreshService.emit('report');
           this.closeDetail();
         } else {
-          this.toaster.error(response.message || 'فشل حذف البلاغ');
+          this.toaster.error(response.message || this.t('notifications.detail.deleteReportFail'));
           this.isSaving = false;
           this.cdr.markForCheck();
         }
       },
       error: () => {
-        this.toaster.error('فشل حذف البلاغ');
+        this.toaster.error(this.t('notifications.detail.deleteReportFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -346,8 +353,8 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   // ========== Complaint Actions ==========
 
   resolveComplaint(): void {
-    this.confirmDialogTitle = 'حل الشكوى';
-    this.confirmDialogMessage = 'هل أنت متأكد من حل هذه الشكوى؟';
+    this.confirmDialogTitle = this.t('notifications.detail.resolveComplaintTitle');
+    this.confirmDialogMessage = this.t('notifications.detail.resolveComplaintConfirm');
     this.pendingAction = () => this.confirmResolveComplaint();
     this.showConfirmDialog = true;
     this.cdr.markForCheck();
@@ -360,17 +367,17 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     this.complaintsService.resolveComplaint(this.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم حل الشكوى بنجاح');
+          this.toaster.success(this.t('notifications.detail.resolveComplaintSuccess'));
           this.refreshService.emit('complaint');
           this.closeDetail();
         } else {
-          this.toaster.error(response.message || 'فشل حل الشكوى');
+          this.toaster.error(response.message || this.t('notifications.detail.resolveComplaintFail'));
           this.isSaving = false;
           this.cdr.markForCheck();
         }
       },
       error: () => {
-        this.toaster.error('فشل حل الشكوى');
+        this.toaster.error(this.t('notifications.detail.resolveComplaintFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -379,7 +386,7 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
 
   addReply(): void {
     if (!this.replyContent.trim()) {
-      this.toaster.warning('الرجاء إدخال محتوى الرد');
+      this.toaster.warning(this.t('notifications.detail.enterReplyContent'));
       return;
     }
 
@@ -389,18 +396,18 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     this.complaintsService.addReply(this.id, { content: this.replyContent }).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم إضافة الرد بنجاح');
+          this.toaster.success(this.t('notifications.detail.replySuccess'));
           this.replyContent = '';
           this.refreshService.emit('complaint');
           this.loadComplaint(); // Reload to show the reply inline (stay on page for reply context)
         } else {
-          this.toaster.error(response.message || 'فشل إضافة الرد');
+          this.toaster.error(response.message || this.t('notifications.detail.replyFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: () => {
-        this.toaster.error('فشل إضافة الرد');
+        this.toaster.error(this.t('notifications.detail.replyFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -410,15 +417,9 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   // ========== Reservation Actions ==========
 
   updateReservationStatus(status: string): void {
-    const statusLabels: { [key: string]: string } = {
-      'pending': 'قيد الانتظار',
-      'contacted': 'تم التواصل',
-      'completed': 'مكتمل',
-      'cancelled': 'ملغي'
-    };
-
-    this.confirmDialogTitle = 'تغيير حالة الحجز';
-    this.confirmDialogMessage = `هل أنت متأكد من تغيير حالة الحجز إلى "${statusLabels[status]}"؟`;
+    const label = this.t(`notifications.detail.reservationStatus.${status}`);
+    this.confirmDialogTitle = this.t('notifications.detail.reservationStatusTitle');
+    this.confirmDialogMessage = this.t('notifications.detail.reservationStatusConfirm', { label });
     this.pendingAction = () => this.confirmUpdateReservationStatus(status);
     this.showConfirmDialog = true;
     this.cdr.markForCheck();
@@ -431,17 +432,17 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     this.storeService.updateReservationStatus(this.id, status).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم تحديث حالة الحجز بنجاح');
+          this.toaster.success(this.t('notifications.detail.reservationStatusSuccess'));
           this.refreshService.emit('reservation');
           this.closeDetail();
         } else {
-          this.toaster.error(response.message || 'فشل تحديث حالة الحجز');
+          this.toaster.error(response.message || this.t('notifications.detail.reservationStatusFail'));
           this.isSaving = false;
           this.cdr.markForCheck();
         }
       },
       error: () => {
-        this.toaster.error('فشل تحديث حالة الحجز');
+        this.toaster.error(this.t('notifications.detail.reservationStatusFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -449,14 +450,9 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   }
 
   updatePaymentStatus(status: string): void {
-    const statusLabels: { [key: string]: string } = {
-      'pending': 'في انتظار الدفع',
-      'paid': 'مدفوع',
-      'refunded': 'مسترد'
-    };
-
-    this.confirmDialogTitle = 'تغيير حالة الدفع';
-    this.confirmDialogMessage = `هل أنت متأكد من تغيير حالة الدفع إلى "${statusLabels[status]}"؟`;
+    const label = this.t(`notifications.detail.paymentStatus.${status}`);
+    this.confirmDialogTitle = this.t('notifications.detail.paymentStatusTitle');
+    this.confirmDialogMessage = this.t('notifications.detail.paymentStatusConfirm', { label });
     this.pendingAction = () => this.confirmUpdatePaymentStatus(status);
     this.showConfirmDialog = true;
     this.cdr.markForCheck();
@@ -469,17 +465,17 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
     this.storeService.updatePaymentStatus(this.id, status).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم تحديث حالة الدفع بنجاح');
+          this.toaster.success(this.t('notifications.detail.paymentStatusSuccess'));
           this.refreshService.emit('reservation');
           this.closeDetail();
         } else {
-          this.toaster.error(response.message || 'فشل تحديث حالة الدفع');
+          this.toaster.error(response.message || this.t('notifications.detail.paymentStatusFail'));
           this.isSaving = false;
           this.cdr.markForCheck();
         }
       },
       error: () => {
-        this.toaster.error('فشل تحديث حالة الدفع');
+        this.toaster.error(this.t('notifications.detail.paymentStatusFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -510,11 +506,11 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
 
   getTypeLabel(): string {
     switch (this.type) {
-      case 'report': return 'بلاغ';
-      case 'complaint': return 'شكوى';
-      case 'reservation': return 'حجز منتج';
-      case 'vehicle-request': return 'طلب إضافة سيارة';
-      default: return 'إشعار';
+      case 'report': return this.t('notifications.detail.types.report');
+      case 'complaint': return this.t('notifications.detail.types.complaint');
+      case 'reservation': return this.t('notifications.detail.types.reservation');
+      case 'vehicle-request': return this.t('notifications.detail.types.vehicleRequest');
+      default: return this.t('notifications.detail.types.generic');
     }
   }
 
@@ -529,18 +525,15 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   }
 
   getVehicleRequestStatusLabel(status: string): string {
-    switch (status) {
-      case 'pending': return 'قيد الانتظار';
-      case 'accepted': return 'مقبولة';
-      case 'declined': return 'مرفوضة';
-      default: return status;
-    }
+    const key = `notifications.detail.vehicleStatus.${status}`;
+    const translated = this.t(key);
+    return translated === key ? status : translated;
   }
 
   formatDate(dateString: string): string {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return date.toLocaleDateString('ar-EG', {
+    return date.toLocaleDateString(this.translate.currentLang === 'en' ? 'en-US' : 'ar-EG', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -550,25 +543,18 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
   }
 
   formatCurrency(amount: number): string {
-    return amount?.toLocaleString('en-US') + ' ج.م';
+    return amount?.toLocaleString('en-US') + ' ' + this.t('common.currency');
   }
 
   getReservationStatusLabel(status: string): string {
-    const labels: { [key: string]: string } = {
-      'pending': 'قيد الانتظار',
-      'contacted': 'تم التواصل',
-      'completed': 'مكتمل',
-      'cancelled': 'ملغي'
-    };
-    return labels[status] || status;
+    const key = `notifications.detail.reservationStatus.${status}`;
+    const translated = this.t(key);
+    return translated === key ? status : translated;
   }
 
   getPaymentStatusLabel(status: string): string {
-    const labels: { [key: string]: string } = {
-      'pending': 'في انتظار الدفع',
-      'paid': 'مدفوع',
-      'refunded': 'مسترد'
-    };
-    return labels[status] || status;
+    const key = `notifications.detail.paymentStatus.${status}`;
+    const translated = this.t(key);
+    return translated === key ? status : translated;
   }
 }

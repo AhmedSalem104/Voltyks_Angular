@@ -2,37 +2,40 @@ import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Error Interceptor - Handles HTTP errors globally
  */
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
+  const translate = inject(TranslateService);
+  const t = (key: string, params?: any) => translate.instant(key, params);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      let errorMessage = 'حدث خطأ غير متوقع';
+      let errorMessage = t('errors.unexpected');
 
       if (error.error instanceof ErrorEvent) {
         // Client-side error
-        errorMessage = `خطأ: ${error.error.message}`;
+        errorMessage = t('errors.clientPrefix', { message: error.error.message });
       } else {
         // Server-side error
         switch (error.status) {
           case 401:
-            errorMessage = 'غير مصرح. يرجى تسجيل الدخول مرة أخرى.';
+            errorMessage = t('errors.unauthorized');
             // Redirect to login
             localStorage.removeItem('admin_token');
             router.navigate(['/login']);
             break;
           case 403:
-            errorMessage = 'ليس لديك صلاحية للوصول إلى هذا المورد.';
+            errorMessage = t('errors.forbidden');
             break;
           case 404:
-            errorMessage = 'المورد المطلوب غير موجود.';
+            errorMessage = t('errors.notFound');
             break;
           case 500:
-            errorMessage = 'خطأ في الخادم. يرجى المحاولة لاحقاً.';
+            errorMessage = t('errors.server');
             break;
           default:
             if (error.error?.message) {

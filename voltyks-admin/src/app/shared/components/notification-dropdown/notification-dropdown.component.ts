@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NotificationService, NotificationSettings } from '../../../core/services/notification.service';
 import { AppNotification, NotificationType } from '../../../core/models';
 
@@ -46,6 +46,7 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private router: Router,
     private elementRef: ElementRef,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -271,13 +272,13 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   getConnectionLabel(): string {
     switch (this.connectionState) {
       case 'connected':
-        return 'متصل';
+        return this.translate.instant('notifications.connection.connected');
       case 'connecting':
-        return 'جاري الاتصال...';
+        return this.translate.instant('notifications.connection.connecting');
       case 'error':
-        return 'خطأ في الاتصال';
+        return this.translate.instant('notifications.connection.error');
       default:
-        return 'غير متصل';
+        return this.translate.instant('notifications.connection.disconnected');
     }
   }
 

@@ -448,7 +448,7 @@ export class UserDetailsComponent implements OnInit {
 
     this.feesService.transferFees({
       recipientUserId: this.userId,
-      amount: -this.deductBalanceDto.amount,  // سالب للخصم
+      amount: -this.deductBalanceDto.amount,  // negative amount for deduction
       notes: this.deductBalanceDto.notes
     }).subscribe({
       next: (response) => {

@@ -192,7 +192,7 @@ export class ComplaintsListComponent implements OnInit {
     const newStatus = !complaint.isResolved;
     const originalStatus = complaint.isResolved;
 
-    // Optimistic Update - تحديث فوري للـ UI
+    // Optimistic update — apply immediately to the UI
     complaint.isResolved = newStatus;
     this.updatingComplaintId = complaint.id;
     this.calculateStats();

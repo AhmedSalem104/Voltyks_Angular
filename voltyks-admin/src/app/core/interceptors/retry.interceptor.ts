@@ -1,6 +1,7 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { retry, timer } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
 
 /**
@@ -18,6 +19,7 @@ import { ToasterService } from '../../shared/components/toaster/toaster.service'
  */
 export const retryInterceptor: HttpInterceptorFn = (req, next) => {
   const toaster = inject(ToasterService);
+  const translate = inject(TranslateService);
   let rateLimitToastShown = false;
 
   // Only retry GET requests - other methods might have side effects
@@ -33,7 +35,7 @@ export const retryInterceptor: HttpInterceptorFn = (req, next) => {
         if (error.status === 429) {
           // Show toast only once per request
           if (!rateLimitToastShown) {
-            toaster.warning('تم تجاوز حد الطلبات. جارٍ إعادة المحاولة...');
+            toaster.warning(translate.instant('errors.rateLimitRetry'));
             rateLimitToastShown = true;
           }
           const delayMs = Math.pow(2, retryCount) * 2000; // 2s, 4s, 8s

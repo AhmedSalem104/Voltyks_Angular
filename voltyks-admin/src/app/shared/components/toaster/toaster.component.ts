@@ -46,7 +46,7 @@ import { ToasterService, Toast } from './toaster.service';
 export class ToasterComponent implements OnInit, OnDestroy {
   toasts: Toast[] = [];
   private subscription?: Subscription;
-  private readonly MAX_TOASTS = 3; // حد أقصى 3 إشعارات في نفس الوقت
+  private readonly MAX_TOASTS = 3;
 
   constructor(
     private toasterService: ToasterService,
@@ -55,12 +55,12 @@ export class ToasterComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription = this.toasterService.toasts$.subscribe(toast => {
-      // تجاهل الرسائل الفارغة
+      // Ignore empty messages
       if (!toast.message || toast.message.trim() === '') {
         return;
       }
 
-      // منع التكرار - تحقق من وجود رسالة مشابهة
+      // Prevent duplicates — check for an existing matching toast
       const isDuplicate = this.toasts.some(
         t => t.message === toast.message && t.type === toast.type
       );
@@ -69,7 +69,7 @@ export class ToasterComponent implements OnInit, OnDestroy {
         return;
       }
 
-      // إزالة أقدم toast إذا وصلنا للحد الأقصى
+      // Remove the oldest toast when at the limit
       if (this.toasts.length >= this.MAX_TOASTS) {
         const oldestToast = this.toasts[0];
         this.removeToast(oldestToast.id);

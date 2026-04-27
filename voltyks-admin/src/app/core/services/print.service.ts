@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 // Lazy loaded - not imported at top level to reduce bundle size
 type jsPDFType = import('jspdf').jsPDF;
@@ -28,7 +29,17 @@ export class PrintService {
   private jsPDFModule: typeof import('jspdf') | null = null;
   private html2canvasModule: Html2CanvasType | null = null;
 
+  private translate = inject(TranslateService);
+
   constructor() {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
+
+  private get isArabic(): boolean {
+    return this.translate.currentLang !== 'en';
+  }
 
   /**
    * Lazy load jsPDF library
@@ -137,7 +148,7 @@ export class PrintService {
 
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('حدث خطأ أثناء إنشاء ملف PDF');
+      alert(this.t('print.errorGenerating'));
     } finally {
       this.hideLoading(loadingEl);
     }
@@ -158,7 +169,11 @@ export class PrintService {
     totalRecords: number,
     orientation: string
   ): string {
-    const dateStr = showDate ? new Date().toLocaleDateString('ar-EG', {
+    const locale = this.isArabic ? 'ar-EG' : 'en-US';
+    const dir = this.isArabic ? 'rtl' : 'ltr';
+    const lang = this.isArabic ? 'ar' : 'en';
+    const align = this.isArabic ? 'right' : 'left';
+    const dateStr = showDate ? new Date().toLocaleDateString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -168,7 +183,7 @@ export class PrintService {
 
     return `
       <!DOCTYPE html>
-      <html dir="rtl" lang="ar">
+      <html dir="${dir}" lang="${lang}">
       <head>
         <meta charset="UTF-8">
         <style>
@@ -181,8 +196,8 @@ export class PrintService {
           }
           body {
             background: #ffffff;
-            direction: rtl;
-            text-align: right;
+            direction: ${dir};
+            text-align: ${align};
           }
           .page {
             width: ${orientation === 'landscape' ? '1120px' : '794px'};
@@ -331,8 +346,8 @@ export class PrintService {
               <div class="brand-name">Voltyks</div>
             </div>
           </div>
-          <div class="page-number" style="text-align: right; padding: 8px 25px; background: #f0f0f0; color: #555; font-size: 12px;">
-            صفحة ${currentPage} من ${totalPages}
+          <div class="page-number" style="text-align: ${align}; padding: 8px 25px; background: #f0f0f0; color: #555; font-size: 12px;">
+            ${this.t('print.pageNumber', { current: currentPage, total: totalPages })}
           </div>
           <div class="table-container">
             <table>
@@ -351,7 +366,7 @@ export class PrintService {
                       } else if (value === null || value === undefined) {
                         value = '-';
                       } else if (typeof value === 'boolean') {
-                        value = value ? 'نعم' : 'لا';
+                        value = this.t(value ? 'common.yes' : 'common.no');
                       }
                       return `<td>${value}</td>`;
                     }).join('')}
@@ -362,7 +377,7 @@ export class PrintService {
           </div>
           <div class="footer">
             <div class="footer-right">
-              <span>إجمالي السجلات:</span> ${totalRecords}
+              <span>${this.t('print.totalRecords')}</span> ${totalRecords}
             </div>
             <div class="footer-left">
               Voltyks Admin Dashboard © ${new Date().getFullYear()}
@@ -442,7 +457,11 @@ export class PrintService {
     const loadingEl = this.showLoading();
 
     try {
-      const dateStr = new Date().toLocaleDateString('ar-EG', {
+      const locale = this.isArabic ? 'ar-EG' : 'en-US';
+      const dir = this.isArabic ? 'rtl' : 'ltr';
+      const lang = this.isArabic ? 'ar' : 'en';
+      const align = this.isArabic ? 'right' : 'left';
+      const dateStr = new Date().toLocaleDateString(locale, {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -453,7 +472,7 @@ export class PrintService {
       // Create HTML page
       const html = `
         <!DOCTYPE html>
-        <html dir="rtl" lang="ar">
+        <html dir="${dir}" lang="${lang}">
         <head>
           <meta charset="UTF-8">
           <style>
@@ -466,8 +485,8 @@ export class PrintService {
             }
             body {
               background: #ffffff;
-              direction: rtl;
-              text-align: right;
+              direction: ${dir};
+              text-align: ${align};
             }
             .page {
               width: ${orientation === 'landscape' ? '1050px' : '750px'};
@@ -563,7 +582,7 @@ export class PrintService {
             </div>
             <div class="footer">
               <div>
-                <span class="date-label">تاريخ الطباعة:</span> ${dateStr}
+                <span class="date-label">${this.t('print.printDateLabel')}</span> ${dateStr}
               </div>
               <div>
                 Voltyks Admin Dashboard © ${new Date().getFullYear()}
@@ -594,7 +613,7 @@ export class PrintService {
 
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('حدث خطأ أثناء إنشاء ملف PDF');
+      alert(this.t('print.errorGenerating'));
     } finally {
       this.hideLoading(loadingEl);
     }
@@ -685,10 +704,10 @@ export class PrintService {
           animation: spin 1s linear infinite;
         "></div>
         <div style="color: #333; font-size: 18px; font-family: 'Cairo', sans-serif; font-weight: 600;">
-          جاري إنشاء ملف PDF...
+          ${this.t('print.generating')}
         </div>
         <div style="color: #666; font-size: 13px; font-family: 'Cairo', sans-serif;">
-          يرجى الانتظار
+          ${this.t('print.pleaseWait')}
         </div>
       </div>
       <style>

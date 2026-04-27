@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, catchError, of, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import * as signalR from '@microsoft/signalr';
+import { TranslateService } from '@ngx-translate/core';
 import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
 import { VehicleAdditionRequestsService } from './admin/vehicle-addition-requests.service';
@@ -106,6 +107,7 @@ export class NotificationService implements OnDestroy {
     private authService: AuthService,
     private vehicleRequestsService: VehicleAdditionRequestsService,
     private toasterService: ToasterService,
+    private translate: TranslateService,
     private ngZone: NgZone
   ) {
     this.cleanupStorage(); // Clean old/corrupted data first
@@ -114,6 +116,10 @@ export class NotificationService implements OnDestroy {
     this.loadSettings();
     this.initNotificationSound();
     this.setupNotificationQueue();
+  }
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
   }
 
   /**
@@ -503,7 +509,7 @@ export class NotificationService implements OnDestroy {
         this.ngZone.run(() => {
           this.isConnected = false;
           this.connectionStateSubject.next('error');
-          this.errorSubject.next('فشل الاتصال بخادم الإشعارات - جاري استخدام التحديث الدوري');
+          this.errorSubject.next(this.t('notifications.svc.hubFail'));
         });
         // Start polling as fallback
         this.startPolling();
@@ -779,7 +785,7 @@ export class NotificationService implements OnDestroy {
           ...notification,
           id: notification.id || `complaint_${notification.originalId || Date.now()}`,
           type: 'complaint',
-          message: notification.message || `شكوى جديدة من ${notification.userName || 'مستخدم'}`,
+          message: notification.message || this.t('notifications.svc.msgComplaintByUser', { userName: notification.userName || this.t('notifications.svc.defaultUserName') }),
           isRead: false,
           timestamp: notification.timestamp || new Date().toISOString()
         };
@@ -814,7 +820,7 @@ export class NotificationService implements OnDestroy {
           originalId: data?.originalId || data?.id,
           title: title,
           message: correctedMessage,
-          userName: data?.userName || data?.userFullName || 'مستخدم',
+          userName: data?.userName || data?.userFullName || this.t('notifications.svc.defaultUserName'),
           timestamp: data?.timestamp || data?.createdAt || new Date().toISOString(),
           isRead: false,
           // Only include product data for reservations
@@ -854,16 +860,16 @@ export class NotificationService implements OnDestroy {
         const brandName = notification.brandName || notification.BrandName;
         const modelName = notification.modelName || notification.ModelName;
         const capacity = notification.capacity || notification.Capacity;
-        const userName = notification.userName || notification.userFullName || 'مستخدم';
+        const userName = notification.userName || notification.userFullName || this.t('notifications.svc.defaultUserName');
         const enrichedNotification: AppNotification = {
           ...notification,
           id: notification.id || `vehicle-request_${notification.originalId || Date.now()}`,
           type: 'vehicle-request',
-          title: notification.title || 'طلب إضافة سيارة',
+          title: notification.title || this.t('notifications.svc.vehicleAddTitle'),
           message: notification.message
             || (brandName && modelName
-                ? `طلب إضافة السيارة "${brandName} ${modelName}" من ${userName}`
-                : `طلب إضافة سيارة جديد من ${userName}`),
+                ? this.t('notifications.svc.msgVehicleRequest', { brandName, modelName, userName })
+                : this.t('notifications.svc.msgVehicleRequestNoBrand', { userName })),
           userName,
           brandName,
           modelName,
@@ -1013,23 +1019,23 @@ export class NotificationService implements OnDestroy {
   private showNotificationToast(notification: AppNotification): void {
     let toastType: 'info' | 'warning' | 'success' | 'error' = 'info';
     let icon = '📢';
-    let title = 'إشعار جديد';
+    let title = this.t('notifications.svc.genericTitle');
 
     switch (notification.type) {
       case 'report':
         toastType = 'warning';
         icon = '🚨';
-        title = 'بلاغ جديد';
+        title = this.t('notifications.svc.newReport');
         break;
       case 'complaint':
         toastType = 'info';
         icon = '📢';
-        title = 'شكوى جديدة';
+        title = this.t('notifications.svc.newComplaint');
         break;
       case 'reservation':
         toastType = 'success';
         icon = '🛒';
-        title = 'حجز منتج جديد';
+        title = this.t('notifications.svc.newReservation');
         break;
     }
 
@@ -1048,7 +1054,10 @@ export class NotificationService implements OnDestroy {
     if (notification.type === 'reservation' && notification.productName) {
       toastMessage += ` | ${notification.productName}`;
       if (notification.totalPrice) {
-        toastMessage += ` (${notification.totalPrice.toLocaleString()} ${notification.currency || 'ج.م'})`;
+        toastMessage += this.t('notifications.svc.reservationToastWithPrice', {
+          price: notification.totalPrice.toLocaleString(),
+          currency: notification.currency || this.t('common.currency')
+        });
       }
     }
 
@@ -1077,7 +1086,7 @@ export class NotificationService implements OnDestroy {
           return of(null);
         }
 
-        this.errorSubject.next('فشل تحميل الإشعارات');
+        this.errorSubject.next(this.t('notifications.svc.loadFail'));
         this.loadingSubject.next(false);
         return of(null);
       })
@@ -1179,13 +1188,17 @@ export class NotificationService implements OnDestroy {
    */
   private vehicleRequestToNotification(req: VehicleAdditionRequestDto): AppNotification {
     const id = `vehicle-request_${req.id}`;
-    const message = `طلب إضافة السيارة "${req.brandName} ${req.modelName}" من ${req.userFullName}`;
+    const message = this.t('notifications.svc.msgVehicleRequest', {
+      brandName: req.brandName,
+      modelName: req.modelName,
+      userName: req.userFullName
+    });
 
     const notification: AppNotification = {
       id,
       type: 'vehicle-request',
       originalId: req.id,
-      title: 'طلب إضافة سيارة',
+      title: this.t('notifications.svc.vehicleAddTitle'),
       message,
       userName: req.userFullName,
       timestamp: req.createdAt,
@@ -1237,8 +1250,10 @@ export class NotificationService implements OnDestroy {
     if (id.startsWith('reservation_') || id.includes('reservation')) return 'reservation';
     if (id.startsWith('vehicle-request_') || id.includes('vehicle-request')) return 'vehicle-request';
 
-    // PRIORITY 3: Check message/title content
-    // Complaint keywords (Arabic) - check FIRST
+    // PRIORITY 3: Check message/title content. The Arabic substrings below are
+    // backend-generated content fragments we match against to classify
+    // notifications — they intentionally remain as Arabic literals because they
+    // match what the server emits, not anything we render.
     if (combinedText.includes('شكوى') || combinedText.includes('شكوي') ||
         combinedText.includes('complaint')) {
       return 'complaint';
@@ -1345,7 +1360,7 @@ export class NotificationService implements OnDestroy {
    */
   private generateConsistentMessage(type: NotificationType, originalBody: string, data: any): string {
     const bodyLower = (originalBody || '').toLowerCase();
-    const userName = data?.userName || data?.userFullName || 'مستخدم';
+    const userName = data?.userName || data?.userFullName || this.t('notifications.svc.defaultUserName');
 
     // Check if the message content matches the detected type
     const bodyHasReservationContent = bodyLower.includes('بحجز') || bodyLower.includes('الكمية') ||
@@ -1358,7 +1373,7 @@ export class NotificationService implements OnDestroy {
       if (data?.content || data?.complaintContent) {
         return data.content || data.complaintContent;
       }
-      return `قام ${userName} بتقديم شكوى جديدة`;
+      return this.t('notifications.svc.msgComplaintByUser', { userName });
     }
 
     // If type is report but body has reservation content, generate correct message
@@ -1366,14 +1381,14 @@ export class NotificationService implements OnDestroy {
       if (data?.reportContent) {
         return data.reportContent;
       }
-      return `قام ${userName} بتقديم بلاغ جديد`;
+      return this.t('notifications.svc.msgReportByUser', { userName });
     }
 
     // If type is reservation but body doesn't have reservation content, generate correct message
     if (type === 'reservation' && !bodyHasReservationContent) {
-      const productName = data?.productName || 'منتج';
+      const productName = data?.productName || this.t('notifications.svc.defaultProductName');
       const quantity = data?.quantity || 1;
-      return `قام ${userName} بحجز ${productName} (الكمية: ${quantity})`;
+      return this.t('notifications.svc.msgReservationByUser', { userName, productName, quantity });
     }
 
     // Vehicle-request: generate a clear message if missing
@@ -1381,9 +1396,9 @@ export class NotificationService implements OnDestroy {
       const brandName = data?.brandName;
       const modelName = data?.modelName;
       if (brandName && modelName) {
-        return `طلب إضافة السيارة "${brandName} ${modelName}" من ${userName}`;
+        return this.t('notifications.svc.msgVehicleRequest', { brandName, modelName, userName });
       }
-      return `طلب إضافة سيارة جديد من ${userName}`;
+      return this.t('notifications.svc.msgVehicleRequestNoBrand', { userName });
     }
 
     // Original body is fine
@@ -1572,31 +1587,31 @@ export class NotificationService implements OnDestroy {
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffSecs < 30) return 'الآن';
-    if (diffSecs < 60) return `منذ ${diffSecs} ثانية`;
-    if (diffMins === 1) return 'منذ دقيقة';
-    if (diffMins === 2) return 'منذ دقيقتين';
-    if (diffMins < 11) return `منذ ${diffMins} دقائق`;
-    if (diffMins < 60) return `منذ ${diffMins} دقيقة`;
-    if (diffHours === 1) return 'منذ ساعة';
-    if (diffHours === 2) return 'منذ ساعتين';
-    if (diffHours < 11) return `منذ ${diffHours} ساعات`;
-    if (diffHours < 24) return `منذ ${diffHours} ساعة`;
-    if (diffDays === 1) return 'أمس';
-    if (diffDays === 2) return 'منذ يومين';
-    if (diffDays < 7) return `منذ ${diffDays} أيام`;
+    if (diffSecs < 30) return this.t('notifications.timeAgo.now');
+    if (diffSecs < 60) return this.t('notifications.timeAgo.secondsAgo', { count: diffSecs });
+    if (diffMins === 1) return this.t('notifications.timeAgo.minuteAgo');
+    if (diffMins === 2) return this.t('notifications.timeAgo.twoMinutesAgo');
+    if (diffMins < 11) return this.t('notifications.timeAgo.minutesAgoFew', { count: diffMins });
+    if (diffMins < 60) return this.t('notifications.timeAgo.minutesAgoMany', { count: diffMins });
+    if (diffHours === 1) return this.t('notifications.timeAgo.hourAgo');
+    if (diffHours === 2) return this.t('notifications.timeAgo.twoHoursAgo');
+    if (diffHours < 11) return this.t('notifications.timeAgo.hoursAgoFew', { count: diffHours });
+    if (diffHours < 24) return this.t('notifications.timeAgo.hoursAgoMany', { count: diffHours });
+    if (diffDays === 1) return this.t('notifications.timeAgo.yesterday');
+    if (diffDays === 2) return this.t('notifications.timeAgo.twoDaysAgo');
+    if (diffDays < 7) return this.t('notifications.timeAgo.daysAgo', { count: diffDays });
 
     const diffWeeks = Math.floor(diffDays / 7);
-    if (diffWeeks === 1) return 'منذ أسبوع';
-    if (diffWeeks === 2) return 'منذ أسبوعين';
-    if (diffWeeks < 5) return `منذ ${diffWeeks} أسابيع`;
+    if (diffWeeks === 1) return this.t('notifications.timeAgo.weekAgo');
+    if (diffWeeks === 2) return this.t('notifications.timeAgo.twoWeeksAgo');
+    if (diffWeeks < 5) return this.t('notifications.timeAgo.weeksAgo', { count: diffWeeks });
 
     const diffMonths = Math.floor(diffDays / 30);
-    if (diffMonths === 1) return 'منذ شهر';
-    if (diffMonths === 2) return 'منذ شهرين';
-    if (diffMonths < 12) return `منذ ${diffMonths} أشهر`;
+    if (diffMonths === 1) return this.t('notifications.timeAgo.monthAgo');
+    if (diffMonths === 2) return this.t('notifications.timeAgo.twoMonthsAgo');
+    if (diffMonths < 12) return this.t('notifications.timeAgo.monthsAgo', { count: diffMonths });
 
-    return date.toLocaleDateString('ar-EG', {
+    return date.toLocaleDateString(this.translate.currentLang === 'en' ? 'en-US' : 'ar-EG', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
@@ -1611,11 +1626,11 @@ export class NotificationService implements OnDestroy {
     const date = new Date(timestamp);
     const diffDays = Math.floor((now.getTime() - date.getTime()) / 86400000);
 
-    if (diffDays === 0) return 'اليوم';
-    if (diffDays === 1) return 'أمس';
-    if (diffDays < 7) return 'هذا الأسبوع';
-    if (diffDays < 30) return 'هذا الشهر';
-    return 'أقدم';
+    if (diffDays === 0) return this.t('notifications.timeAgo.today');
+    if (diffDays === 1) return this.t('notifications.timeAgo.yesterday');
+    if (diffDays < 7) return this.t('notifications.timeAgo.thisWeek');
+    if (diffDays < 30) return this.t('notifications.timeAgo.thisMonth');
+    return this.t('notifications.timeAgo.older');
   }
 
   /**
@@ -1623,7 +1638,13 @@ export class NotificationService implements OnDestroy {
    */
   getGroupedNotifications(notifications: AppNotification[]): Map<string, AppNotification[]> {
     const groups = new Map<string, AppNotification[]>();
-    const order = ['اليوم', 'أمس', 'هذا الأسبوع', 'هذا الشهر', 'أقدم'];
+    const order = [
+      this.t('notifications.timeAgo.today'),
+      this.t('notifications.timeAgo.yesterday'),
+      this.t('notifications.timeAgo.thisWeek'),
+      this.t('notifications.timeAgo.thisMonth'),
+      this.t('notifications.timeAgo.older')
+    ];
 
     // Initialize groups in order
     order.forEach(key => groups.set(key, []));

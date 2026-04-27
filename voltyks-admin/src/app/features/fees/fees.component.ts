@@ -28,7 +28,7 @@ export class FeesComponent implements OnInit {
   isLoading = false;
   showUpdateDialog = false;
   showTransferDialog = false;
-  loadError = false; // لعرض رسالة الخطأ بدل التحميل اللانهائي
+  loadError = false;
 
   // Users dropdown
   users: AdminUserDto[] = [];

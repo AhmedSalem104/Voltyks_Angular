@@ -1,6 +1,7 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, switchMap, throwError, timer } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { ToasterService } from '../../shared/components/toaster/toaster.service';
 
 /**
@@ -16,6 +17,7 @@ import { ToasterService } from '../../shared/components/toaster/toaster.service'
  */
 export const rateLimitInterceptor: HttpInterceptorFn = (req, next) => {
   const toaster = inject(ToasterService);
+  const translate = inject(TranslateService);
 
   // Skip GET requests - handled by retry interceptor with exponential backoff
   if (req.method === 'GET') {
@@ -26,7 +28,7 @@ export const rateLimitInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       if (error.status === 429) {
         // Show warning to user
-        toaster.warning('تم تجاوز حد الطلبات. جارٍ إعادة المحاولة...');
+        toaster.warning(translate.instant('errors.rateLimitRetry'));
 
         // Get retry time from header or use default
         const retryAfter = error.headers.get('Retry-After');

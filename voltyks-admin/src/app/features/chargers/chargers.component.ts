@@ -443,7 +443,7 @@ export class ChargersComponent implements OnInit, OnDestroy {
     const newStatus = !charger.isActive;
     const originalStatus = charger.isActive;
 
-    // Optimistic Update - تحديث فوري للـ UI
+    // Optimistic update — apply immediately to the UI
     charger.isActive = newStatus;
     this.cdr.markForCheck();
 
@@ -458,7 +458,7 @@ export class ChargersComponent implements OnInit, OnDestroy {
         }
       },
       error: (error) => {
-        // Revert - إرجاع الحالة الأصلية عند الفشل
+        // Revert to the original state on failure
         charger.isActive = originalStatus;
         this.cdr.markForCheck();
         this.toaster.error(error.message || this.t('chargers.msg.toggleFail'));
