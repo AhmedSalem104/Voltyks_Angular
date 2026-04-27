@@ -180,7 +180,23 @@
     "newPassword": "كلمة المرور الجديدة",
     "confirmPassword": "تأكيد كلمة المرور",
     "resetPassword": "إعادة تعيين كلمة المرور",
-    "backToLogin": "العودة لتسجيل الدخول"
+    "backToLogin": "العودة لتسجيل الدخول",
+    "msg": {
+      "adminsOnly": "عذراً، لوحة التحكم متاحة للمسؤولين فقط",
+      "loginFailed": "فشل تسجيل الدخول",
+      "serverConnection": "فشل الاتصال بالخادم. يرجى التحقق من اتصال الإنترنت أو الاتصال بمسؤول النظام.",
+      "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+      "serviceUnavailable": "الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً",
+      "serverError": "خطأ في الخادم. يرجى المحاولة لاحقاً",
+      "loginErrorGeneric": "حدث خطأ أثناء تسجيل الدخول",
+      "required": "هذا الحقل مطلوب",
+      "minLength": "الحد الأدنى {{count}} أحرف"
+    },
+    "fp": {
+      "sendSuccess": "تم إرسال كود التحقق بنجاح. يرجى التحقق من هاتفك.",
+      "sendFail": "فشل إرسال كود التحقق",
+      "generic": "حدث خطأ أثناء معالجة الطلب"
+    }
   },
   "sidebar": {
     "groups": {
@@ -537,7 +553,24 @@
     "statusEnabled": "مفعّل",
     "statusDisabled": "معطّل",
     "bookingStatus": "حالة الحجوزات",
-    "dateFormat": "EEEE، d MMMM yyyy"
+    "dateFormat": "EEEE، d MMMM yyyy",
+    "charts": {
+      "usersAxis": "مستخدمين",
+      "chargersAxis": "شواحن",
+      "vehiclesAxis": "مركبات",
+      "reportsAxis": "بلاغات",
+      "pendingAxis": "معلق",
+      "resolvedAxis": "تم الحل",
+      "reservationPending": "قيد الانتظار",
+      "reservationContacted": "تم التواصل",
+      "reservationCompleted": "مكتمل",
+      "reservationCancelled": "ملغي"
+    },
+    "timeAgo": {
+      "today": "اليوم",
+      "yesterday": "أمس",
+      "daysAgo": "منذ {{count}} أيام"
+    }
   },
   "users": {
     "title": "إدارة المستخدمين",
@@ -1000,7 +1033,23 @@
     "saveEdits": "حفظ التعديلات",
     "cancel": "إلغاء",
     "empty": "لا توجد شروط وأحكام متاحة حالياً",
-    "retry": "إعادة المحاولة"
+    "retry": "إعادة المحاولة",
+    "msg": {
+      "notFound": "لم يتم العثور على شروط وأحكام لهذه اللغة",
+      "loadError": "حدث خطأ أثناء تحميل الشروط والأحكام",
+      "invalidJson": "JSON غير صالح",
+      "formatSuccess": "تم تنسيق JSON بنجاح",
+      "formatInvalid": "لا يمكن تنسيق JSON غير صالح",
+      "noData": "لا توجد بيانات للحفظ",
+      "fixErrors": "يرجى تصحيح أخطاء JSON قبل الحفظ",
+      "formatError": "خطأ في تنسيق JSON: {{message}}",
+      "saveSuccess": "تم حفظ التعديلات بنجاح",
+      "saveFail": "فشل حفظ التعديلات",
+      "saveError": "حدث خطأ أثناء حفظ التعديلات",
+      "printTitle": "الشروط والأحكام - {{lang}}"
+    },
+    "langArabic": "العربية",
+    "langEnglish": "English"
   },
   "appConfig": {
     "title": "إعدادات التطبيق",
@@ -1042,7 +1091,22 @@
     "loadFailed": "فشل تحميل البيانات",
     "loadFailedHint": "تأكد من اتصال الخادم وحاول مرة أخرى",
     "loading": "جاري تحميل الإعدادات...",
-    "exampleVersion": "مثال: 1.0.0"
+    "exampleVersion": "مثال: 1.0.0",
+    "toast": {
+      "loadFail": "فشل تحميل الإعدادات",
+      "saveSuccess": "تم حفظ الإعدادات بنجاح",
+      "saveFail": "فشل حفظ الإعدادات",
+      "enableActionVerb": "تفعيل",
+      "disableActionVerb": "تعطيل",
+      "platformConfirmEnable": "هل أنت متأكد من تفعيل تطبيق {{platform}}؟",
+      "platformConfirmDisable": "هل أنت متأكد من تعطيل تطبيق {{platform}}؟ لن يتمكن مستخدمو {{platform}} من الوصول.",
+      "chargingModeAction": "{{action}} وضع الشحن",
+      "chargingModeConfirmEnable": "هل أنت متأكد من تفعيل وضع الشحن؟ سيتمكن المستخدمون من استخدام الشواحن وإجراء عمليات الشحن.",
+      "chargingModeConfirmDisable": "هل أنت متأكد من تعطيل وضع الشحن؟ لن يتمكن المستخدمون من استخدام الشواحن أو إجراء عمليات شحن جديدة. ستظهر لهم رسالة \"الشحن غير مفعّل حالياً\".",
+      "chargingModeEnabledToast": "تم تفعيل وضع الشحن بنجاح",
+      "chargingModeDisabledToast": "تم تعطيل وضع الشحن",
+      "chargingModeFail": "فشل تحديث وضع الشحن"
+    }
   },
   "adminsMode": {
     "title": "وضع المسؤولين",
@@ -1542,7 +1606,22 @@
     "detailNameLabel": "الاسم",
     "detailEmailLabel": "البريد الإلكتروني",
     "detailPhoneLabel": "رقم الهاتف",
-    "createAnother": "إنشاء أدمن آخر"
+    "createAnother": "إنشاء أدمن آخر",
+    "msg": {
+      "otpSent": "تم إرسال كود التحقق إلى هاتفك",
+      "otpSendFail": "فشل إرسال كود التحقق",
+      "createSuccess": "تم إنشاء الأدمن بنجاح",
+      "createFail": "فشل إنشاء الأدمن",
+      "enterOtp": "يرجى إدخال كود التحقق (4 أرقام)",
+      "enterFullName": "يرجى إدخال الاسم الكامل",
+      "invalidEmail": "يرجى إدخال بريد إلكتروني صحيح",
+      "enterPhone": "يرجى إدخال رقم الهاتف",
+      "shortPassword": "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
+      "otpExpired": "كود التحقق انتهت صلاحيته - أعد الإرسال",
+      "otpIncorrect": "كود التحقق غير صحيح",
+      "phoneTaken": "رقم الهاتف مسجل مسبقاً",
+      "emailTaken": "البريد الإلكتروني مسجل مسبقاً"
+    }
   },
   "backup": {
     "title": "النسخ الاحتياطي",
@@ -1571,7 +1650,14 @@
     "downloadTip": "تحميل",
     "emptyInRange": "لا توجد نسخ احتياطية في هذه الفترة",
     "clearFilter": "مسح الفلتر",
-    "emptyAll": "لا توجد نسخ احتياطية بعد"
+    "emptyAll": "لا توجد نسخ احتياطية بعد",
+    "msg": {
+      "loadFail": "فشل تحميل قائمة النسخ الاحتياطية",
+      "createSuccess": "تم إنشاء النسخة الاحتياطية بنجاح",
+      "createFail": "فشل إنشاء النسخة الاحتياطية",
+      "downloadStart": "جاري تحميل الملف",
+      "downloadFail": "فشل تحميل الملف"
+    }
   },
   "about": {
     "title": "عن Voltyks",
@@ -1630,5 +1716,19 @@
     "chargingTypeChinese": "AC/DC",
     "chargingTypeEuropean": "AC + DC مدمج",
     "detailedExplanation": "الشرح التفصيلي"
+  },
+  "brandsModels": {
+    "pageTitle": "إدارة العلامات التجارية والموديلات",
+    "pageSubtitle": "عرض جميع العلامات التجارية والموديلات المسجلة",
+    "brandsTitle": "العلامات التجارية",
+    "nameCol": "الاسم",
+    "modelsCountCol": "عدد الموديلات",
+    "actionsCol": "الإجراءات",
+    "viewModels": "عرض الموديلات",
+    "modelsTitle": "الموديلات",
+    "filteredSuffix": "(مرشحة حسب العلامة)",
+    "clearFilter": "إلغاء التصفية",
+    "brandCol": "العلامة التجارية",
+    "capacityCol": "سعة البطارية (kWh)"
   }
 }

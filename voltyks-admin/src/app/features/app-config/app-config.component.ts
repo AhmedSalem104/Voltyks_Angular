@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AppConfigService } from '../../core/services/admin/app-config.service';
 import { LoadingOverlayComponent } from '../../shared/components/loading-overlay/loading-overlay.component';
@@ -48,8 +48,13 @@ export class AppConfigComponent implements OnInit {
   constructor(
     private appConfigService: AppConfigService,
     private toaster: ToasterService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.loadConfig();
@@ -68,14 +73,14 @@ export class AppConfigComponent implements OnInit {
           this.hasChanges = false;
         } else {
           this.loadError = true;
-          this.toaster.error(res.message || 'فشل تحميل الإعدادات');
+          this.toaster.error(res.message || this.t('appConfig.toast.loadFail'));
         }
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: (err) => {
         this.loadError = true;
-        this.toaster.error(err.error?.message || 'فشل تحميل الإعدادات');
+        this.toaster.error(err.error?.message || this.t('appConfig.toast.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -128,12 +133,13 @@ export class AppConfigComponent implements OnInit {
 
     const newStatus = !currentStatus;
     const platformName = platform === 'android' ? 'Android' : 'iOS';
-    const actionText = newStatus ? 'تفعيل' : 'تعطيل';
+    const actionText = this.t(newStatus ? 'appConfig.toast.enableActionVerb' : 'appConfig.toast.disableActionVerb');
 
     this.confirmDialogTitle = `${actionText} ${platformName}`;
-    this.confirmDialogMessage = newStatus
-      ? `هل أنت متأكد من تفعيل تطبيق ${platformName}؟`
-      : `هل أنت متأكد من تعطيل تطبيق ${platformName}؟ لن يتمكن مستخدمو ${platformName} من الوصول.`;
+    this.confirmDialogMessage = this.t(
+      newStatus ? 'appConfig.toast.platformConfirmEnable' : 'appConfig.toast.platformConfirmDisable',
+      { platform: platformName }
+    );
 
     this.pendingAction = () => {
       if (platform === 'android') {
@@ -183,15 +189,15 @@ export class AppConfigComponent implements OnInit {
           this.config = this.normalizeMobileConfig(res.data);
           this.syncFormWithConfig();
           this.hasChanges = false;
-          this.toaster.success('تم حفظ الإعدادات بنجاح');
+          this.toaster.success(this.t('appConfig.toast.saveSuccess'));
         } else {
-          this.toaster.error(res.message || 'فشل حفظ الإعدادات');
+          this.toaster.error(res.message || this.t('appConfig.toast.saveFail'));
         }
         this.isSaving = false;
         this.cdr.markForCheck();
       },
       error: (err) => {
-        this.toaster.error(err.error?.message || 'فشل حفظ الإعدادات');
+        this.toaster.error(err.error?.message || this.t('appConfig.toast.saveFail'));
         this.isSaving = false;
         this.cdr.markForCheck();
       }
@@ -205,7 +211,7 @@ export class AppConfigComponent implements OnInit {
   }
 
   getStatusText(enabled: boolean | undefined): string {
-    return enabled ? 'مفعّل' : 'معطّل';
+    return this.t(enabled ? 'appConfig.enabledLabel' : 'appConfig.disabledLabel');
   }
 
   getStatusClass(enabled: boolean | undefined): string {
@@ -247,12 +253,12 @@ export class AppConfigComponent implements OnInit {
 
   toggleChargingMode(): void {
     const newStatus = !this.chargingModeEnabled;
-    const actionText = newStatus ? 'تفعيل' : 'تعطيل';
+    const actionText = this.t(newStatus ? 'appConfig.toast.enableActionVerb' : 'appConfig.toast.disableActionVerb');
 
-    this.confirmDialogTitle = `${actionText} وضع الشحن`;
-    this.confirmDialogMessage = newStatus
-      ? 'هل أنت متأكد من تفعيل وضع الشحن؟ سيتمكن المستخدمون من استخدام الشواحن وإجراء عمليات الشحن.'
-      : 'هل أنت متأكد من تعطيل وضع الشحن؟ لن يتمكن المستخدمون من استخدام الشواحن أو إجراء عمليات شحن جديدة. ستظهر لهم رسالة "الشحن غير مفعّل حالياً".';
+    this.confirmDialogTitle = this.t('appConfig.toast.chargingModeAction', { action: actionText });
+    this.confirmDialogMessage = this.t(
+      newStatus ? 'appConfig.toast.chargingModeConfirmEnable' : 'appConfig.toast.chargingModeConfirmDisable'
+    );
 
     this.pendingAction = () => this.confirmChargingModeToggle(newStatus);
     this.showConfirmDialog = true;
@@ -267,19 +273,19 @@ export class AppConfigComponent implements OnInit {
       next: (res: any) => {
         if (res.status && res.data) {
           this.chargingModeEnabled = res.data.enabled ?? res.data.chargingModeEnabled ?? res.data.charging_mode_enabled ?? newStatus;
-          this.toaster.success(newStatus ? 'تم تفعيل وضع الشحن بنجاح' : 'تم تعطيل وضع الشحن');
+          this.toaster.success(this.t(newStatus ? 'appConfig.toast.chargingModeEnabledToast' : 'appConfig.toast.chargingModeDisabledToast'));
         } else if (res.status) {
           // Response has status but no data - use the intended value
           this.chargingModeEnabled = newStatus;
-          this.toaster.success(newStatus ? 'تم تفعيل وضع الشحن بنجاح' : 'تم تعطيل وضع الشحن');
+          this.toaster.success(this.t(newStatus ? 'appConfig.toast.chargingModeEnabledToast' : 'appConfig.toast.chargingModeDisabledToast'));
         } else {
-          this.toaster.error(res.message || 'فشل تحديث وضع الشحن');
+          this.toaster.error(res.message || this.t('appConfig.toast.chargingModeFail'));
         }
         this.isChargingModeSaving = false;
         this.cdr.markForCheck();
       },
       error: (err: any) => {
-        this.toaster.error(err.error?.message || 'فشل تحديث وضع الشحن');
+        this.toaster.error(err.error?.message || this.t('appConfig.toast.chargingModeFail'));
         this.isChargingModeSaving = false;
         this.cdr.markForCheck();
       }

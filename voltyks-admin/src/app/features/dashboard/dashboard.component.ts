@@ -149,9 +149,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   charIndex = 0;
   isDeleting = false;
 
-  // Charts
+  // Charts — labels populated in ngOnInit so they can pick up the active locale
   overviewChartData: ChartConfiguration<'doughnut'>['data'] = {
-    labels: ['مستخدمين', 'شواحن', 'مركبات', 'بلاغات'],
+    labels: [],
     datasets: [{
       data: [0, 0, 0, 0],
       backgroundColor: ['#6366f1', '#00C853', '#ec4899', '#f59e0b'],
@@ -178,7 +178,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   };
 
   reportsChartData: ChartConfiguration<'bar'>['data'] = {
-    labels: ['معلق', 'تم الحل'],
+    labels: [],
     datasets: [{
       data: [0, 0],
       backgroundColor: ['rgba(245, 158, 11, 0.8)', 'rgba(0, 200, 83, 0.8)'],
@@ -212,7 +212,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   };
 
   reservationsChartData: ChartConfiguration<'doughnut'>['data'] = {
-    labels: ['قيد الانتظار', 'تم التواصل', 'مكتمل', 'ملغي'],
+    labels: [],
     datasets: [{
       data: [0, 0, 0, 0],
       backgroundColor: ['#f59e0b', '#3b82f6', '#00C853', '#ef4444'],
@@ -256,12 +256,32 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {}
 
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
+
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
     this.typingTexts = [
       this.translate.instant('dashboard.tagline1'),
       this.translate.instant('dashboard.tagline2'),
       this.translate.instant('dashboard.tagline3')
+    ];
+    this.overviewChartData.labels = [
+      this.t('dashboard.charts.usersAxis'),
+      this.t('dashboard.charts.chargersAxis'),
+      this.t('dashboard.charts.vehiclesAxis'),
+      this.t('dashboard.charts.reportsAxis')
+    ];
+    this.reportsChartData.labels = [
+      this.t('dashboard.charts.pendingAxis'),
+      this.t('dashboard.charts.resolvedAxis')
+    ];
+    this.reservationsChartData.labels = [
+      this.t('dashboard.charts.reservationPending'),
+      this.t('dashboard.charts.reservationContacted'),
+      this.t('dashboard.charts.reservationCompleted'),
+      this.t('dashboard.charts.reservationCancelled')
     ];
     this.setGreeting();
     this.subscribeToNotifications();
@@ -669,17 +689,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // ========== Helpers ==========
 
   formatCurrency(amount: number): string {
-    return amount.toLocaleString('en-US') + ' ج.م';
+    return amount.toLocaleString('en-US') + ' ' + this.t('common.currency');
   }
 
   getReservationStatusLabel(status: string): string {
-    const labels: { [key: string]: string } = {
-      'pending': 'قيد الانتظار',
-      'contacted': 'تم التواصل',
-      'completed': 'مكتمل',
-      'cancelled': 'ملغي'
+    const keyMap: { [key: string]: string } = {
+      'pending': 'dashboard.charts.reservationPending',
+      'contacted': 'dashboard.charts.reservationContacted',
+      'completed': 'dashboard.charts.reservationCompleted',
+      'cancelled': 'dashboard.charts.reservationCancelled'
     };
-    return labels[status] || status;
+    return keyMap[status] ? this.t(keyMap[status]) : status;
   }
 
   getReservationStatusClass(status: string): string {
@@ -693,11 +713,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const diff = now.getTime() - date.getTime();
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-    if (days === 0) return 'اليوم';
-    if (days === 1) return 'أمس';
-    if (days < 7) return `منذ ${days} أيام`;
+    if (days === 0) return this.t('dashboard.timeAgo.today');
+    if (days === 1) return this.t('dashboard.timeAgo.yesterday');
+    if (days < 7) return this.t('dashboard.timeAgo.daysAgo', { count: days });
 
-    return date.toLocaleDateString('ar-EG', {
+    return date.toLocaleDateString(this.translate.currentLang === 'en' ? 'en-US' : 'ar-EG', {
       month: 'short',
       day: 'numeric'
     });

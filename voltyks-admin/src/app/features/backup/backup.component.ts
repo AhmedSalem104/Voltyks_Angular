@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AdminBackupService } from '../../core/services/admin/admin-backup.service';
 import { BackupResultDto, BackupFileDto } from '../../core/models/backup.model';
@@ -37,8 +37,13 @@ export class BackupComponent implements OnInit, OnDestroy {
     private backupService: AdminBackupService,
     private toaster: ToasterService,
     private cdr: ChangeDetectorRef,
-    private vaultService: VaultService
+    private vaultService: VaultService,
+    private translate: TranslateService
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.setToday();
@@ -67,7 +72,7 @@ export class BackupComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.error?.message || 'فشل تحميل قائمة النسخ الاحتياطية');
+        this.toaster.error(error.error?.message || this.t('backup.msg.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -81,16 +86,16 @@ export class BackupComponent implements OnInit, OnDestroy {
       next: (response) => {
         if (response.status && response.data) {
           this.lastResult = response.data;
-          this.toaster.success('تم إنشاء النسخة الاحتياطية بنجاح');
+          this.toaster.success(this.t('backup.msg.createSuccess'));
           this.loadBackups();
         } else {
-          this.toaster.error(response.message || 'فشل إنشاء النسخة الاحتياطية');
+          this.toaster.error(response.message || this.t('backup.msg.createFail'));
         }
         this.isTriggering = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.error?.message || 'فشل إنشاء النسخة الاحتياطية');
+        this.toaster.error(error.error?.message || this.t('backup.msg.createFail'));
         this.isTriggering = false;
         this.cdr.markForCheck();
       }
@@ -111,12 +116,12 @@ export class BackupComponent implements OnInit, OnDestroy {
         a.click();
         document.body.removeChild(a);
         setTimeout(() => URL.revokeObjectURL(url), 1000);
-        this.toaster.success('جاري تحميل الملف');
+        this.toaster.success(this.t('backup.msg.downloadStart'));
         this.downloadingFile = null;
         this.cdr.markForCheck();
       },
       error: () => {
-        this.toaster.error('فشل تحميل الملف');
+        this.toaster.error(this.t('backup.msg.downloadFail'));
         this.downloadingFile = null;
         this.cdr.markForCheck();
       }

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -22,6 +22,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private themeService = inject(ThemeService);
   private cdr = inject(ChangeDetectorRef);
+  private translate = inject(TranslateService);
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   // Destroy subject for cleanup
   private destroy$ = new Subject<void>();
@@ -99,7 +104,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           // Check if user is Admin
           if (!this.authService.isAdmin()) {
             this.authService.clearAuth();
-            this.errorMessage = 'عذراً، لوحة التحكم متاحة للمسؤولين فقط';
+            this.errorMessage = this.t('auth.msg.adminsOnly');
             this.cdr.markForCheck();
             return;
           }
@@ -110,7 +115,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.router.navigate([returnUrl]);
           }, 200);
         } else {
-          this.errorMessage = response.message || 'فشل تسجيل الدخول';
+          this.errorMessage = response.message || this.t('auth.msg.loginFailed');
         }
         this.cdr.markForCheck();
       },
@@ -119,15 +124,15 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         // Handle different error types
         if (error.status === 0) {
-          this.errorMessage = 'فشل الاتصال بالخادم. يرجى التحقق من اتصال الإنترنت أو الاتصال بمسؤول النظام.';
+          this.errorMessage = this.t('auth.msg.serverConnection');
         } else if (error.status === 401) {
-          this.errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+          this.errorMessage = this.t('auth.msg.invalidCredentials');
         } else if (error.status === 404) {
-          this.errorMessage = 'الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً';
+          this.errorMessage = this.t('auth.msg.serviceUnavailable');
         } else if (error.status === 500) {
-          this.errorMessage = 'خطأ في الخادم. يرجى المحاولة لاحقاً';
+          this.errorMessage = this.t('auth.msg.serverError');
         } else {
-          this.errorMessage = error.error?.message || 'حدث خطأ أثناء تسجيل الدخول';
+          this.errorMessage = error.error?.message || this.t('auth.msg.loginErrorGeneric');
         }
         this.cdr.markForCheck();
       }
@@ -168,11 +173,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   getErrorMessage(fieldName: string): string {
     const field = this.loginForm.get(fieldName);
     if (field?.hasError('required')) {
-      return 'هذا الحقل مطلوب';
+      return this.t('auth.msg.required');
     }
     if (field?.hasError('minlength')) {
       const minLength = field.getError('minlength').requiredLength;
-      return `الحد الأدنى ${minLength} أحرف`;
+      return this.t('auth.msg.minLength', { count: minLength });
     }
     return '';
   }

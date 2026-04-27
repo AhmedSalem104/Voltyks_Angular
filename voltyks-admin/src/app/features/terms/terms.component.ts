@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { AdminTermsService } from '../../core/services/admin/admin-terms.service';
@@ -33,8 +33,13 @@ export class TermsComponent implements OnInit {
     private termsService: AdminTermsService,
     private toaster: ToasterService,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.loadTerms();
@@ -60,14 +65,14 @@ export class TermsComponent implements OnInit {
             this.jsonData = { content: this.terms.content };
           }
         } else {
-          this.toaster.error('لم يتم العثور على شروط وأحكام لهذه اللغة');
+          this.toaster.error(this.t('terms.msg.notFound'));
         }
 
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: (err) => {
-        const errorMessage = err?.error?.message || err?.message || 'حدث خطأ أثناء تحميل الشروط والأحكام';
+        const errorMessage = err?.error?.message || err?.message || this.t('terms.msg.loadError');
         this.toaster.error(errorMessage);
         this.isLoading = false;
         this.cdr.markForCheck();
@@ -90,11 +95,11 @@ export class TermsComponent implements OnInit {
   }
 
   get languageLabel(): string {
-    return this.selectedLang === 'ar' ? 'العربية' : 'English';
+    return this.t(this.selectedLang === 'ar' ? 'terms.langArabic' : 'terms.langEnglish');
   }
 
   get otherLanguageLabel(): string {
-    return this.selectedLang === 'ar' ? 'English' : 'العربية';
+    return this.t(this.selectedLang === 'ar' ? 'terms.langEnglish' : 'terms.langArabic');
   }
 
   // Edit mode methods
@@ -122,7 +127,7 @@ export class TermsComponent implements OnInit {
       this.jsonError = '';
     } catch (e: any) {
       this.isJsonValid = false;
-      this.jsonError = e.message || 'JSON غير صالح';
+      this.jsonError = e.message || this.t('terms.msg.invalidJson');
     }
   }
 
@@ -132,15 +137,15 @@ export class TermsComponent implements OnInit {
       this.editedContent = JSON.stringify(parsed, null, 2);
       this.isJsonValid = true;
       this.jsonError = '';
-      this.toaster.success('تم تنسيق JSON بنجاح');
+      this.toaster.success(this.t('terms.msg.formatSuccess'));
     } catch (e: any) {
-      this.toaster.error('لا يمكن تنسيق JSON غير صالح');
+      this.toaster.error(this.t('terms.msg.formatInvalid'));
     }
   }
 
   saveTerms(): void {
     if (!this.terms) {
-      this.toaster.error('لا توجد بيانات للحفظ');
+      this.toaster.error(this.t('terms.msg.noData'));
       return;
     }
 
@@ -148,7 +153,7 @@ export class TermsComponent implements OnInit {
     this.validateJson();
 
     if (!this.isJsonValid) {
-      this.toaster.error('يرجى تصحيح أخطاء JSON قبل الحفظ');
+      this.toaster.error(this.t('terms.msg.fixErrors'));
       return;
     }
 
@@ -159,7 +164,7 @@ export class TermsComponent implements OnInit {
     try {
       parsedContent = JSON.parse(this.editedContent);
     } catch (e: any) {
-      this.toaster.error(`خطأ في تنسيق JSON: ${e.message}`);
+      this.toaster.error(this.t('terms.msg.formatError', { message: e.message }));
       this.isLoading = false;
       return;
     }
@@ -173,20 +178,20 @@ export class TermsComponent implements OnInit {
     this.termsService.updateTerms(updatedTerms).subscribe({
       next: (res) => {
         if (res.status) {
-          this.toaster.success('تم حفظ التعديلات بنجاح');
+          this.toaster.success(this.t('terms.msg.saveSuccess'));
           this.jsonData = parsedContent;
           // Reload terms to get fresh data from backend
           this.loadTerms();
           this.isEditMode = false;
           this.editedContent = '';
         } else {
-          this.toaster.error(res.message || 'فشل حفظ التعديلات');
+          this.toaster.error(res.message || this.t('terms.msg.saveFail'));
         }
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: (err) => {
-        const errorMessage = err?.error?.message || err?.message || 'حدث خطأ أثناء حفظ التعديلات';
+        const errorMessage = err?.error?.message || err?.message || this.t('terms.msg.saveError');
         this.toaster.error(errorMessage);
         this.isLoading = false;
         this.cdr.markForCheck();
@@ -198,7 +203,7 @@ export class TermsComponent implements OnInit {
     if (!this.jsonData) return;
     const content = this.formatJsonForPrint(this.jsonData);
     this.printService.printContentToPdf(content, {
-      title: `الشروط والأحكام - ${this.languageLabel}`,
+      title: this.t('terms.msg.printTitle', { lang: this.languageLabel }),
       filename: `terms_${this.selectedLang}`,
       orientation: 'portrait'
     });

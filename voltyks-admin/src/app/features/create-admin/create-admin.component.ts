@@ -1,6 +1,6 @@
 import { Component, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AdminUsersService } from '../../core/services/admin/admin-users.service';
 import { CreateAdminDto, CreatedAdminDto } from '../../core/models';
@@ -52,8 +52,13 @@ export class CreateAdminComponent implements OnDestroy {
   constructor(
     private usersService: AdminUsersService,
     private toaster: ToasterService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnDestroy(): void {
     this.clearTimers();
@@ -67,18 +72,18 @@ export class CreateAdminComponent implements OnDestroy {
       next: (response) => {
         if (response.status && response.data) {
           this.phoneHint = response.data.phoneHint;
-          this.toaster.success('تم إرسال كود التحقق إلى هاتفك');
+          this.toaster.success(this.t('createAdmin.msg.otpSent'));
           this.step = 'create-form';
           this.startOtpTimer();
           this.startResendCooldown();
         } else {
-          this.toaster.error(response.message || 'فشل إرسال كود التحقق');
+          this.toaster.error(response.message || this.t('createAdmin.msg.otpSendFail'));
         }
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.error?.message || error.message || 'فشل إرسال كود التحقق');
+        this.toaster.error(error.error?.message || error.message || this.t('createAdmin.msg.otpSendFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -101,18 +106,18 @@ export class CreateAdminComponent implements OnDestroy {
     this.usersService.createAdmin(this.createDto).subscribe({
       next: (response) => {
         if (response.status && response.data) {
-          this.toaster.success('تم إنشاء الأدمن بنجاح');
+          this.toaster.success(this.t('createAdmin.msg.createSuccess'));
           this.createdAdmin = response.data;
           this.step = 'success';
           this.clearTimers();
         } else {
-          this.handleCreateError(response.message || 'فشل إنشاء الأدمن');
+          this.handleCreateError(response.message || this.t('createAdmin.msg.createFail'));
         }
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        const msg = error.error?.message || error.message || 'فشل إنشاء الأدمن';
+        const msg = error.error?.message || error.message || this.t('createAdmin.msg.createFail');
         this.handleCreateError(msg);
         this.isLoading = false;
         this.cdr.markForCheck();
@@ -135,27 +140,27 @@ export class CreateAdminComponent implements OnDestroy {
 
   private validateForm(): boolean {
     if (!this.createDto.otpCode || this.createDto.otpCode.length !== 4) {
-      this.toaster.error('يرجى إدخال كود التحقق (4 أرقام)');
+      this.toaster.error(this.t('createAdmin.msg.enterOtp'));
       return false;
     }
 
     if (!this.createDto.fullName?.trim()) {
-      this.toaster.error('يرجى إدخال الاسم الكامل');
+      this.toaster.error(this.t('createAdmin.msg.enterFullName'));
       return false;
     }
 
     if (!this.createDto.email?.trim() || !this.isValidEmail(this.createDto.email)) {
-      this.toaster.error('يرجى إدخال بريد إلكتروني صحيح');
+      this.toaster.error(this.t('createAdmin.msg.invalidEmail'));
       return false;
     }
 
     if (!this.createDto.phoneNumber?.trim()) {
-      this.toaster.error('يرجى إدخال رقم الهاتف');
+      this.toaster.error(this.t('createAdmin.msg.enterPhone'));
       return false;
     }
 
     if (!this.createDto.password || this.createDto.password.length < 6) {
-      this.toaster.error('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+      this.toaster.error(this.t('createAdmin.msg.shortPassword'));
       return false;
     }
 
@@ -172,16 +177,16 @@ export class CreateAdminComponent implements OnDestroy {
     const lower = message.toLowerCase();
 
     if (lower.includes('otp expired') || lower.includes('not found')) {
-      this.toaster.error('كود التحقق انتهت صلاحيته - أعد الإرسال');
+      this.toaster.error(this.t('createAdmin.msg.otpExpired'));
       this.otpExpirySeconds = 0;
       this.clearTimers();
     } else if (lower.includes('invalid otp')) {
-      this.toaster.error('كود التحقق غير صحيح');
+      this.toaster.error(this.t('createAdmin.msg.otpIncorrect'));
     } else if (lower.includes('phone') && lower.includes('registered')) {
-      this.phoneError = 'رقم الهاتف مسجل مسبقاً';
+      this.phoneError = this.t('createAdmin.msg.phoneTaken');
       this.toaster.error(this.phoneError);
     } else if (lower.includes('email') && lower.includes('registered')) {
-      this.emailError = 'البريد الإلكتروني مسجل مسبقاً';
+      this.emailError = this.t('createAdmin.msg.emailTaken');
       this.toaster.error(this.emailError);
     } else {
       this.toaster.error(message);

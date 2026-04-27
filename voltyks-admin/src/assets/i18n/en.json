@@ -180,7 +180,23 @@
     "newPassword": "New password",
     "confirmPassword": "Confirm password",
     "resetPassword": "Reset password",
-    "backToLogin": "Back to login"
+    "backToLogin": "Back to login",
+    "msg": {
+      "adminsOnly": "Sorry, the admin panel is for administrators only",
+      "loginFailed": "Login failed",
+      "serverConnection": "Failed to connect to the server. Check your internet connection or contact a system administrator.",
+      "invalidCredentials": "Email or password is incorrect",
+      "serviceUnavailable": "Service is currently unavailable. Please try again later",
+      "serverError": "Server error. Please try again later",
+      "loginErrorGeneric": "An error occurred during login",
+      "required": "This field is required",
+      "minLength": "Minimum {{count}} characters"
+    },
+    "fp": {
+      "sendSuccess": "Verification code sent successfully. Please check your phone.",
+      "sendFail": "Failed to send verification code",
+      "generic": "An error occurred while processing the request"
+    }
   },
   "sidebar": {
     "groups": {
@@ -537,7 +553,24 @@
     "statusEnabled": "Enabled",
     "statusDisabled": "Disabled",
     "bookingStatus": "Booking status",
-    "dateFormat": "EEEE, d MMMM yyyy"
+    "dateFormat": "EEEE, d MMMM yyyy",
+    "charts": {
+      "usersAxis": "Users",
+      "chargersAxis": "Chargers",
+      "vehiclesAxis": "Vehicles",
+      "reportsAxis": "Reports",
+      "pendingAxis": "Pending",
+      "resolvedAxis": "Resolved",
+      "reservationPending": "Pending",
+      "reservationContacted": "Contacted",
+      "reservationCompleted": "Completed",
+      "reservationCancelled": "Cancelled"
+    },
+    "timeAgo": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "daysAgo": "{{count}} days ago"
+    }
   },
   "users": {
     "title": "User Management",
@@ -1000,7 +1033,23 @@
     "saveEdits": "Save edits",
     "cancel": "Cancel",
     "empty": "No terms & conditions available right now",
-    "retry": "Retry"
+    "retry": "Retry",
+    "msg": {
+      "notFound": "No terms & conditions found for this language",
+      "loadError": "An error occurred while loading terms & conditions",
+      "invalidJson": "Invalid JSON",
+      "formatSuccess": "JSON formatted successfully",
+      "formatInvalid": "Cannot format invalid JSON",
+      "noData": "No data to save",
+      "fixErrors": "Please fix JSON errors before saving",
+      "formatError": "JSON format error: {{message}}",
+      "saveSuccess": "Edits saved successfully",
+      "saveFail": "Failed to save edits",
+      "saveError": "An error occurred while saving edits",
+      "printTitle": "Terms & conditions — {{lang}}"
+    },
+    "langArabic": "Arabic",
+    "langEnglish": "English"
   },
   "appConfig": {
     "title": "App Configuration",
@@ -1042,7 +1091,22 @@
     "loadFailed": "Failed to load data",
     "loadFailedHint": "Check the server connection and try again",
     "loading": "Loading settings...",
-    "exampleVersion": "Example: 1.0.0"
+    "exampleVersion": "Example: 1.0.0",
+    "toast": {
+      "loadFail": "Failed to load settings",
+      "saveSuccess": "Settings saved successfully",
+      "saveFail": "Failed to save settings",
+      "enableActionVerb": "Enable",
+      "disableActionVerb": "Disable",
+      "platformConfirmEnable": "Are you sure you want to enable the {{platform}} app?",
+      "platformConfirmDisable": "Are you sure you want to disable the {{platform}} app? {{platform}} users will lose access.",
+      "chargingModeAction": "{{action}} charging mode",
+      "chargingModeConfirmEnable": "Are you sure you want to enable charging mode? Users will be able to use chargers and run new charging processes.",
+      "chargingModeConfirmDisable": "Are you sure you want to disable charging mode? Users will be unable to use chargers or start new charging processes. They will see the message \"Charging is currently disabled\".",
+      "chargingModeEnabledToast": "Charging mode enabled successfully",
+      "chargingModeDisabledToast": "Charging mode disabled",
+      "chargingModeFail": "Failed to update charging mode"
+    }
   },
   "adminsMode": {
     "title": "Admin-Only Mode",
@@ -1542,7 +1606,22 @@
     "detailNameLabel": "Name",
     "detailEmailLabel": "Email",
     "detailPhoneLabel": "Phone number",
-    "createAnother": "Create another admin"
+    "createAnother": "Create another admin",
+    "msg": {
+      "otpSent": "Verification code sent to your phone",
+      "otpSendFail": "Failed to send verification code",
+      "createSuccess": "Admin created successfully",
+      "createFail": "Failed to create admin",
+      "enterOtp": "Please enter the verification code (4 digits)",
+      "enterFullName": "Please enter the full name",
+      "invalidEmail": "Please enter a valid email",
+      "enterPhone": "Please enter the phone number",
+      "shortPassword": "Password must be at least 6 characters",
+      "otpExpired": "Verification code expired — request a new one",
+      "otpIncorrect": "Verification code is incorrect",
+      "phoneTaken": "Phone number already registered",
+      "emailTaken": "Email already registered"
+    }
   },
   "backup": {
     "title": "Backup",
@@ -1571,7 +1650,14 @@
     "downloadTip": "Download",
     "emptyInRange": "No backups in this range",
     "clearFilter": "Clear filter",
-    "emptyAll": "No backups yet"
+    "emptyAll": "No backups yet",
+    "msg": {
+      "loadFail": "Failed to load the backups list",
+      "createSuccess": "Backup created successfully",
+      "createFail": "Failed to create backup",
+      "downloadStart": "Downloading file...",
+      "downloadFail": "Failed to download file"
+    }
   },
   "about": {
     "title": "About Voltyks",
@@ -1630,5 +1716,19 @@
     "chargingTypeChinese": "AC/DC",
     "chargingTypeEuropean": "AC + DC combined",
     "detailedExplanation": "Detailed explanation"
+  },
+  "brandsModels": {
+    "pageTitle": "Brands & models management",
+    "pageSubtitle": "View all registered brands and models",
+    "brandsTitle": "Brands",
+    "nameCol": "Name",
+    "modelsCountCol": "Models count",
+    "actionsCol": "Actions",
+    "viewModels": "View models",
+    "modelsTitle": "Models",
+    "filteredSuffix": "(filtered by brand)",
+    "clearFilter": "Clear filter",
+    "brandCol": "Brand",
+    "capacityCol": "Battery capacity (kWh)"
   }
 }

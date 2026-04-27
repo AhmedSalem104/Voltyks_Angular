@@ -14,19 +14,19 @@ import { ToasterService } from '../../shared/components/toaster/toaster.service'
   imports: [CommonModule, FormsModule, PaginationComponent, LoadingOverlayComponent, TranslatePipe],
   template: `
     <div class="brands-models-container">
-      <h2>إدارة العلامات التجارية والموديلات</h2>
-      <p class="subtitle">عرض جميع العلامات التجارية والموديلات المسجلة</p>
+      <h2>{{ "brandsModels.pageTitle" | translate }}</h2>
+      <p class="subtitle">{{ "brandsModels.pageSubtitle" | translate }}</p>
 
       <!-- Brands Section -->
       <div class="voltyks-card">
-        <h3>العلامات التجارية</h3>
+        <h3>{{ "brandsModels.brandsTitle" | translate }}</h3>
         @if (paginatedBrands.length > 0) {
           <table class="voltyks-table">
             <thead>
               <tr>
-                <th>الاسم</th>
-                <th>عدد الموديلات</th>
-                <th>الإجراءات</th>
+                <th>{{ "brandsModels.nameCol" | translate }}</th>
+                <th>{{ "brandsModels.modelsCountCol" | translate }}</th>
+                <th>{{ "brandsModels.actionsCol" | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -36,7 +36,7 @@ import { ToasterService } from '../../shared/components/toaster/toaster.service'
                   <td>{{ brand.totalModels || 0 }}</td>
                   <td>
                     <button class="voltyks-btn btn-primary btn-sm" (click)="loadModelsByBrand(brand.id)">
-                      عرض الموديلات
+                      {{ "brandsModels.viewModels" | translate }}
                     </button>
                   </td>
                 </tr>
@@ -55,18 +55,18 @@ import { ToasterService } from '../../shared/components/toaster/toaster.service'
       <!-- Models Section -->
       @if (models.length > 0) {
         <div class="voltyks-card">
-          <h3>الموديلات {{ selectedBrandId ? '(مرشحة حسب العلامة)' : '' }}</h3>
+          <h3>{{ "brandsModels.modelsTitle" | translate }} {{ selectedBrandId ? ("brandsModels.filteredSuffix" | translate) : '' }}</h3>
           @if (selectedBrandId) {
             <button class="voltyks-btn btn-secondary btn-sm mb-md" (click)="clearFilter()">
-              إلغاء التصفية
+              {{ "brandsModels.clearFilter" | translate }}
             </button>
           }
           <table class="voltyks-table">
             <thead>
               <tr>
-                <th>الاسم</th>
-                <th>العلامة التجارية</th>
-                <th>سعة البطارية (kWh)</th>
+                <th>{{ "brandsModels.nameCol" | translate }}</th>
+                <th>{{ "brandsModels.brandCol" | translate }}</th>
+                <th>{{ "brandsModels.capacityCol" | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -264,6 +264,6 @@ export class BrandsModelsComponent implements OnInit {
 
   formatDate(dateString: string): string {
     if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+    return new Date(dateString).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
   }
 }

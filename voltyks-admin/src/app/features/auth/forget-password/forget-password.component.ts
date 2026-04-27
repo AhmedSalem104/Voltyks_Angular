@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -22,6 +22,11 @@ export class ForgetPasswordComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private themeService = inject(ThemeService);
   private cdr = inject(ChangeDetectorRef);
+  private translate = inject(TranslateService);
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   // Destroy subject for cleanup
   private destroy$ = new Subject<void>();
@@ -74,20 +79,20 @@ export class ForgetPasswordComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.isLoading = false;
         if (response.status) {
-          this.successMessage = response.message || 'تم إرسال كود التحقق بنجاح. يرجى التحقق من هاتفك.';
+          this.successMessage = response.message || this.t('auth.fp.sendSuccess');
 
           // Redirect to login after 3 seconds
           setTimeout(() => {
             this.router.navigate(['/login']);
           }, 3000);
         } else {
-          this.errorMessage = response.message || 'فشل إرسال كود التحقق';
+          this.errorMessage = response.message || this.t('auth.fp.sendFail');
         }
         this.cdr.markForCheck();
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = error.error?.message || 'حدث خطأ أثناء معالجة الطلب';
+        this.errorMessage = error.error?.message || this.t('auth.fp.generic');
         this.cdr.markForCheck();
       }
     });
@@ -120,11 +125,11 @@ export class ForgetPasswordComponent implements OnInit, OnDestroy {
   getErrorMessage(fieldName: string): string {
     const field = this.forgetPasswordForm.get(fieldName);
     if (field?.hasError('required')) {
-      return 'هذا الحقل مطلوب';
+      return this.t('auth.msg.required');
     }
     if (field?.hasError('minlength')) {
       const minLength = field.getError('minlength').requiredLength;
-      return `الحد الأدنى ${minLength} أحرف`;
+      return this.t('auth.msg.minLength', { count: minLength });
     }
     return '';
   }
