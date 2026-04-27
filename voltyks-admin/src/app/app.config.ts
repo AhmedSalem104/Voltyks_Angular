@@ -1,12 +1,13 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, LOCALE_ID } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, LOCALE_ID, provideAppInitializer, inject } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
 import localeAr from '@angular/common/locales/ar-EG';
 import localeEn from '@angular/common/locales/en';
-import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { firstValueFrom } from 'rxjs';
 
 import { routes } from './app.routes';
 import { authInterceptor, errorInterceptor, rateLimitInterceptor, retryInterceptor } from './core/interceptors';
@@ -46,6 +47,14 @@ export const appConfig: ApplicationConfig = {
       provide: LOCALE_ID,
       useFactory: (langService: LanguageService) => langService.currentLocale,
       deps: [LanguageService]
-    }
+    },
+    // Block app bootstrap until the saved language's JSON is loaded.
+    // Without this the sidebar/header can render before translations resolve,
+    // showing raw keys like "sidebar.items.fees".
+    provideAppInitializer(() => {
+      const lang = inject(LanguageService);
+      const translate = inject(TranslateService);
+      return firstValueFrom(translate.use(lang.currentLanguage));
+    })
   ]
 };
