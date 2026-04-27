@@ -36,12 +36,17 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimations(),
     provideTranslateService({
-      defaultLanguage: 'ar',
+      // `defaultLanguage` is deprecated in v17 in favor of `fallbackLang`.
       fallbackLang: 'ar'
     }),
     provideTranslateHttpLoader({
       prefix: '/assets/i18n/',
-      suffix: '.json'
+      suffix: '.json',
+      // Bypass HttpClient interceptors (auth, case-transform, cache, retry,
+      // error) for translation downloads. case-transform was lower-casing
+      // dictionary keys (e.g. processStatus.Pending → pending) and the
+      // cache layer was masking real fetch failures.
+      useHttpBackend: true
     }),
     {
       provide: LOCALE_ID,
