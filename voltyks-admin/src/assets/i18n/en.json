@@ -152,7 +152,9 @@
     "notifications": "Notifications",
     "toggleTheme": "Toggle theme",
     "toggleLanguage": "Change language",
-    "menu": "Menu"
+    "menu": "Menu",
+    "themeDark": "Dark mode",
+    "themeLight": "Light mode"
   },
   "auth": {
     "login": "Login",

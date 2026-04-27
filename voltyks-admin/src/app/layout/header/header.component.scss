@@ -83,134 +83,212 @@
   flex-shrink: 0;
 }
 
-// Theme Toggle Button
-.theme-toggle {
+// ==========================================================================
+//  Segmented Toggles  —  shared shell for the language and theme switchers
+//  in the navbar. Both render two side-by-side options with a single sliding
+//  green pill that tweens between them when the active option changes.
+// ==========================================================================
+
+.seg-toggle {
+  --seg-h: 40px;
+  --seg-pad: 4px;
+  --seg-radius: 999px;
+  --seg-anim: cubic-bezier(0.4, 0.0, 0.2, 1);
+
   position: relative;
-  background: linear-gradient(135deg, rgba(0, 200, 83, 0.1) 0%, rgba(0, 200, 83, 0.05) 100%);
-  border: 1px solid rgba(0, 200, 83, 0.2);
-  color: #00C853;
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 10px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-
-  .material-symbols-rounded {
-    font-size: 22px;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  &:hover {
-    background: linear-gradient(135deg, rgba(0, 200, 83, 0.2) 0%, rgba(0, 200, 83, 0.1) 100%);
-    border-color: rgba(0, 200, 83, 0.4);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 200, 83, 0.3);
-
-    .material-symbols-rounded {
-      transform: rotate(180deg) scale(1.1);
-    }
-  }
-
-  &:active {
-    transform: translateY(0) scale(0.95);
-  }
-}
-
-// Language Toggle — segmented pill: [ ع العربية | EN English ]
-.lang-toggle {
   display: inline-flex;
   align-items: stretch;
-  height: 44px;
-  padding: 4px;
-  gap: 4px;
+  height: var(--seg-h);
+  padding: var(--seg-pad);
   background: var(--bg-elevated, rgba(255, 255, 255, 0.04));
   border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
-  border-radius: 12px;
+  border-radius: var(--seg-radius);
   font-family: 'Cairo', sans-serif;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  user-select: none;
 
   &:hover {
-    border-color: rgba(0, 200, 83, 0.4);
+    border-color: rgba(0, 200, 83, 0.45);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
   }
 }
 
-.lang-segment {
+// Sliding green pill that sits behind the active option. Two equal columns,
+// so it spans 50% and translates by 100% to land on the second option.
+.seg-indicator {
+  position: absolute;
+  top: var(--seg-pad);
+  bottom: var(--seg-pad);
+  left: var(--seg-pad);
+  width: calc(50% - var(--seg-pad));
+  border-radius: calc(var(--seg-radius) - var(--seg-pad));
+  background: linear-gradient(135deg, #00E064 0%, #00A040 100%);
+  box-shadow: 0 4px 12px rgba(0, 200, 83, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition: transform 0.35s var(--seg-anim);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.seg-toggle.is-second .seg-indicator {
+  transform: translateX(100%);
+}
+
+// In RTL the visual order of the buttons flips — so when the second logical
+// option is active, the indicator must slide *the other way* visually.
+:host-context([dir='rtl']) .seg-toggle.is-second .seg-indicator,
+[dir='rtl'] .seg-toggle.is-second .seg-indicator {
+  transform: translateX(-100%);
+}
+
+.seg-option {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 7px;
   height: 100%;
-  padding: 0 12px;
+  min-width: 44px;
+  padding: 0 14px;
   border: 0;
   background: transparent;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  color: var(--text-secondary, rgba(255, 255, 255, 0.62));
   font-family: inherit;
   font-weight: 600;
   font-size: 13px;
   line-height: 1;
   letter-spacing: 0.3px;
-  border-radius: 8px;
+  border-radius: calc(var(--seg-radius) - var(--seg-pad));
   cursor: pointer;
-  transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease;
+  transition: color 0.25s ease, transform 0.15s ease;
   white-space: nowrap;
 
-  .lang-code {
+  .material-symbols-rounded {
+    font-size: 20px;
+    transition: transform 0.4s var(--seg-anim);
+  }
+
+  // Small chip with the language abbreviation (ع / EN). Subtle bg in the
+  // inactive state, transparent-white over the green pill when active.
+  .seg-code {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 20px;
-    height: 20px;
-    padding: 0 4px;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
     font-size: 12px;
     font-weight: 700;
-    border-radius: 6px;
+    border-radius: 8px;
     background: rgba(255, 255, 255, 0.08);
     color: var(--text-primary, #fff);
     transition: background 0.25s ease, color 0.25s ease;
   }
 
-  .lang-name {
+  .seg-label {
     font-size: 13px;
+    font-weight: 600;
   }
 
+  // Hover on the inactive option — preview the brand color without
+  // committing the slide.
   &:hover:not(.active) {
     color: var(--text-primary, #fff);
 
-    .lang-code {
-      background: rgba(0, 200, 83, 0.15);
+    .seg-code {
+      background: rgba(0, 200, 83, 0.18);
       color: #00C853;
     }
   }
 
+  // Active option — sits on top of the green sliding pill.
   &.active {
-    background: linear-gradient(135deg, #00C853 0%, #00A040 100%);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 200, 83, 0.35);
+    color: #ffffff;
 
-    .lang-code {
+    .seg-code {
       background: rgba(255, 255, 255, 0.22);
-      color: #fff;
+      color: #ffffff;
+    }
+
+    .material-symbols-rounded {
+      transform: scale(1.1);
     }
   }
 
   &:active {
     transform: scale(0.97);
   }
+
+  &:focus-visible {
+    outline: 2px solid rgba(0, 200, 83, 0.6);
+    outline-offset: 2px;
+  }
 }
 
-// Compact mode: hide the spelled-out name on narrow viewports, keep just the
-// abbreviated code (ع / EN). Keeps the toggle from eating navbar space on
-// laptops/tablets while staying readable.
-@media (max-width: 1100px) {
-  .lang-segment {
-    padding: 0 8px;
+// ==========================================================================
+//  Light theme overrides — the segmented control sits on a white nav, so
+//  the muted-text and chip backgrounds need higher-contrast values.
+// ==========================================================================
+:host-context([data-theme='light']) .seg-toggle,
+[data-theme='light'] .seg-toggle {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.1);
 
-    .lang-name {
-      display: none;
+  .seg-option {
+    color: rgba(0, 0, 0, 0.62);
+
+    .seg-code {
+      background: rgba(0, 0, 0, 0.06);
+      color: rgba(0, 0, 0, 0.78);
+    }
+
+    &:hover:not(.active) {
+      color: rgba(0, 0, 0, 0.92);
+
+      .seg-code {
+        background: rgba(0, 200, 83, 0.18);
+        color: #00A040;
+      }
+    }
+
+    &.active {
+      color: #ffffff;
+
+      .seg-code {
+        background: rgba(255, 255, 255, 0.28);
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+// ==========================================================================
+//  Responsive sizing
+//  - <=1100px: drop the spelled-out language name (keep ع / EN chip only)
+//  - <=720px:  fully icon-only; even tighter padding
+// ==========================================================================
+@media (max-width: 1100px) {
+  .lang-toggle .seg-label {
+    display: none;
+  }
+
+  .seg-option {
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 720px) {
+  .seg-toggle {
+    --seg-h: 36px;
+  }
+
+  .seg-option {
+    padding: 0 8px;
+    min-width: 38px;
+
+    .material-symbols-rounded {
+      font-size: 18px;
     }
   }
 }

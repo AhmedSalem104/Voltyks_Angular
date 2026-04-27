@@ -152,7 +152,9 @@
     "notifications": "الإشعارات",
     "toggleTheme": "تبديل المظهر",
     "toggleLanguage": "تغيير اللغة",
-    "menu": "القائمة"
+    "menu": "القائمة",
+    "themeDark": "الوضع الداكن",
+    "themeLight": "الوضع الفاتح"
   },
   "auth": {
     "login": "تسجيل دخول",

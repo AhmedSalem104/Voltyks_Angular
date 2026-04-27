@@ -51,36 +51,67 @@ import { NotificationDropdownComponent } from '../../shared/components/notificat
           ></app-notification-dropdown>
         </div>
 
-        <!-- Language Toggle (segmented pill) -->
-        <div class="lang-toggle" role="group" [attr.aria-label]="'header.toggleLanguage' | translate">
+        <!-- Language Toggle (segmented pill with sliding indicator) -->
+        <div
+          class="seg-toggle lang-toggle"
+          [class.is-second]="currentLanguage === 'en'"
+          role="group"
+          [attr.aria-label]="'header.toggleLanguage' | translate"
+        >
+          <span class="seg-indicator" aria-hidden="true"></span>
           <button
             type="button"
-            class="lang-segment"
+            class="seg-option"
             [class.active]="currentLanguage === 'ar'"
             [attr.aria-pressed]="currentLanguage === 'ar'"
             (click)="setLanguage('ar')"
             title="العربية"
           >
-            <span class="lang-code">ع</span>
-            <span class="lang-name">العربية</span>
+            <span class="seg-code" lang="ar">ع</span>
+            <span class="seg-label">العربية</span>
           </button>
           <button
             type="button"
-            class="lang-segment"
+            class="seg-option"
             [class.active]="currentLanguage === 'en'"
             [attr.aria-pressed]="currentLanguage === 'en'"
             (click)="setLanguage('en')"
             title="English"
           >
-            <span class="lang-code">EN</span>
-            <span class="lang-name">English</span>
+            <span class="seg-code" lang="en">EN</span>
+            <span class="seg-label">English</span>
           </button>
         </div>
 
-        <!-- Theme Toggle -->
-        <button class="theme-toggle" (click)="toggleTheme()" [title]="'header.toggleTheme' | translate">
-          <span class="material-symbols-rounded">{{ currentTheme === 'dark' ? 'light_mode' : 'dark_mode' }}</span>
-        </button>
+        <!-- Theme Toggle (segmented pill with sliding indicator) -->
+        <div
+          class="seg-toggle theme-toggle"
+          [class.is-second]="currentTheme === 'light'"
+          role="group"
+          [attr.aria-label]="'header.toggleTheme' | translate"
+        >
+          <span class="seg-indicator" aria-hidden="true"></span>
+          <button
+            type="button"
+            class="seg-option"
+            [class.active]="currentTheme === 'dark'"
+            [attr.aria-pressed]="currentTheme === 'dark'"
+            (click)="setTheme('dark')"
+            [title]="'header.themeDark' | translate"
+          >
+            <span class="material-symbols-rounded">dark_mode</span>
+          </button>
+          <button
+            type="button"
+            class="seg-option"
+            [class.active]="currentTheme === 'light'"
+            [attr.aria-pressed]="currentTheme === 'light'"
+            (click)="setTheme('light')"
+            [title]="'header.themeLight' | translate"
+          >
+            <span class="material-symbols-rounded">light_mode</span>
+          </button>
+        </div>
 
         <!-- Logout Button -->
         <button class="logout-btn" (click)="logout()" [title]="'header.logout' | translate">
@@ -173,6 +204,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleTheme(): void {
     this.themeService.toggleTheme();
+  }
+
+  setTheme(theme: 'dark' | 'light'): void {
+    if (this.currentTheme !== theme) {
+      this.themeService.setTheme(theme);
+    }
   }
 
   toggleLanguage(): void {
