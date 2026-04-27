@@ -8,6 +8,7 @@ import { AdminNotificationsCenterService } from '../../../core/services/admin/ad
 import { NotificationTemplateDto } from '../../../core/models';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { ToasterService } from '../../../shared/components/toaster/toaster.service';
 import { TemplateEditorModalComponent } from '../template-editor-modal/template-editor-modal.component';
 
@@ -22,6 +23,7 @@ type Category = 'all' | 'charging' | 'process' | 'reports' | 'vehicle' | 'other'
     TranslatePipe,
     LoadingOverlayComponent,
     ConfirmDialogComponent,
+    PaginationComponent,
     TemplateEditorModalComponent
   ],
   templateUrl: './templates-list.component.html',
@@ -33,10 +35,15 @@ export class TemplatesListComponent implements OnInit, OnDestroy {
 
   templates: NotificationTemplateDto[] = [];
   filtered: NotificationTemplateDto[] = [];
+  paginated: NotificationTemplateDto[] = [];
 
   searchTerm = '';
   category: Category = 'all';
   private searchSubject = new Subject<string>();
+
+  // Pagination
+  currentPage = 1;
+  pageSize = 10;
 
   isLoading = false;
 
@@ -132,6 +139,28 @@ export class TemplatesListComponent implements OnInit, OnDestroy {
       }
       return true;
     });
+
+    // Reset to first page whenever the filtered set changes, then re-slice.
+    this.currentPage = 1;
+    this.updatePaginated();
+  }
+
+  private updatePaginated(): void {
+    const start = (this.currentPage - 1) * this.pageSize;
+    this.paginated = this.filtered.slice(start, start + this.pageSize);
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.updatePaginated();
+    this.cdr.markForCheck();
+  }
+
+  onPageSizeChange(size: number): void {
+    this.pageSize = size;
+    this.currentPage = 1;
+    this.updatePaginated();
+    this.cdr.markForCheck();
   }
 
   /**

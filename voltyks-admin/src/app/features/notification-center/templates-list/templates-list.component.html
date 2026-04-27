@@ -110,9 +110,9 @@
             </tr>
           </thead>
           <tbody>
-            @for (t of filtered; track trackByKey($index, t); let i = $index) {
+            @for (t of paginated; track trackByKey($index, t); let i = $index) {
               <tr>
-                <td class="cell-index">{{ i + 1 }}</td>
+                <td class="cell-index">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
                 <td class="cell-key">
                   <code>{{ t.key }}</code>
                 </td>
@@ -173,6 +173,14 @@
           </tbody>
         </table>
       </div>
+
+      <app-pagination
+        [totalItems]="filtered.length"
+        [pageSize]="pageSize"
+        [currentPage]="currentPage"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      ></app-pagination>
     } @else {
       <div class="empty-state">
         <span class="material-symbols-rounded empty-icon">inbox</span>
