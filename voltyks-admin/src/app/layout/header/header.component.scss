@@ -84,140 +84,237 @@
 }
 
 // ==========================================================================
-//  Segmented Toggles  —  shared shell for the language and theme switchers
-//  in the navbar. Both render two side-by-side options with a single sliding
-//  green pill that tweens between them when the active option changes.
+//  Language Picker  —  click-to-open dropdown menu (GitHub / Vercel pattern)
 // ==========================================================================
 
-.seg-toggle {
-  --seg-h: 40px;
-  --seg-pad: 4px;
-  --seg-radius: 999px;
-  --seg-anim: cubic-bezier(0.4, 0.0, 0.2, 1);
-
+.lang-picker {
   position: relative;
-  display: inline-flex;
-  align-items: stretch;
-  height: var(--seg-h);
-  padding: var(--seg-pad);
-  background: var(--bg-elevated, rgba(255, 255, 255, 0.04));
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
-  border-radius: var(--seg-radius);
   font-family: 'Cairo', sans-serif;
-  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
-  user-select: none;
-
-  &:hover {
-    border-color: rgba(0, 200, 83, 0.45);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
-  }
 }
 
-// Sliding green pill that sits behind the active option. Two equal columns,
-// so it spans 50% and translates by 100% to land on the second option.
-.seg-indicator {
-  position: absolute;
-  top: var(--seg-pad);
-  bottom: var(--seg-pad);
-  left: var(--seg-pad);
-  width: calc(50% - var(--seg-pad));
-  border-radius: calc(var(--seg-radius) - var(--seg-pad));
-  background: linear-gradient(135deg, #00E064 0%, #00A040 100%);
-  box-shadow: 0 4px 12px rgba(0, 200, 83, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  transition: transform 0.35s var(--seg-anim);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.seg-toggle.is-second .seg-indicator {
-  transform: translateX(100%);
-}
-
-// In RTL the visual order of the buttons flips — so when the second logical
-// option is active, the indicator must slide *the other way* visually.
-:host-context([dir='rtl']) .seg-toggle.is-second .seg-indicator,
-[dir='rtl'] .seg-toggle.is-second .seg-indicator {
-  transform: translateX(-100%);
-}
-
-.seg-option {
-  position: relative;
-  z-index: 1;
+.lang-trigger {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 7px;
-  height: 100%;
-  min-width: 44px;
-  padding: 0 14px;
-  border: 0;
-  background: transparent;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.62));
+  gap: 8px;
+  height: 40px;
+  padding: 0 12px 0 10px;
+  background: var(--bg-elevated, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  border-radius: 10px;
+  color: var(--text-primary, #ffffff);
   font-family: inherit;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1;
-  letter-spacing: 0.3px;
-  border-radius: calc(var(--seg-radius) - var(--seg-pad));
   cursor: pointer;
-  transition: color 0.25s ease, transform 0.15s ease;
-  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 
-  .material-symbols-rounded {
+  .lang-icon {
     font-size: 20px;
-    transition: transform 0.4s var(--seg-anim);
+    color: #00C853;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  // Small chip with the language abbreviation (ع / EN). Subtle bg in the
-  // inactive state, transparent-white over the green pill when active.
-  .seg-code {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 22px;
-    height: 22px;
-    padding: 0 6px;
-    font-size: 12px;
-    font-weight: 700;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text-primary, #fff);
-    transition: background 0.25s ease, color 0.25s ease;
+  .lang-current {
+    min-width: 0;
+    white-space: nowrap;
+    letter-spacing: 0.2px;
   }
 
-  .seg-label {
-    font-size: 13px;
-    font-weight: 600;
+  .lang-chevron {
+    font-size: 18px;
+    color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  // Hover on the inactive option — preview the brand color without
-  // committing the slide.
-  &:hover:not(.active) {
-    color: var(--text-primary, #fff);
+  &:hover {
+    background: var(--bg-hover, rgba(0, 200, 83, 0.08));
+    border-color: rgba(0, 200, 83, 0.4);
 
-    .seg-code {
-      background: rgba(0, 200, 83, 0.18);
-      color: #00C853;
+    .lang-icon {
+      transform: rotate(15deg);
     }
   }
 
-  // Active option — sits on top of the green sliding pill.
-  &.active {
-    color: #ffffff;
+  &.open {
+    background: rgba(0, 200, 83, 0.12);
+    border-color: rgba(0, 200, 83, 0.5);
 
-    .seg-code {
-      background: rgba(255, 255, 255, 0.22);
-      color: #ffffff;
-    }
-
-    .material-symbols-rounded {
-      transform: scale(1.1);
+    .lang-chevron {
+      transform: rotate(180deg);
     }
   }
 
   &:active {
-    transform: scale(0.97);
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(0, 200, 83, 0.6);
+    outline-offset: 2px;
+  }
+}
+
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  inset-inline-end: 0;
+  min-width: 220px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--bg-card, #1c1c24);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3),
+              0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  animation: lang-menu-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  li {
+    padding: 0;
+  }
+}
+
+@keyframes lang-menu-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  color: var(--text-primary, #ffffff);
+  font-family: inherit;
+  font-weight: 500;
+  text-align: start;
+  cursor: pointer;
+  transition: background 0.18s ease;
+
+  .lang-flag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, rgba(0, 200, 83, 0.15) 0%, rgba(0, 200, 83, 0.06) 100%);
+    border: 1px solid rgba(0, 200, 83, 0.25);
+    border-radius: 8px;
+    color: #00C853;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  .lang-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .lang-text-primary {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text-primary, #ffffff);
+  }
+
+  .lang-text-secondary {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--text-secondary, rgba(255, 255, 255, 0.5));
+    letter-spacing: 0.2px;
+  }
+
+  .lang-check {
+    font-size: 20px;
+    color: #00C853;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: var(--bg-hover, rgba(0, 200, 83, 0.08));
+  }
+
+  &.active {
+    background: rgba(0, 200, 83, 0.12);
+
+    .lang-flag {
+      background: linear-gradient(135deg, #00E064 0%, #00A040 100%);
+      border-color: transparent;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 200, 83, 0.4);
+    }
+  }
+}
+
+// ==========================================================================
+//  Theme Toggle  —  single icon button, sun and moon stack with crossfade
+// ==========================================================================
+
+.theme-toggle {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background: var(--bg-elevated, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+
+  .icon-moon,
+  .icon-sun {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 20px;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .icon-moon {
+    color: #b9b3ff;  // soft moon-blue
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+
+  .icon-sun {
+    color: #ffb547;  // warm sun-gold
+    transform: translate(-50%, -50%) rotate(-90deg) scale(0.4);
+    opacity: 0;
+  }
+
+  // is-light = light theme is active → show sun, hide moon
+  &.is-light {
+    .icon-moon {
+      transform: translate(-50%, -50%) rotate(90deg) scale(0.4);
+      opacity: 0;
+    }
+    .icon-sun {
+      transform: translate(-50%, -50%) rotate(0deg) scale(1);
+      opacity: 1;
+    }
+  }
+
+  &:hover {
+    background: var(--bg-hover, rgba(0, 200, 83, 0.08));
+    border-color: rgba(0, 200, 83, 0.4);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 
   &:focus-visible {
@@ -227,70 +324,57 @@
 }
 
 // ==========================================================================
-//  Light theme overrides — the segmented control sits on a white nav, so
-//  the muted-text and chip backgrounds need higher-contrast values.
+//  Light theme overrides — controls sit on a white navbar in light mode.
 // ==========================================================================
-:host-context([data-theme='light']) .seg-toggle,
-[data-theme='light'] .seg-toggle {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.1);
+:host-context([data-theme='light']) {
+  .lang-trigger {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.88);
 
-  .seg-option {
-    color: rgba(0, 0, 0, 0.62);
+    .lang-chevron { color: rgba(0, 0, 0, 0.5); }
 
-    .seg-code {
-      background: rgba(0, 0, 0, 0.06);
-      color: rgba(0, 0, 0, 0.78);
-    }
+    &:hover { background: rgba(0, 200, 83, 0.08); }
+    &.open  { background: rgba(0, 200, 83, 0.12); }
+  }
 
-    &:hover:not(.active) {
-      color: rgba(0, 0, 0, 0.92);
+  .lang-menu {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12),
+                0 4px 12px rgba(0, 0, 0, 0.06);
+  }
 
-      .seg-code {
-        background: rgba(0, 200, 83, 0.18);
-        color: #00A040;
-      }
-    }
+  .lang-option {
+    color: rgba(0, 0, 0, 0.88);
 
-    &.active {
-      color: #ffffff;
+    .lang-text-primary  { color: rgba(0, 0, 0, 0.88); }
+    .lang-text-secondary { color: rgba(0, 0, 0, 0.5); }
 
-      .seg-code {
-        background: rgba(255, 255, 255, 0.28);
-        color: #ffffff;
-      }
-    }
+    &:hover { background: rgba(0, 200, 83, 0.08); }
+    &.active { background: rgba(0, 200, 83, 0.1); }
+  }
+
+  .theme-toggle {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.1);
+
+    &:hover { background: rgba(0, 200, 83, 0.08); }
   }
 }
 
 // ==========================================================================
-//  Responsive sizing
-//  - <=1100px: drop the spelled-out language name (keep ع / EN chip only)
-//  - <=720px:  fully icon-only; even tighter padding
+//  Responsive — collapse the language label below 720px.
 // ==========================================================================
-@media (max-width: 1100px) {
-  .lang-toggle .seg-label {
-    display: none;
-  }
-
-  .seg-option {
-    padding: 0 10px;
-  }
-}
-
 @media (max-width: 720px) {
-  .seg-toggle {
-    --seg-h: 36px;
-  }
-
-  .seg-option {
+  .lang-trigger {
     padding: 0 8px;
-    min-width: 38px;
 
-    .material-symbols-rounded {
-      font-size: 18px;
-    }
+    .lang-current { display: none; }
+    .lang-chevron { font-size: 16px; }
   }
+
+  .theme-toggle { width: 36px; height: 36px; }
 }
 
 // Notification Wrapper (for dropdown positioning)

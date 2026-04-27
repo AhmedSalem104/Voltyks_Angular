@@ -51,67 +51,76 @@ import { NotificationDropdownComponent } from '../../shared/components/notificat
           ></app-notification-dropdown>
         </div>
 
-        <!-- Language Toggle (segmented pill with sliding indicator) -->
-        <div
-          class="seg-toggle lang-toggle"
-          [class.is-second]="currentLanguage === 'en'"
-          role="group"
-          [attr.aria-label]="'header.toggleLanguage' | translate"
-        >
-          <span class="seg-indicator" aria-hidden="true"></span>
+        <!-- Language Picker (dropdown) -->
+        <div class="lang-picker" (document:click)="onDocumentClick($event)">
           <button
             type="button"
-            class="seg-option"
-            [class.active]="currentLanguage === 'ar'"
-            [attr.aria-pressed]="currentLanguage === 'ar'"
-            (click)="setLanguage('ar')"
-            title="العربية"
+            class="lang-trigger"
+            [class.open]="showLangMenu"
+            [attr.aria-expanded]="showLangMenu"
+            aria-haspopup="listbox"
+            (click)="toggleLangMenu($event)"
+            [title]="'header.toggleLanguage' | translate"
           >
-            <span class="seg-code" lang="ar">ع</span>
-            <span class="seg-label">العربية</span>
+            <span class="material-symbols-rounded lang-icon">language</span>
+            <span class="lang-current" [lang]="currentLanguage">
+              {{ currentLanguage === 'ar' ? 'العربية' : 'English' }}
+            </span>
+            <span class="material-symbols-rounded lang-chevron">expand_more</span>
           </button>
-          <button
-            type="button"
-            class="seg-option"
-            [class.active]="currentLanguage === 'en'"
-            [attr.aria-pressed]="currentLanguage === 'en'"
-            (click)="setLanguage('en')"
-            title="English"
-          >
-            <span class="seg-code" lang="en">EN</span>
-            <span class="seg-label">English</span>
-          </button>
+
+          @if (showLangMenu) {
+            <ul class="lang-menu" role="listbox" [attr.aria-label]="'header.toggleLanguage' | translate">
+              <li role="option" [attr.aria-selected]="currentLanguage === 'ar'">
+                <button
+                  type="button"
+                  class="lang-option"
+                  [class.active]="currentLanguage === 'ar'"
+                  (click)="pickLanguage('ar')"
+                >
+                  <span class="lang-flag" lang="ar">ع</span>
+                  <span class="lang-text">
+                    <span class="lang-text-primary">العربية</span>
+                    <span class="lang-text-secondary">Arabic</span>
+                  </span>
+                  @if (currentLanguage === 'ar') {
+                    <span class="material-symbols-rounded lang-check">check</span>
+                  }
+                </button>
+              </li>
+              <li role="option" [attr.aria-selected]="currentLanguage === 'en'">
+                <button
+                  type="button"
+                  class="lang-option"
+                  [class.active]="currentLanguage === 'en'"
+                  (click)="pickLanguage('en')"
+                >
+                  <span class="lang-flag" lang="en">EN</span>
+                  <span class="lang-text">
+                    <span class="lang-text-primary">English</span>
+                    <span class="lang-text-secondary">الإنجليزية</span>
+                  </span>
+                  @if (currentLanguage === 'en') {
+                    <span class="material-symbols-rounded lang-check">check</span>
+                  }
+                </button>
+              </li>
+            </ul>
+          }
         </div>
 
-        <!-- Theme Toggle (segmented pill with sliding indicator) -->
-        <div
-          class="seg-toggle theme-toggle"
-          [class.is-second]="currentTheme === 'light'"
-          role="group"
-          [attr.aria-label]="'header.toggleTheme' | translate"
+        <!-- Theme Toggle (single icon, animated sun/moon) -->
+        <button
+          type="button"
+          class="theme-toggle"
+          [class.is-light]="currentTheme === 'light'"
+          (click)="toggleTheme()"
+          [title]="(currentTheme === 'dark' ? 'header.themeLight' : 'header.themeDark') | translate"
+          [attr.aria-label]="(currentTheme === 'dark' ? 'header.themeLight' : 'header.themeDark') | translate"
         >
-          <span class="seg-indicator" aria-hidden="true"></span>
-          <button
-            type="button"
-            class="seg-option"
-            [class.active]="currentTheme === 'dark'"
-            [attr.aria-pressed]="currentTheme === 'dark'"
-            (click)="setTheme('dark')"
-            [title]="'header.themeDark' | translate"
-          >
-            <span class="material-symbols-rounded">dark_mode</span>
-          </button>
-          <button
-            type="button"
-            class="seg-option"
-            [class.active]="currentTheme === 'light'"
-            [attr.aria-pressed]="currentTheme === 'light'"
-            (click)="setTheme('light')"
-            [title]="'header.themeLight' | translate"
-          >
-            <span class="material-symbols-rounded">light_mode</span>
-          </button>
-        </div>
+          <span class="material-symbols-rounded icon-moon">dark_mode</span>
+          <span class="material-symbols-rounded icon-sun">light_mode</span>
+        </button>
 
         <!-- Logout Button -->
         <button class="logout-btn" (click)="logout()" [title]="'header.logout' | translate">
@@ -141,6 +150,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   // Notifications
   showNotifications = false;
   unreadCount = 0;
+
+  // Language dropdown
+  showLangMenu = false;
 
   private subscriptions: Subscription[] = [];
 
@@ -219,6 +231,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
   setLanguage(lang: Language): void {
     if (this.currentLanguage !== lang) {
       this.languageService.setLanguage(lang);
+    }
+  }
+
+  toggleLangMenu(event: Event): void {
+    event.stopPropagation();
+    this.showLangMenu = !this.showLangMenu;
+  }
+
+  pickLanguage(lang: Language): void {
+    this.showLangMenu = false;
+    if (this.currentLanguage !== lang) {
+      this.languageService.setLanguage(lang);
+    }
+  }
+
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.showLangMenu) return;
+    const target = event.target as HTMLElement;
+    if (!target.closest('.lang-picker')) {
+      this.showLangMenu = false;
+      this.cdr.markForCheck();
     }
   }
 
