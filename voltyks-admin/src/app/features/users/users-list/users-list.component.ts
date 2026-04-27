@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRe
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { AdminUsersService } from '../../../core/services/admin/admin-users.service';
 import { AdminUserDto } from '../../../core/models';
@@ -63,8 +63,13 @@ export class UsersListComponent implements OnInit, OnDestroy {
     private usersService: AdminUsersService,
     private toaster: ToasterService,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.setupSearch();
@@ -103,7 +108,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل المستخدمين');
+        this.toaster.error(error.message || this.t('users.list.msg.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -165,9 +170,9 @@ export class UsersListComponent implements OnInit, OnDestroy {
   }
 
   getStatusText(user: AdminUserDto): string {
-    if (user.isDeleted) return 'محذوف';
-    if (user.isBanned) return 'محظور';
-    return 'نشط';
+    if (user.isDeleted) return this.t('users.list.msg.statusDeleted');
+    if (user.isBanned) return this.t('users.list.msg.statusBanned');
+    return this.t('users.list.msg.statusActive');
   }
 
   // ========== Delete Actions ==========
@@ -178,8 +183,8 @@ export class UsersListComponent implements OnInit, OnDestroy {
   onDeleteUser(user: AdminUserDto): void {
     this.selectedUser = user;
     this.pendingAction = 'soft';
-    this.confirmDialogTitle = 'حذف المستخدم';
-    this.confirmDialogMessage = `هل أنت متأكد من حذف المستخدم "${user.fullName}"؟\n\nسيتم إخفاء المستخدم ولكن يمكن استعادته لاحقاً.`;
+    this.confirmDialogTitle = this.t('users.list.msg.deleteTitle');
+    this.confirmDialogMessage = this.t('users.list.msg.deleteMessage', { name: user.fullName });
     this.showConfirmDialog = true;
     this.cdr.markForCheck();
   }
@@ -190,8 +195,8 @@ export class UsersListComponent implements OnInit, OnDestroy {
   onPermanentDeleteUser(user: AdminUserDto): void {
     this.selectedUser = user;
     this.pendingAction = 'permanent';
-    this.confirmDialogTitle = '⚠️ حذف نهائي';
-    this.confirmDialogMessage = `تحذير: هذا الإجراء لا يمكن التراجع عنه!\n\nهل أنت متأكد من الحذف النهائي للمستخدم "${user.fullName}"؟\n\nسيتم حذف جميع بيانات المستخدم بشكل دائم.`;
+    this.confirmDialogTitle = this.t('users.list.msg.permanentTitle');
+    this.confirmDialogMessage = this.t('users.list.msg.permanentMessage', { name: user.fullName });
     this.showConfirmDialog = true;
     this.cdr.markForCheck();
   }
@@ -202,8 +207,8 @@ export class UsersListComponent implements OnInit, OnDestroy {
   onRestoreUser(user: AdminUserDto): void {
     this.selectedUser = user;
     this.pendingAction = 'restore';
-    this.confirmDialogTitle = 'استعادة المستخدم';
-    this.confirmDialogMessage = `هل تريد استعادة المستخدم "${user.fullName}"؟`;
+    this.confirmDialogTitle = this.t('users.list.msg.restoreTitle');
+    this.confirmDialogMessage = this.t('users.list.msg.restoreMessage', { name: user.fullName });
     this.showConfirmDialog = true;
     this.cdr.markForCheck();
   }
@@ -247,17 +252,17 @@ export class UsersListComponent implements OnInit, OnDestroy {
     this.usersService.deleteUser(this.selectedUser.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success(`تم حذف المستخدم "${this.selectedUser?.fullName}" بنجاح`);
+          this.toaster.success(this.t('users.list.msg.deleteSuccess', { name: this.selectedUser?.fullName }));
           this.loadUsers(this.searchTerm.trim() || undefined);
         } else {
-          this.toaster.error(response.message || 'فشل حذف المستخدم');
+          this.toaster.error(response.message || this.t('users.list.msg.deleteFail'));
           this.isLoading = false;
           this.cdr.markForCheck();
         }
         this.resetActionState();
       },
       error: (error) => {
-        this.toaster.error(error.error?.message || 'فشل حذف المستخدم');
+        this.toaster.error(error.error?.message || this.t('users.list.msg.deleteFail'));
         this.isLoading = false;
         this.resetActionState();
         this.cdr.markForCheck();
@@ -271,17 +276,17 @@ export class UsersListComponent implements OnInit, OnDestroy {
     this.usersService.permanentDeleteUser(this.selectedUser.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success(`تم الحذف النهائي للمستخدم "${this.selectedUser?.fullName}"`);
+          this.toaster.success(this.t('users.list.msg.permanentSuccess', { name: this.selectedUser?.fullName }));
           this.loadUsers(this.searchTerm.trim() || undefined);
         } else {
-          this.toaster.error(response.message || 'فشل الحذف النهائي');
+          this.toaster.error(response.message || this.t('users.list.msg.permanentFail'));
           this.isLoading = false;
           this.cdr.markForCheck();
         }
         this.resetActionState();
       },
       error: (error) => {
-        this.toaster.error(error.error?.message || 'فشل الحذف النهائي');
+        this.toaster.error(error.error?.message || this.t('users.list.msg.permanentFail'));
         this.isLoading = false;
         this.resetActionState();
         this.cdr.markForCheck();
@@ -295,17 +300,17 @@ export class UsersListComponent implements OnInit, OnDestroy {
     this.usersService.restoreUser(this.selectedUser.id).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success(`تم استعادة المستخدم "${this.selectedUser?.fullName}" بنجاح`);
+          this.toaster.success(this.t('users.list.msg.restoreSuccess', { name: this.selectedUser?.fullName }));
           this.loadUsers(this.searchTerm.trim() || undefined);
         } else {
-          this.toaster.error(response.message || 'فشل استعادة المستخدم');
+          this.toaster.error(response.message || this.t('users.list.msg.restoreFail'));
           this.isLoading = false;
           this.cdr.markForCheck();
         }
         this.resetActionState();
       },
       error: (error) => {
-        this.toaster.error(error.error?.message || 'فشل استعادة المستخدم');
+        this.toaster.error(error.error?.message || this.t('users.list.msg.restoreFail'));
         this.isLoading = false;
         this.resetActionState();
         this.cdr.markForCheck();
@@ -342,22 +347,22 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
   printToPdf(): void {
     this.printService.printTableToPdf({
-      title: 'تقرير المستخدمين',
+      title: this.t('users.list.printTitle'),
       filename: 'users_report',
       orientation: 'landscape',
       columns: [
         { header: '#', field: 'index' },
-        { header: 'الاسم الكامل', field: 'fullName' },
-        { header: 'البريد الإلكتروني', field: 'email' },
-        { header: 'رقم الهاتف', field: 'phoneNumber' },
-        { header: 'تاريخ التسجيل', field: 'dateCreatedFormatted' },
-        { header: 'الحالة', field: 'statusText' }
+        { header: this.t('users.list.printColumns.fullName'), field: 'fullName' },
+        { header: this.t('users.list.printColumns.email'), field: 'email' },
+        { header: this.t('users.list.printColumns.phone'), field: 'phoneNumber' },
+        { header: this.t('users.list.printColumns.dateCreated'), field: 'dateCreatedFormatted' },
+        { header: this.t('users.list.printColumns.status'), field: 'statusText' }
       ],
       data: this.filteredUsers.map((user, index) => ({
         ...user,
         index: index + 1,
         dateCreatedFormatted: this.formatDate(user.dateCreated),
-        statusText: user.isBanned ? 'محظور' : 'نشط'
+        statusText: this.t(user.isBanned ? 'users.list.msg.statusBanned' : 'users.list.msg.statusActive')
       }))
     });
   }

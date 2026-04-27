@@ -643,7 +643,37 @@
       "addBalanceConfirmTitle": "Confirm balance addition",
       "addBalanceConfirmMsg": "Are you sure you want to add {{amount}} {{currency}} to {{name}}'s balance?",
       "deductBalanceConfirmTitle": "Confirm balance deduction",
-      "deductBalanceConfirmMsg": "Are you sure you want to deduct {{amount}} {{currency}} from {{name}}'s balance?"
+      "deductBalanceConfirmMsg": "Are you sure you want to deduct {{amount}} {{currency}} from {{name}}'s balance?",
+      "msg": {
+        "loadSuccess": "User data loaded",
+        "loadFail": "Failed to load user data",
+        "walletFail": "Failed to load wallet",
+        "vehiclesFail": "Failed to load vehicles",
+        "reportsFail": "Failed to load reports",
+        "banAction": "Ban",
+        "unbanAction": "Unban",
+        "banSuccess": "{{action}} succeeded",
+        "banFail": "Operation failed",
+        "txLoadFail": "Failed to load transaction history",
+        "defaultUserName": "User",
+        "txReportTitle": "Transactions log — {{name}}",
+        "txTypeAdd": "Add",
+        "txTypeDeduct": "Deduct",
+        "enterValidAmount": "Please enter a valid amount greater than zero",
+        "enterNotes": "Please enter notes",
+        "addBalanceSuccess": "Balance added successfully",
+        "addBalanceFail": "Failed to add balance",
+        "deductBalanceSuccess": "Balance deducted successfully",
+        "deductBalanceFail": "Failed to deduct balance"
+      },
+      "txCols": {
+        "date": "Date",
+        "type": "Type",
+        "amount": "Amount",
+        "previous": "Previous balance",
+        "new": "New balance",
+        "notes": "Notes"
+      }
     },
     "list": {
       "filterActive": "Active",
@@ -653,7 +683,33 @@
       "titleDeleted": "Deleted users list",
       "titleAll": "All users list",
       "emptyDeleted": "No deleted users",
-      "emptyDefault": "No users"
+      "emptyDefault": "No users",
+      "msg": {
+        "loadFail": "Failed to load users",
+        "statusDeleted": "Deleted",
+        "statusBanned": "Banned",
+        "statusActive": "Active",
+        "deleteTitle": "Delete user",
+        "deleteMessage": "Are you sure you want to delete user \"{{name}}\"?\n\nThe user will be hidden but can be restored later.",
+        "permanentTitle": "⚠️ Permanent deletion",
+        "permanentMessage": "Warning: this action cannot be undone!\n\nAre you sure you want to permanently delete user \"{{name}}\"?\n\nAll user data will be removed permanently.",
+        "restoreTitle": "Restore user",
+        "restoreMessage": "Do you want to restore user \"{{name}}\"?",
+        "deleteSuccess": "User \"{{name}}\" deleted successfully",
+        "deleteFail": "Failed to delete user",
+        "permanentSuccess": "User \"{{name}}\" permanently deleted",
+        "permanentFail": "Failed to permanently delete user",
+        "restoreSuccess": "User \"{{name}}\" restored successfully",
+        "restoreFail": "Failed to restore user"
+      },
+      "printTitle": "Users report",
+      "printColumns": {
+        "fullName": "Full name",
+        "email": "Email",
+        "phone": "Phone number",
+        "dateCreated": "Registration date",
+        "status": "Status"
+      }
     }
   },
   "brands": {
@@ -1254,7 +1310,51 @@
     "fees": "Fees",
     "adapterAvailable": "Adapter available",
     "chargerStatus": "Charger status",
-    "loadingProcessData": "Loading process data"
+    "loadingProcessData": "Loading process data",
+    "statusOptions": {
+      "all": "All statuses",
+      "resolved": "Resolved",
+      "pending": "Pending"
+    },
+    "msg": {
+      "loadFail": "Failed to load reports",
+      "processNotFound": "Process data not found",
+      "processLoadFail": "Failed to load process data",
+      "toggleResolved": "Status updated to: Resolved",
+      "togglePending": "Status updated to: Pending",
+      "toggleFail": "Failed to update status",
+      "toggleErrorGeneric": "Failed to update report status"
+    },
+    "timeAgo": {
+      "now": "Just now",
+      "minutesAgo": "{{count}} min ago",
+      "hoursAgo": "{{count}} h ago",
+      "yesterday": "Yesterday",
+      "daysAgo": "{{count}} days ago",
+      "weeksAgo": "{{count}} weeks ago",
+      "monthsAgo": "{{count}} months ago",
+      "yearsAgo": "{{count}} years ago"
+    },
+    "processStatus": {
+      "Pending": "Pending",
+      "Accepted": "Accepted",
+      "InProgress": "In progress",
+      "Completed": "Completed",
+      "Aborted": "Aborted",
+      "Rejected": "Rejected"
+    },
+    "printTitle": "Reports report",
+    "printColumns": {
+      "id": "Report ID",
+      "userName": "User name",
+      "email": "Email",
+      "phone": "Phone number",
+      "content": "Report content",
+      "status": "Status",
+      "date": "Date",
+      "resolved": "Resolved",
+      "pending": "Pending"
+    }
   },
   "store": {
     "title": "Store",
@@ -1716,7 +1816,27 @@
   },
   "about": {
     "title": "About Voltyks",
-    "subtitle": "Smart EV charging-station management system"
+    "printPdf": "Print PDF",
+    "tagline": "Freedom of mobility. Pricing transparency. Power of choice.",
+    "vision": "Our vision",
+    "community": "Community",
+    "ourCommunity": "Our community",
+    "transparency": "Transparency",
+    "safety": "Safety",
+    "growth": "Growth",
+    "globalImpact": "Global impact",
+    "mission": "Our mission",
+    "activeUsers": "Active users",
+    "completedTrips": "Completed trips",
+    "averageRating": "Average rating",
+    "citiesCovered": "Cities covered",
+    "contactUs": "Contact us",
+    "email": "Email",
+    "website": "Website",
+    "app": "App",
+    "appAvailability": "Available on iOS & Android",
+    "printMission": "Building a sustainable, fair, and transparent transportation ecosystem where drivers earn what they deserve and riders pay fair prices.\nWe believe technology should empower people, not exploit them.",
+    "printTitle": "About Voltyks"
   },
   "complaintsList": {
     "pageTitle": "Complaints",

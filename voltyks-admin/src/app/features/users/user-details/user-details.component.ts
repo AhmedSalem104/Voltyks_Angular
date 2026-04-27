@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
@@ -82,8 +82,13 @@ export class UserDetailsComponent implements OnInit {
     private feesService: AdminFeesService,
     private toaster: ToasterService,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.userId = this.route.snapshot.paramMap.get('id')!;
@@ -106,12 +111,12 @@ export class UserDetailsComponent implements OnInit {
           this.vehicles = responses.vehicles.data;
           this.updatePaginatedVehicles();
         }
-        this.toaster.success('تم تحميل بيانات المستخدم');
+        this.toaster.success(this.t('users.details.msg.loadSuccess'));
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل بيانات المستخدم');
+        this.toaster.error(error.message || this.t('users.details.msg.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -147,7 +152,7 @@ export class UserDetailsComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل المحفظة');
+        this.toaster.error(error.message || this.t('users.details.msg.walletFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -167,7 +172,7 @@ export class UserDetailsComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل المركبات');
+        this.toaster.error(error.message || this.t('users.details.msg.vehiclesFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -187,7 +192,7 @@ export class UserDetailsComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل التقارير');
+        this.toaster.error(error.message || this.t('users.details.msg.reportsFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -204,15 +209,15 @@ export class UserDetailsComponent implements OnInit {
     this.usersService.toggleBan(this.userId).subscribe({
       next: (response) => {
         if (response.status) {
-          const action = this.user?.isBanned ? 'إلغاء الحظر' : 'الحظر';
-          this.toaster.success(`تم ${action} بنجاح`);
+          const action = this.t(this.user?.isBanned ? 'users.details.msg.unbanAction' : 'users.details.msg.banAction');
+          this.toaster.success(this.t('users.details.msg.banSuccess', { action }));
           this.loadUserDetails();
         }
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشلت العملية');
+        this.toaster.error(error.message || this.t('users.details.msg.banFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -247,7 +252,7 @@ export class UserDetailsComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل تحميل سجل المعاملات');
+        this.toaster.error(error.message || this.t('users.details.msg.txLoadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -316,26 +321,27 @@ export class UserDetailsComponent implements OnInit {
   }
 
   printTransactionsToPdf(): void {
-    const userName = this.user?.fullName || 'المستخدم';
+    const userName = this.user?.fullName || this.t('users.details.msg.defaultUserName');
+    const currency = this.t('common.currency');
     this.printService.printTableToPdf({
-      title: `سجل معاملات - ${userName}`,
+      title: this.t('users.details.msg.txReportTitle', { name: userName }),
       filename: `transactions_${this.userId}`,
       orientation: 'landscape',
       columns: [
         { header: '#', field: 'index' },
-        { header: 'التاريخ', field: 'formattedDate' },
-        { header: 'النوع', field: 'typeArabic' },
-        { header: 'المبلغ', field: 'formattedAmount' },
-        { header: 'الرصيد السابق', field: 'previousBalance' },
-        { header: 'الرصيد الجديد', field: 'newBalance' },
-        { header: 'الملاحظات', field: 'notes' }
+        { header: this.t('users.details.txCols.date'), field: 'formattedDate' },
+        { header: this.t('users.details.txCols.type'), field: 'typeArabic' },
+        { header: this.t('users.details.txCols.amount'), field: 'formattedAmount' },
+        { header: this.t('users.details.txCols.previous'), field: 'previousBalance' },
+        { header: this.t('users.details.txCols.new'), field: 'newBalance' },
+        { header: this.t('users.details.txCols.notes'), field: 'notes' }
       ],
       data: this.filteredTransactions.map((transaction, index) => ({
         ...transaction,
         index: index + 1,
         formattedDate: this.formatDate(transaction.createdAt),
-        typeArabic: transaction.transactionType === 'Add' ? 'إضافة' : 'خصم',
-        formattedAmount: `${transaction.transactionType === 'Add' ? '+' : ''}${transaction.amount} ج.م`,
+        typeArabic: this.t(transaction.transactionType === 'Add' ? 'users.details.msg.txTypeAdd' : 'users.details.msg.txTypeDeduct'),
+        formattedAmount: `${transaction.transactionType === 'Add' ? '+' : ''}${transaction.amount} ${currency}`,
         notes: transaction.notes || '-'
       }))
     });
@@ -368,11 +374,11 @@ export class UserDetailsComponent implements OnInit {
   // Add Balance Methods
   openAddBalanceDialog(): void {
     if (!this.addBalanceDto.amount || this.addBalanceDto.amount <= 0) {
-      this.toaster.error('يرجى إدخال مبلغ صحيح أكبر من صفر');
+      this.toaster.error(this.t('users.details.msg.enterValidAmount'));
       return;
     }
     if (!this.addBalanceDto.notes || this.addBalanceDto.notes.trim() === '') {
-      this.toaster.error('يرجى إدخال الملاحظات');
+      this.toaster.error(this.t('users.details.msg.enterNotes'));
       return;
     }
     this.showAddBalanceDialog = true;
@@ -393,7 +399,7 @@ export class UserDetailsComponent implements OnInit {
     }).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم إضافة الرصيد بنجاح');
+          this.toaster.success(this.t('users.details.msg.addBalanceSuccess'));
           this.resetAddBalanceForm();
           // Reload wallet, user data, and transactions
           this.loadUserDetails();
@@ -402,13 +408,13 @@ export class UserDetailsComponent implements OnInit {
             this.loadWallet();
           }
         } else {
-          this.toaster.error(response.message || 'فشل إضافة الرصيد');
+          this.toaster.error(response.message || this.t('users.details.msg.addBalanceFail'));
         }
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل إضافة الرصيد');
+        this.toaster.error(error.message || this.t('users.details.msg.addBalanceFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -422,11 +428,11 @@ export class UserDetailsComponent implements OnInit {
   // Deduct Balance Methods
   openDeductBalanceDialog(): void {
     if (!this.deductBalanceDto.amount || this.deductBalanceDto.amount <= 0) {
-      this.toaster.error('يرجى إدخال مبلغ صحيح أكبر من صفر');
+      this.toaster.error(this.t('users.details.msg.enterValidAmount'));
       return;
     }
     if (!this.deductBalanceDto.notes || this.deductBalanceDto.notes.trim() === '') {
-      this.toaster.error('يرجى إدخال الملاحظات');
+      this.toaster.error(this.t('users.details.msg.enterNotes'));
       return;
     }
     this.showDeductBalanceDialog = true;
@@ -447,7 +453,7 @@ export class UserDetailsComponent implements OnInit {
     }).subscribe({
       next: (response) => {
         if (response.status) {
-          this.toaster.success('تم خصم الرصيد بنجاح');
+          this.toaster.success(this.t('users.details.msg.deductBalanceSuccess'));
           this.resetDeductBalanceForm();
           // Reload wallet, user data, and transactions
           this.loadUserDetails();
@@ -460,7 +466,7 @@ export class UserDetailsComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        this.toaster.error(error.message || 'فشل خصم الرصيد');
+        this.toaster.error(error.message || this.t('users.details.msg.deductBalanceFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }

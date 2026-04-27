@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, forkJoin, takeUntil } from 'rxjs';
 import { AdminReportsService } from '../../core/services/admin/admin-reports.service';
@@ -17,11 +17,11 @@ interface ReportWithUserDetails extends AdminReportDto {
   userPhone?: string;
 }
 
-// Status options for reports
+// Status options for reports — labels are translation keys
 const REPORT_STATUS_OPTIONS = [
-  { value: '', label: 'كل الحالات' },
-  { value: 'true', label: 'تم الحل' },
-  { value: 'false', label: 'معلق' }
+  { value: '', label: 'reports.statusOptions.all' },
+  { value: 'true', label: 'reports.statusOptions.resolved' },
+  { value: 'false', label: 'reports.statusOptions.pending' }
 ];
 
 @Component({
@@ -88,8 +88,13 @@ export class ReportsComponent implements OnInit, OnDestroy {
     private processesService: AdminProcessesService,
     private toaster: ToasterService,
     private printService: PrintService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   ngOnInit(): void {
     this.setupSearch();
@@ -132,7 +137,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (err) => {
-        this.toaster.error(err.message || 'فشل تحميل التقارير');
+        this.toaster.error(err.message || this.t('reports.msg.loadFail'));
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -266,16 +271,16 @@ export class ReportsComponent implements OnInit, OnDestroy {
     const diffWeeks = Math.floor(diffMs / 604800000);
     const diffMonths = Math.floor(diffMs / 2592000000);
 
-    if (diffMinutes < 1) return 'الآن';
-    if (diffMinutes < 60) return `منذ ${diffMinutes} دقيقة`;
-    if (diffHours < 24) return `منذ ${diffHours} ساعة`;
-    if (diffDays === 1) return 'أمس';
-    if (diffDays < 7) return `منذ ${diffDays} أيام`;
-    if (diffWeeks < 4) return `منذ ${diffWeeks} أسبوع`;
-    if (diffMonths < 12) return `منذ ${diffMonths} شهر`;
+    if (diffMinutes < 1) return this.t('reports.timeAgo.now');
+    if (diffMinutes < 60) return this.t('reports.timeAgo.minutesAgo', { count: diffMinutes });
+    if (diffHours < 24) return this.t('reports.timeAgo.hoursAgo', { count: diffHours });
+    if (diffDays === 1) return this.t('reports.timeAgo.yesterday');
+    if (diffDays < 7) return this.t('reports.timeAgo.daysAgo', { count: diffDays });
+    if (diffWeeks < 4) return this.t('reports.timeAgo.weeksAgo', { count: diffWeeks });
+    if (diffMonths < 12) return this.t('reports.timeAgo.monthsAgo', { count: diffMonths });
 
     const diffYears = Math.floor(diffMonths / 12);
-    return `منذ ${diffYears} سنة`;
+    return this.t('reports.timeAgo.yearsAgo', { count: diffYears });
   }
 
   hasActiveFilters(): boolean {
@@ -334,14 +339,14 @@ export class ReportsComponent implements OnInit, OnDestroy {
           if (process) {
             this.selectedProcess = process;
           } else {
-            this.toaster.error('لم يتم العثور على بيانات العملية');
+            this.toaster.error(this.t('reports.msg.processNotFound'));
           }
         }
         this.isLoadingProcess = false;
         this.cdr.markForCheck();
       },
       error: (err) => {
-        this.toaster.error('فشل تحميل بيانات العملية');
+        this.toaster.error(this.t('reports.msg.processLoadFail'));
         this.isLoadingProcess = false;
         this.cdr.markForCheck();
       }
@@ -375,16 +380,16 @@ export class ReportsComponent implements OnInit, OnDestroy {
           if (this.selectedReport?.id === report.id) {
             this.selectedReport.isResolved = newStatus;
           }
-          this.toaster.success(newStatus ? 'تم تحديث الحالة إلى: تم الحل' : 'تم تحديث الحالة إلى: معلق');
+          this.toaster.success(this.t(newStatus ? 'reports.msg.toggleResolved' : 'reports.msg.togglePending'));
         } else {
-          this.toaster.error(response.message || 'فشل تحديث الحالة');
+          this.toaster.error(response.message || this.t('reports.msg.toggleFail'));
         }
         this.updatingReportIds.delete(report.id);
         this.isUpdatingStatus = false;
         this.cdr.markForCheck();
       },
       error: (err) => {
-        this.toaster.error('فشل تحديث حالة البلاغ');
+        this.toaster.error(this.t('reports.msg.toggleErrorGeneric'));
         this.updatingReportIds.delete(report.id);
         this.isUpdatingStatus = false;
         this.cdr.markForCheck();
@@ -410,37 +415,31 @@ export class ReportsComponent implements OnInit, OnDestroy {
   }
 
   getStatusText(status: string): string {
-    const statusTexts: { [key: string]: string } = {
-      'Pending': 'قيد الانتظار',
-      'Accepted': 'مقبول',
-      'InProgress': 'جاري التنفيذ',
-      'Completed': 'مكتمل',
-      'Aborted': 'ملغي',
-      'Rejected': 'مرفوض'
-    };
-    return statusTexts[status] || status;
+    const key = `reports.processStatus.${status}`;
+    const translated = this.t(key);
+    return translated === key ? status : translated;
   }
 
   printToPdf(): void {
     this.printService.printTableToPdf({
-      title: 'تقرير البلاغات',
+      title: this.t('reports.printTitle'),
       filename: 'reports_report',
       orientation: 'landscape',
       columns: [
         { header: '#', field: 'index' },
-        { header: 'رقم البلاغ', field: 'id' },
-        { header: 'اسم المستخدم', field: 'userFullName' },
-        { header: 'البريد الإلكتروني', field: 'userEmail' },
-        { header: 'رقم الهاتف', field: 'userPhone' },
-        { header: 'محتوى البلاغ', field: 'reportContentShort' },
-        { header: 'الحالة', field: 'statusText' },
-        { header: 'التاريخ', field: 'reportDateFormatted' }
+        { header: this.t('reports.printColumns.id'), field: 'id' },
+        { header: this.t('reports.printColumns.userName'), field: 'userFullName' },
+        { header: this.t('reports.printColumns.email'), field: 'userEmail' },
+        { header: this.t('reports.printColumns.phone'), field: 'userPhone' },
+        { header: this.t('reports.printColumns.content'), field: 'reportContentShort' },
+        { header: this.t('reports.printColumns.status'), field: 'statusText' },
+        { header: this.t('reports.printColumns.date'), field: 'reportDateFormatted' }
       ],
       data: this.filteredReports.map((report, index) => ({
         ...report,
         index: index + 1,
         reportContentShort: report.reportContent?.substring(0, 50) + (report.reportContent?.length > 50 ? '...' : ''),
-        statusText: report.isResolved ? 'تم الحل' : 'معلق',
+        statusText: this.t(report.isResolved ? 'reports.printColumns.resolved' : 'reports.printColumns.pending'),
         reportDateFormatted: this.formatDate(report.reportDate)
       }))
     });

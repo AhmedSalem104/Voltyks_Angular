@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PrintService } from '../../core/services/print.service';
 
 @Component({
@@ -15,16 +15,16 @@ import { PrintService } from '../../core/services/print.service';
           <h1>Voltyks</h1>
           <button class="voltyks-btn print-btn hero-print-btn" (click)="printToPdf()">
             <span class="material-symbols-rounded">print</span>
-            <span>طباعة PDF</span>
+            <span>{{ "about.printPdf" | translate }}</span>
           </button>
         </div>
-        <p class="tagline">حرية التنقل. شفافية الأسعار. قوة الاختيار.</p>
+        <p class="tagline">{{ "about.tagline" | translate }}</p>
       </div>
 
       <div class="content-grid">
         <div class="content-card voltyks-card">
           <span class="material-symbols-rounded card-icon">electric_bolt</span>
-          <h3>رؤيتنا</h3>
+          <h3>{{ "about.vision" | translate }}</h3>
           <p>
             At its core, Voltyks stands for freedom, transparency, and empowerment.
             We challenge outdated systems and give both drivers and riders the power to choose—
@@ -34,7 +34,7 @@ import { PrintService } from '../../core/services/print.service';
 
         <div class="content-card voltyks-card">
           <span class="material-symbols-rounded card-icon">group</span>
-          <h3>المجتمع</h3>
+          <h3>{{ "about.community" | translate }}</h3>
           <p>
             Voltyks fosters a vibrant community where drivers and riders connect directly.
             We believe in fair compensation for drivers and affordable, transparent pricing for riders.
@@ -43,7 +43,7 @@ import { PrintService } from '../../core/services/print.service';
 
         <div class="content-card voltyks-card">
           <span class="material-symbols-rounded card-icon">verified</span>
-          <h3>الشفافية</h3>
+          <h3>{{ "about.transparency" | translate }}</h3>
           <p>
             Every transaction on Voltyks is transparent. We don't hide fees or manipulate prices.
             What you see is what you get—a platform built on trust and honesty.
@@ -52,7 +52,7 @@ import { PrintService } from '../../core/services/print.service';
 
         <div class="content-card voltyks-card">
           <span class="material-symbols-rounded card-icon">security</span>
-          <h3>الأمان</h3>
+          <h3>{{ "about.safety" | translate }}</h3>
           <p>
             Safety is our top priority. With verified profiles, ratings, and secure payment systems,
             we ensure that every ride on Voltyks is safe and reliable.
@@ -61,7 +61,7 @@ import { PrintService } from '../../core/services/print.service';
 
         <div class="content-card voltyks-card">
           <span class="material-symbols-rounded card-icon">trending_up</span>
-          <h3>النمو</h3>
+          <h3>{{ "about.growth" | translate }}</h3>
           <p>
             We're constantly evolving and improving our platform based on community feedback.
             Voltyks is more than a service—it's a movement towards better transportation.
@@ -70,7 +70,7 @@ import { PrintService } from '../../core/services/print.service';
 
         <div class="content-card voltyks-card">
           <span class="material-symbols-rounded card-icon">public</span>
-          <h3>التأثير العالمي</h3>
+          <h3>{{ "about.globalImpact" | translate }}</h3>
           <p>
             Starting locally, thinking globally. Voltyks aims to revolutionize transportation
             markets worldwide, one community at a time.
@@ -79,7 +79,7 @@ import { PrintService } from '../../core/services/print.service';
       </div>
 
       <div class="mission-section voltyks-card">
-        <h2>مهمتنا</h2>
+        <h2>{{ "about.mission" | translate }}</h2>
         <p>
           To create a sustainable, fair, and transparent transportation ecosystem
           where drivers earn what they deserve and riders pay fair prices—
@@ -95,22 +95,22 @@ import { PrintService } from '../../core/services/print.service';
         <div class="stat-item voltyks-card">
           <span class="material-symbols-rounded stat-icon">people</span>
           <h4>1000+</h4>
-          <p>مستخدم نشط</p>
+          <p>{{ "about.activeUsers" | translate }}</p>
         </div>
         <div class="stat-item voltyks-card">
           <span class="material-symbols-rounded stat-icon">route</span>
           <h4>5000+</h4>
-          <p>رحلة مكتملة</p>
+          <p>{{ "about.completedTrips" | translate }}</p>
         </div>
         <div class="stat-item voltyks-card">
           <span class="material-symbols-rounded stat-icon">star</span>
           <h4>4.8/5</h4>
-          <p>متوسط التقييم</p>
+          <p>{{ "about.averageRating" | translate }}</p>
         </div>
         <div class="stat-item voltyks-card">
           <span class="material-symbols-rounded stat-icon">location_city</span>
           <h4>10+</h4>
-          <p>مدن مغطاة</p>
+          <p>{{ "about.citiesCovered" | translate }}</p>
         </div>
       </div>
     </div>
@@ -252,14 +252,30 @@ import { PrintService } from '../../core/services/print.service';
   `]
 })
 export class AboutComponent {
-  constructor(private printService: PrintService) {}
+  constructor(private printService: PrintService, private translate: TranslateService) {}
+
+  private t(key: string, params?: any): string {
+    return this.translate.instant(key, params);
+  }
 
   printToPdf(): void {
+    const tagline = this.t('about.tagline');
+    const vision = this.t('about.vision');
+    const ourCommunity = this.t('about.ourCommunity');
+    const transparency = this.t('about.transparency');
+    const safety = this.t('about.safety');
+    const mission = this.t('about.mission');
+    const missionBody = this.t('about.printMission');
+    const contactUs = this.t('about.contactUs');
+    const email = this.t('about.email');
+    const website = this.t('about.website');
+    const app = this.t('about.app');
+    const appAvail = this.t('about.appAvailability');
     const content = `
       <!-- Hero Section -->
       <div style="text-align: center; margin-bottom: 40px; padding: 30px; background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%); border-radius: 16px; border: 2px solid #00C853;">
         <h1 style="font-size: 42px; color: #00C853; margin-bottom: 12px; font-weight: 700;">Voltyks</h1>
-        <p style="font-size: 18px; color: #555; font-weight: 500;">حرية التنقل. شفافية الأسعار. قوة الاختيار.</p>
+        <p style="font-size: 18px; color: #555; font-weight: 500;">${tagline}</p>
       </div>
 
       <!-- Vision & Mission Grid -->
@@ -267,7 +283,7 @@ export class AboutComponent {
         <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-right: 4px solid #00C853;">
           <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
             <span style="font-size: 28px;">⚡</span>
-            <h3 style="color: #333; margin: 0; font-size: 18px;">رؤيتنا</h3>
+            <h3 style="color: #333; margin: 0; font-size: 18px;">${vision}</h3>
           </div>
           <p style="color: #555; font-size: 14px; line-height: 1.8; margin: 0;">
             At its core, Voltyks stands for freedom, transparency, and empowerment.
@@ -279,7 +295,7 @@ export class AboutComponent {
         <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-right: 4px solid #00C853;">
           <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
             <span style="font-size: 28px;">👥</span>
-            <h3 style="color: #333; margin: 0; font-size: 18px;">مجتمعنا</h3>
+            <h3 style="color: #333; margin: 0; font-size: 18px;">${ourCommunity}</h3>
           </div>
           <p style="color: #555; font-size: 14px; line-height: 1.8; margin: 0;">
             We connect drivers and riders directly with fair, transparent pricing.
@@ -291,7 +307,7 @@ export class AboutComponent {
         <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-right: 4px solid #00C853;">
           <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
             <span style="font-size: 28px;">✓</span>
-            <h3 style="color: #333; margin: 0; font-size: 18px;">الشفافية</h3>
+            <h3 style="color: #333; margin: 0; font-size: 18px;">${transparency}</h3>
           </div>
           <p style="color: #555; font-size: 14px; line-height: 1.8; margin: 0;">
             Every transaction is transparent. No hidden fees or manipulated prices.
@@ -303,7 +319,7 @@ export class AboutComponent {
         <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-right: 4px solid #00C853;">
           <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
             <span style="font-size: 28px;">🔒</span>
-            <h3 style="color: #333; margin: 0; font-size: 18px;">الأمان</h3>
+            <h3 style="color: #333; margin: 0; font-size: 18px;">${safety}</h3>
           </div>
           <p style="color: #555; font-size: 14px; line-height: 1.8; margin: 0;">
             Verified accounts, ratings, and secure payment systems ensure safety for everyone.
@@ -314,38 +330,37 @@ export class AboutComponent {
 
       <!-- Mission Statement -->
       <div style="background: linear-gradient(135deg, #00C853 0%, #009E3D 100%); padding: 35px; border-radius: 16px; text-align: center; margin-bottom: 30px;">
-        <h2 style="color: #fff; margin-bottom: 16px; font-size: 22px;">مهمتنا</h2>
-        <p style="color: rgba(255,255,255,0.95); line-height: 2; font-size: 15px; max-width: 700px; margin: 0 auto;">
-          إنشاء نظام نقل مستدام وعادل وشفاف حيث يكسب السائقون ما يستحقونه ويدفع الركاب أسعاراً عادلة.
-          نحن نؤمن بأن التكنولوجيا يجب أن تمكّن الناس، لا أن تستغلهم.
+        <h2 style="color: #fff; margin-bottom: 16px; font-size: 22px;">${mission}</h2>
+        <p style="color: rgba(255,255,255,0.95); line-height: 2; font-size: 15px; max-width: 700px; margin: 0 auto; white-space: pre-line;">
+          ${missionBody}
         </p>
       </div>
 
       <!-- Contact Info -->
       <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; text-align: center;">
-        <h3 style="color: #333; margin-bottom: 20px; font-size: 18px;">تواصل معنا</h3>
+        <h3 style="color: #333; margin-bottom: 20px; font-size: 18px;">${contactUs}</h3>
         <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
           <div style="text-align: center;">
             <div style="font-size: 24px; margin-bottom: 8px;">📧</div>
-            <div style="color: #00C853; font-weight: 600;">البريد الإلكتروني</div>
+            <div style="color: #00C853; font-weight: 600;">${email}</div>
             <div style="color: #555; font-size: 13px;">support@voltyks.com</div>
           </div>
           <div style="text-align: center;">
             <div style="font-size: 24px; margin-bottom: 8px;">🌐</div>
-            <div style="color: #00C853; font-weight: 600;">الموقع</div>
+            <div style="color: #00C853; font-weight: 600;">${website}</div>
             <div style="color: #555; font-size: 13px;">www.voltyks.com</div>
           </div>
           <div style="text-align: center;">
             <div style="font-size: 24px; margin-bottom: 8px;">📱</div>
-            <div style="color: #00C853; font-weight: 600;">التطبيق</div>
-            <div style="color: #555; font-size: 13px;">متاح على iOS & Android</div>
+            <div style="color: #00C853; font-weight: 600;">${app}</div>
+            <div style="color: #555; font-size: 13px;">${appAvail}</div>
           </div>
         </div>
       </div>
     `;
 
     this.printService.printContentToPdf(content, {
-      title: 'عن Voltyks',
+      title: this.t('about.printTitle'),
       filename: 'about_voltyks',
       orientation: 'portrait'
     });

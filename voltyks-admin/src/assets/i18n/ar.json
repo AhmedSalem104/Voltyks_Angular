@@ -643,7 +643,37 @@
       "addBalanceConfirmTitle": "تأكيد إضافة الرصيد",
       "addBalanceConfirmMsg": "هل أنت متأكد من إضافة {{amount}} {{currency}} للمستخدم {{name}}؟",
       "deductBalanceConfirmTitle": "تأكيد خصم الرصيد",
-      "deductBalanceConfirmMsg": "هل أنت متأكد من خصم {{amount}} {{currency}} من رصيد المستخدم {{name}}؟"
+      "deductBalanceConfirmMsg": "هل أنت متأكد من خصم {{amount}} {{currency}} من رصيد المستخدم {{name}}؟",
+      "msg": {
+        "loadSuccess": "تم تحميل بيانات المستخدم",
+        "loadFail": "فشل تحميل بيانات المستخدم",
+        "walletFail": "فشل تحميل المحفظة",
+        "vehiclesFail": "فشل تحميل المركبات",
+        "reportsFail": "فشل تحميل التقارير",
+        "banAction": "الحظر",
+        "unbanAction": "إلغاء الحظر",
+        "banSuccess": "تم {{action}} بنجاح",
+        "banFail": "فشلت العملية",
+        "txLoadFail": "فشل تحميل سجل المعاملات",
+        "defaultUserName": "المستخدم",
+        "txReportTitle": "سجل معاملات - {{name}}",
+        "txTypeAdd": "إضافة",
+        "txTypeDeduct": "خصم",
+        "enterValidAmount": "يرجى إدخال مبلغ صحيح أكبر من صفر",
+        "enterNotes": "يرجى إدخال الملاحظات",
+        "addBalanceSuccess": "تم إضافة الرصيد بنجاح",
+        "addBalanceFail": "فشل إضافة الرصيد",
+        "deductBalanceSuccess": "تم خصم الرصيد بنجاح",
+        "deductBalanceFail": "فشل خصم الرصيد"
+      },
+      "txCols": {
+        "date": "التاريخ",
+        "type": "النوع",
+        "amount": "المبلغ",
+        "previous": "الرصيد السابق",
+        "new": "الرصيد الجديد",
+        "notes": "الملاحظات"
+      }
     },
     "list": {
       "filterActive": "النشطين",
@@ -653,7 +683,33 @@
       "titleDeleted": "قائمة المستخدمين المحذوفين",
       "titleAll": "قائمة جميع المستخدمين",
       "emptyDeleted": "لا يوجد مستخدمون محذوفون",
-      "emptyDefault": "لا يوجد مستخدمون"
+      "emptyDefault": "لا يوجد مستخدمون",
+      "msg": {
+        "loadFail": "فشل تحميل المستخدمين",
+        "statusDeleted": "محذوف",
+        "statusBanned": "محظور",
+        "statusActive": "نشط",
+        "deleteTitle": "حذف المستخدم",
+        "deleteMessage": "هل أنت متأكد من حذف المستخدم \"{{name}}\"؟\n\nسيتم إخفاء المستخدم ولكن يمكن استعادته لاحقاً.",
+        "permanentTitle": "⚠️ حذف نهائي",
+        "permanentMessage": "تحذير: هذا الإجراء لا يمكن التراجع عنه!\n\nهل أنت متأكد من الحذف النهائي للمستخدم \"{{name}}\"؟\n\nسيتم حذف جميع بيانات المستخدم بشكل دائم.",
+        "restoreTitle": "استعادة المستخدم",
+        "restoreMessage": "هل تريد استعادة المستخدم \"{{name}}\"؟",
+        "deleteSuccess": "تم حذف المستخدم \"{{name}}\" بنجاح",
+        "deleteFail": "فشل حذف المستخدم",
+        "permanentSuccess": "تم الحذف النهائي للمستخدم \"{{name}}\"",
+        "permanentFail": "فشل الحذف النهائي",
+        "restoreSuccess": "تم استعادة المستخدم \"{{name}}\" بنجاح",
+        "restoreFail": "فشل استعادة المستخدم"
+      },
+      "printTitle": "تقرير المستخدمين",
+      "printColumns": {
+        "fullName": "الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "phone": "رقم الهاتف",
+        "dateCreated": "تاريخ التسجيل",
+        "status": "الحالة"
+      }
     }
   },
   "brands": {
@@ -1254,7 +1310,51 @@
     "fees": "رسوم",
     "adapterAvailable": "توفر الأدابتر",
     "chargerStatus": "حالة الشاحن",
-    "loadingProcessData": "جاري تحميل بيانات العملية"
+    "loadingProcessData": "جاري تحميل بيانات العملية",
+    "statusOptions": {
+      "all": "كل الحالات",
+      "resolved": "تم الحل",
+      "pending": "معلق"
+    },
+    "msg": {
+      "loadFail": "فشل تحميل التقارير",
+      "processNotFound": "لم يتم العثور على بيانات العملية",
+      "processLoadFail": "فشل تحميل بيانات العملية",
+      "toggleResolved": "تم تحديث الحالة إلى: تم الحل",
+      "togglePending": "تم تحديث الحالة إلى: معلق",
+      "toggleFail": "فشل تحديث الحالة",
+      "toggleErrorGeneric": "فشل تحديث حالة البلاغ"
+    },
+    "timeAgo": {
+      "now": "الآن",
+      "minutesAgo": "منذ {{count}} دقيقة",
+      "hoursAgo": "منذ {{count}} ساعة",
+      "yesterday": "أمس",
+      "daysAgo": "منذ {{count}} أيام",
+      "weeksAgo": "منذ {{count}} أسبوع",
+      "monthsAgo": "منذ {{count}} شهر",
+      "yearsAgo": "منذ {{count}} سنة"
+    },
+    "processStatus": {
+      "Pending": "قيد الانتظار",
+      "Accepted": "مقبول",
+      "InProgress": "جاري التنفيذ",
+      "Completed": "مكتمل",
+      "Aborted": "ملغي",
+      "Rejected": "مرفوض"
+    },
+    "printTitle": "تقرير البلاغات",
+    "printColumns": {
+      "id": "رقم البلاغ",
+      "userName": "اسم المستخدم",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "content": "محتوى البلاغ",
+      "status": "الحالة",
+      "date": "التاريخ",
+      "resolved": "تم الحل",
+      "pending": "معلق"
+    }
   },
   "store": {
     "title": "المتجر",
@@ -1716,7 +1816,27 @@
   },
   "about": {
     "title": "عن Voltyks",
-    "subtitle": "نظام إدارة محطات الشحن الذكي"
+    "printPdf": "طباعة PDF",
+    "tagline": "حرية التنقل. شفافية الأسعار. قوة الاختيار.",
+    "vision": "رؤيتنا",
+    "community": "المجتمع",
+    "ourCommunity": "مجتمعنا",
+    "transparency": "الشفافية",
+    "safety": "الأمان",
+    "growth": "النمو",
+    "globalImpact": "التأثير العالمي",
+    "mission": "مهمتنا",
+    "activeUsers": "مستخدم نشط",
+    "completedTrips": "رحلة مكتملة",
+    "averageRating": "متوسط التقييم",
+    "citiesCovered": "مدن مغطاة",
+    "contactUs": "تواصل معنا",
+    "email": "البريد الإلكتروني",
+    "website": "الموقع",
+    "app": "التطبيق",
+    "appAvailability": "متاح على iOS & Android",
+    "printMission": "إنشاء نظام نقل مستدام وعادل وشفاف حيث يكسب السائقون ما يستحقونه ويدفع الركاب أسعاراً عادلة.\nنحن نؤمن بأن التكنولوجيا يجب أن تمكّن الناس، لا أن تستغلهم.",
+    "printTitle": "عن Voltyks"
   },
   "complaintsList": {
     "pageTitle": "الشكاوى",
