@@ -51,10 +51,31 @@ import { NotificationDropdownComponent } from '../../shared/components/notificat
           ></app-notification-dropdown>
         </div>
 
-        <!-- Language Toggle -->
-        <button class="lang-toggle" (click)="toggleLanguage()" [title]="'header.toggleLanguage' | translate">
-          <span class="lang-text">{{ currentLanguage === 'ar' ? 'EN' : 'ع' }}</span>
-        </button>
+        <!-- Language Toggle (segmented pill) -->
+        <div class="lang-toggle" role="group" [attr.aria-label]="'header.toggleLanguage' | translate">
+          <button
+            type="button"
+            class="lang-segment"
+            [class.active]="currentLanguage === 'ar'"
+            [attr.aria-pressed]="currentLanguage === 'ar'"
+            (click)="setLanguage('ar')"
+            title="العربية"
+          >
+            <span class="lang-code">ع</span>
+            <span class="lang-name">العربية</span>
+          </button>
+          <button
+            type="button"
+            class="lang-segment"
+            [class.active]="currentLanguage === 'en'"
+            [attr.aria-pressed]="currentLanguage === 'en'"
+            (click)="setLanguage('en')"
+            title="English"
+          >
+            <span class="lang-code">EN</span>
+            <span class="lang-name">English</span>
+          </button>
+        </div>
 
         <!-- Theme Toggle -->
         <button class="theme-toggle" (click)="toggleTheme()" [title]="'header.toggleTheme' | translate">
@@ -156,6 +177,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleLanguage(): void {
     this.languageService.toggleLanguage();
+  }
+
+  setLanguage(lang: Language): void {
+    if (this.currentLanguage !== lang) {
+      this.languageService.setLanguage(lang);
+    }
   }
 
   goToProfile(): void {
