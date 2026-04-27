@@ -7,6 +7,11 @@ import { AuthService } from '../services/auth.service';
  * In Angular 15+, we use functional interceptors
  */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  // Static assets (translation files, images, etc.) don't need auth headers.
+  if (req.url.includes('/assets/')) {
+    return next(req);
+  }
+
   const authService = inject(AuthService);
   const token = authService.getToken(); // Get token from localStorage or cookies
 

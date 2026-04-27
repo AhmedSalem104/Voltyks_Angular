@@ -6,6 +6,12 @@ import { map } from 'rxjs/operators';
  * This handles .NET backends that return PascalCase property names
  */
 export const caseTransformInterceptor: HttpInterceptorFn = (req, next) => {
+  // Skip non-API requests (e.g. /assets/i18n/*.json translation files).
+  // Case-transforming a translation dictionary would lower-case status keys
+  // like "Pending" → "pending" and break translate.instant() lookups.
+  if (req.url.includes('/assets/')) {
+    return next(req);
+  }
   return next(req).pipe(
     map(event => {
       if (event instanceof HttpResponse && event.body) {

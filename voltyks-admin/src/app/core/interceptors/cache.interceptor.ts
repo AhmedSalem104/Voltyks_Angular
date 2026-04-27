@@ -18,6 +18,13 @@ import { CacheService } from '../services/cache.service';
  * - /admin/store/reservations - Dynamic data that changes frequently
  */
 export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
+  // Static assets (e.g. /assets/i18n/*.json) are served directly — no need
+  // for app-level caching, and we don't want a stale translation file
+  // sticking around in memory.
+  if (req.url.includes('/assets/')) {
+    return next(req);
+  }
+
   const cacheService = inject(CacheService);
 
   // For non-GET requests (POST/PUT/PATCH/DELETE), invalidate related caches
