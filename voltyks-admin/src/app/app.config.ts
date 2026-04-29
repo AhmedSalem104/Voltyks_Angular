@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, LOCALE_ID, provideAppInitializer, inject } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, LOCALE_ID, provideAppInitializer, inject, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -14,6 +14,7 @@ import { authInterceptor, errorInterceptor, rateLimitInterceptor, retryIntercept
 import { caseTransformInterceptor } from './core/interceptors/case-transform.interceptor';
 import { cacheInterceptor } from './core/interceptors/cache.interceptor';
 import { LanguageService } from './core/services/language.service';
+import { provideServiceWorker } from '@angular/service-worker';
 
 // Register supported locales for date/number pipes
 registerLocaleData(localeAr, 'ar-EG');
@@ -70,6 +71,10 @@ export const appConfig: ApplicationConfig = {
           /* swallow — at worst the UI shows raw keys */
         }
       }
+    }),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000'
     })
   ]
 };

@@ -26,16 +26,46 @@
     })();
   </script>
 
-  <!-- Preconnect + early translation JSON preload (race-free with bootstrap) -->
+  <!-- Reveal Material Symbols glyphs only once the font is actually loaded. -->
+  <script>
+    (function () {
+      var html = document.documentElement;
+      function ready() { html.classList.add('fonts-ready'); }
+      // Failsafe: reveal after 1.5s even if FontFaceSet isn't supported / hangs
+      var failsafe = setTimeout(ready, 1500);
+      if (document.fonts && document.fonts.load) {
+        document.fonts.load('1em "Material Symbols Rounded"').then(function () {
+          clearTimeout(failsafe);
+          ready();
+        }).catch(function () { /* fall through to failsafe */ });
+      } else {
+        clearTimeout(failsafe);
+        ready();
+      }
+    })();
+  </script>
+
+  <!-- Preconnect: fonts + API origin (warms DNS/TLS in parallel with bundle parse) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link rel="preconnect" href="https://voltyks.runasp.net" crossorigin="">
+  <link rel="dns-prefetch" href="https://voltyks.runasp.net">
+
+  <!-- Translation JSON preload — bytes ready in cache before initializer fetches -->
   <link id="i18n-preload" rel="preload" as="fetch" crossorigin="anonymous" href="/assets/i18n/ar.json">
 
   <!-- Cairo: only the two weights actually rendered -->
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700&amp;display=swap" rel="stylesheet">
 
-  <!-- Material Symbols Rounded: subset to ranges actually used in the UI -->
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..24,400..600,0..1,0&display=swap" rel="stylesheet">
+  <!-- Material Symbols Rounded — display=block so ligature names ("settings",
+       "logout", etc.) never render as plain text while the font is loading. -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..24,400..600,0..1,0&amp;display=block" rel="stylesheet">
+
+  <style>
+    /* Belt-and-suspenders: hide ligature text until the icon font is ready. */
+    .material-symbols-rounded { visibility: hidden; }
+    .fonts-ready .material-symbols-rounded { visibility: visible; }
+  </style>
 
   <style>
     /* Pre-Angular splash so the user sees something within ~50ms */
@@ -66,12 +96,14 @@
     #app-splash.is-hidden { opacity: 0; pointer-events: none; }
     /* Once Angular has rendered, the splash fades out and is removed by main.ts */
   </style>
+  <link rel="manifest" href="manifest.webmanifest">
 </head>
 <body class="voltyks-dark-theme">
   <div id="app-splash" aria-hidden="true">
-    <img src="assets/images/Voltyks_Logo.jpg" alt="" />
+    <img src="assets/images/Voltyks_Logo.jpg" alt=""/>
     <div class="splash-spinner"></div>
   </div>
   <app-root></app-root>
+  <noscript>Please enable JavaScript to continue using this application.</noscript>
 </body>
 </html>

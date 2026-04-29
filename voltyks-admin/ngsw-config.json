@@ -1,0 +1,98 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app-shell",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "media",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ]
+      }
+    },
+    {
+      "name": "i18n",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/assets/i18n/*.json"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "admin-lists",
+      "urls": [
+        "/api/admin/users",
+        "/api/admin/brands",
+        "/api/admin/vehicles",
+        "/api/admin/chargers",
+        "/api/admin/fees",
+        "/api/admin/process",
+        "/api/admin/complaint-categories",
+        "/api/admin/complaints",
+        "/api/admin/reports",
+        "/api/admin/notifications/templates"
+      ],
+      "cacheConfig": {
+        "maxSize": 100,
+        "maxAge": "1h",
+        "timeout": "10s",
+        "strategy": "freshness"
+      }
+    },
+    {
+      "name": "admin-static",
+      "urls": [
+        "/api/admin/terms",
+        "/api/admin/protocol",
+        "/api/admin/app-config"
+      ],
+      "cacheConfig": {
+        "maxSize": 50,
+        "maxAge": "1d",
+        "timeout": "5s",
+        "strategy": "performance"
+      }
+    },
+    {
+      "name": "admin-analytics",
+      "urls": [
+        "/api/admin/dashboard",
+        "/api/admin/analytics",
+        "/api/admin/store"
+      ],
+      "cacheConfig": {
+        "maxSize": 80,
+        "maxAge": "30m",
+        "timeout": "8s",
+        "strategy": "freshness"
+      }
+    }
+  ],
+  "navigationUrls": [
+    "/**",
+    "!/**/*.*",
+    "!/**/*__*",
+    "!/**/*__*/**",
+    "!/api/**"
+  ]
+}
