@@ -248,12 +248,12 @@ const SIDEBAR_PINNED_KEY = 'voltyks_sidebar_pinned';
             [(ngModel)]="vaultPassword"
             (keydown.enter)="submitVaultPassword()"
             (keydown.escape)="closeVaultPrompt()"
-            placeholder="Enter access key"
+            [placeholder]="'sidebar.vault.placeholder' | translate"
             [class.shake]="vaultError"
             autocomplete="off"
           />
           @if (vaultError) {
-            <span class="vault-error">Access denied</span>
+            <span class="vault-error">{{ "sidebar.vault.accessDenied" | translate }}</span>
           }
         </div>
       </div>

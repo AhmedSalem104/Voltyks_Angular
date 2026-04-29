@@ -86,7 +86,6 @@
     "resolved": "Resolved",
     "completed": "Completed",
     "enabled": "Enabled",
-    "hour": "h",
     "walletBalance": "Wallet balance",
     "accountStatus": "Account status",
     "reservable": "Reservable",
@@ -157,7 +156,7 @@
     "themeLight": "Light mode"
   },
   "auth": {
-    "login": "Login",
+    "login": "Log in",
     "logout": "Log out",
     "email": "Email address",
     "password": "Password",
@@ -247,7 +246,11 @@
     "expandAll": "Expand all",
     "collapseAll": "Collapse all",
     "pinSidebar": "Pin sidebar",
-    "unpinSidebar": "Unpin sidebar"
+    "unpinSidebar": "Unpin sidebar",
+    "vault": {
+      "placeholder": "Enter access key",
+      "accessDenied": "Access denied"
+    }
   },
   "confirmDialog": {
     "defaultTitle": "Confirm",
@@ -1492,7 +1495,8 @@
         "status": "Status",
         "productCount": "Product count",
         "sortOrder": "Sort order"
-      }
+      },
+      "slug": "Slug"
     },
     "products": {
       "title": "Products",
@@ -1580,7 +1584,11 @@
         "status": "Status",
         "reservable": "Reservable",
         "reservationCount": "Reservation count"
-      }
+      },
+      "slug": "Slug",
+      "slugAutoPlaceholder": "auto",
+      "thumbnailUrl": "Thumbnail URL",
+      "specKeyPlaceholder": "Key"
     },
     "reservations": {
       "title": "Reservations",

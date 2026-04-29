@@ -82,11 +82,10 @@
     "active": "نشط",
     "inactive": "معطّل",
     "banned": "محظور",
-    "pending": "معلق",
+    "pending": "قيد الانتظار",
     "resolved": "تم الحل",
     "completed": "مكتمل",
     "enabled": "مفعّل",
-    "hour": "ساعة",
     "walletBalance": "رصيد المحفظة",
     "accountStatus": "حالة الحساب",
     "reservable": "قابل للحجز",
@@ -128,7 +127,7 @@
     "active": "نشط",
     "inactive": "معطّل",
     "enabled": "مفعّل",
-    "disabled": "معطّل",
+    "disabled": "موقوف",
     "pending": "قيد الانتظار",
     "completed": "مكتمل",
     "cancelled": "ملغي",
@@ -142,8 +141,8 @@
     "email": "بريد إلكتروني غير صالح",
     "phone": "رقم هاتف غير صالح",
     "numeric": "يجب إدخال رقم",
-    "min": "القيمة يجب أن تكون أكبر من {{value}}",
-    "max": "القيمة يجب أن تكون أقل من {{value}}"
+    "min": "يجب أن تكون القيمة أكبر من {{value}}",
+    "max": "يجب أن تكون القيمة أقل من {{value}}"
   },
   "header": {
     "logout": "تسجيل الخروج",
@@ -247,7 +246,11 @@
     "expandAll": "فتح الكل",
     "collapseAll": "طي الكل",
     "pinSidebar": "تثبيت القائمة",
-    "unpinSidebar": "إلغاء التثبيت"
+    "unpinSidebar": "إلغاء التثبيت",
+    "vault": {
+      "placeholder": "أدخل مفتاح الوصول",
+      "accessDenied": "تم رفض الوصول"
+    }
   },
   "confirmDialog": {
     "defaultTitle": "تأكيد",
@@ -308,7 +311,7 @@
       "userEmail": "البريد الإلكتروني",
       "userPhone": "رقم الهاتف",
       "vehicle": "بيانات السيارة المطلوبة",
-      "brand": "الماركة",
+      "brand": "العلامة التجارية",
       "model": "الموديل",
       "capacity": "السعة",
       "meta": "البيانات الزمنية",
@@ -1454,7 +1457,7 @@
       "restore": "استرجاع",
       "empty": "لا توجد فئات",
       "nameLabel": "اسم الفئة",
-      "slugLabel": "Slug (اختياري)",
+      "slugLabel": "المعرّف (اختياري)",
       "slugAuto": "يُنشأ تلقائياً من الاسم",
       "statusLabel": "الحالة",
       "orderLabel": "الترتيب",
@@ -1492,7 +1495,8 @@
         "status": "الحالة",
         "productCount": "عدد المنتجات",
         "sortOrder": "الترتيب"
-      }
+      },
+      "slug": "المعرّف"
     },
     "products": {
       "title": "المنتجات",
@@ -1580,7 +1584,11 @@
         "status": "الحالة",
         "reservable": "قابل للحجز",
         "reservationCount": "عدد الحجوزات"
-      }
+      },
+      "slug": "المعرّف",
+      "slugAutoPlaceholder": "تلقائي",
+      "thumbnailUrl": "رابط الصورة المصغرة",
+      "specKeyPlaceholder": "المفتاح"
     },
     "reservations": {
       "title": "الحجوزات",

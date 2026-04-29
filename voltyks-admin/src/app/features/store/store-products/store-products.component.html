@@ -222,8 +222,8 @@
             </div>
 
             <div class="form-group">
-              <label>Slug ({{ "common.optional" | translate }})</label>
-              <input type="text" class="voltyks-input" [(ngModel)]="createDto.slug" placeholder="auto" />
+              <label>{{ "store.products.slug" | translate }} ({{ "common.optional" | translate }})</label>
+              <input type="text" class="voltyks-input" [(ngModel)]="createDto.slug" [placeholder]="'store.products.slugAutoPlaceholder' | translate" />
             </div>
           </div>
 
@@ -267,7 +267,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>Thumbnail URL</label>
+              <label>{{ "store.products.thumbnailUrl" | translate }}</label>
               <input type="text" class="voltyks-input" [(ngModel)]="createDto.thumbnailUrl" placeholder="https://..." />
             </div>
 
@@ -282,7 +282,7 @@
           <!-- Specifications -->
           <div class="form-section">
             <div class="section-header">
-              <label>Specifications</label>
+              <label>{{ "store.products.specifications" | translate }}</label>
               <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="addSpecification(true)">
                 <span class="material-symbols-rounded">add</span>
                 {{ "store.products.addSpecBtn" | translate }}
@@ -290,7 +290,7 @@
             </div>
             @for (spec of createSpecs; track $index; let i = $index) {
               <div class="spec-row">
-                <input type="text" class="voltyks-input" [(ngModel)]="spec.key" placeholder="Key" />
+                <input type="text" class="voltyks-input" [(ngModel)]="spec.key" [placeholder]="'store.products.specKeyPlaceholder' | translate" />
                 <input type="text" class="voltyks-input" [(ngModel)]="spec.value" [placeholder]="'common.value' | translate" />
                 <button type="button" class="voltyks-btn btn-icon btn-danger" (click)="removeSpecification(i, true)">
                   <span class="material-symbols-rounded">close</span>
@@ -335,7 +335,7 @@
             </div>
 
             <div class="form-group">
-              <label>Slug</label>
+              <label>{{ "store.products.slug" | translate }}</label>
               <input type="text" class="voltyks-input" [(ngModel)]="updateDto.slug" />
             </div>
           </div>
@@ -379,7 +379,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>Thumbnail URL</label>
+              <label>{{ "store.products.thumbnailUrl" | translate }}</label>
               <input type="text" class="voltyks-input" [(ngModel)]="updateDto.thumbnailUrl" placeholder="https://..." />
             </div>
 
@@ -394,7 +394,7 @@
           <!-- Specifications -->
           <div class="form-section">
             <div class="section-header">
-              <label>Specifications</label>
+              <label>{{ "store.products.specifications" | translate }}</label>
               <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="addSpecification(false)">
                 <span class="material-symbols-rounded">add</span>
                 {{ "store.products.addSpecBtn" | translate }}
@@ -402,7 +402,7 @@
             </div>
             @for (spec of updateSpecs; track $index; let i = $index) {
               <div class="spec-row">
-                <input type="text" class="voltyks-input" [(ngModel)]="spec.key" placeholder="Key" />
+                <input type="text" class="voltyks-input" [(ngModel)]="spec.key" [placeholder]="'store.products.specKeyPlaceholder' | translate" />
                 <input type="text" class="voltyks-input" [(ngModel)]="spec.value" [placeholder]="'common.value' | translate" />
                 <button type="button" class="voltyks-btn btn-icon btn-danger" (click)="removeSpecification(i, false)">
                   <span class="material-symbols-rounded">close</span>
