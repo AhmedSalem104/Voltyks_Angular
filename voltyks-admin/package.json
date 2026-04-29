@@ -33,7 +33,7 @@
     "@angular/material": "^20.2.13",
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
-    "@angular/service-worker": "~20.3.0",
+    "@angular/service-worker": "^20.3.12",
     "@microsoft/signalr": "^10.0.0",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
