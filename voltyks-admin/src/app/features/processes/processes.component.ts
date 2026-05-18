@@ -270,7 +270,7 @@ export class ProcessesComponent implements OnInit, OnDestroy {
 
   formatCurrency(value: number): string {
     if (value === null || value === undefined) return '-';
-    return `${value.toFixed(2)} ${this.translate.instant('common.currency')}`;
+    return `${value.toLocaleString('en-US')} ${this.translate.instant('common.currency')}`;
   }
 
   formatDistance(km: number): string {
