@@ -206,6 +206,7 @@
 
   <!-- Create Dialog - Deferred for performance -->
   @defer (when showCreateDialog) {
+    @if (showCreateDialog) {
     <div class="modal-overlay" (click)="closeCreateDialog()">
       <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
         <div class="modal-header">
@@ -315,10 +316,12 @@
         </div>
       </div>
     </div>
+    }
   }
 
   <!-- Edit Dialog - Deferred for performance -->
   @defer (when showEditDialog && currentProduct) {
+    @if (showEditDialog && currentProduct) {
     <div class="modal-overlay" (click)="closeEditDialog()">
       <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
         <div class="modal-header">
@@ -446,11 +449,12 @@
         </div>
       </div>
     </div>
+    }
   }
 
   <!-- Details Dialog - Deferred for performance -->
   @defer (when showDetailsDialog && currentProduct) {
-    @if (currentProduct) {
+    @if (showDetailsDialog && currentProduct) {
       <div class="modal-overlay" (click)="closeDetailsDialog()">
         <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
           <div class="modal-header">
@@ -586,7 +590,7 @@
 
   <!-- Image Manager Dialog - Deferred for performance -->
   @defer (when showImageManager && currentProduct) {
-    @if (currentProduct) {
+    @if (showImageManager && currentProduct) {
       <div class="modal-overlay" (click)="closeImageManager()">
         <div class="modal-dialog modal-lg image-manager-dialog" (click)="$event.stopPropagation()">
           <div class="modal-header">
@@ -700,6 +704,7 @@
 
   <!-- Lightbox - Deferred for performance -->
   @defer (when showLightbox) {
+    @if (showLightbox) {
     <div class="lightbox-overlay" (click)="closeLightbox()">
       <button class="lightbox-close" (click)="closeLightbox()">
         <span class="material-symbols-rounded">close</span>
@@ -708,6 +713,7 @@
         <img [src]="lightboxImageUrl" alt="full size image" />
       </div>
     </div>
+    }
   }
 
   <!-- Delete Image Confirm - Deferred for performance -->
