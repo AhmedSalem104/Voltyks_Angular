@@ -415,7 +415,7 @@
           <div class="form-section">
             <div class="section-header">
               <label>{{ "store.products.productImages" | translate }}</label>
-              <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="closeEditDialog(); openImageManager(currentProduct!)">
+              <button type="button" class="voltyks-btn btn-small btn-secondary" (click)="goToImageManagerFromEdit()">
                 <span class="material-symbols-rounded">collections</span>
                 {{ "store.products.manageImages" | translate }}
               </button>
@@ -547,7 +547,7 @@
         <div class="modal-footer">
           <button class="voltyks-btn btn-secondary" (click)="closeDetailsDialog()">{{ "common.close" | translate }}</button>
           @if (!currentProduct.isDeleted) {
-            <button class="voltyks-btn btn-primary" (click)="closeDetailsDialog(); openEditDialog(currentProduct)">
+            <button class="voltyks-btn btn-primary" (click)="goToEditFromDetails()">
               <span class="material-symbols-rounded">edit</span>
               {{ "store.products.edit" | translate }}
             </button>

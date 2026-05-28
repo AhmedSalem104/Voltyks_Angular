@@ -331,6 +331,15 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
     this.updateSpecs = [];
   }
 
+  goToImageManagerFromEdit(): void {
+    if (!this.currentProduct) return;
+    const product = this.currentProduct;
+    this.showEditDialog = false;
+    this.updateDto = {};
+    this.updateSpecs = [];
+    this.openImageManager(product);
+  }
+
   updateProduct(): void {
     if (!this.currentProduct || !this.validateUpdateForm()) return;
 
@@ -474,6 +483,13 @@ export class StoreProductsComponent implements OnInit, OnDestroy {
   closeDetailsDialog(): void {
     this.showDetailsDialog = false;
     this.currentProduct = null;
+  }
+
+  goToEditFromDetails(): void {
+    if (!this.currentProduct) return;
+    const product = this.currentProduct;
+    this.showDetailsDialog = false;
+    this.openEditDialog(product);
   }
 
   // Specifications Management
