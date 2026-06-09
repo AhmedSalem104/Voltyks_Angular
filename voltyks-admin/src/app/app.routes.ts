@@ -102,6 +102,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admins-mode/admins-mode.component').then(m => m.AdminsModeComponent)
       },
       {
+        path: 'anti-restrictions',
+        loadComponent: () => import('./features/anti-restrictions/anti-restrictions.component').then(m => m.AntiRestrictionsComponent)
+      },
+      {
         path: 'store',
         loadChildren: () => import('./features/store/store.routes').then(m => m.storeRoutes)
       },

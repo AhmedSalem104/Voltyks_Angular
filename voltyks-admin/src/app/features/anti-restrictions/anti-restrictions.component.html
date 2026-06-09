@@ -1,0 +1,182 @@
+<div class="anti-restrictions-container">
+  <div class="page-header-row">
+    <div>
+      <h2>{{ "antiRestrictions.title" | translate }}</h2>
+      <p class="subtitle">{{ "antiRestrictions.subtitle" | translate }}</p>
+    </div>
+  </div>
+
+  <!-- ============ Anti-OTP Restriction ============ -->
+  <div class="section-header">
+    <span class="material-symbols-rounded">sms</span>
+    <h3>{{ 'antiRestrictions.otp.sectionTitle' | translate }}</h3>
+  </div>
+
+  @if (isLoadingOtp) {
+    <div class="ar-card loading">
+      <div class="loading-spinner small"></div>
+      <span>{{ 'antiRestrictions.otp.loading' | translate }}</span>
+    </div>
+  } @else if (loadErrorOtp) {
+    <div class="ar-card error">
+      <span class="material-symbols-rounded">error</span>
+      <span>{{ 'antiRestrictions.otp.loadError' | translate }}</span>
+      <button class="retry-btn" (click)="loadOtpConfig()">
+        <span class="material-symbols-rounded">refresh</span>
+        {{ 'common.retry' | translate }}
+      </button>
+    </div>
+  } @else {
+    <div class="ar-card" [class.activated]="antiOtpEnabled" [class.deactivated]="!antiOtpEnabled">
+      <div class="ar-header">
+        <div class="ar-icon" [class.active]="antiOtpEnabled">
+          <span class="material-symbols-rounded">{{ antiOtpEnabled ? 'sms_failed' : 'sms' }}</span>
+        </div>
+        <div class="ar-info">
+          <h4>{{ 'antiRestrictions.otp.title' | translate }}</h4>
+          <span class="status-badge" [class]="antiOtpEnabled ? 'status-danger' : 'status-active'">
+            {{ (antiOtpEnabled ? 'antiRestrictions.otp.activated' : 'antiRestrictions.otp.deactivated') | translate }}
+          </span>
+        </div>
+        <div class="ar-toggle">
+          <button
+            class="toggle-btn-large"
+            [class.active]="antiOtpEnabled"
+            [disabled]="isSavingOtp"
+            (click)="toggleOtp()"
+          >
+            @if (isSavingOtp) {
+              <span class="material-symbols-rounded spin">sync</span>
+            } @else {
+              <span class="material-symbols-rounded">{{ antiOtpEnabled ? 'toggle_on' : 'toggle_off' }}</span>
+            }
+            <span>{{ (antiOtpEnabled ? 'common.no' : 'common.yes') | translate }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="ar-description">
+        @if (antiOtpEnabled) {
+          <div class="status-message danger">
+            <span class="material-symbols-rounded">warning</span>
+            <div>
+              <strong>{{ 'antiRestrictions.otp.activeTitle' | translate }}</strong>
+              <p>{{ 'antiRestrictions.otp.activeDesc' | translate }}</p>
+              <ul>
+                <li>{{ 'antiRestrictions.otp.activeBullet1' | translate }}</li>
+                <li>{{ 'antiRestrictions.otp.activeBullet2' | translate }}</li>
+                <li>{{ 'antiRestrictions.otp.activeBullet3' | translate }}</li>
+              </ul>
+            </div>
+          </div>
+        } @else {
+          <div class="status-message success">
+            <span class="material-symbols-rounded">check_circle</span>
+            <div>
+              <strong>{{ 'antiRestrictions.otp.openTitle' | translate }}</strong>
+              <p>{{ 'antiRestrictions.otp.openDesc' | translate }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ============ Anti-Payment Restriction ============ -->
+  <div class="section-header">
+    <span class="material-symbols-rounded">payments</span>
+    <h3>{{ 'antiRestrictions.payment.sectionTitle' | translate }}</h3>
+  </div>
+
+  @if (isLoadingPayment) {
+    <div class="ar-card loading">
+      <div class="loading-spinner small"></div>
+      <span>{{ 'antiRestrictions.payment.loading' | translate }}</span>
+    </div>
+  } @else if (loadErrorPayment) {
+    <div class="ar-card error">
+      <span class="material-symbols-rounded">error</span>
+      <span>{{ 'antiRestrictions.payment.loadError' | translate }}</span>
+      <button class="retry-btn" (click)="loadPaymentConfig()">
+        <span class="material-symbols-rounded">refresh</span>
+        {{ 'common.retry' | translate }}
+      </button>
+    </div>
+  } @else {
+    <div class="ar-card" [class.activated]="antiPaymentEnabled" [class.deactivated]="!antiPaymentEnabled">
+      <div class="ar-header">
+        <div class="ar-icon" [class.active]="antiPaymentEnabled">
+          <span class="material-symbols-rounded">{{ antiPaymentEnabled ? 'money_off' : 'payments' }}</span>
+        </div>
+        <div class="ar-info">
+          <h4>{{ 'antiRestrictions.payment.title' | translate }}</h4>
+          <span class="status-badge" [class]="antiPaymentEnabled ? 'status-danger' : 'status-active'">
+            {{ (antiPaymentEnabled ? 'antiRestrictions.payment.activated' : 'antiRestrictions.payment.deactivated') | translate }}
+          </span>
+        </div>
+        <div class="ar-toggle">
+          <button
+            class="toggle-btn-large"
+            [class.active]="antiPaymentEnabled"
+            [disabled]="isSavingPayment"
+            (click)="togglePayment()"
+          >
+            @if (isSavingPayment) {
+              <span class="material-symbols-rounded spin">sync</span>
+            } @else {
+              <span class="material-symbols-rounded">{{ antiPaymentEnabled ? 'toggle_on' : 'toggle_off' }}</span>
+            }
+            <span>{{ (antiPaymentEnabled ? 'common.no' : 'common.yes') | translate }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="ar-description">
+        @if (antiPaymentEnabled) {
+          <div class="status-message danger">
+            <span class="material-symbols-rounded">warning</span>
+            <div>
+              <strong>{{ 'antiRestrictions.payment.activeTitle' | translate }}</strong>
+              <p>{{ 'antiRestrictions.payment.activeDesc' | translate }}</p>
+              <ul>
+                <li>{{ 'antiRestrictions.payment.activeBullet1' | translate }}</li>
+                <li>{{ 'antiRestrictions.payment.activeBullet2' | translate }}</li>
+              </ul>
+            </div>
+          </div>
+        } @else {
+          <div class="status-message success">
+            <span class="material-symbols-rounded">check_circle</span>
+            <div>
+              <strong>{{ 'antiRestrictions.payment.openTitle' | translate }}</strong>
+              <p>{{ 'antiRestrictions.payment.openDesc' | translate }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Info Card -->
+  <div class="info-card">
+    <span class="material-symbols-rounded">info</span>
+    <div class="info-content">
+      <p>{{ 'antiRestrictions.infoLine1' | translate }}</p>
+      <p>{{ 'antiRestrictions.infoLine2' | translate }}</p>
+      <p>{{ 'antiRestrictions.infoLine3' | translate }}</p>
+    </div>
+  </div>
+</div>
+
+<app-confirm-dialog
+  [isOpen]="showConfirmDialog"
+  [title]="confirmDialogTitle"
+  [message]="confirmDialogMessage"
+  [type]="confirmDialogType"
+  (confirm)="confirmAction()"
+  (cancel)="cancelAction()"
+></app-confirm-dialog>
+
+@if (isSaving) {
+  <app-loading-overlay></app-loading-overlay>
+}

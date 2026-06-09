@@ -11,4 +11,5 @@ export * from './admin-processes.service';
 export * from './charging-protocol.service';
 export * from './capacity.service';
 export * from './admins-mode.service';
+export * from './anti-restrictions.service';
 export * from './vehicle-addition-requests.service';

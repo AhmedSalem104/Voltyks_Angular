@@ -343,7 +343,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
         { label: 'sidebar.items.terms', icon: 'gavel', route: '/terms' },
         { label: 'sidebar.items.protocol', icon: 'verified_user', route: '/protocol' },
         { label: 'sidebar.items.appConfig', icon: 'smartphone', route: '/app-config' },
-        { label: 'sidebar.items.adminsMode', icon: 'admin_panel_settings', route: '/admins-mode' }
+        { label: 'sidebar.items.adminsMode', icon: 'admin_panel_settings', route: '/admins-mode' },
+        { label: 'sidebar.items.antiRestrictions', icon: 'block', route: '/anti-restrictions' }
       ]
     },
     {
